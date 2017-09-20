@@ -1,0 +1,222 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="X-UA-Compatible" content="IE=9" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta id="ctl00_copyright" name="copyright" content="Copyright © Bolsas y Mercados Españoles 2017" /><link href="/estilos.css" rel="stylesheet" type="text/css" /><title>
+	Bolsa de Madrid - Lista de Empresas Cotizadas
+</title><script type="text/javascript">
+var id = "esp", bolsa = "BMadrid"; window.id = "esp"; window.AnalyticsID = "UA-35966870-2"; window.horaAct = "Thu, 14 Sep 2017 17:44:32 GMT";</script><link id="ctl00_RSSLink1" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Todo" title="Bolsa de Madrid: Todos los contenidos agregados" /><link id="ctl00_RSSLink2" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=NotasPrensa" title="Bolsa de Madrid: Notas de Prensa" /><link id="ctl00_RSSLink3" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Regulacion" title="Bolsa de Madrid: Regulación: Circulares e Instrucciones Operativas" /><link id="ctl00_RSSLink4" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Indices" title="Bolsa de Madrid: Avisos Índices IBEX" /><link id="ctl00_RSSLink5" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Revista" title="Bolsa de Madrid: Artículos de la Revista Bolsa" />
+    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="/js/Master.js"></script>
+</head>
+<body><div id="Base">
+    <table cellpadding="0" cellspacing="0" align="center"><tr class="noimpr">
+        <td colspan="6" id="CabeceraArr">
+            <div id="Idiomas"><ul><li class="mclick"><a href="/?id=ing" target="_self">&nbsp;English&nbsp;</a></li></ul></div>
+            <div id="MenuSup"><ul><li class="mclick"><a href="http://www.bolsasymercados.es/esp/Accionistas-Inversores" target="_blank">&nbsp;Accionistas e Inversores BME&nbsp;</a></li><li class="mclick"><a href="/esp/BMadrid/Contacto.aspx" target="_self">&nbsp;Contacto&nbsp;</a></li><li class="mclick"><a href="/esp/Inversores/Agenda/HorarioMercado.aspx" target="_self">&nbsp;Horario Mercado&nbsp;</a></li><li class="mclick"><a href="/esp/aspx/Inversores/Agenda/Calendario.aspx" target="_self">&nbsp;Calendario bursátil&nbsp;</a></li><li class="mclick"><a href="/esp/RSS.aspx" target="_self">&nbsp;RSS&nbsp; &nbsp;<img src="/images/IconoRSS.png" border="0" align="absmiddle" alt="RSS" />&nbsp;</a></li></ul></div>
+        </td>
+    </tr><tr valign="top">
+        <td rowspan="3" class="BaseIzq noimpr"><div></div></td>
+        <td rowspan="3" class="BaseSep noimpr"></td>
+        <td class="BaseMenu" id="CabeceraLogo"><a href="/?id=esp"><img src="/images/Base/LogoBMadrid.gif" border="0" alt="Bolsa de Madrid" /></a></td>
+        <td id="Cabecera" class="noimpr">
+            <div id="LogoBME"><a href="http://www.bolsasymercados.es/" target="_blank"><img src="/images/Base/LogoBMEBlanco.png" width="118" height="45" border="0" alt="Bolsas y Mercados Españoles" /></a></div>
+            <div class="finFila"></div>
+            <div id="TopMensajes">
+                <table cellpadding="0" cellspacing="0" width="650" height="27" align="left"><tr>
+                    <td style="margin: 0 0 0 40px; vertical-align: middle;"><div><a></a></div></td>
+                </tr></table>
+            </div>
+            <div id="BuscadorCab">
+                <div>Buscador de<br/>empresas</div>
+                <form id="formBusq" method="get" action="/esp/aspx/Empresas/BusqEmpresas.aspx">
+                    <input type="text" name="busq" value="nombre / ISIN / ticker" autocomplete="off" />
+                    <div id="divBusq" style="display: none;"></div>
+                    <span class="BtnGris mclick"><a href="javascript:document.forms.formBusq.submitbusq();"><span class="BtnBuscarDcha" title="Buscar"></span></a></span>
+                </form>
+            </div>
+            <div id="LineaBuscadorCab"></div>
+        </td>
+        <td rowspan="3" class="BaseSep noimpr"></td>
+        <td rowspan="3" class="BaseDcha noimpr"><div></div></td>
+    </tr><tr>
+        <td colspan="2" id="SeparacionCap"><div class="noimpr"></div>
+            
+<div class="seg"><a href="/?id=esp" target="_self">Inicio</a> / <a href="#" target="_self">EMPRESAS COTIZADAS</a> / <span class="segUlt">Lista de Empresas &gt;</span></div>
+        </td>
+    </tr><tr valign="top">
+        <td class="BaseMenu noimpr">
+<script type="text/javascript" src="/js/MenuIzq.js"></script>
+<div id="MenuIzq" class="MenuIzq noimpr">
+
+</div>
+<script language="javascript">
+var MenuIzqLoad_MenusSel = [ "m301","m302" ];
+var MenuIzqLoad_MenusDespl = [  ];
+MenuIzqLoad(true,'General');
+</script>
+</td>
+        <td class="BaseCont">
+            
+            
+<div class="col6"><form method="post" action="/esp/aspx/Empresas/Empresas.aspx" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="cgbkjncW1c80x0NvkyYWtLV4yF+XHVhzaPLTvdOEr+wgss4finNgKfkhWfeBUProAvPi1qH1JqiFDO4WGWfVGmkM4ZZh3s9SbypTWMR0c6xkZZH1VHEv5tD48ZXQ4sY/4CTQCyNNQeOWGV2i9KgIg4YWB/x9+cVo8hygbLgfjx4GLYLMxRwKMNY49uXfCjJI3UAUJw==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="65A1DED9" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="bIVsCBwnI0IHJgCiWRfOVY1iq+yfleYs539jJAklBQa7jeOaj+oxe4+eRlyQoqGEwbSl4wXuCEdsOGR9jSAInr0bNfoWuGl4AQny5ULn520+Il+FbIXRym309YJKB2vNo0Y3hZay/7OBZmnasn7qnXgvCM3vhJEUC4MQYKE27vYY8xqy4z9UUWd1C6kfcgCLU8QK9A==" />
+</div>
+<div class="TituloPag">Lista de Empresas Cotizadas</div>
+
+
+<script language="javascript">
+var GoPag = function (inicio) {
+    document.forms.aspnetForm['ctl00_Contenido_GoPag'].value = inicio;
+    document.forms.aspnetForm.submit();
+}
+</script>
+<input type="hidden" name="ctl00$Contenido$GoPag" id="ctl00_Contenido_GoPag" />
+<div class="LinkAntSig">
+<div class="Izq" style="width: 80px;"><a id="ctl00_Contenido_AnterioresArr" href="javascript:__doPostBack(&#39;ctl00$Contenido$AnterioresArr&#39;,&#39;&#39;)">&lt; Anteriores</a>&nbsp;</div>
+<div class="Dcha" style="width: 80px;">&nbsp;</div>
+<div class="Ctr" style="width: 580px; font-size: 10px; font-weight: normal;"><A href="javascript:GoPag('0');"><U>ABE - BAN</U></A> | <A href="javascript:GoPag('1');"><U>BAN - CLI</U></A> | <A href="javascript:GoPag('2');"><U>COC - FER</U></A> | <A href="javascript:GoPag('3');"><U>FER - INY</U></A> | <A href="javascript:GoPag('4');"><U>LAB - PAP</U></A> | <A href="javascript:GoPag('5');"><U>PAR - TAL</U></A> | TEC - ZAR</div>
+<div class="finFila"></div>
+</div>
+
+
+<div>
+	<table class="TblPort" cellspacing="0" cellpadding="3" id="ctl00_Contenido_tblEmisoras" style="width:100%;border-collapse:collapse;">
+		<tr align="center">
+			<th scope="col">Nombre</th><th scope="col">Sector - Subsector</th><th scope="col">Mercado</th><th class="Ult" scope="col">&#205;ndices</th>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0178165017">TECNICAS REUNIDAS, S.A.</a></td><td>Mat.Basicos, Industria y Construcción - Ingeniería y Otros</td><td>Mercado Continuo</td><td class="Ult">IBEX 35&#174;, IBEX TOP Dividendo&#174;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0178430E18">TELEFONICA, S.A.</a></td><td>Tecnología y Telecomunicaciones - Telecomunicaciones y Otros</td><td>Mercado Continuo</td><td class="Ult">IBEX 35&#174;, IBEX TOP Dividendo&#174;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105128005">TELEPIZZA GROUP, S.A.</a></td><td>Bienes de Consumo - Alimentación y Bebidas</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0179598000">TR HOTEL JARDIN DEL MAR, S.A.</a></td><td>Servicios de Consumo - Ocio, Turismo y Hostelería</td><td>Parqu&#233;</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0132945017">TUBACEX, S.A.</a></td><td>Mat.Basicos, Industria y Construcción - Mineral, Metales y Transformación</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0180850416">TUBOS REUNIDOS,S.A.</a></td><td>Mat.Basicos, Industria y Construcción - Mineral, Metales y Transformación</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=MX01AZ060013">TV AZTECA, S.A. DE C.V.</a></td><td>Servicios de Consumo - Medios de Comunicación y Publicidad</td><td>Latibex</td><td class="Ult">FTSE Latibex TOP, FTSE Latibex All Share</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0180907000">UNICAJA BANCO, S.A.</a></td><td>Servicios Financieros e Inmobiliarios - Bancos y Cajas de Ahorro</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0181222011">UNION CATALANA DE VALORES, S.A.</a></td><td>Servicios Financieros e Inmobiliarios - Cartera y Holding</td><td>Parqu&#233;</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0181480114">UNION EUROPEA DE INVERSIONES, S.A.</a></td><td>Servicios Financieros e Inmobiliarios - Cartera y Holding</td><td>Parqu&#233;</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0182484214">URBAR INGENIEROS, S.A.</a></td><td>Mat.Basicos, Industria y Construcción - Ingeniería y Otros</td><td>Parqu&#233;</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0182280018">URBAS GRUPO FINANCIERO, S.A.</a></td><td>Servicios Financieros e Inmobiliarios - Inmobiliarias y Otros</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=BRUSIMACNPA6">USINAS SIDERURGICAS DE MINAS GERAIS,S.A.</a></td><td>Petróleo y Energía - Electricidad y Gas</td><td>Latibex</td><td class="Ult">FTSE Latibex BRASIL, FTSE Latibex TOP, FTSE Latibex All Share</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=BRVALEACNPA3">VALE, S.A.</a></td><td>Mat.Basicos, Industria y Construcción - Mineral, Metales y Transformación</td><td>Latibex</td><td class="Ult">FTSE Latibex BRASIL, FTSE Latibex TOP, FTSE Latibex All Share</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0183304312">VERTICE TRESCIENTOS SESENTA GRADOS, S.A.</a></td><td>Servicios de Consumo - Medios de Comunicación y Publicidad</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0183746314">VIDRALA S.A.</a></td><td>Bienes de Consumo - Otros Bienes de Consumo</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0184262212">VISCOFAN, S.A.</a></td><td>Bienes de Consumo - Alimentación y Bebidas</td><td>Mercado Continuo</td><td class="Ult">IBEX 35&#174;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0114820113">VOCENTO, S.A.</a></td><td>Servicios de Consumo - Medios de Comunicación y Publicidad</td><td>Mercado Continuo</td><td class="Ult">&nbsp;</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=PEP648014202">VOLCAN, COMPAñIA MINERA S.A.A.</a></td><td>Mat.Basicos, Industria y Construcción - Mineral, Metales y Transformación</td><td>Latibex</td><td class="Ult">FTSE Latibex All Share</td>
+		</tr><tr>
+			<td><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0184933812">ZARDOYA OTIS, S.A.</a></td><td>Mat.Basicos, Industria y Construcción - Fabric. y Montaje Bienes de Equipo</td><td>Mercado Continuo</td><td class="Ult">IBEX TOP Dividendo&#174;</td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+<div class="LinkAntSig">
+<div class="Izq" style="width: 80px;"><a id="ctl00_Contenido_AnterioresAbj" href="javascript:__doPostBack(&#39;ctl00$Contenido$AnterioresAbj&#39;,&#39;&#39;)">&lt; Anteriores</a></div>
+<div class="Dcha" style="width: 80px;"></div>
+<div class="Ctr" style="width: 580px; font-size: 10px; font-weight: normal;"><A href="javascript:GoPag('0');"><U>ABE - BAN</U></A> | <A href="javascript:GoPag('1');"><U>BAN - CLI</U></A> | <A href="javascript:GoPag('2');"><U>COC - FER</U></A> | <A href="javascript:GoPag('3');"><U>FER - INY</U></A> | <A href="javascript:GoPag('4');"><U>LAB - PAP</U></A> | <A href="javascript:GoPag('5');"><U>PAR - TAL</U></A> | TEC - ZAR</div>
+<div class="finFila"></div>
+</div>
+
+
+</form></div>
+
+            <div class="finFila"></div>
+        </td>
+    </tr><tr>
+        <td class="BaseIzq noimpr"></td>
+        <td class="BaseSep noimpr"></td>
+        <td colspan="2"><div id="capaIconosRRSS" class="noimpr">
+            Síguenos en:<br />
+            <ul><li class="mclick"><a href="https://twitter.com/GrupoBME" target="_blank">&nbsp;<img src="/images/Twitter.png" border="0" align="absmiddle" alt="Twitter" />&nbsp;</a></li><li class="mclick"><a href="http://www.flickr.com/photos/archivobme/" target="_blank">&nbsp;<img src="/images/Flickr.png" border="0" align="absmiddle" alt="Flickr" />&nbsp;</a></li><li class="mclick"><a href="http://www.linkedin.com/company/grupo-bme" target="_blank">&nbsp;<img src="/images/Linkedin.png" border="0" align="absmiddle" alt="Linkedin" />&nbsp;</a></li><li class="mclick"><a href="http://www.youtube.com/user/GrupoBME?ob=0&feature=results_main" target="_blank">&nbsp;<img src="/images/Youtube.png" border="0" align="absmiddle" alt="YouTube" />&nbsp;</a></li></ul>
+        </div></td>
+        <td class="BaseSep noimpr"></td>
+        <td class="BaseDcha noimpr"></td>
+    </tr><tr valign="top">
+        <td class="PieIzq noimpr"></td>
+        <td class="PieFondo BaseSep noimpr"></td>
+        <td colspan="2" class="PieFondo"><div>
+            <div id="PieOps" class="noimpr"><ul><li class="mclick"><a href="/esp/aspx/Comun/MapaWeb.aspx" target="_self">&nbsp;Mapa web&nbsp;</a></li><li class="mclick"><a href="javascript:Disclaimer('esp')" target="_self">&nbsp;Disclaimer&nbsp;</a></li><li class="mclick"><a href="/esp/BMadrid/AvisoLegal.aspx" target="_self">&nbsp;Aviso Legal&nbsp;</a></li><li class="mclick"><a href="/esp/PoliticaCookies.aspx" target="_self">&nbsp;Políticas de Cookies&nbsp;</a></li><li class="mclick"><a href="http://www.bolsasymercados.es/esp/Accionistas-Inversores/Inf-Economica/Promedio_pago_a_proveedores" target="_blank">&nbsp;Pago proveedores&nbsp;</a></li></ul></div>
+            <div id="PieWebs" class="noimpr"><form id="formWeb">
+                <select name="ctl00$webs" id="ctl00_webs">
+	<option value="">Webs del grupo BME</option>
+	<option value="http://www.bolsasymercados.es">BOLSAS Y MERCADOS ESPA&#209;OLES</option>
+	<option value="http://www.bmerv.es">BME RENTA VARIABLE</option>
+	<option value="http://www.bolsamadrid.es">BOLSA DE MADRID</option>
+	<option value="http://www.borsabcn.es">BOLSA DE BARCELONA</option>
+	<option value="http://www.bolsabilbao.es">BOLSA DE BILBAO</option>
+	<option value="http://www.bolsavalencia.es">BOLSA DE VALENCIA</option>
+	<option value="http://www.aiaf.es/">BME RENTA FIJA</option>
+	<option value="http://www.bmemarketdata.es/">BME MARKET DATA</option>
+	<option value="http://www.bmeinnova.com">BME INNOVA</option>
+	<option value="http://www.bmeclima.es">BME CLIMA</option>
+	<option value="http://www.bmeclearing.es/">BME CLEARING</option>
+	<option value="http://www.iberclear.es/">IBERCLEAR</option>
+	<option value="http://www.infobolsa.es">INFOBOLSA</option>
+	<option value="http://www.institutobme.es">INSTITUTO BME</option>
+	<option value="http://www.latibex.com">LATIBEX</option>
+	<option value="http://www.bolsasymercados.es/mab">MAB</option>
+	<option value="http://www.meff.com/">MEFF</option>
+	<option value="http://www.regis-tr.com/">REGIS-TR</option>
+	<option value="http://www.visual-trader.com">VISUAL TRADER</option>
+</select>
+                <div class="BtnGris mclick" style="display: inline; margin-left: 10px;">
+                    <div class="BtnFlechaBlancaDcha" style="display: inline;">
+                        <a href="javascript:var o=document.forms.formWeb.ctl00_webs.value;if(o && o.length>0) window.open(o,'_blank');void(0);">&nbsp;IR</a>
+                    </div>
+                </div>
+            </form></div>
+            <div id="PieCopyright">Copyright © Bolsas y Mercados Españoles 2017</div>
+        </div></td>
+        <td class="PieFondo BaseSep noimpr"></td>
+        <td class="PieDcha noimpr"></td>
+    </tr></table>
+</div></body>
+</html>

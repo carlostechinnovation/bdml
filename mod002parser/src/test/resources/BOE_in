@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="es">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>BOE.es - Hora oficial</title>
+<base target="_top" />
+<link rel="stylesheet" href="/estilos/eboe.css" type="text/css" />
+<meta name="Description" content="Hora oficial" />
+<meta http-equiv="X-UA-Compatible" content="IE=10" />
+</head>
+<body>
+    <div id="cabecera">
+      <h1 class="fuera">Agencia Estatal Bolet&iacute;n Oficial del Estado</h1>
+      <a name="top"></a>
+      <ul class="fuera">
+        <li><a accesskey="c" href="#contenido">Ir a contenido</a></li>
+        <li><a href="/sede_electronica/informacion/accesibilidad_web.php">Accesibilidad</a></li>
+        <li><a accesskey="2" href="/sede_electronica/informacion/mapa_web.php">Mapa</a></li>
+        <li><a accesskey="5" href="/diario_boe/">Consultar el diario oficial BOE</a></li>
+        <li><a href="/aeboe/organismo/contactar.php">Contactar</a></li>
+      </ul>
+
+      <div class="menuIdiomas">
+        <p class="fuera">Puede seleccionar otro idioma:</p>
+        <ul>
+          <li><a href="hora_oficial.php?lang=es" lang="es" hreflang="es" title="Cambiar a español/castellano">Bienvenidos<span class="fuera"> (español/castellano)</span></a></li>
+          <li><a href="hora_oficial.php?lang=ca" lang="ca" hreflang="ca" title="Canviar a catal&agrave;/valenci&agrave;">Benvinguts<span class="fuera"> (catal&agrave;/valenci&agrave;)</span></a></li>
+          <li><a href="hora_oficial.php?lang=gl" lang="gl" hreflang="gl" title="Cambiar a galego">Benvidos<span class="fuera"> (galego)</span></a></li>
+          <li><a href="hora_oficial.php?lang=eu" lang="eu" hreflang="eu" title="-ra aldatu euskara">Ongi etorri<span class="fuera"> (euskara)</span></a></li>
+          <li><a href="hora_oficial.php?lang=en" lang="en" hreflang="en" title="Change to English">Welcome<span class="fuera"> (english)</span></a></li>
+          <li><a href="hora_oficial.php?lang=fr" lang="fr" hreflang="fr" title="Changer français">Bienvenue<span class="fuera"> (fran&#231;aise)</span></a></li>
+        </ul>
+      </div> <!-- .menuIdiomas -->
+      <div id="logoInicio">
+        <a href="http://www.mpr.es/" title="Ir al Ministerio de la Presidencia"><img src="/imagenes/logoMPR.png" alt="Ministerio de la Presidencia"></a>
+        <a href="/" title="Ir a la p&aacute;gina de inicio"><img src="/imagenes/logoBOE2012.gif" alt="Agencia Estatal Bolet&iacute;n Oficial del Estado"></a>
+      </div> <!-- #logoInicio -->
+
+      <div id="menu_principal">
+        <div class="poolAgencia">
+          <ul>
+            <li><a accesskey="1"  href="/">Inicio</a></li>
+            <li><a   href="/diario_boe/">BOE</a></li>
+            <li><a  href="/diario_borme/">BORME</a></li>
+            <li><a  href="/legislacion/">Legislaci&oacute;n</a></li>
+            <li><a  href="/anuncios/">Anuncios</a></li>
+            <li><a  href="/tablon_edictal_unico/"><acronym title="Tabl&oacute;n Edictal &Uacute;nico" style="cursor:pointer">TEU</acronym></a></li>
+            <li><a  href="/publicaciones/">Publicaciones</a></li>
+            <li><a href="http://tienda.boe.es/"><span class="tv">Tienda</span></a></li>
+            <li><a  class="current"  href="/aeboe/">La Agencia</a></li>
+            <li><a  href="/buscar/"><span class="botonBuscar">Buscar</span></a></li>
+
+
+<li><a  href="/a_la_carta/"><span class="botonAlacarta">a la Carta <strong class="luz"><img class="callout" src="/imagenes/franjaHoriz/botonAlacarta_callout_black.gif" alt="" />Desconectado. Pulse para acceder al servicio 'BOE a la carta'</strong></span></a></li> 
+
+
+            
+          </ul>
+        </div> <!-- .franjaBOE -->
+      </div> <!-- #menu_principal -->
+      <div class="espacio"></div>
+      <hr class="oculto">
+      <div id="franjaMigas">
+      	<div class="contMigas">
+        <span class="fraseMigas">Est&aacute; <abbr title="usted">Vd.</abbr> en</span>
+        <ul class="migas">
+                  <li><a href="/">Inicio</a></li>
+                  <li><a href="/sede_electronica/index.php">Sobre esta sede electrónica</a></li>
+                  <li class="destino">Información general. Hora oficial</li>        </ul>
+        <div id="solapa">
+        </div><!-- solapa -->
+        </div><!-- contMigas -->
+      </div> <!-- #franjaMigas -->
+      <div class="espacio"></div>
+    </div> <!-- #cabecera -->
+
+
+    <div id="contenedor">
+
+
+<!-- <div id="promos"><div class="espacio"></div>
+		 <span class="aviso">Novedades</span> en el régimen de publicidad de las <strong>subvenciones</strong> (becas, premios y otras ayudas) <a href = '/buscar/ayudas/subvenciones_informacion.php'>Más <abbr title="información">info</abbr></a> 
+</div> -->
+
+<div class="espacio"></div>
+
+
+
+      <a name="contenido"></a>
+      <div class="poolAgencia">
+  
+
+
+
+<div id="dosColumnas">
+
+<div id="col-1">                                                                                                 
+      <div class="menu">                                                                                         
+                                                                                                                 
+<p class="titMenu">Información general</p>
+<ul>
+  <li><a href="mapa_web.php">Mapa web</a>  </li>
+  <li><a href="acerca_web.php">Nuestra web: navegación</a>  </li>
+  <li><a href="configuraciones_web.php">Configuraciones necesarias</a>  </li>
+  <li><a href="accesibilidad_web.php">Accesibilidad</a></li>
+</ul>
+
+<ul>
+  <li><a href="normativa_sede.php">Normativa reguladora de la sede</a>  </li>
+  <li><a href="aviso_legal.php">Aviso legal</a>  </li>
+  <li><a href="proteccion_datos.php">Privacidad y protección de datos</a></li>
+</ul>
+
+<ul>
+  <li class="current">Hora oficial  </li>
+</ul>
+                                                                                                       
+                                                                                                                 
+      </div><!-- /menu -->                                                                                       
+                                                                                                                 
+                                                                                                 
+                                                                                                                 
+</div><!-- /col-1 -->   
+
+<div id="col-2">                                                                                                 
+
+
+
+<div class="bkgSede"><h2 class="sede">Hora oficial</h2>
+<div class="horaOficial">
+<p class="cajaHora"> <span class="grande">jueves, 14 de septiembre de 2017, 17:44:24</span> <a href="hora_oficial.php"><img src="/imagenes/sede/reload.png" alt="Actualizar la hora" /></a></p>
+
+<p>El artículo 26.1 de la Ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los servicios públicos señala que</p> <blockquote>"los registros electrónicos se regirán a efectos de cómputo de los plazos imputables tanto a los interesados como a las Administraciones Públicas por la fecha y hora oficial de la sede electrónica de acceso, que deberá contar con las medidas de seguridad necesarias para garantizar su integridad y figurar visible".</blockquote>
+
+<p>Asimismo, el artículo 6.2 j) del Real Decreto 1671/2009, de 6 de noviembre de 2009, por el que se desarrolla parcialmente dicha Ley, establece que las sedes electrónicas indicarán la fecha y hora oficial a los efectos previstos en el artículo 26.1 de la Ley 11/2007.</p>
+
+<p>En cumplimiento de ambas disposiciones se ofrece la fecha y hora oficial de la sede electrónica de la Agencia Estatal Boletín Oficial del Estado.</p>
+
+<p>Es necesario actualizarlas cuando se quiera tener certeza de la misma en un momento dado.</p>
+<p>Puede, además, comprobar la hora y fecha oficiales en el <a href="http://www.armada.mde.es/ArmadaPortal/page/Portal/ArmadaEspannola/ciencia_observatorio/06_Hora--01_QueHoraEs" target="_blank">Real Instituto y Observatorio de la Armada (ROA) <img class="ventana_nueva" alt="Abre una nueva ventana" src="/imagenes/ventana_nueva.gif" /></a></p>
+
+</div>
+
+</div><!-- sede -->
+<p class="linkSubir"><a href="#top">Subir</a></p>
+  
+
+</div><!-- /col-2 -->
+</div><!-- /dosColumnas -->
+
+      </div> <!-- .pool -->
+      <div class="espacio"></div>
+
+    </div> <!-- #contenedor -->
+
+    <div id="pie">
+      <div id="menuPie">
+        <div class="franjaMenu">
+          <ul>
+            <li><a href="/aeboe/organismo/contactar.php" accesskey="3">Contactar</a></li>
+            <li><a href="/sede_electronica/" hreflang="es">Sobre esta sede electr&oacute;nica</a></li>
+            <li><a href="/sede_electronica/informacion/aviso_legal.php">Aviso legal</a></li>
+            <li><a href="/sede_electronica/informacion/acerca_web.php">Nuestra web</a></li>
+            <li><a accesskey="2" href="/sede_electronica/informacion/mapa_web.php">Mapa</a></li>
+            <li><a href="/sede_electronica/informacion/accesibilidad_web.php" accesskey="0"><span class="linkAccesi">Accesibilidad</span></a></li>
+            <li class="grupoIcon"><a href="/movil/boe-app/" hreflang="es" lang="es" title="BOE app. El BOE en su m&oacute;vil"><img src="/imagenes/boe-app/iconPhone_peq.png" alt="BOE app"></a></li>
+            <li class="grupoIcon"><a href="/rss/" hreflang="es" lang="es" title="RSS"><img src="/imagenes/iconRSSpeq.png" alt="RSS"></a></li>
+            <li class="grupoIcon"><a href="/redes_sociales/twitter.php" hreflang="es" lang="es" title="boegob, el BOE en Twitter"><img src="/imagenes/redes_sociales/iconTWITTERpeq.png" alt="Twitter"></a></li>
+            <li class="grupoIcon"><a href="/redes_sociales/facebook.php" hreflang="es" lang="es" title="El BOE en Facebook"><img src="/imagenes/redes_sociales/iconFBKpeq.png" alt="Facebook"></a></li>
+            <li class="grupoIcon"><a href="/redes_sociales/linkedin.php" hreflang="es" lang="es" title="El BOE en LinkedIn"><img src="/imagenes/redes_sociales/iconLINKEDINpeq.png" alt="LinkedIn"></a></li>
+            <li class="grupoIcon"><a href="/redes_sociales/google_plus.php" hreflang="es" lang="es" title="El BOE en Google+"><img src="/imagenes/redes_sociales/iconoGPLUSpeq.png" alt="Google+"></a></li>
+          </ul>
+        </div> <!-- .franjaMenu -->
+      </div> <!-- #menuPie -->
+      <div class="direccionPie">
+        <p>Agencia Estatal <span class="mayus">Bolet&iacute;n Oficial del Estado</span></p>
+        <p><abbr title="Avenida">Avda.</abbr> de Manoteras, 54 - 28050 Madrid - <abbr title="Tel&eacute;fono">Tel</abbr>.: (+34) 91 111 4000</p>
+      </div> <!-- .direccionPie -->
+    </div> <!-- #pie -->
+
+    <!-- //Google Analytics -->
+    <script type="text/javascript">
+      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+      var pageTracker = _gat._getTracker("UA-6269064-1");
+      pageTracker._trackPageview();
+    </script>
+    <!-- //Google Analytics -->
+  </body>
+</html>
+  
