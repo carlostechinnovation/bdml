@@ -1,4 +1,4 @@
-package casa.mod002.parser;
+package casa.mod002a.parser;
 
 public interface ParserDeDiaAPI {
 

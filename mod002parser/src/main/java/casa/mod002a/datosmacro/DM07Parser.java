@@ -6,7 +6,7 @@ package casa.mod002a.datosmacro;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import casa.mod002.parser.ParserDeDia;
+import casa.mod002a.parser.ParserDeDia;
 import utilidades.Constantes;
 
 public class DM07Parser extends ParserDeDia {

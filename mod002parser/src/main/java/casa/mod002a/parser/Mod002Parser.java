@@ -1,7 +1,7 @@
 /**
  * 
  */
-package casa.mod002.parser;
+package casa.mod002a.parser;
 
 import java.io.IOException;
 import java.nio.file.Files;

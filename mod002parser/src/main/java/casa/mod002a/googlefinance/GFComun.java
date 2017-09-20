@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import casa.mod002.parser.ParserDeDia;
+import casa.mod002a.parser.ParserDeDia;
 import utilidades.Constantes;
 
 public abstract class GFComun extends ParserDeDia {

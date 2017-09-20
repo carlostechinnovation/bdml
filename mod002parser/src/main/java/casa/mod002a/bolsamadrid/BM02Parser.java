@@ -15,7 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 
-import casa.mod002.parser.ParserDeDia;
+import casa.mod002a.parser.ParserDeDia;
 import utilidades.Constantes;
 
 /**

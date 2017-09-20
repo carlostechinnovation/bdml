@@ -12,7 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
-import casa.mod002.parser.ParserDeDia;
+import casa.mod002a.parser.ParserDeDia;
 import utilidades.Constantes;
 
 public class BM03Parser extends ParserDeDia {

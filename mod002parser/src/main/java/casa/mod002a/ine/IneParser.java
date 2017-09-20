@@ -13,7 +13,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import casa.mod002.parser.ParserDeDia;
+import casa.mod002a.parser.ParserDeDia;
 import utilidades.Constantes;
 
 public class IneParser extends ParserDeDia {
