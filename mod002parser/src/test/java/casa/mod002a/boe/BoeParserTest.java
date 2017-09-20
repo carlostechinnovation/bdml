@@ -4,9 +4,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import casa.mod002a.boe.BoeParser;
 import utilidades.Constantes;
 import utilidades.ResourceFile;
+import utilidadestest.PadreTest;
 
 /**
  * @author root

@@ -20,7 +20,7 @@ public class DM13ParserTest extends PadreTest {
 
 	@Before
 	public void iniciar() {
-		instancia = new DM1Parser();
+		instancia = new DM13Parser();
 		res = new ResourceFile("/" + instancia.getPathEntrada(TAG_DIA_TEST));
 	}
 

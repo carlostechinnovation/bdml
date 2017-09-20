@@ -15,7 +15,7 @@ import utilidadestest.PadreTest;
  */
 public class GF05ParserTest extends PadreTest {
 
-	GF04Parser instancia;
+	GF05Parser instancia;
 	ResourceFile res;
 
 	@Before
