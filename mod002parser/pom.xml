@@ -59,7 +59,7 @@
 					<!-- MainClass in mainfest make a executable jar -->
 					<archive>
 						<manifest>
-							<mainClass>casa.mod002.parser.Mod002Parser</mainClass>
+							<mainClass>casa.mod002a.parser.Mod002Parser</mainClass>
 						</manifest>
 					</archive>
 

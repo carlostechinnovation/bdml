@@ -3,16 +3,6 @@
  */
 package casa.mod002a.googlefinance;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import utilidades.Constantes;
 
 public class GF03Parser extends GFComun {
@@ -25,11 +15,9 @@ public class GF03Parser extends GFComun {
 		return tagDia + Constantes.GF + "03";
 	}
 
-
-
 	public String generarSqlCreateTable() {
 
-		return "CREATE TABLE datos_desa.tb_gf01 (tag_dia varchar(15), ticker varchar(10), is_active varchar(2), "
+		return "CREATE TABLE datos_desa.tb_gf03 (tag_dia varchar(15), ticker varchar(10), is_active varchar(2), "
 				+ "is_supported_exchange varchar(2), id varchar(20), title varchar(255), "
 				+ "BookValuePerShareYear decimal(7,2), CashPerShareYear decimal(7,2),"
 				+ "CurrentRatioYear decimal(7,2), LTDebtToAssetsYear decimal(7,2), LTDebtToAssetsQuarter decimal(7,2),"

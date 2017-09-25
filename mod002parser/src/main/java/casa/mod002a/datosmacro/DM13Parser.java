@@ -16,7 +16,7 @@ public class DM13Parser extends ParserDeDia {
 	}
 
 	public String getPathEntrada(String tagDia) {
-		return tagDia + Constantes.DATOSMACRO + "12";
+		return tagDia + Constantes.DATOSMACRO + "13";
 	}
 
 	public String parsear(String tagDia, String in) {

@@ -12,13 +12,13 @@ public class GF06Parser extends GFComun {
 	}
 
 	public String getPathEntrada(String tagDia) {
-		return tagDia + Constantes.GF + "05";
+		return tagDia + Constantes.GF + "06";
 	}
 
 	public String generarSqlCreateTable() {
 
 		// TODO
-		return "CREATE TABLE datos_desa.tb_gf05 (" + ");";
+		return "CREATE TABLE datos_desa.tb_gf06 (" + ");";
 	}
 
 }

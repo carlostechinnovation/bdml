@@ -65,8 +65,8 @@
         <span class="fraseMigas">Est&aacute; <abbr title="usted">Vd.</abbr> en</span>
         <ul class="migas">
                   <li><a href="/">Inicio</a></li>
-                  <li><a href="/sede_electronica/index.php">Sobre esta sede electrónica</a></li>
-                  <li class="destino">Información general. Hora oficial</li>        </ul>
+                  <li><a href="/sede_electronica/index.php">Sobre esta sede electr&oacute;nica</a></li>
+                  <li class="destino">Informaci&oacute;n general. Hora oficial</li>        </ul>
         <div id="solapa">
         </div><!-- solapa -->
         </div><!-- contMigas -->
@@ -97,10 +97,10 @@
 <div id="col-1">                                                                                                 
       <div class="menu">                                                                                         
                                                                                                                  
-<p class="titMenu">Información general</p>
+<p class="titMenu">Informaci&oacute;n general</p>
 <ul>
   <li><a href="mapa_web.php">Mapa web</a>  </li>
-  <li><a href="acerca_web.php">Nuestra web: navegación</a>  </li>
+  <li><a href="acerca_web.php">Nuestra web: navegaci&oacute;n</a>  </li>
   <li><a href="configuraciones_web.php">Configuraciones necesarias</a>  </li>
   <li><a href="accesibilidad_web.php">Accesibilidad</a></li>
 </ul>
@@ -108,7 +108,7 @@
 <ul>
   <li><a href="normativa_sede.php">Normativa reguladora de la sede</a>  </li>
   <li><a href="aviso_legal.php">Aviso legal</a>  </li>
-  <li><a href="proteccion_datos.php">Privacidad y protección de datos</a></li>
+  <li><a href="proteccion_datos.php">Privacidad y protecci&oacute;n de datos</a></li>
 </ul>
 
 <ul>
@@ -128,7 +128,7 @@
 
 <div class="bkgSede"><h2 class="sede">Hora oficial</h2>
 <div class="horaOficial">
-<p class="cajaHora"> <span class="grande">jueves, 14 de septiembre de 2017, 17:44:24</span> <a href="hora_oficial.php"><img src="/imagenes/sede/reload.png" alt="Actualizar la hora" /></a></p>
+<p class="cajaHora"> <span class="grande">miércoles, 20 de septiembre de 2017, 18:35:02</span> <a href="hora_oficial.php"><img src="/imagenes/sede/reload.png" alt="Actualizar la hora" /></a></p>
 
 <p>El artículo 26.1 de la Ley 11/2007, de 22 de junio, de acceso electrónico de los ciudadanos a los servicios públicos señala que</p> <blockquote>"los registros electrónicos se regirán a efectos de cómputo de los plazos imputables tanto a los interesados como a las Administraciones Públicas por la fecha y hora oficial de la sede electrónica de acceso, que deberá contar con las medidas de seguridad necesarias para garantizar su integridad y figurar visible".</blockquote>
 

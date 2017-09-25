@@ -9,7 +9,7 @@ public class BM04Parser extends BM01Parser {
 
 	@Override
 	public String getPathEntrada(String tagDia) {
-		return tagDia + Constantes.BM + "01";
+		return tagDia + Constantes.BM + "04";
 	}
 
 	@Override

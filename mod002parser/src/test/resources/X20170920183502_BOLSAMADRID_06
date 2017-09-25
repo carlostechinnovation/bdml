@@ -1,0 +1,735 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><meta http-equiv="X-UA-Compatible" content="IE=9" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta id="ctl00_copyright" name="copyright" content="Copyright © Bolsas y Mercados Españoles 2017" /><link href="/estilos.css" rel="stylesheet" type="text/css" /><title>
+	Bolsa de Madrid
+</title><script type="text/javascript">
+var id = "esp", bolsa = "BMadrid"; window.id = "esp"; window.AnalyticsID = "UA-35966870-2"; window.horaAct = "Wed, 20 Sep 2017 18:35:16 GMT";</script><link id="ctl00_RSSLink1" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Todo" title="Bolsa de Madrid: Todos los contenidos agregados" /><link id="ctl00_RSSLink2" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=NotasPrensa" title="Bolsa de Madrid: Notas de Prensa" /><link id="ctl00_RSSLink3" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Regulacion" title="Bolsa de Madrid: Regulación: Circulares e Instrucciones Operativas" /><link id="ctl00_RSSLink4" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Indices" title="Bolsa de Madrid: Avisos Índices IBEX" /><link id="ctl00_RSSLink5" rel="alternate" type="application/rss+xml" href="/esp/aspx/RSS/RSS.ashx?feed=Revista" title="Bolsa de Madrid: Artículos de la Revista Bolsa" />
+    <script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.cookie.min.js"></script>
+    <script type="text/javascript" src="/js/Master.js"></script>
+</head>
+<body><div id="Base">
+    <table cellpadding="0" cellspacing="0" align="center"><tr class="noimpr">
+        <td colspan="6" id="CabeceraArr">
+            <div id="Idiomas"><ul><li class="mclick"><a href="/?id=ing" target="_self">&nbsp;English&nbsp;</a></li></ul></div>
+            <div id="MenuSup"><ul><li class="mclick"><a href="http://www.bolsasymercados.es/esp/Accionistas-Inversores" target="_blank">&nbsp;Accionistas e Inversores BME&nbsp;</a></li><li class="mclick"><a href="/esp/BMadrid/Contacto.aspx" target="_self">&nbsp;Contacto&nbsp;</a></li><li class="mclick"><a href="/esp/Inversores/Agenda/HorarioMercado.aspx" target="_self">&nbsp;Horario Mercado&nbsp;</a></li><li class="mclick"><a href="/esp/aspx/Inversores/Agenda/Calendario.aspx" target="_self">&nbsp;Calendario bursátil&nbsp;</a></li><li class="mclick"><a href="/esp/RSS.aspx" target="_self">&nbsp;RSS&nbsp; &nbsp;<img src="/images/IconoRSS.png" border="0" align="absmiddle" alt="RSS" />&nbsp;</a></li></ul></div>
+        </td>
+    </tr><tr valign="top">
+        <td rowspan="3" class="BaseIzq noimpr"><div></div></td>
+        <td rowspan="3" class="BaseSep noimpr"></td>
+        <td class="BaseMenu" id="CabeceraLogo"><a href="/?id=esp"><img src="/images/Base/LogoBMadrid.gif" border="0" alt="Bolsa de Madrid" /></a></td>
+        <td id="Cabecera" class="noimpr">
+            <div id="LogoBME"><a href="http://www.bolsasymercados.es/" target="_blank"><img src="/images/Base/LogoBMEBlanco.png" width="118" height="45" border="0" alt="Bolsas y Mercados Españoles" /></a></div>
+            <div class="finFila"></div>
+            <div id="TopMensajes">
+                <table cellpadding="0" cellspacing="0" width="650" height="27" align="left"><tr>
+                    <td style="margin: 0 0 0 40px; vertical-align: middle;"><div><a></a></div></td>
+                </tr></table>
+            </div>
+            <div id="BuscadorCab">
+                <div>Buscador de<br/>empresas</div>
+                <form id="formBusq" method="get" action="/esp/aspx/Empresas/BusqEmpresas.aspx">
+                    <input type="text" name="busq" value="nombre / ISIN / ticker" autocomplete="off" />
+                    <div id="divBusq" style="display: none;"></div>
+                    <span class="BtnGris mclick"><a href="javascript:document.forms.formBusq.submitbusq();"><span class="BtnBuscarDcha" title="Buscar"></span></a></span>
+                </form>
+            </div>
+            <div id="LineaBuscadorCab"></div>
+        </td>
+        <td rowspan="3" class="BaseSep noimpr"></td>
+        <td rowspan="3" class="BaseDcha noimpr"><div></div></td>
+    </tr><tr>
+        <td colspan="2" id="SeparacionCap"><div class="noimpr"></div>
+            
+<div class="seg"></div>
+        </td>
+    </tr><tr valign="top">
+        <td class="BaseMenu noimpr">
+<script type="text/javascript" src="/js/MenuIzq.js"></script>
+<div id="MenuIzq" class="MenuIzq noimpr">
+<div class="MenuGrupo Azul">
+<div class="Menu1 MenuDiv Azul Off" menu="m1"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">SOBRE NOSOTROS</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m1">
+<div class="Menu2 MenuDiv Off" menu="m2"><div class="MenuLink Off"><a href="/esp/BMadrid/BMadrid.aspx" target="_self">Bolsa de Madrid</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m3"><div class="MenuLink Off"><a href="javascript:sacaVentanaHistoria('/htm/esp/BMadrid/Historia/histo021.aspx')" target="_self">Historia</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m4"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">El Palacio de la Bolsa</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m4">
+<div class="Menu3 MenuDiv Off" menu="m5"><div class="MenuLink Off"><a href="/esp/BMadrid/Palacio/Historia.aspx" target="_self">Historia del Palacio</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m6"><div class="MenuLink Off"><a href="/esp/BMadrid/Palacio/Visita.aspx" target="_self">Visitas Guiadas</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m7"><div class="MenuLink Off"><a href="/esp/BMadrid/Palacio/VisitaVirtual.aspx" target="_self">Visita Virtual</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m8"><div class="MenuLink Off"><a href="/esp/BMadrid/Palacio/Eventos.aspx" target="_self">Actos y Conferencias</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m9"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/Eventos/Eventos.aspx?CodBolsa=BMadrid" target="_self">Aperturas de Honor</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m10"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Formación</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m10">
+<div class="Menu3 MenuDiv Off" menu="m11"><div class="MenuLink Off"><a href="/esp/aspx/Inversores/Formacion/Formacion.aspx?tipo=T&CodBolsa=BMadrid" target="_self">Cursos y Masters</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m19"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Protector del Inversor</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m19">
+<div class="Menu3 MenuDiv Off" menu="m20"><div class="MenuLink Off"><a href="/esp/BMadrid/Protector/Protector1.aspx" target="_self">Información General</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m24"><div class="MenuLink Off"><a href="/esp/BMadrid/Protector/Protector21.aspx" target="_self">Consultas y Reclamaciones</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m27"><div class="MenuLink Off"><a href="/esp/BMadrid/Protector/Protector3.aspx" target="_self">Informes Anuales</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m28"><div class="MenuLink Off"><a href="/esp/BMadrid/Protector/Protector4.aspx" target="_self">Normativa</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m31"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Miembros</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m31">
+<div class="Menu3 MenuDiv Off" menu="m32"><div class="MenuLink Off"><a href="/esp/aspx/Miembros/Miembros.aspx?tipo=T" target="_self">Listado de miembros</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m38"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Miembros/Comosermiembro.pdf')" target="_self">Cómo ser miembro</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m39"><div class="MenuLink Off"><a href="/esp/aspx/Regulacion/Regulacion.aspx" target="_self">Regulación</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m40"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/BMadrid/Canones/CanonesBolsaMadrid.pdf')" target="_self">Cánones</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m41"><div class="MenuLink Off"><a href="/esp/BMadrid/Localizacion.aspx" target="_self">Dónde estamos</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m42"><div class="MenuLink Off"><a href="/esp/BMadrid/Contacto.aspx" target="_self">Contacto</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m197"><div class="MenuLink Off"><a href="/esp/Nosotros/BME.aspx" target="_self">BME</a></div></div>
+</div>
+<div class="Menu1 MenuDiv Azul Off" menu="m207"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">MERCADOS Y COTIZACIONES</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m207">
+<div class="Menu2 MenuDiv Off" menu="m208"><div class="MenuLink MenuConOp Off"><a href="/esp/aspx/Mercados/Precios.aspx?indice=ESI100000000" target="_self">Acciones</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m208">
+<div class="Menu3 MenuDiv Off" menu="m209"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/Precios.aspx?indice=ESI100000000" target="_self">Precios de la sesión</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m210"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=VALORES" target="_self">Gráficos históricos</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m211"><div class="MenuLink Off"><a href="/etfs" target="_blank">ETFs</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m212"><div class="MenuLink Off"><a href="/esp/aspx/warrants/Portada/Portada.aspx" target="_blank">Warrants</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m213"><div class="MenuLink Off"><a href="http://www.bolsasymercados.es/mab/" target="_blank">MAB</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m214"><div class="MenuLink Off"><a href="http://www.latibex.com" target="_blank">Latibex</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m215"><div class="MenuLink Off"><a href="/esp/aspx/Fondos/Portada/Portada.aspx" target="_self">Fondos de Inversión</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m216"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/Cartera/cartera.aspx" target="_self">Mi cartera</a></div></div>
+</div>
+<div class="Menu1 MenuDiv Azul Off" menu="m220"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">ÍNDICES</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m220">
+<div class="Menu2 MenuDiv Off" menu="m221"><div class="MenuLink Off"><a href="/esp/aspx/Indices/Resumen.aspx" target="_self">Resumen de Índices</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m222"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Índices IBEX</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m222">
+<div class="Menu3 MenuDiv Off" menu="m223"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/Precios.aspx?indice=ESI100000000&punto=indice" target="_self">Precios Sesión</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m224"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=IBEX" target="_self">Gráficos históricos</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m225"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=IBEX" target="_self">Precios históricos</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m226"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Informes</a></div></div>
+<div class="Menu4 MenuSubOp" menu="m226">
+<div class="Menu4 MenuDiv Off" menu="m227"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/resumen.pdf')" target="_self">Resumen Diario</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m228"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/semanal.pdf')" target="_self">Resumen Semanal</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m229"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/anual.pdf')" target="_self">Informe Anual</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m230"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/Constituents.pdf')" target="_self">Composición</a></div></div>
+</div>
+<div class="Menu3 MenuDiv Off" menu="m231"><div class="MenuLink Off"><a href="/esp/aspx/Indices/Avisos/Avisos.aspx?tipo=01" target="_self">Avisos</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m234"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/docsSubidos/NormasIndices/Normas_Indices_Ibex_esp.pdf')" target="_self">Normas y Cálculo</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m235"><div class="MenuLink Off"><a href="/esp/Indices/Ibex/ComposicionHistorica_Ibex.aspx" target="_self">Composición histórica</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m236"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/productosreferenciados.pdf')" target="_self">Productos referenciados IBEX 35®</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m237"><div class="MenuLink Off"><a href="/esp/Indices/Ibex/Factsheet_Ibex.aspx" target="_self">Factsheets</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m238"><div class="MenuLink Off"><a href="/esp/indices/ibex/PreguntasClaveIbex35.aspx" target="_self">10 preguntas clave</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m241"><div class="MenuLink Off"><a href="/esp/Indices/Ibex/IBEX-MAB.aspx" target="_self">IBEX MAB®</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m249"><div class="MenuLink Off"><a href="/esp/Indices/Ibex/FTSE4Good.aspx" target="_self">FTSE4Good IBEX</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m256"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Índices sobre Acciones</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m256">
+<div class="Menu3 MenuDiv Off" menu="m257"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/docsSubidos/NormasIndices/Normas_Acciones_esp.pdf')" target="_self">Normas y cálculo</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m258"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Índices Latibex</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m258">
+<div class="Menu3 MenuDiv Off" menu="m259"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/Precios.aspx?indice=ESI200000000&punto2=indiceLX" target="_self">Precios Sesión</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m260"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=LATIBEX" target="_self">Gráficos históricos</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m261"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=Latibex" target="_self">Precios históricos</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m262"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfFinDiaLatibex.aspx?indice=l" target="_self">Informes Fin de Día</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m266"><div class="MenuLink Off"><a href="http://www.latibex.com" target="_blank">Web Latibex</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m267"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Índices Bolsas</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m267">
+<div class="Menu3 MenuDiv Off" menu="m268"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Bolsa de Madrid</a></div></div>
+<div class="Menu4 MenuSubOp" menu="m268">
+<div class="Menu4 MenuDiv Off" menu="m269"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/PreciosIGBM.aspx" target="_self">Precios Sesión IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m270"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=BMadrid" target="_self">Gráfico histórico IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m271"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=BMadrid" target="_self">Información histórica IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m272"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistoricaSect.aspx?grupo=BMadrid" target="_self">Información histórica Sectores</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m273"><div class="MenuLink Off"><a href="/esp/indices/BMadrid/altas_bajas.aspx" target="_self">Altas y Bajas IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m274"><div class="MenuLink Off"><a href="/esp/indices/BMadrid/comite_igbm.aspx" target="_self">Comité Gestión IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m275"><div class="MenuLink Off"><a href="/esp/indices/BMadrid/comite_avisos.aspx" target="_self">Avisos Comité IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m276"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Indices/BMadrid/1_normasdefinicionindiceVER_10_0_EN_17.pdf')" target="_self">Normas IGBM</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m277"><div class="MenuLink Off"><a href="/esp/indices/BMadrid/familias_igbm.aspx" target="_self">Familia Indices</a></div></div>
+</div>
+<div class="Menu3 MenuDiv Off" menu="m278"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Bolsa de Barcelona</a></div></div>
+<div class="Menu4 MenuSubOp" menu="m278">
+<div class="Menu4 MenuDiv Off" menu="m279"><div class="MenuLink Off"><a href="/esp/aspx/Indices/Resumen.aspx?grupo=BBarna" target="_self">Resumen Indices</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m280"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/PreciosBCNGlobal100.aspx" target="_self">Precios Sesion BCN GLOBAL-100</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m281"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=BBarna" target="_self">Gráficos históricos</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m282"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=BBarna" target="_self">Información histórica</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m283"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=BBarnaSect" target="_self">Información histórica Sectores</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m284"><div class="MenuLink Off"><a href="/esp/aspx/Indices/Resumen.aspx?grupo=BBarnaCestas" target="_self">Cestas de Valores</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m285"><div class="MenuLink Off"><a href="/esp/indices/BBarna/ComposicionIndices.aspx" target="_self">Composición Indices</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m286"><div class="MenuLink Off"><a href="/esp/indices/BBarna/AltasBajasIndices.aspx" target="_self">Altas y Bajas Indices</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m287"><div class="MenuLink Off"><a href="/esp/indices/BBarna/ComiteIndices.aspx" target="_self">Comité Gestión Indices</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m288"><div class="MenuLink Off"><a href="/esp/aspx/BBarna/notasCG.aspx" target="_self">Notas Comité Gestión</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m289"><div class="MenuLink Off"><a href="/esp/indices/BBarna/NormasIndicesBarcelona.aspx" target="_self">Normas Indices</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m290"><div class="MenuLink Off"><a href="/esp/indices/BBarna/CaracteristicasIndices.aspx" target="_self">Características y Evolución</a></div></div>
+</div>
+<div class="Menu3 MenuDiv Off" menu="m291"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Bolsa de Bilbao</a></div></div>
+<div class="Menu4 MenuSubOp" menu="m291">
+<div class="Menu4 MenuDiv Off" menu="m292"><div class="MenuLink Off"><a href="/esp/indices/BBilbao/IndiceBolsaBilbao2000.aspx" target="_self">Bolsa Bilbao 2000</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m293"><div class="MenuLink Off"><a href="/esp/indices/BBilbao/IndiceBolsaBilbao_Avisos.aspx" target="_self">Avisos</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m294"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=BBilbao" target="_self">Gráficos históricos</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m295"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=BBilbao" target="_self">Información histórica</a></div></div>
+</div>
+<div class="Menu3 MenuDiv Off" menu="m296"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Bolsa de Valencia</a></div></div>
+<div class="Menu4 MenuSubOp" menu="m296">
+<div class="Menu4 MenuDiv Off" menu="m297"><div class="MenuLink Off"><a href="/esp/indices/BValencia/IndiceGeneral.aspx" target="_self">Indice General</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m298"><div class="MenuLink Off"><a href="/esp/aspx/Comun/Graficos.aspx?tipo=BValencia" target="_self">Gráficos históricos</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m299"><div class="MenuLink Off"><a href="/esp/aspx/Indices/InfHistorica.aspx?grupo=BValencia" target="_self">Información histórica</a></div></div>
+<div class="Menu4 MenuDiv Off" menu="m300"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Indices/BValencia/ClasifSectorial2006BV.pdf')" target="_self">Clasificación sectorial</a></div></div>
+</div>
+</div>
+</div>
+<div class="Menu1 MenuDiv Azul Off" menu="m301"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">EMPRESAS COTIZADAS</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m301">
+<div class="Menu2 MenuDiv Off" menu="m302"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/Empresas.aspx" target="_self">Lista de Empresas</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m303"><div class="MenuLink Off"><a href="/esp/Empresas/Inf_Financiera.aspx" target="_self">Información Financiera</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m304"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/HechosRelevantesUltimos.aspx" target="_self">Hechos Relevantes</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m307"><div class="MenuLink MenuConOp Off"><a href="/esp/aspx/Empresas/OperFinancieras/Dividendos.aspx" target="_self">Dividendos</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m307">
+<div class="Menu3 MenuDiv Off" menu="m308"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/BMadrid/docsSubidos/Reforma_ cambio_fecha_pago_dividendos.pdf')" target="_self">Fechas clave en el pago de dividendos</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m309"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/OperFinancieras/OPVs_OPSs.aspx" target="_self">Operaciones Financieras</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m316"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/Admisiones.aspx" target="_self">Admisiones a Negociación</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m317"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/Exclusiones.aspx" target="_self">Exclusiones de Negociación</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m318"><div class="MenuLink Off"><a href="/esp/aspx/Empresas/EmpresasPorSectores.aspx" target="_self">Clasificación sectorial</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m322"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Análisis</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m322">
+<div class="Menu3 MenuDiv Off" menu="m323"><div class="MenuLink Off"><a href="/esp/Empresas/InResearch.aspx" target="_self">Análisis InResearch</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m324"><div class="MenuLink Off"><a href="/esp/Empresas/MorningStar_IbexMed.aspx" target="_self">Análisis Cuantitativo</a></div></div>
+</div>
+</div>
+<div class="Menu1 MenuDiv Azul Off" menu="m329"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">ESTADÍSTICAS Y PUBLICACIONES</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m329">
+<div class="Menu2 MenuDiv Off" menu="m330"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Estadísticas</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m330">
+<div class="Menu3 MenuDiv Off" menu="m331"><div class="MenuLink Off"><a href="http://www.bolsasymercados.es/esp/Estudios-Publicaciones/Estadisticas" target="_blank">Mensuales</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m332"><div class="MenuLink Off"><a href="http://www.bolsasymercados.es/esp/Estudios-Publicaciones/Informe-Mercado" target="_blank">Anuales</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m333"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Boletines de Cotización</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m333">
+<div class="Menu3 MenuDiv Off" menu="m334"><div class="MenuLink Off"><a href="/esp/aspx/Estadisticas/Boletin/frameboletin.aspx" target="_self">Bolsa de Madrid</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m335"><div class="MenuLink Off"><a href="/esp/aspx/Estadisticas/Boletin/frameboletin.aspx?bolsa=BBarna" target="_self">Bolsa de Barcelona</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m336"><div class="MenuLink Off"><a href="/esp/aspx/Estadisticas/Boletin/frameboletin.aspx?bolsa=BBilbao" target="_self">Bolsa de Bilbao</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m337"><div class="MenuLink Off"><a href="/esp/aspx/Estadisticas/Boletin/frameboletin.aspx?bolsa=BValencia" target="_self">Bolsa de Valencia</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m340"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Sbolsas/InformesSB/bdiario.pdf')" target="_self">Boletin Mercado Continuo</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m341"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Informes</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m341">
+<div class="Menu3 MenuDiv Off" menu="m342"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/resumen.pdf')" target="_self">Resumen diario Índices IBEX</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m343"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/semanal.pdf')" target="_self">Resumen semanal Índices IBEX</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m344"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Sbolsas/InformesSB/Mensual.pdf')" target="_self">Informe mensual Mercado Continuo</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m345"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Sbolsas/InformesSB/anual.pdf')" target="_self">Informe anual Mercado Continuo</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m346"><div class="MenuLink Off"><a href="http://www.bolsasymercados.es/esp/Estudios-Publicaciones/Informe-Mercado" target="_blank">Informe anual Mercados BME</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m347"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Otras Publicaciones</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m347">
+<div class="Menu3 MenuDiv Off" menu="m348"><div class="MenuLink Off"><a href="https://www.bolsasymercados.es/esp/Estudios-Publicaciones" target="_blank">Estudios y Publicaciones</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m349"><div class="MenuLink Off"><a href="https://www.bolsasymercados.es/esp/Estudios-Publicaciones/Libros-y-Guias" target="_blank">Libros y Guías</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m350"><div class="MenuLink Off"><a href="/esp/aspx/Prensa/SalaPrensa.aspx?tipo=09" target="_self">Documentos de Interés</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m351"><div class="MenuLink Off"><a href="/esp/aspx/Mercados/Fondos.aspx" target="_self">Fondos de Inversión</a></div></div>
+</div>
+</div>
+<div class="MenuGrTit"><div>Información:</div></div>
+<div class="MenuGrupo Blanco">
+<div class="Menu1 MenuDiv Blanco Off" menu="m352"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">PARA INVERSORES</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m352">
+<div class="Menu2 MenuDiv Off" menu="m353"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Formación</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m353">
+<div class="Menu3 MenuDiv Off" menu="m354"><div class="MenuLink Off"><a href="/esp/Inversores/Formacion/QueeslaBolsa.aspx" target="_self">¿Qué es la Bolsa?</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m355"><div class="MenuLink Off"><a href="/esp/aspx/Inversores/Formacion/Formacion.aspx?tipo=T" target="_self">Cursos y Masters</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m356"><div class="MenuLink Off"><a href="/esp/Inversores/Formacion/Invertir/PerfilInversor.aspx" target="_self">Cómo invertir en Bolsa</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m364"><div class="MenuLink Off"><a href="/esp/Inversores/Formacion/Guias/Guias.aspx" target="_self">Guías del inversor</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m365"><div class="MenuLink Off"><a href="/esp/Inversores/Formacion/Glosario/A.aspx" target="_self">Glosario</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m393"><div class="MenuLink Off"><a href="/esp/Inversores/Formacion/Invertir/FAQS.aspx" target="_self">Preguntas Frecuentes</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m394"><div class="MenuLink Off"><a href="/esp/Inversores/MercadoEsp.aspx" target="_self">El Mercado de Valores Español</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m398"><div class="MenuLink Off"><a href="http://biblioteca.bolsasymercados.es/opac/" target="_blank">Biblioteca BME</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m399"><div class="MenuLink Off"><a href="http://publicaciones.bolsasymercados.es/revistas.html" target="_blank">Ediciones Digitales</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m400"><div class="MenuLink Off"><a href="/esp/aspx/Inversores/Agenda/Agenda.aspx" target="_self">Agenda del Inversor</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m406"><div class="MenuLink Off"><a href="/esp/Inversores/ServInversores.aspx" target="_self">Servicios para Inversores</a></div></div>
+</div>
+<div class="Menu1 MenuDiv Blanco Off" menu="m407"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">PARA EMPRESAS</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m407">
+<div class="Menu2 MenuDiv Off" menu="m408"><div class="MenuLink Off"><a href="/esp/ParaEmp/ComoCotizar/ComoCotizar1.aspx" target="_self">Cómo cotizar en Bolsa</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m414"><div class="MenuLink Off"><a href="/esp/ParaEmp/VenCotizar/VenCotizar1.aspx" target="_self">Ventajas de Cotizar en Bolsa</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m421"><div class="MenuLink Off"><a href="http://www.bolsasymercados.es/BME_4Companies/esp" target="_blank">BME 4Companies</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m422"><div class="MenuLink Off"><a href="/esp/ParaEmp/Eventos-Corporativos.aspx" target="_self">Eventos Corporativos</a></div></div>
+</div>
+<div class="Menu1 MenuDiv Blanco Off" menu="m423"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">PARA MIEMBROS Y PROFESIONALES</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m423">
+<div class="Menu2 MenuDiv Off" menu="m424"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Contratos IBEX</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m424">
+<div class="Menu3 MenuDiv Off" menu="m425"><div class="MenuLink Off"><a href="/esp/Miembros/Ibex/IBEXContratoLicenciaUso.aspx" target="_self">Contrato Licencia Uso</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m426"><div class="MenuLink Off"><a href="/esp/Miembros/Ibex/IBEXContratoLicenciaUso.aspx?2" target="_self">Contrato Marco Licencia Uso</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m427"><div class="MenuLink Off"><a href="/esp/Miembros/Ibex/Contacto.aspx" target="_self">Contacto</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m428"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/listadodevalores.pdf')" target="_self">Listado de Valores</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m429"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Modelo de Mercado</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m429">
+<div class="Menu3 MenuDiv Off" menu="m430"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/docsSubidos/SIBE/modelomercado.pdf')" target="_self">Acciones</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m431"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/docsSubidos/SIBE/modelomercadoETF.pdf')" target="_self">ETFs</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m432"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/docsSubidos/SIBE/mdlomdowarrcertotros.pdf')" target="_self">Warrants</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m433"><div class="MenuLink MenuConOp Off"><a href="/esp/Miembros/AccesoMercado.aspx" target="_self">Acceso al Mercado</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m433">
+<div class="Menu3 MenuDiv Off" menu="m434"><div class="MenuLink Off"><a href="/esp/Miembros/AplicExternas.aspx" target="_self">Aplicaciones externas</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m435"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">Tarifas</a></div></div>
+<div class="Menu3 MenuSubOp" menu="m435">
+<div class="Menu3 MenuDiv Off" menu="m436"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Miembros/tarifasSB.pdf')" target="_self">Sociedad de Bolsas</a></div></div>
+<div class="Menu3 MenuDiv Off" menu="m437"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Miembros/TarifasRectoras.pdf')" target="_self">Rectoras</a></div></div>
+</div>
+<div class="Menu2 MenuDiv Off" menu="m438"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/SBolsas/InformesSB/miembrosmercado.pdf')" target="_self">Miembros del Mercado</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m439"><div class="MenuLink Off"><a href="/esp/aspx/Regulacion/Regulacion.aspx?cod=SBolsas" target="_self">Regulación</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m440"><div class="MenuLink Off"><a href="javascript:sacaVentana('/docs/Acciones/sect.pdf')" target="_self">Clasificación sectorial</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m441"><div class="MenuLink Off"><a href="/esp/Miembros/Servicios/MiembrosServicios.aspx" target="_self">Servicios para miembros y profesionales</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m442"><div class="MenuLink Off"><a href="/esp/Miembros/ReformaT2S.aspx" target="_self">Reforma</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m443"><div class="MenuLink Off"><a href="/esp/Miembros/MIFID_II.aspx" target="_self">MiFID II</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m444"><div class="MenuLink Off"><a href="/esp/Miembros/BMESecuritiesSolutions.aspx" target="_self">BME Securities Solutions</a></div></div>
+</div>
+<div class="Menu1 MenuDiv Blanco Off" menu="m445"><div class="MenuLink MenuConOp Off"><a href="#" target="_self">PARA MEDIOS DE COMUNICACIÓN</a></div></div>
+<div class="Menu2 MenuSubOp" menu="m445">
+<div class="Menu2 MenuDiv Off" menu="m446"><div class="MenuLink Off"><a href="/esp/aspx/Prensa/SalaPrensa.aspx?tipo=07" target="_self">Notas de Prensa</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m447"><div class="MenuLink Off"><a href="/esp/aspx/Prensa/Contacte.aspx" target="_self">Contacto de Prensa</a></div></div>
+<div class="Menu2 MenuDiv Off" menu="m448"><div class="MenuLink Off"><a href="http://www.bolsasymercados.es/esp/Sala-Comunicacion" target="Prensa">Sala de Prensa</a></div></div>
+</div>
+</div>
+
+</div>
+<script language="javascript">
+var MenuIzqLoad_MenusSel = [  ];
+var MenuIzqLoad_MenusDespl = [  ];
+MenuIzqLoad(false,'General');
+</script>
+</td>
+        <td class="BaseCont">
+            
+            
+<script type="text/javascript" language="javascript">
+    var f, sel;
+    $(function() {
+        f = document.forms.aspnetForm;
+        sel = [ f.ctl00_Contenido_SelMercado, f.ctl00_Contenido_SelÍndice, f.ctl00_Contenido_SelSector ];
+    });
+    var rstSel = function (n) {
+        if (sel[n].selectedIndex > 0) {
+            for (var i=0; i<3; ++i)
+                if (n!=i) sel[i].selectedIndex = 0;
+        };
+    };
+    var chkSel = function () {
+        for (var i=0; i<3; ++i)
+            if (sel[i].selectedIndex > 0) return true;
+        return false;
+    }
+</script>
+<div class="col6"><form method="post" action="/esp/aspx/Mercados/Precios.aspx?indice=ESI250000000" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="thRFoJTRppPcHI8WZwmWyXQBAozx7Mb7TIoP4x5q02eA5N58Ze7oBMCMB0LWP9//+CoKZCS5EuBx664VtZkdtK5J5w4bvQNUkuflpCa/4eKqtZF4Xi2/O+sXZ/Jxy8qhQ29xROXL9Tg6t4gsTtfTYs1a3cXe+Tm8YbZMPSaRWq6qiXm/XiQzkVc8xJmwOEN9JgpiSQzYZbx7hjzix6G8094urn8IHP1ICXDutAMlpt1E9utRRap9RjupUtYoc0cRYHPaog==" />
+</div>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="DC05C2DC" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="XHd/xPKcvRC9ivGdQ+SNhWgsDtQHVzjU7HjOp2H+Yu0sclnCq4CcJ6oC0rKtk4l8jqfPDO7YYJ7Z2mrA2XvZpoueRHRjY+tR4LoWSq2fdcYZ3hoP77ahXHL07NQm3x7l4PssfcY5bJIBxI6gtm/NgpaChTYCYxFcpyCi6lSTofMrt1xhFj4H7vM6YXFXaOx2YxEBNOaqEClXIaCJO/JfKZuQxSVuzKOdD72IoebppdXfCSacZ0OqJQfyN6gNCQdDudWDz/EhkAcArF1psQc2D645Fd7fiHhO+Jd4/0tlCo/yiTVLEvs3cpOwXWxDmEncXcQqgcGLjHYsTpk/mFiSyXzO2wUeWcdY7QYCGW9xadnQsqLrbymL62XA07x/ao2ihkXV7olZLD3ZELLt5dM5alPpnBmywoKn33y+a1EfTGWz5gAgsOKKtwhpYNI1FNIkX/uepjYuQbkYHYFGZf9eZ9wj4aHMPyV4c7j9ezEmsneQ2NTDNhs4bp8vDQ5i9TEnQH6NEGr4iiP2WVwa8GKXlftS6YsEMTyys10a52aPCd1JGxmOgRi8dQBJG4vyzadq3wgAT1uYxcsTeAvruBO2At/xzxndhksLcIdAvTJKZ30CMWjZBXftt3tr/5OcW4MovBH4gBXg3lrqbUeeqw2DGJdw2jkzKSCd68ddJnRiG/V4ISALj8Ib6AH7R3wACEqVo49UP7BwtXOIqxMmy50YtnC+Prm3axKPuvgKMAmIGzQI3HXK/yhieF1CZDiHnnL5dRBPQQ==" />
+</div>
+<div class="TituloPag"></div>
+<table cellpadding="5" cellspacing="2" class="FrmBusq" style="width: 60%;" align="center"><tr>
+  <td class="Etiqueta">Mercado</td><td class="Campo"> <select name="ctl00$Contenido$SelMercado" id="ctl00_Contenido_SelMercado" onchange="rstSel(0);">
+	<option value="" style="color: #999999;">Seleccione mercado</option>
+	<option selected="selected" value="MC">Mercado Continuo</option>
+	<option value="ETF">ETFs</option>
+	<option value="LT">Latibex</option>
+	<option value="MABEE">MAB - EE</option>
+	<option value="2MER">2&#186; Mercado</option>
+	<option value="CMAD">Corros Madrid</option>
+	<option value="CBAR">Corros Barcelona</option>
+	<option value="CBIL">Corros Bilbao</option>
+	<option value="CVAL">Corros Valencia</option>
+
+</select> </td>
+  <td class="Etiqueta">Índice</td><td class="Campo"> <select name="ctl00$Contenido$SelÍndice" id="ctl00_Contenido_SelÍndice" onchange="rstSel(1);">
+	<option selected="selected" value="" style="color: #999999;">Seleccione &#237;ndice</option>
+	<option value="ESI100000000">IBEX 35&#174;</option>
+	<option value="ESI060000000">IBEX MEDIUM CAP&#174;</option>
+	<option value="ESI240000000">IBEX SMALL CAP&#174;</option>
+	<option value="ESI260000000">IBEX TOP Dividendo&#174;</option>
+	<option value="ES0S00000901">IBEX 35&#174; Bancos</option>
+	<option value="ES0S00000919">IBEX 35&#174; Energ&#237;a</option>
+	<option value="ES0S00000927">IBEX 35&#174; Construcci&#243;n</option>
+	<option value="ESI230000000">FTSE4Good IBEX</option>
+	<option value="ESI200000000">FTSE Latibex All Share</option>
+	<option value="ESI220000000">FTSE Latibex TOP</option>
+	<option value="ESI250000000">FTSE Latibex BRASIL</option>
+
+</select> </td>
+  <td class="Etiqueta">Sector</td><td class="Campo"> <select name="ctl00$Contenido$SelSector" id="ctl00_Contenido_SelSector" onchange="rstSel(2);">
+	<option selected="selected" value="" style="color: #999999;">Seleccione sector</option>
+	<option value="01">Petr&#243;leo y Energ&#237;a</option>
+	<option value="02">Mat.Basicos, Industria y Construcci&#243;n</option>
+	<option value="03">Bienes de Consumo</option>
+	<option value="04">Servicios de Consumo</option>
+	<option value="05">Servicios Financieros e Inmobiliarios</option>
+	<option value="06">Tecnolog&#237;a y Telecomunicaciones</option>
+
+</select> </td>
+  <td  class="Buscar">
+    <input type="submit" name="ctl00$Contenido$Consultar" value="Consultar" onclick="return chkSel();" id="ctl00_Contenido_Consultar" style="width:90px;" />
+  </td>
+ </tr></table>
+<br /><br />
+
+<div class="LinkAntSig">
+
+<div class="Ctr">Mercado Continuo</div>
+<div class="finFila"></div>
+</div>
+
+<div>
+
+</div>
+
+<div>
+	<table class="TblPort" cellspacing="0" cellpadding="3" id="ctl00_Contenido_tblAcciones" style="width:100%;border-collapse:collapse;">
+		<tr align="center">
+			<th scope="col">Nombre</th><th scope="col">&#218;lt.</th><th scope="col">% Dif.</th><th scope="col">M&#225;x.</th><th scope="col">M&#237;n.</th><th scope="col">Volumen</th><th scope="col">Efectivo (miles €)</th><th scope="col">Fecha</th><th class="Ult" scope="col">Hora</th>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105200416">ABENGOA A</a></td><td>0,0360</td><td class="DifClIg">0,00</td><td>0,0370</td><td>0,0350</td><td>14.744.449</td><td>531,61</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105200002">ABENGOA B</a></td><td>0,0140</td><td class="DifClBj">-6,67</td><td>0,0150</td><td>0,0140</td><td>108.344.849</td><td>1.519,10</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0111845014">ABERTIS</a></td><td>17,0200</td><td class="DifClBj">-0,58</td><td>17,1650</td><td>17,0200</td><td>4.391.193</td><td>74.894,80</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0125220311">ACCIONA</a></td><td>69,2500</td><td class="DifClBj">-1,68</td><td>70,8500</td><td>69,1500</td><td>158.508</td><td>11.045,12</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0132105018">ACERINOX</a></td><td>12,1450</td><td class="DifClSb">0,83</td><td>12,2100</td><td>12,0400</td><td>1.001.006</td><td>12.138,36</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0167050915">ACS</a></td><td>30,9700</td><td class="DifClBj">-3,80</td><td>32,1900</td><td>30,5200</td><td>1.736.458</td><td>54.136,25</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0106000013">ADOLFO DGUEZ</a></td><td>4,9100</td><td class="DifClSb">0,20</td><td>5,0100</td><td>4,9100</td><td>1.816</td><td>8,92</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0182045312">ADVEO</a></td><td>2,9000</td><td class="DifClBj">-0,68</td><td>2,9100</td><td>2,8800</td><td>11.880</td><td>34,37</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105046009">AENA</a></td><td>155,2500</td><td class="DifClBj">-0,48</td><td>156,6500</td><td>154,9000</td><td>212.690</td><td>33.097,04</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=NL0000235190">AIRBUS SE</a></td><td>74,4500</td><td class="DifClSb">0,47</td><td>74,5000</td><td>73,5500</td><td>8.287</td><td>612,79</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0126501131">ALANTRA</a></td><td>12,3200</td><td class="DifClSb">0,90</td><td>12,3200</td><td>12,0500</td><td>1.619</td><td>19,64</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0157097017">ALMIRALL</a></td><td>9,2000</td><td class="DifClBj">-3,16</td><td>9,5100</td><td>9,1900</td><td>279.698</td><td>2.592,45</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0109067019">AMADEUS</a></td><td>54,4700</td><td class="DifClSb">0,17</td><td>54,4800</td><td>54,0500</td><td>968.289</td><td>52.567,78</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0109260531">AMPER</a></td><td>0,2190</td><td class="DifClBj">-3,95</td><td>0,2280</td><td>0,2160</td><td>6.448.111</td><td>1.426,80</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=LU0569974404">APERAM</a></td><td>44,6100</td><td class="DifClIg">0,00</td><td>45,0300</td><td>44,7650</td><td>28</td><td>1,26</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105022000">APPLUS</a></td><td>10,7700</td><td class="DifClBj">-1,33</td><td>10,8900</td><td>10,7000</td><td>73.940</td><td>797,57</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=LU1598757687">ARCELORMIT.</a></td><td>22,6900</td><td class="DifClSb">1,57</td><td>22,6900</td><td>22,4500</td><td>676.570</td><td>15.283,15</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0109427734">ATRESMEDIA</a></td><td>8,8000</td><td class="DifClSb">0,46</td><td>8,9200</td><td>8,7200</td><td>513.316</td><td>4.527,04</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0121975009">AUX.FERROCAR</a></td><td>33,1500</td><td class="DifClBj">-0,54</td><td>33,4000</td><td>33,0300</td><td>35.736</td><td>1.185,95</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105026001">AXIARE</a></td><td>16,8350</td><td class="DifClSb">1,05</td><td>16,9900</td><td>16,6050</td><td>46.280</td><td>776,91</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0112458312">AZKOYEN</a></td><td>7,7900</td><td class="DifClBj">-1,89</td><td>7,9350</td><td>7,7150</td><td>9.232</td><td>72,38</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0113860A34">BA.SABADELL</a></td><td>1,7320</td><td class="DifClBj">-3,78</td><td>1,8010</td><td>1,7130</td><td>27.331.315</td><td>47.691,90</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0113900J37">BA.SANTANDER</a></td><td>5,6260</td><td class="DifClBj">-0,88</td><td>5,6990</td><td>5,5770</td><td>69.922.646</td><td>393.746,29</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0113307062">BANKIA</a></td><td>3,9750</td><td class="DifClBj">-0,38</td><td>4,0210</td><td>3,9350</td><td>6.295.476</td><td>25.008,93</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0113679I37">BANKINTER</a></td><td>7,7830</td><td class="DifClBj">-0,78</td><td>7,8700</td><td>7,7550</td><td>26.976.250</td><td>209.760,50</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0114297015">BARON DE LEY</a></td><td>105,1000</td><td class="DifClBj">-1,13</td><td>105,9000</td><td>105,0500</td><td>667</td><td>70,10</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0119037010">BAVIERA</a></td><td>8,6400</td><td class="DifClIg">0,00</td><td>8,6400</td><td>8,6400</td><td>82</td><td>0,71</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=DE000BAY0017">BAYER</a></td><td>109,3000</td><td class="DifClIg">0,00</td><td>112,0000</td><td>109,3000</td><td>281</td><td>31,33</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0113211835">BBVA</a></td><td>7,3780</td><td class="DifClBj">-1,10</td><td>7,4850</td><td>7,3340</td><td>29.346.250</td><td>217.401,69</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0172233118">BIOSEARCH</a></td><td>0,5000</td><td class="DifClBj">-3,85</td><td>0,5200</td><td>0,5000</td><td>53.985</td><td>27,66</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0115056139">BME</a></td><td>28,5000</td><td class="DifClBj">-1,04</td><td>28,9250</td><td>28,5000</td><td>81.637</td><td>2.334,52</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0115002018">BO.RIOJANAS</a></td><td>5,0600</td><td class="DifClBj">-0,98</td><td>5,2300</td><td>5,0100</td><td>1.700</td><td>8,54</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105271003">BORGES BAIN</a></td><td>37,0000</td><td class="DifClBj">-6,33</td><td>38,5000</td><td>37,0000</td><td>279</td><td>10,46</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0140609019">CAIXABANK</a></td><td>4,1510</td><td class="DifClBj">-1,91</td><td>4,2500</td><td>4,1160</td><td>15.699.118</td><td>65.344,79</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0114400007">CAM</a></td><td>1,3400</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105229001">CASH</a></td><td>2,5200</td><td class="DifClBj">-0,79</td><td>2,5480</td><td>2,5200</td><td>160.880</td><td>407,34</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=GB00BDCPN049">CCEP</a></td><td>33,9000</td><td class="DifClBj">-2,16</td><td>34,4500</td><td>33,9000</td><td>529</td><td>17,97</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105066007">CELLNEX</a></td><td>19,2200</td><td class="DifClBj">-0,21</td><td>19,3900</td><td>19,1400</td><td>432.363</td><td>8.325,29</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105630315">CIE AUTOMOT.</a></td><td>22,4350</td><td class="DifClBj">-0,84</td><td>22,6200</td><td>22,3350</td><td>69.525</td><td>1.559,63</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0158300410">CLEOP</a></td><td>1,1500</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0119256115">CODERE</a></td><td>0,3600</td><td class="DifClBj">-2,70</td><td>0,3800</td><td>0,3600</td><td>2.763.595</td><td>1.018,92</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0182170615">COEMAC</a></td><td>0,4000</td><td class="DifClIg">0,00</td><td>0,4150</td><td>0,3950</td><td>36.901</td><td>15,00</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0117160111">CORP. ALBA</a></td><td>50,8000</td><td class="DifClSb">0,20</td><td>51,0000</td><td>50,4000</td><td>4.771</td><td>241,73</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0162600417">D. FELGUERA</a></td><td>0,6000</td><td class="DifClBj">-4,76</td><td>0,6400</td><td>0,6000</td><td>705.900</td><td>429,93</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0110047919">DEOLEO</a></td><td>0,1950</td><td class="DifClSb">2,63</td><td>0,1950</td><td>0,1850</td><td>113.844</td><td>21,55</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0126775032">DIA</a></td><td>5,1350</td><td class="DifClBj">-1,42</td><td>5,2010</td><td>5,1100</td><td>2.268.226</td><td>11.670,56</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0126962002">DOGI</a></td><td>3,7500</td><td class="DifClBj">-1,83</td><td>3,8200</td><td>3,7500</td><td>9.433</td><td>35,51</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105130001">DOMINION</a></td><td>4,1700</td><td class="DifClSb">0,22</td><td>4,1700</td><td>4,1500</td><td>101.406</td><td>422,40</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0112501012">EBRO FOODS</a></td><td>20,1550</td><td class="DifClBj">-0,07</td><td>20,2050</td><td>19,8450</td><td>666.196</td><td>13.361,02</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=LU1048328220">EDREAMS</a></td><td>2,6010</td><td class="DifClSb">0,62</td><td>2,6350</td><td>2,5500</td><td>194.975</td><td>505,05</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0129743318">ELECNOR</a></td><td>11,9200</td><td class="DifClBj">-1,32</td><td>12,0700</td><td>11,9100</td><td>5.577</td><td>66,70</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0130960018">ENAGAS</a></td><td>24,0950</td><td class="DifClBj">-0,64</td><td>24,2650</td><td>24,0150</td><td>884.480</td><td>21.369,63</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0130625512">ENCE</a></td><td>4,1100</td><td class="DifClSb">0,37</td><td>4,1450</td><td>4,0750</td><td>631.666</td><td>2.594,39</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0130670112">ENDESA</a></td><td>19,8900</td><td class="DifClBj">-1,31</td><td>20,1500</td><td>19,8100</td><td>1.467.132</td><td>29.203,17</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0125140A14">ERCROS</a></td><td>2,9680</td><td class="DifClBj">-4,17</td><td>3,1410</td><td>2,9600</td><td>385.428</td><td>1.161,96</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0168561019">EUROPAC</a></td><td>7,6800</td><td class="DifClSb">0,07</td><td>7,7700</td><td>7,6300</td><td>90.051</td><td>692,29</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105075008">EUSKALTEL</a></td><td>8,1000</td><td class="DifClBj">-0,58</td><td>8,1910</td><td>8,0060</td><td>417.220</td><td>3.398,78</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0172708234">EZENTIS</a></td><td>0,7150</td><td class="DifClBj">-3,12</td><td>0,7400</td><td>0,7120</td><td>1.025.308</td><td>740,99</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0134950F36">FAES FARMA</a></td><td>2,8150</td><td class="DifClBj">-2,26</td><td>2,8800</td><td>2,8000</td><td>603.287</td><td>1.702,51</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0122060314">FCC</a></td><td>8,4420</td><td class="DifClSb">2,06</td><td>8,6000</td><td>8,2950</td><td>102.319</td><td>863,00</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0118900010">FERROVIAL</a></td><td>18,7450</td><td class="DifClBj">-0,50</td><td>18,8550</td><td>18,6250</td><td>1.475.238</td><td>27.647,03</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0136463017">FERSA</a></td><td>0,4800</td><td class="DifClBj">-2,04</td><td>0,4950</td><td>0,4800</td><td>51.022</td><td>24,72</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0137650018">FLUIDRA</a></td><td>8,7700</td><td class="DifClBj">-0,11</td><td>8,8000</td><td>8,6500</td><td>117.514</td><td>1.027,98</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0140441017">FUNESPAÑA</a></td><td>7,2100</td><td class="DifClIg">0,00</td><td>7,2100</td><td>7,2100</td><td>260</td><td>1,87</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0141571192">G.A.M.</a></td><td>1,5200</td><td class="DifClBj">-2,56</td><td>1,5800</td><td>1,5200</td><td>8.361</td><td>12,90</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0116870314">GAS NATURAL</a></td><td>19,1850</td><td class="DifClBj">-0,49</td><td>19,2650</td><td>19,1000</td><td>24.086.135</td><td>462.455,27</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105223004">GESTAMP</a></td><td>5,3770</td><td class="DifClBj">-0,04</td><td>5,4500</td><td>5,3770</td><td>514.814</td><td>2.776,56</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0116920333">GR.C.OCCIDEN</a></td><td>35,1700</td><td class="DifClSb">0,54</td><td>35,3600</td><td>34,8300</td><td>74.641</td><td>2.615,98</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0171996087">GRIFOLS CL.A</a></td><td>23,4150</td><td class="DifClBj">-1,49</td><td>23,7550</td><td>23,3450</td><td>609.117</td><td>14.321,37</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0171996095">GRIFOLS CL.B</a></td><td>17,1500</td><td class="DifClBj">-1,58</td><td>17,4950</td><td>17,1150</td><td>71.158</td><td>1.225,83</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105019006">HISPANIA</a></td><td>15,1350</td><td class="DifClSb">0,50</td><td>15,2100</td><td>14,8550</td><td>210.618</td><td>3.165,45</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0177542018">IAG</a></td><td>6,7330</td><td class="DifClBj">-1,84</td><td>6,8440</td><td>6,7160</td><td>2.333.232</td><td>15.793,25</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0144580Y14">IBERDROLA</a></td><td>6,7130</td><td class="DifClBj">-0,55</td><td>6,7800</td><td>6,7010</td><td>12.985.555</td><td>87.345,30</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0147561015">IBERPAPEL</a></td><td>26,4700</td><td class="DifClIg">0,00</td><td>26,5700</td><td>26,1300</td><td>131</td><td>3,46</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0148396007">INDITEX</a></td><td>32,4100</td><td class="DifClBj">-0,84</td><td>32,4300</td><td>31,7200</td><td>5.802.180</td><td>186.932,85</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0118594417">INDRA A</a></td><td>13,5200</td><td class="DifClBj">-0,73</td><td>13,6500</td><td>13,4300</td><td>670.427</td><td>9.066,91</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0139140174">INM.COLONIAL</a></td><td>8,4440</td><td class="DifClBj">-0,18</td><td>8,5010</td><td>8,4200</td><td>605.747</td><td>5.125,48</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0154653911">INM.DEL SUR</a></td><td>11,2400</td><td class="DifClBj">-0,53</td><td>11,2900</td><td>11,2400</td><td>1.441</td><td>16,22</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0152768612">INYPSA</a></td><td>0,1750</td><td class="DifClBj">-2,78</td><td>0,1800</td><td>0,1700</td><td>3.918.162</td><td>685,36</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105015012">LAR ESPAÑA</a></td><td>8,2200</td><td class="DifClBj">-0,60</td><td>8,2940</td><td>8,2110</td><td>56.250</td><td>462,84</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0168675090">LIBERBANK</a></td><td>0,7800</td><td class="DifClBj">-2,13</td><td>0,8020</td><td>0,7650</td><td>2.464.840</td><td>1.952,44</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0158480311">LINGOTES ESP</a></td><td>15,1600</td><td class="DifClBj">-2,60</td><td>15,6850</td><td>15,1300</td><td>8.708</td><td>133,25</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105027009">LOGISTA</a></td><td>19,7050</td><td class="DifClBj">-0,73</td><td>19,9800</td><td>19,6900</td><td>229.692</td><td>4.547,83</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0124244E34">MAPFRE</a></td><td>2,8470</td><td class="DifClBj">-1,18</td><td>2,8850</td><td>2,8390</td><td>4.713.450</td><td>13.441,56</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0184696013">MASMOVIL</a></td><td>64,6500</td><td class="DifClBj">-3,52</td><td>67,0000</td><td>64,6500</td><td>17.374</td><td>1.138,33</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0152503035">MEDIASET</a></td><td>9,5700</td><td class="DifClSb">0,74</td><td>9,6090</td><td>9,4800</td><td>780.367</td><td>7.466,13</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0176252718">MELIA HOTELS</a></td><td>12,0550</td><td class="DifClBj">-0,74</td><td>12,2150</td><td>12,0550</td><td>413.228</td><td>5.000,35</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105025003">MERLIN</a></td><td>11,7000</td><td class="DifClBj">-0,43</td><td>11,7550</td><td>11,6750</td><td>1.959.307</td><td>22.936,06</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0164180012">MIQUEL COST.</a></td><td>31,7500</td><td class="DifClSb">0,79</td><td>31,8700</td><td>31,4200</td><td>7.198</td><td>228,32</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0116494016">MONTEBALITO</a></td><td>2,6700</td><td class="DifClSb">0,56</td><td>2,6750</td><td>2,5500</td><td>20.532</td><td>53,38</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0165515117">NATRA</a></td><td>0,4500</td><td class="DifClBj">-1,10</td><td>0,4550</td><td>0,4400</td><td>60.781</td><td>27,21</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105043006">NATURHOUSE</a></td><td>4,3060</td><td class="DifClBj">-0,55</td><td>4,3490</td><td>4,2510</td><td>39.943</td><td>171,71</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105251005">NEINOR</a></td><td>18,4750</td><td class="DifClBj">-1,20</td><td>18,6950</td><td>18,4200</td><td>117.834</td><td>2.181,19</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0161560018">NH HOTEL</a></td><td>5,7700</td><td class="DifClSb">0,35</td><td>5,8000</td><td>5,7000</td><td>1.399.233</td><td>8.040,08</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0166300212">NICO.CORREA</a></td><td>2,8000</td><td class="DifClBj">-3,28</td><td>2,9550</td><td>2,8000</td><td>53.394</td><td>152,76</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0150480111">NYESA</a></td><td>0,1700</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0142090317">OHL</a></td><td>3,3200</td><td class="DifClBj">-3,77</td><td>3,4890</td><td>3,3000</td><td>1.783.862</td><td>6.003,20</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0167733015">ORYZON</a></td><td>2,0840</td><td class="DifClBj">-0,76</td><td>2,1600</td><td>2,0840</td><td>6.551</td><td>14,02</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105131009">PARQUES RSC</a></td><td>13,5100</td><td class="DifClBj">-3,15</td><td>14,0000</td><td>13,5100</td><td>219.904</td><td>2.983,86</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0169350016">PESCANOVA</a></td><td>1,2640</td><td class="DifClBj">-0,47</td><td>1,2810</td><td>1,2510</td><td>155.059</td><td>195,91</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0169501030">PHARMA MAR</a></td><td>3,4250</td><td class="DifClBj">-2,42</td><td>3,5550</td><td>3,3800</td><td>874.590</td><td>3.012,50</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0170884417">PRIM</a></td><td>10,3800</td><td class="DifClBj">-0,95</td><td>10,4000</td><td>10,2100</td><td>1.981</td><td>20,55</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0171743901">PRISA</a></td><td>3,2090</td><td class="DifClBj">-1,32</td><td>3,3000</td><td>3,1790</td><td>35.110</td><td>113,20</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0175438003">PROSEGUR</a></td><td>6,0000</td><td class="DifClBj">-0,99</td><td>6,0800</td><td>5,9500</td><td>184.044</td><td>1.104,12</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0110944172">QUABIT</a></td><td>1,7190</td><td class="DifClSb">0,59</td><td>1,7300</td><td>1,7080</td><td>64.576</td><td>110,74</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0173093024">R.E.C.</a></td><td>17,9900</td><td class="DifClBj">-0,91</td><td>18,1650</td><td>17,9350</td><td>1.242.603</td><td>22.387,61</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0173908015">REALIA</a></td><td>1,0650</td><td class="DifClBj">-0,93</td><td>1,0800</td><td>1,0550</td><td>124.610</td><td>133,19</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0165359029">REIG JOFRE</a></td><td>2,7000</td><td class="DifClBj">-0,07</td><td>2,7390</td><td>2,6900</td><td>19.926</td><td>53,87</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=IT0001178299">RENO M. S/A</a></td><td>0,5410</td><td class="DifClSb">0,37</td><td>0,5570</td><td>0,5210</td><td>201.230</td><td>109,07</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=IT0001178240">RENO M.CONV.</a></td><td>0,7000</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0173358039">RENTA 4</a></td><td>5,9300</td><td class="DifClBj">-0,34</td><td>5,9500</td><td>5,9300</td><td>1.489</td><td>8,83</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0173365018">RENTA CORP.</a></td><td>3,2100</td><td class="DifClSb">2,23</td><td>3,2350</td><td>3,1050</td><td>64.346</td><td>204,65</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0173516115">REPSOL</a></td><td>15,3450</td><td class="DifClSb">0,56</td><td>15,3700</td><td>15,1600</td><td>11.367.684</td><td>173.256,11</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0122761010">REYAL URBIS</a></td><td>0,1240</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0157261019">ROVI</a></td><td>16,0200</td><td class="DifClBj">-2,73</td><td>16,3200</td><td>15,7100</td><td>3.146</td><td>50,12</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0182870214">SACYR</a></td><td>2,2700</td><td class="DifClSb">0,98</td><td>2,2700</td><td>2,2100</td><td>2.009.986</td><td>4.514,22</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105058004">SAETA YIELD</a></td><td>10,0400</td><td class="DifClSb">0,35</td><td>10,1400</td><td>9,9400</td><td>104.212</td><td>1.047,29</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0180918015">SAN JOSE</a></td><td>3,0200</td><td class="DifClBj">-3,51</td><td>3,1600</td><td>3,0100</td><td>175.747</td><td>537,56</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0143421073">SERVICE P.S.</a></td><td>1,0600</td><td class="DifClBj">-0,28</td><td>1,0600</td><td>1,0500</td><td>9.725</td><td>10,22</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0143416115">SIEMENS GAME</a></td><td>11,5250</td><td class="DifClSb">0,04</td><td>11,8250</td><td>11,3150</td><td>3.431.283</td><td>39.709,44</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0165380017">SNIACE</a></td><td>0,1830</td><td class="DifClSb">1,10</td><td>0,1930</td><td>0,1800</td><td>9.611.702</td><td>1.797,38</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0165386014">SOLARIA</a></td><td>1,4400</td><td class="DifClBj">-1,71</td><td>1,4750</td><td>1,4300</td><td>177.505</td><td>258,39</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0138109014">SOTOGRANDE</a></td><td>3,0000</td><td class="DifClSb">7,53</td><td>3,0000</td><td>2,9200</td><td>4.560</td><td>13,38</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105065009">TALGO</a></td><td>4,8150</td><td class="DifClSb">0,46</td><td>4,8450</td><td>4,7550</td><td>77.124</td><td>369,89</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0178165017">TEC.REUNIDAS</a></td><td>27,4750</td><td class="DifClSb">0,71</td><td>27,5100</td><td>27,1350</td><td>358.955</td><td>9.819,10</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0178430E18">TELEFONICA</a></td><td>9,1400</td><td class="DifClBj">-0,52</td><td>9,2490</td><td>9,1010</td><td>15.443.097</td><td>141.266,73</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0105128005">TELEPIZZA</a></td><td>4,9900</td><td class="DifClSb">3,96</td><td>5,1100</td><td>4,8860</td><td>689.444</td><td>3.482,50</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0132945017">TUBACEX</a></td><td>3,2150</td><td class="DifClSb">0,31</td><td>3,2400</td><td>3,2000</td><td>187.888</td><td>604,35</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0180850416">TUBOS REUNI.</a></td><td>0,9800</td><td class="DifClIg">0,00</td><td>0,9950</td><td>0,9800</td><td>71.616</td><td>70,49</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0180907000">UNICAJA</a></td><td>1,2920</td><td class="DifClBj">-0,46</td><td>1,3100</td><td>1,2800</td><td>893.949</td><td>1.158,71</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0182280018">URBAS</a></td><td>0,0170</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlIg" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0183304312">VERTICE 360</a></td><td>0,0440</td><td class="DifClIg">0,00</td><td>-</td><td>-</td><td>-</td><td>-</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0183746314">VIDRALA</a></td><td>69,8500</td><td class="DifClBj">-1,48</td><td>71,0500</td><td>69,0500</td><td>33.995</td><td>2.421,38</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0184262212">VISCOFAN</a></td><td>51,5000</td><td class="DifClBj">-0,46</td><td>51,8700</td><td>51,4800</td><td>68.783</td><td>3.545,53</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlSb" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0114820113">VOCENTO</a></td><td>1,4000</td><td class="DifClSb">0,36</td><td>1,4450</td><td>1,3800</td><td>78.322</td><td>109,55</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr><tr align="right">
+			<td class="DifFlBj" align="left"><a href="/esp/aspx/Empresas/FichaValor.aspx?ISIN=ES0184933812">ZARDOYA OTIS</a></td><td>9,2600</td><td class="DifClBj">-0,11</td><td>9,2700</td><td>9,1700</td><td>190.051</td><td>1.755,33</td><td align="center">20/09/2017</td><td class="Ult" align="center">Cierre</td>
+		</tr>
+	</table>
+</div>
+
+
+
+
+
+<div class="Nota"><u>Precios</u> expresados en euros.<br />
+<u>Efectivo</u> expresado en miles de euros.<br />
+El <u>volumen y efectivo</u> para cada valor incluye todas las operaciones realizadas hasta el cierre de la sesión de contratación. El <u>volumen y efectivo total</u> incluyendo las operaciones especiales realizadas después del cierre de la sesión está disponible en la consulta histórica.<br />
+</div>
+
+</form></div>
+
+            <div class="finFila"></div>
+        </td>
+    </tr><tr>
+        <td class="BaseIzq noimpr"></td>
+        <td class="BaseSep noimpr"></td>
+        <td colspan="2"><div id="capaIconosRRSS" class="noimpr">
+            Síguenos en:<br />
+            <ul><li class="mclick"><a href="https://twitter.com/GrupoBME" target="_blank">&nbsp;<img src="/images/Twitter.png" border="0" align="absmiddle" alt="Twitter" />&nbsp;</a></li><li class="mclick"><a href="http://www.flickr.com/photos/archivobme/" target="_blank">&nbsp;<img src="/images/Flickr.png" border="0" align="absmiddle" alt="Flickr" />&nbsp;</a></li><li class="mclick"><a href="http://www.linkedin.com/company/grupo-bme" target="_blank">&nbsp;<img src="/images/Linkedin.png" border="0" align="absmiddle" alt="Linkedin" />&nbsp;</a></li><li class="mclick"><a href="http://www.youtube.com/user/GrupoBME?ob=0&feature=results_main" target="_blank">&nbsp;<img src="/images/Youtube.png" border="0" align="absmiddle" alt="YouTube" />&nbsp;</a></li></ul>
+        </div></td>
+        <td class="BaseSep noimpr"></td>
+        <td class="BaseDcha noimpr"></td>
+    </tr><tr valign="top">
+        <td class="PieIzq noimpr"></td>
+        <td class="PieFondo BaseSep noimpr"></td>
+        <td colspan="2" class="PieFondo"><div>
+            <div id="PieOps" class="noimpr"><ul><li class="mclick"><a href="/esp/aspx/Comun/MapaWeb.aspx" target="_self">&nbsp;Mapa web&nbsp;</a></li><li class="mclick"><a href="javascript:Disclaimer('esp')" target="_self">&nbsp;Disclaimer&nbsp;</a></li><li class="mclick"><a href="/esp/BMadrid/AvisoLegal.aspx" target="_self">&nbsp;Aviso Legal&nbsp;</a></li><li class="mclick"><a href="/esp/PoliticaCookies.aspx" target="_self">&nbsp;Políticas de Cookies&nbsp;</a></li><li class="mclick"><a href="http://www.bolsasymercados.es/esp/Accionistas-Inversores/Inf-Economica/Promedio_pago_a_proveedores" target="_blank">&nbsp;Pago proveedores&nbsp;</a></li></ul></div>
+            <div id="PieWebs" class="noimpr"><form id="formWeb">
+                <select name="ctl00$webs" id="ctl00_webs">
+	<option value="">Webs del grupo BME</option>
+	<option value="http://www.bolsasymercados.es">BOLSAS Y MERCADOS ESPA&#209;OLES</option>
+	<option value="http://www.bmerv.es">BME RENTA VARIABLE</option>
+	<option value="http://www.bolsamadrid.es">BOLSA DE MADRID</option>
+	<option value="http://www.borsabcn.es">BOLSA DE BARCELONA</option>
+	<option value="http://www.bolsabilbao.es">BOLSA DE BILBAO</option>
+	<option value="http://www.bolsavalencia.es">BOLSA DE VALENCIA</option>
+	<option value="http://www.aiaf.es/">BME RENTA FIJA</option>
+	<option value="http://www.bmemarketdata.es/">BME MARKET DATA</option>
+	<option value="http://www.bmeinnova.com">BME INNOVA</option>
+	<option value="http://www.bmeclima.es">BME CLIMA</option>
+	<option value="http://www.bmeclearing.es/">BME CLEARING</option>
+	<option value="http://www.iberclear.es/">IBERCLEAR</option>
+	<option value="http://www.infobolsa.es">INFOBOLSA</option>
+	<option value="http://www.institutobme.es">INSTITUTO BME</option>
+	<option value="http://www.latibex.com">LATIBEX</option>
+	<option value="http://www.bolsasymercados.es/mab">MAB</option>
+	<option value="http://www.meff.com/">MEFF</option>
+	<option value="http://www.regis-tr.com/">REGIS-TR</option>
+	<option value="http://www.visual-trader.com">VISUAL TRADER</option>
+</select>
+                <div class="BtnGris mclick" style="display: inline; margin-left: 10px;">
+                    <div class="BtnFlechaBlancaDcha" style="display: inline;">
+                        <a href="javascript:var o=document.forms.formWeb.ctl00_webs.value;if(o && o.length>0) window.open(o,'_blank');void(0);">&nbsp;IR</a>
+                    </div>
+                </div>
+            </form></div>
+            <div id="PieCopyright">Copyright © Bolsas y Mercados Españoles 2017</div>
+        </div></td>
+        <td class="PieFondo BaseSep noimpr"></td>
+        <td class="PieDcha noimpr"></td>
+    </tr></table>
+</div></body>
+</html>

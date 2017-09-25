@@ -2,8 +2,8 @@ package utilidades;
 
 public class Constantes {
 
-	public static final String PATH_DIR_DATOS_BRUTOS = "../DATOS_BRUTO/";
-	public static final String PATH_DIR_DATOS_LIMPIOS = "../DATOS_LIMPIO/";
+	public static final String PATH_DIR_DATOS_BRUTOS = "/home/carloslinux/Desktop/DATOS_BRUTO/";
+	public static final String PATH_DIR_DATOS_LIMPIOS = "/home/carloslinux/Desktop/DATOS_LIMPIO/";
 
 	public static final String BOE_IN = "BOE_in";
 	public static final String BOE_OUT = "BOE_out";
