@@ -15,12 +15,12 @@ import utilidadestest.PadreTest;
  */
 public class DM02ParserTest extends PadreTest {
 
-	DM01Parser instancia;
+	DM02Parser instancia;
 	ResourceFile res;
 
 	@Before
 	public void iniciar() {
-		instancia = new DM01Parser();
+		instancia = new DM02Parser();
 		res = new ResourceFile("/" + instancia.getPathEntrada(TAG_DIA_TEST));
 	}
 

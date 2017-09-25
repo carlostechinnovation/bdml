@@ -15,12 +15,12 @@ import utilidadestest.PadreTest;
  */
 public class GF06ParserTest extends PadreTest {
 
-	GF05Parser instancia;
+	GF06Parser instancia;
 	ResourceFile res;
 
 	@Before
 	public void iniciar() {
-		instancia = new GF05Parser();
+		instancia = new GF06Parser();
 		res = new ResourceFile("/" + instancia.getPathEntrada(TAG_DIA_TEST));
 	}
 
