@@ -26,7 +26,7 @@ mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_periodos
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_periodos LIMIT 100;"
 
 
-################# Análisis MOD003_001: Las 10 empresas empresas que más crecieron en los periodos de CRISIS ######
+################# Análisis MOD003_001: Las empresas empresas que más crecieron en los periodos de CRISIS o BONANZA ######
 #A.Limpieza
 DROP TABLE datos_desa.tb_mod003_001_a;
 DROP TABLE datos_desa.tb_mod003_001_b;
@@ -76,8 +76,6 @@ ORDER BY id_periodo ASC, diferencia_porcentaje DESC;
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_mod003_001_b WHERE diferencia_porcentaje > 10;" > periodos_incremento_precios.txt
 
 #################################################################################
-
-
 
 
 
