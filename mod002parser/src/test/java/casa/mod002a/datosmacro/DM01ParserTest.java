@@ -27,9 +27,9 @@ public class DM01ParserTest extends PadreTest {
 	@Test
 	public void testParsear() throws Exception {
 		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
-		assert (out.startsWith("J20170914174424|Brasil|8.2|0.60|2.30|2016|02|01|||||||6.40|8.80|2015|08|01\n" + 
-				"J20170914174424"));
-		assert (out.contains("\nJ20170914174424|España"));
+		assert (out.startsWith(
+				TAG_DIA_TEST + "|Brasil|8.2|0.60|2.30|2016|02|01|||||||6.40|8.80|2015|08|01\n" + TAG_DIA_TEST));
+		assert (out.contains("\n" + TAG_DIA_TEST + "|España"));
 	}
 
 }

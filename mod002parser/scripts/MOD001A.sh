@@ -153,6 +153,33 @@ curl 'https://www.datosmacro.com/divisas' -H 'Accept: text/html,application/xhtm
 #DM_15: Materias primas
 curl 'https://www.datosmacro.com/materias-primas' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' > "${PATH_CARPETA}${TAG_DIA_DESCARGA}_${TAG_DM}_15"
 
+
+########### SHELL que invoca a NODE.js ###############################
+TAG_YAHOO_FINANCE="YF"
+
+#Instalacion en local del programa descargador de yahoo finance
+#npm install --save yahoo-finance
+
+#Ejecutar cuando se necesite descargar el historico, indicando rangos de fecha. En caso de reejecucion, se sobreescriben los ficheros brutos de ese anio.
+#./MOD001A_yahoo_finance.sh '2005'
+#./MOD001A_yahoo_finance.sh '2006'
+#./MOD001A_yahoo_finance.sh '2007'
+#./MOD001A_yahoo_finance.sh '2008'
+#./MOD001A_yahoo_finance.sh '2009'
+#./MOD001A_yahoo_finance.sh '2010'
+#./MOD001A_yahoo_finance.sh '2011'
+#./MOD001A_yahoo_finance.sh '2012'
+#./MOD001A_yahoo_finance.sh '2013'
+#./MOD001A_yahoo_finance.sh '2014'
+#./MOD001A_yahoo_finance.sh '2015'
+#./MOD001A_yahoo_finance.sh '2016'
+#./MOD001A_yahoo_finance.sh '2017'
+
+
+
+
+
+
 echo "Modulo 001A - FIN" 2>&1 1>>${PATH_LOG}
 
 

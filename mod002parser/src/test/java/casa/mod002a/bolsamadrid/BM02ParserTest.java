@@ -34,9 +34,9 @@ public class BM02ParserTest extends PadreTest {
 			String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
 
 			if (i == 1) {
-				assert (out.startsWith(
-						"J20170914174424|ES0105200002|ABENGOA, S.A.|Mat.Basicos, Industria y Construcción | Ingeniería y Otros\n" + 
-						"J20170914174424|ES0111845014"));
+				assert (out.startsWith(TAG_DIA_TEST
+						+ "|ES0105200002|ABENGOA, S.A.|Mat.Basicos, Industria y Construcción | Ingeniería y Otros\n"
+						+ TAG_DIA_TEST + "|ES0111845014"));
 			}
 		}
 

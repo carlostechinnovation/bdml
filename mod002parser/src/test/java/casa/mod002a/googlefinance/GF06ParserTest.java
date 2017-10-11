@@ -29,9 +29,8 @@ public class GF06ParserTest extends PadreTest {
 		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
 
 		assert (out.startsWith(
-				"J20170914174424|IKM|||707460621158239|1nkemia IUCT Group SA|-6.50|-0.41|2.04|-0.54|2.40|-0.33|3.47|-0.41|-0.33|-0.54\n"
-						+ "J20170914174424"));
-		assert (out.contains("\nJ20170914174424|ACS"));
+				TAG_DIA_TEST + "|IKM|||707460621158239|1nkemia IUCT Group SA|-|-|-|-0.78|-\n" + TAG_DIA_TEST));
+		assert (out.contains("\n" + TAG_DIA_TEST + "|ACS"));
 	}
 
 }
