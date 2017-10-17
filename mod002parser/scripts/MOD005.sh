@@ -143,11 +143,8 @@ mysql -u root --password=datos1986 -t --execute="SELECT id_periodo, ticker, prec
 
 
 
-
-
-
 #######################################################################################################################
-################# Análisis MOD005_003: 
+################# Análisis MOD005_003: Modelo predictivo SVC
 
 
 
