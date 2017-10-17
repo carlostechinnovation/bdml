@@ -118,7 +118,7 @@ public class IneParser extends ParserDeDia {
 	}
 
 	public String generarSqlCreateTable() {
-		return "CREATE TABLE datos_desa.tb_ine (tag_dia varchar(15), indicador varchar(30), "
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_ine (tag_dia varchar(15), indicador varchar(30), "
 				+ "periodo varchar(15), valor decimal(10,4), variacion_porcentaje decimal(10,4)" + ");";
 	}
 

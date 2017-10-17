@@ -42,7 +42,6 @@ import casa.mod002a.googlefinance.GF05Parser;
 import casa.mod002a.googlefinance.GF06Parser;
 import casa.mod002a.ine.IneParser;
 import utilidades.Constantes;
-import utilidades.MiFormateador;
 
 /**
  * @author root
@@ -138,6 +137,9 @@ public class Mod002Parser {
 			(new BM01Parser()).ejecutar(param2);
 			(new BM02Parser()).ejecutar(param2);
 			(new BM03Parser()).ejecutar(param2);
+			(new BM04Parser()).ejecutar(param2);
+			(new BM05Parser()).ejecutar(param2);
+			(new BM06Parser()).ejecutar(param2);
 
 			(new IneParser()).ejecutar(param2);
 

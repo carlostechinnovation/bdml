@@ -37,7 +37,7 @@ public class BM01Parser extends ParserDeDia {
 		int indiceMax = -1;
 		for (int i = 0; i < hijos.size(); i++) {
 			if (contadorMax < hijos.get(i).childNodeSize() && hijos.get(i).childNodeSize() > 2
-					&& hijos.get(i).childNode(1) instanceof Element ) {
+					&& hijos.get(i).childNode(1) instanceof Element) {
 				contadorMax = hijos.get(i).childNode(1).childNodeSize();
 				indiceMax = i;
 			}
@@ -93,9 +93,9 @@ public class BM01Parser extends ParserDeDia {
 
 	public String generarSqlCreateTable() {
 
-		return "CREATE TABLE datos_desa.tb_bm01 (tag_dia varchar(15), isin varchar(15), precio_ultimo decimal(8,4), "
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_bm01 (tag_dia varchar(15), isin varchar(15), precio_ultimo decimal(8,4), "
 				+ "porcentaje_diferencia decimal(5,2), max decimal(8,4), min decimal(8,4),"
-				+ "volumen varchar(12,0), efectivo_miles_euros decimal(10,2)" + ");";
+				+ "volumen decimal(12,0), efectivo_miles_euros decimal(10,2)" + ");";
 	}
 
 }

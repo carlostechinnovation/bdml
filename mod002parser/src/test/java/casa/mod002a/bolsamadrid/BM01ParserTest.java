@@ -6,6 +6,7 @@ package casa.mod002a.bolsamadrid;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import utilidades.ResourceFile;
 import utilidadestest.PadreTest;
 
@@ -27,7 +28,15 @@ public class BM01ParserTest extends PadreTest {
 	@Test
 	public void testParsear() throws Exception {
 		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
-		assert (out.startsWith("ES0105200416|0.0400|0.00|0.0400|0.0390|2269304|89.19\n" + "ES0"));
+		Assert.assertTrue(out.startsWith(
+				TAG_DIA_TEST + "|ES0111845014|17.0200|-0.58|17.1650|17.0200|4391193|74894.80\n" + TAG_DIA_TEST));
+	}
+
+	@Test
+	public void generarSqlCreateTableTest() {
+		String out = instancia.generarSqlCreateTable();
+		Assert.assertTrue(out != null);
+		Assert.assertTrue(out.contains("datos_desa.tb_bm01"));
 	}
 
 }

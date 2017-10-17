@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import utilidades.Constantes;
 import utilidades.ResourceFile;
 import utilidadestest.PadreTest;
@@ -24,7 +25,7 @@ public class BoeParserTest extends PadreTest {
 	@Test
 	public void testParsear() throws Exception {
 		String out = BoeParser.parsear(res.getContent());
-		assert (out.equals(TAG_DIA_TEST));
+		Assert.assertTrue(out.equals(TAG_DIA_TEST));
 	}
 
 }

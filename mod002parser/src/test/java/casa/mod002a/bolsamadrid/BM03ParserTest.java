@@ -6,6 +6,7 @@ package casa.mod002a.bolsamadrid;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import utilidades.ResourceFile;
 import utilidadestest.PadreTest;
 
@@ -27,10 +28,16 @@ public class BM03ParserTest extends PadreTest {
 	@Test
 	public void testParsear() throws Exception {
 		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
-		assert (out.startsWith(TAG_DIA_TEST
-				+ "|INTERNATIONAL CONSOLIDAT. AIRLINES GROUP|01/09/2017|Nº Reg.CNMV:| 256057|Programas de recompra de acciones, estabilización y autocartera|La Sociedad remite información sobre las operaciones efectuadas al amparo de su programa de recompra de acciones. \n"
+		Assert.assertTrue(out.startsWith(TAG_DIA_TEST
+				+ "|INTERNATIONAL CONSOL|01/09/2017|Nº Reg.CNMV:| 256057|Programas de recompr|La Sociedad remite información sobre las operaciones efectuadas al amparo de su programa de recompra de acciones. \n"
 				+ TAG_DIA_TEST + "|SOTOGRANDE"));
 
 	}
 
+	@Test
+	public void generarSqlCreateTableTest() {
+		String out = instancia.generarSqlCreateTable();
+		Assert.assertTrue(out != null);
+		Assert.assertTrue(out.contains("datos_desa.tb_bm03"));
+	}
 }

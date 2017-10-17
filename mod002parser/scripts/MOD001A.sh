@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PATH_LOG="/home/carloslinux/Desktop/descarga_bruto.log"
+PATH_SCRIPTS="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/"
 
 echo "Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${PATH_LOG}
 
@@ -8,29 +9,26 @@ PATH_CARPETA="/home/carloslinux/Desktop/DATOS_BRUTO/"
 PATH_JAR="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 
 
-##########################################
-TAG_BOE="BOE"
+######## BOE - DIA ##################################
+if [ $# -eq 0 ]
+  then
+    echo "ERROR Parametro de entrada vacio. Debes indicar el dia (BOE) que quieres procesar!"
+    exit -1
+fi
 
-#BOE_01: dia y hora oficial en este instante.
-curl 'https://www.boe.es/sede_electronica/informacion/hora_oficial.php' > "${PATH_CARPETA}${TAG_BOE}_in"
-sleep 3s
-FILE_BOE_OUT="${PATH_CARPETA}${TAG_BOE}_out"
+TAG_DIA_DESCARGA=${1}
+anio=${TAG_DIA_DESCARGA:1:4}
+mes=${TAG_DIA_DESCARGA:5:2}
+dia=${TAG_DIA_DESCARGA:7:2}
 
-rm ${FILE_BOE_OUT}
+echo 'ID de ejecucion parseado = '$anio'/'$mes'/'$dia
 
-java -jar ${PATH_JAR} "01" -Djava.util.logging.SimpleFormatter.format='%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %2$s %5$s%6$s%n' 2>>${PATH_LOG} 1>>${PATH_LOG}
-
-
-export TAG_DIA_DESCARGA=$(cat $FILE_BOE_OUT)
-
-desde_dia=$(cut -c 2-5 $FILE_BOE_OUT)
-desde_mes=$(cut -c 6-7 $FILE_BOE_OUT)
-desde_anio=$(cut -c 8-9 $FILE_BOE_OUT)
-hasta_dia=$(cut -c 2-5 $FILE_BOE_OUT)
-hasta_mes=$(cut -c 6-7 $FILE_BOE_OUT)
-hasta_anio=$(cut -c 8-9 $FILE_BOE_OUT)
-
-echo $TAG_DIA_DESCARGA 2>&1 1>>${PATH_LOG}
+desde_dia=$dia
+desde_mes=$mes
+desde_anio=$anio
+hasta_dia=$dia
+hasta_mes=$mes
+hasta_anio=$anio
 
 
 ##########################################
@@ -160,23 +158,8 @@ TAG_YAHOO_FINANCE="YF"
 #Instalacion en local del programa descargador de yahoo finance
 #npm install --save yahoo-finance
 
-#Ejecutar cuando se necesite descargar el historico, indicando rangos de fecha. En caso de reejecucion, se sobreescriben los ficheros brutos de ese anio.
-#./MOD001A_yahoo_finance.sh '2005'
-#./MOD001A_yahoo_finance.sh '2006'
-#./MOD001A_yahoo_finance.sh '2007'
-#./MOD001A_yahoo_finance.sh '2008'
-#./MOD001A_yahoo_finance.sh '2009'
-#./MOD001A_yahoo_finance.sh '2010'
-#./MOD001A_yahoo_finance.sh '2011'
-#./MOD001A_yahoo_finance.sh '2012'
-#./MOD001A_yahoo_finance.sh '2013'
-#./MOD001A_yahoo_finance.sh '2014'
-#./MOD001A_yahoo_finance.sh '2015'
-#./MOD001A_yahoo_finance.sh '2016'
-#./MOD001A_yahoo_finance.sh '2017'
-
-
-
+#Historico anual hasta hoy. En caso de reejecucion, se sobreescriben los ficheros brutos de ese anio.
+${PATH_SCRIPTS}'MOD001A_yahoo_finance.sh' ${anio}
 
 
 

@@ -6,6 +6,7 @@ package casa.mod002a.ine;
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import utilidades.ResourceFile;
 import utilidadestest.PadreTest;
 
@@ -27,8 +28,8 @@ public class IneParserTest extends PadreTest {
 	@Test
 	public void testParsear() throws Exception {
 		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
-		assert (out.startsWith("IPC |2017M08|101.553|1.6\n" + 				"EPA"));
-		assert (out.contains("Población total (miles) |2017"));
+		Assert.assertTrue(out.startsWith("IPC |2017M08|101.553|1.6\n" + "EPA"));
+		Assert.assertTrue(out.contains("Población total (miles) |2017"));
 	}
 
 }

@@ -59,20 +59,22 @@ public class BM03Parser extends ParserDeDia {
 			for (Node a : datosEmpresa) {
 				if (a instanceof Element) {
 					Element aa = (Element) a;
-					
-					for(Node aaa:aa.childNodes()) {
 
-					if (aaa instanceof Element) {
-						Node aaaa = aaa.childNodes().get(0);
-						out += Constantes.tratar(aaaa.toString(), 1) + Constantes.SEPARADOR_CAMPO;
+					for (Node aaa : aa.childNodes()) {
 
-					} else if (aaa instanceof TextNode) {
-						out += Constantes.tratar(aaa.toString(), 1) + Constantes.SEPARADOR_CAMPO;
+						if (aaa instanceof Element) {
+							Node aaaa = aaa.childNodes().get(0);
+							// "Nº Reg.CNMV:" ó "Latibex"
+							out += Constantes.tratar(aaaa.toString(), 1) + Constantes.SEPARADOR_CAMPO;
+
+						} else if (aaa instanceof TextNode) {
+							// Empresa
+							String empresa = Constantes.tratar(aaa.toString(), 1);
+							out += empresa.substring(0, Math.min(empresa.length(), STR_MAX))
+									+ Constantes.SEPARADOR_CAMPO;
+						}
+
 					}
-					
-					}
-					
-					
 
 				}
 			}
@@ -85,14 +87,20 @@ public class BM03Parser extends ParserDeDia {
 
 					Node titulo = bbb.get(0);
 					if (titulo.childNodeSize() > 0) {
-						out += Constantes.tratar(titulo.childNode(0).toString(), 1) + Constantes.SEPARADOR_CAMPO;
+						String tituloTruncado = Constantes.tratar(titulo.childNode(0).toString(), 1);
+						out += tituloTruncado.substring(0, Math.min(tituloTruncado.length(), STR_MAX))
+								+ Constantes.SEPARADOR_CAMPO;
+
 					} else {
 						out += "" + Constantes.SEPARADOR_CAMPO;
 					}
 
 					if (bbb.size() > 3) {
-						out += Constantes.tratar(
+						// texto_completo
+						String textoCompleto = Constantes.tratar(
 								Constantes.truncar(bbb.get(3).toString(), Constantes.BM03_LONGITUD_TRUNCATE), 1);
+						out += textoCompleto.substring(0, Math.min(textoCompleto.length(), STR_LARGO_MAX));
+
 					} else {
 						out += "" + Constantes.SEPARADOR_CAMPO;
 					}
@@ -108,8 +116,9 @@ public class BM03Parser extends ParserDeDia {
 
 	public String generarSqlCreateTable() {
 
-		return "CREATE TABLE datos_desa.tb_bm03 (tag_dia varchar(15), empresa varchar(50), "
-				+ "dia varchar(15), num_registro_cnmv varchar(10), descripcion varchar(255)" + ");";
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_bm03 (tag_dia varchar(15), empresa varchar(20), fecha_hecho_relevante INT,"
+				+ " tipo varchar(20), subtipo_num_cnmv INT, titulo varchar(20), texto_completo varchar(1500)" + ");";
+
 	}
 
 }

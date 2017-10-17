@@ -17,7 +17,7 @@ public class GF04Parser extends GFComun {
 
 	public String generarSqlCreateTable() {
 
-		return "CREATE TABLE datos_desa.tb_gf04 (tag_dia varchar(15), ticker varchar(10), is_active varchar(2), "
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_gf04 (tag_dia varchar(15), ticker varchar(10), is_active varchar(2), "
 				+ "is_supported_exchange varchar(2), id varchar(20), title varchar(255), "
 
 				+ "AINTCOV varchar(20), ReturnOnInvestmentTTM varchar(20), ReturnOnInvestment5Years varchar(20), ReturnOnInvestmentYear varchar(20),"

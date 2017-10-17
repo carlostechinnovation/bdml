@@ -8,12 +8,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import utilidades.Constantes;
-import utilidades.MiFormateador;
 
 public abstract class ParserDeDia implements ParserDeDiaAPI {
 
-	public static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());;
+	public static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
+	public static final Integer STR_MAX = Integer.valueOf(20);
+	public static final Integer STR_LARGO_MAX = Integer.valueOf(1500);
 
 	/**
 	 * @param TAG_DIA

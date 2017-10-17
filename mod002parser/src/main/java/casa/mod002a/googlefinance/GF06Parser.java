@@ -18,7 +18,7 @@ public class GF06Parser extends GFComun {
 	public String generarSqlCreateTable() {
 
 		// TODO
-		return "CREATE TABLE datos_desa.tb_gf06 (" + ");";
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_gf06 (" + ");";
 	}
 
 }
