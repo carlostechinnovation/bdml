@@ -108,19 +108,20 @@ fi
 
 
 ########### Periodos de crisis y de bonanza (identificados por mi mirando el IBEX) ####
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_stg_periodos; DROP TABLE datos_desa.tb_periodos;"
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_stg_periodos (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT, flag_subida BOOLEAN, desc varchar(30));"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20060901-20070601', 20060901, 20070601, 1,'burbuja_inmo_0607');"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20080602-20090202',20080602, 20090202, 0,'crisis_financiera_0809');"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20110201-20120502',20110201, 20120502, 0,'crisis_deuda_publica_1112');"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20130603-20150202', 20130603, 20150202, 1, 'bonanza_1315');"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20150803-20160201', 20150803, 20160201, 0, 'crisis_15');"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20160701-20170502', 20160701, 20170502, 1, 'bonanza_1617');"
-mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,desc) VALUES ('20170601-20171004', 20170601, 20171004, 0, 'crisis_17');"
-mysql -u root --password=datos1986 --execute="CREATE TABLE SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, SP.flag_subida, SP.desc, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos SP LIMIT 20;"
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_stg_periodos;"
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_stg_periodos (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT, flag_subida BOOLEAN, descripcion varchar(30));"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20060901-20070601', 20060901, 20070601, 1,'burbuja_inmo_0607');"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20080602-20090202',20080602, 20090202, 0,'crisis_financiera_0809');"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20110201-20120502',20110201, 20120502, 0,'crisis_deuda_publica_1112');"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20130603-20150202', 20130603, 20150202, 1, 'bonanza_1315');"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20150803-20160201', 20150803, 20160201, 0, 'crisis_15');"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20160701-20170502', 20160701, 20170502, 1, 'bonanza_1617');"
+mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20170601-20171004', 20170601, 20171004, 0, 'crisis_17');"
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_periodos;"
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_periodos AS SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, SP.flag_subida, SP.descripcion, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos SP LIMIT 20;"
 
 ########### Periodos cortos de FUERTES caidas en el IBEX ####
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_stg_periodos_fuertes_caidas_ibex; DROP TABLE datos_desa.tb_periodos_fuertes_caidas_ibex;"
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_stg_periodos_fuertes_caidas_ibex;"
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT);"
 mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20080515-20080615',20080515,20080615);"
 mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20081001-20081030',20081001,20081030);"
@@ -130,7 +131,8 @@ mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_peri
 mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20150801-20150930',20150801,20150930);"
 mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20151215-20160209',20151215,20160209);"
 mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20170715-20170901',20170715,20170901);"
-mysql -u root --password=datos1986 --execute="SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos_fuertes_caidas_ibex SP LIMIT 20;"
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_periodos_fuertes_caidas_ibex;"
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_periodos_fuertes_caidas_ibex AS SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos_fuertes_caidas_ibex SP LIMIT 20;"
 
 
 #################### Empresas de Google Finance #########

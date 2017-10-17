@@ -28,25 +28,25 @@ ${PATH_SCRIPTS}'MOD001A.sh' $TAG_DIA_DESCARGA
 #.${PATH_SCRIPTS}'/MOD001B.sh'
 
 #Limpieza basica (parseado, padding, diferenciales...) y tablas auxiliares utiles
-#${PATH_SCRIPTS}'MOD002A.sh' $TAG_DIA_DESCARGA
+${PATH_SCRIPTS}'MOD002A.sh' $TAG_DIA_DESCARGA
 
 #Limpieza inteligente (scaling, normalizacion...) que necesitan los algoritmos
-#${PATH_SCRIPTS}'MOD002B.sh'
+${PATH_SCRIPTS}'MOD002B.sh'
 
 #Análisis de datos: ESTADISTICA BASICA
-#${PATH_SCRIPTS}'MOD003A.sh'
+${PATH_SCRIPTS}'MOD003A.sh'
 
 #Generador de DATASETS
-#${PATH_SCRIPTS}'MOD003B.sh'
+${PATH_SCRIPTS}'MOD003B.sh'
 
 #INTELIGENCIA ARTIFICIAL
 #${PATH_SCRIPTS}'MOD004A.sh'
 
 #INFORMES (resultados)
-#${PATH_SCRIPTS}'MOD005.sh'
+${PATH_SCRIPTS}'MOD005.sh'
 
 #Análisis posterior
-#${PATH_SCRIPTS}'MOD006.sh'
+${PATH_SCRIPTS}'MOD006.sh'
 
 
 
