@@ -12,6 +12,8 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import casa.galgos.gbgb.GbgbCarrerasInfoUtil;
+import casa.galgos.gbgb.GbgbParserCarreras;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -54,6 +56,7 @@ public class Mod002Parser {
 	/**
 	 * PARAM1 - Tipo de proceso: 01 (obtener tag del dia con BoeParser) 02 (Generar
 	 * Sentencias Create table) 03 (Procesar datos de un dia)
+	 * 04-galgos-Descargar_GBGB
 	 * 
 	 * PARAM2 - Path entrada: TAG del Día.
 	 * 
@@ -61,14 +64,20 @@ public class Mod002Parser {
 	 */
 	public static void main(String[] args) {
 
-		System.out.println("INICIO");
 		MY_LOGGER.info("INICIO");
 
 		String param1 = args[0];
+		MY_LOGGER.info("param1=" + param1);
 		String param2 = null;
+		String param3 = null;
 
-		if (args.length == 2) {
+		if (args.length >= 2) {
 			param2 = args[1];
+			MY_LOGGER.info("param2=" + param2);
+		}
+		if (args.length >= 3) {
+			param3 = args[2];
+			MY_LOGGER.info("param3=" + param3);
 		}
 
 		String out = "";
@@ -158,6 +167,31 @@ public class Mod002Parser {
 			(new DM13Parser()).ejecutar(param2);
 			(new DM14Parser()).ejecutar(param2);
 			(new DM15Parser()).ejecutar(param2);
+
+		} else if (param1 != null && param1.equals("04") && param2 != null && param3 != null) {
+
+			String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";// Sin filtrar dia. Sirve para extraer
+																			// cookies y parametros ocultos...
+			String SUFIJO_CARRERAS_FILTRADAS = "_carreras_sin_filtrar_limpio";
+			// TODO DESCOMENTAR (new GbgbDownloader()).descargarCarreras(param3 +
+			// SUFIJO_CARRERAS_SIN_FILTRAR, true);
+			GbgbCarrerasInfoUtil infoUtil = (new GbgbParserCarreras()).ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
+
+			// TODO DESCOMENTAR
+			// if (infoUtil != null) {
+			// (new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, param3 +
+			// SUFIJO_CARRERAS_FILTRADAS,
+			// true);
+			//
+			// } else {
+			// MY_LOGGER.severe(
+			// "ERROR Esta vacio el objeto de info util (extraido de la pagina de carreras
+			// sin filtrar por dia)");
+			// }
+
+			// SALIDA:
+			// - Fichero bruto de carreras
+			// - Fichero bruto de galgos (historico)
 
 		} else {
 			MY_LOGGER.severe("ERROR Los parametros de entrada a Mod001Parser no son correctos.");

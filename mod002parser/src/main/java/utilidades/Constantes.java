@@ -15,6 +15,8 @@ public class Constantes {
 
 	public static final String OUT = "_OUT";
 
+	public static final String GALGOS_GBGB_CARRERAS = "http://www.gbgb.org.uk/Results.aspx";
+
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";
 

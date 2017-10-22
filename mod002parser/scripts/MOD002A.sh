@@ -72,6 +72,12 @@ done
 
 ###### YAHOO FINANCE (Solo ejecuto los lunes, porque realmente son datos historicos) (se podria ejecutar cada dia...) #########
 
+mysql -u root --password=datos1986 --execute="CREATE TABLE IF NOT EXISTS datos_desa.tb_yf01_previa (ticker varchar(10) DEFAULT NULL, date int(8) DEFAULT NULL, open decimal(14,4) DEFAULT NULL, high decimal(14,4) DEFAULT NULL, low decimal(14,4) DEFAULT NULL, close decimal(14,4) DEFAULT NULL, volumen bigint(20) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+
+mysql -u root --password=datos1986 --execute="CREATE TABLE IF NOT EXISTS datos_desa.tb_yf01 (ticker varchar(10) DEFAULT NULL, date int(8) DEFAULT NULL, open decimal(14,4) DEFAULT NULL, gap_high_low decimal(14,4) DEFAULT NULL, gap_close_open decimal(14,4) DEFAULT NULL, gap_high_close decimal(14,4) DEFAULT NULL, gap_close_low decimal(14,4) DEFAULT NULL, volumen bigint(20) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+
+
+#Una vez a la semana
 if [ ${dia_semana} = "L" ]
 then
 
@@ -86,19 +92,29 @@ then
     yf_empresa=$(echo ${yf_nombre_fichero} | cut -d"_" -f4)
 
     path_fichero_limpio=${PATH_DIR_OUT}${TAG_YF}"_"${anio}"_"${yf_empresa}
-    echo -e "CSV: "${path_fichero_limpio}
+    echo -e "CSV limpio: "${path_fichero_limpio}
     rm -f ${path_fichero_limpio}
 
     #procesar JSON hacia fichero CSV
     node "./MOD002A_yahoo_finance.js" ${PATH_DIR_IN}${yf_nombre_fichero} > ${path_fichero_limpio}
 
-    mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_yf01 WHERE ticker='${yf_empresa}' and (date >= ${anio}0101 AND date <= ${anio}1231); LOAD DATA LOCAL INFILE '${path_fichero_limpio}' INTO TABLE datos_desa.tb_yf01 FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES;" >&1
+    mysql -u root --password=datos1986 --execute="TRUNCATE TABLE datos_desa.tb_yf01_previa;"
+
+    mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${path_fichero_limpio}' INTO TABLE datos_desa.tb_yf01_previa FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES;" >&1
+    
+    echo -e "Insertando empresa: "${yf_empresa}
+    mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_yf01 WHERE ticker=${yf_empresa} AND date >=${anio}0000 AND date <=${anio}9999;" >&1
+
+    mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_yf01 (ticker, date, open, gap_high_low, gap_close_open, gap_high_close, gap_close_low, volumen) SELECT ticker, date, open, (high-low) AS gap_high_low, (close-open) AS gap_close_open, (high-close) AS gap_high_close, (close-low) AS gap_close_low, volumen FROM datos_desa.tb_yf01_previa WHERE date>=19950000 AND date<=20500000;" >&1
+
     
   done < "${yf_temp_files}"
+  
 
 fi
 
-
+echo -e "Filas insertadas en tabla de YAHOO FINANCE: "
+mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as contador FROM datos_desa.tb_yf01 LIMIT 1;"
 
 
 
