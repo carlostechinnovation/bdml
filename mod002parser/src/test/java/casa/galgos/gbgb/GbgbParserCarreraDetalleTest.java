@@ -23,14 +23,13 @@ public class GbgbParserCarreraDetalleTest {
 	@Test
 	public void testParsear() throws Exception {
 
-		GbgbCarreraDetalle out = GbgbParserCarreraDetalle.parsear(res.getContent());
+		GbgbCarreraDetalle out = GbgbParserCarreraDetalle.parsear(res.getContent("ISO-8859-1"));
 
 		Assert.assertTrue(out != null);
 		Assert.assertTrue(out.premio_primer_puesto.equals(43));
 		Assert.assertTrue(out.premio_otros.equals(30));
 		Assert.assertTrue(out.premio_total_carrera.equals(193));
 
-		// TODO Rellenar
 		Assert.assertTrue(out.going_allowance.equals(false));
 		Assert.assertTrue(out.fc_1.equals("2"));
 		Assert.assertTrue(out.fc_2.equals("1"));

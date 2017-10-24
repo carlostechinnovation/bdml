@@ -23,7 +23,7 @@ public class GbgbParserCarrerasDeUnDiaTest {
 	@Test
 	public void testParsear() throws Exception {
 
-		GbgbCarrerasDeUnDia out = GbgbParserCarrerasDeUnDia.parsear(res.getContent());
+		GbgbCarrerasDeUnDia out = GbgbParserCarrerasDeUnDia.parsear(res.getContent("ISO-8859-1"));
 
 		// TODO rellenar
 		Assert.assertTrue(true);

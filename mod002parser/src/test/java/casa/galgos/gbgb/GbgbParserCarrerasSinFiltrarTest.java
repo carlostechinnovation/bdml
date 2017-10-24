@@ -23,7 +23,7 @@ public class GbgbParserCarrerasSinFiltrarTest {
 	@Test
 	public void testParsear() throws Exception {
 
-		GbgbCarrerasInfoUtilHttp out = GbgbParserCarrerasSinFiltrar.parsear(res.getContent());
+		GbgbCarrerasInfoUtilHttp out = GbgbParserCarrerasSinFiltrar.parsear(res.getContent("ISO-8859-1"));
 
 		// TODO rellenar
 		Assert.assertTrue(out != null);

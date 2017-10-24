@@ -27,7 +27,7 @@ public class BM03ParserTest extends PadreTest {
 
 	@Test
 	public void testParsear() throws Exception {
-		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
+		String out = instancia.parsear(TAG_DIA_TEST, res.getContent("ISO-8859-1"));
 		Assert.assertTrue(out.startsWith(TAG_DIA_TEST
 				+ "|INTERNATIONAL CONSOL|01/09/2017|Nº Reg.CNMV:| 256057|Programas de recompr|La Sociedad remite información sobre las operaciones efectuadas al amparo de su programa de recompra de acciones. \n"
 				+ TAG_DIA_TEST + "|SOTOGRANDE"));

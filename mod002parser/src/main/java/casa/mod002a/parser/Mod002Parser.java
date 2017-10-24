@@ -17,7 +17,9 @@ import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbCarreraDetalle;
 import casa.galgos.gbgb.GbgbCarrerasDeUnDia;
 import casa.galgos.gbgb.GbgbDownloader;
+import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.galgos.gbgb.GbgbParserCarreraDetalle;
+import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -56,6 +58,10 @@ import utilidades.Constantes;
 public class Mod002Parser {
 
 	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+
+	// GALGOS
+	static GbgbCarrerasDeUnDia gbgbCarrerasDia;
+	static List<GbgbGalgoHistorico> historicosGalgos = new ArrayList();
 
 	/**
 	 * PARAM1 - Tipo de proceso: 01 (obtener tag del dia con BoeParser) 02 (Generar
@@ -173,7 +179,15 @@ public class Mod002Parser {
 			(new DM15Parser()).ejecutar(param2);
 
 		} else if (param1 != null && param1.equals("04") && param2 != null && param3 != null) {
+
 			descargarYparsearCarrerasDeGalgos(param2, param3);
+
+			// TODO carrerasDia --> Fichero bruto de carreras (de muchos dias) -->Unificar
+			// todo lo que conozca de las carreras
+			// (desde el detalle de carreras actuales o desde historico de carreras)
+
+			// TODO historicosGalgos --> Fichero bruto de galgos (historico) -->Unificar
+			// todo lo que conozca de los galgos
 
 		} else {
 			MY_LOGGER.severe("ERROR Los parametros de entrada a Mod001Parser no son correctos.");
@@ -184,7 +198,9 @@ public class Mod002Parser {
 
 	/**
 	 * @param param2
+	 *            Dia de la descarga
 	 * @param param3
+	 *            Prefijo de ficheros brutos
 	 */
 	public static void descargarYparsearCarrerasDeGalgos(String param2, String param3) {
 
@@ -211,29 +227,31 @@ public class Mod002Parser {
 		// SUFIJO_CARRERAS_SIN_FILTRAR);
 
 		// TODO Quitar esto
-		GbgbCarrerasDeUnDia carrerasDia = generarCarrerasDePrueba(2030316L, 151752L);
+		gbgbCarrerasDia = generarCarrerasDePrueba(2030316L, 151752L);
 
 		HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // Lista de URLs de los historicos de los
 																		// galgos, SIN DUPLICADOS
 
-		if (carrerasDia != null) {
+		if (gbgbCarrerasDia != null) {
 
-			if (carrerasDia.carreras != null && !carrerasDia.carreras.isEmpty()) {
+			if (gbgbCarrerasDia.carreras != null && !gbgbCarrerasDia.carreras.isEmpty()) {
 
 				String SUFIJO_CARRERA = "_GBGB_bruto_carrera_";
 				String urlCarrera = "";
 				String pathFileCarreraDetalleBruto = "";
 				GbgbCarreraDetalle carreraDetalle = null;
+				String pathFileGalgoHistorico = "";
 
-				for (GbgbCarrera carrera : carrerasDia.carreras) {
+				for (GbgbCarrera carrera : gbgbCarrerasDia.carreras) {
 
 					urlCarrera = Constantes.GALGOS_GBGB_CARRERA_DETALLE_PREFIJO + carrera.id_carrera;
 					pathFileCarreraDetalleBruto = "galgos_" + param3 + SUFIJO_CARRERA + carrera.id_carrera;
 
 					(new GbgbDownloader()).descargarCarreraDetalle(urlCarrera, pathFileCarreraDetalleBruto, true);
 
-					// TODO Parsear cada pagina de carrera, extrayendo todo
+					// Parsear cada pagina de carrera, extrayendo todo
 					carreraDetalle = (new GbgbParserCarreraDetalle()).ejecutar(pathFileCarreraDetalleBruto);
+					carrera.setDetalle(carreraDetalle);
 
 					// TODO En cada carrera-detalle, tenemos una lista con 6 URLs de los historicos
 					// de los galgos. Las vamos acumulando SIN DUPLICADOS.
@@ -241,6 +259,13 @@ public class Mod002Parser {
 				}
 
 				// TODO Conocidas las URLs,Extraer todos los historicos de cada galgo
+				for (String urlGalgo : urlsHistoricoGalgos) {
+					MY_LOGGER.warning("Historico galgo: " + urlGalgo);
+					String galgo_nombre = urlGalgo.split("=")[1];
+					pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
+
+					historicosGalgos.add((new GbgbParserGalgoHistorico()).ejecutar(pathFileGalgoHistorico));
+				}
 
 			} else {
 				MY_LOGGER.warning("WARNING Este dia no ha habido carreras!!!");
@@ -250,12 +275,6 @@ public class Mod002Parser {
 			MY_LOGGER.severe(
 					"ERROR Esta vacio el objeto de info util (extraido de la pagina de carreras sin filtrar por dia)");
 		}
-
-		// TODO SALIDA:
-		// - Fichero bruto de carreras -->Unificar todo lo que conozca de las carreras
-		// (desde el detalle de carreras actuales o desde historico de carreras)
-		// - Fichero bruto de galgos (historico) --->Unificar todo lo que conozca de los
-		// galgos
 
 	}
 

@@ -24,7 +24,7 @@ public class BoeParserTest extends PadreTest {
 
 	@Test
 	public void testParsear() throws Exception {
-		String out = BoeParser.parsear(res.getContent());
+		String out = BoeParser.parsear(res.getContent("ISO-8859-1"));
 		Assert.assertTrue(out.equals(TAG_DIA_TEST));
 	}
 

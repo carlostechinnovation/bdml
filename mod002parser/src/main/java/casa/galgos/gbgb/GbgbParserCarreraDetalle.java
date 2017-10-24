@@ -43,7 +43,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public GbgbCarreraDetalle ejecutar(String pathIn) {
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: INICIO");
+		MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: INICIO");
+		MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle - pathIn=" + pathIn);
 
 		String bruto = "";
 		GbgbCarreraDetalle out = null;
@@ -51,14 +52,14 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		try {
 			bruto = GbgbParserCarreraDetalle.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto);
-			MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
+			MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: FIN");
+		MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: FIN");
 		return out;
 	}
 

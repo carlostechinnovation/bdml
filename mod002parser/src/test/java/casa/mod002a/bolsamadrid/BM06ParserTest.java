@@ -27,7 +27,7 @@ public class BM06ParserTest extends PadreTest {
 
 	@Test
 	public void testParsear() throws Exception {
-		String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
+		String out = instancia.parsear(TAG_DIA_TEST, res.getContent("ISO-8859-1"));
 		Assert.assertTrue(out.startsWith(TAG_DIA_TEST + "|ES0111845014|17.0650|-0.26|17.0800|17.0000|1060585|18065.77\n"
 				+ TAG_DIA_TEST + "|ES0125220311"));
 	}

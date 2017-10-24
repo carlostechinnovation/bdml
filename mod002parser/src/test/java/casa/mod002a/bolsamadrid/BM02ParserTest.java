@@ -31,7 +31,7 @@ public class BM02ParserTest extends PadreTest {
 		for (int i = 1; i <= 2; i++) {
 
 			res = new ResourceFile("/" + instancia.getPathEntrada(TAG_DIA_TEST) + "_0" + i);
-			String out = instancia.parsear(TAG_DIA_TEST, res.getContent());
+			String out = instancia.parsear(TAG_DIA_TEST, res.getContent("ISO-8859-1"));
 
 			if (i == 1) {
 				Assert.assertTrue(out.startsWith(
