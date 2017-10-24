@@ -15,7 +15,9 @@ public class Constantes {
 
 	public static final String OUT = "_OUT";
 
-	public static final String GALGOS_GBGB_CARRERAS = "http://www.gbgb.org.uk/Results.aspx";
+	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
+	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
+	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
 
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";

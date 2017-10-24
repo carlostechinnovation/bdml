@@ -12,13 +12,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Fecha y hora del BOE. URL:
- * https://www.boe.es/sede_electronica/informacion/hora_oficial.php
+ * @author root
  *
  */
-public class GbgbParserCarreras implements Serializable {
+public class GbgbParserCarrerasDeUnDia implements Serializable {
 
-	public GbgbParserCarreras() {
+	private static final long serialVersionUID = 1L;
+
+	public GbgbParserCarrerasDeUnDia() {
 		super();
 	}
 
@@ -31,24 +32,24 @@ public class GbgbParserCarreras implements Serializable {
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
-	public GbgbCarrerasInfoUtil ejecutar(String pathIn) {
+	public GbgbCarrerasDeUnDia ejecutar(String pathIn) {
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarreras: INICIO");
+		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: INICIO");
 
 		String bruto = "";
-		GbgbCarrerasInfoUtil out = null;
+		GbgbCarrerasDeUnDia out = null;
 
 		try {
-			bruto = GbgbParserCarreras.readFile(pathIn, Charset.forName("ISO-8859-1"));
+			bruto = GbgbParserCarrerasDeUnDia.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto);
-			MY_LOGGER.info("GALGOS-GbgbParserCarreras: out=" + out);
+			MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarreras: FIN");
+		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: FIN");
 		return out;
 	}
 
@@ -73,10 +74,10 @@ public class GbgbParserCarreras implements Serializable {
 	 * @param in
 	 * @return
 	 */
-	public static GbgbCarrerasInfoUtil parsear(String in) {
+	public static GbgbCarrerasDeUnDia parsear(String in) {
 
 		// TODO rellenar
-		GbgbCarrerasInfoUtil out = new GbgbCarrerasInfoUtil();
+		GbgbCarrerasDeUnDia out = null;
 
 		return out;
 	}

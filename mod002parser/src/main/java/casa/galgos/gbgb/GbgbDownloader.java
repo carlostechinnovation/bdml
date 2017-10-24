@@ -106,14 +106,14 @@ public class GbgbDownloader {
 	}
 
 	/**
-	 * @param infoUtil
+	 * @param carrerasDeUnDia
 	 * @param aaaammdd
 	 * @param pathOut
 	 * @param borrarSiExisteBorrar
 	 *            fichero destino, si ya existe.
 	 * @return Path absoluto a fichero bruto descargado
 	 */
-	public void descargarCarrerasDeUnDia(GbgbCarrerasInfoUtil infoUtil, String aaaammdd, String pathOut,
+	public void descargarCarrerasDeUnDia(GbgbCarrerasDeUnDia carrerasDeUnDia, String aaaammdd, String pathOut,
 			Boolean borrarSiExiste) {
 
 		MY_LOGGER.info("GALGOS-GbgbDownloader.descargarCarrerasDeUnDia(): INICIO");
@@ -233,7 +233,79 @@ public class GbgbDownloader {
 	//
 	// }
 
-	public void descargarCarrera(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
+	/**
+	 * @param pathOut
+	 * @param borrarSiExiste
+	 */
+	public void descargarCarreraDetalle(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
+
+		MY_LOGGER.info("GALGOS-GbgbDownloader.descargarCarreraDetalle:  " + urlCarrera);
+		MY_LOGGER.info("GALGOS-GbgbDownloader - pathOut=" + pathOut);
+		MY_LOGGER.info("GALGOS-GbgbDownloader - borrarSiExiste=" + borrarSiExiste);
+
+		try {
+
+			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
+			if (Files.exists(Paths.get(pathOut))) {
+				MY_LOGGER.warning("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				if (borrarSiExiste) {
+					Files.delete(Paths.get(pathOut));
+				}
+			}
+
+			// Request
+			URL url = new URL(urlCarrera);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setDoOutput(true); // Conexion usada para output
+
+			// Request Headers
+			con.setRequestProperty("Content-Type",
+					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+			String contentType = con.getHeaderField("Content-Type");
+
+			// TIMEOUTs
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+
+			// Handling Redirects
+			con.setInstanceFollowRedirects(false);
+			HttpURLConnection.setFollowRedirects(true);
+
+			MY_LOGGER.info("GALGOS-GbgbDownloader: HTTP GET " + url + " ...");
+			con = (HttpURLConnection) url.openConnection();
+
+			// CODIGO de RESPUESTA
+			int status = con.getResponseCode();
+			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
+				String location = con.getHeaderField("Location");
+				URL newUrl = new URL(location);
+				con = (HttpURLConnection) newUrl.openConnection();
+			}
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				content.append(inputLine);
+			}
+			in.close();
+
+			// close the connection
+			con.disconnect();
+
+			// Escribir SALIDA
+			MY_LOGGER.info("GALGOS-GbgbDownloader: Escribiendo a fichero...");
+			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
+			MY_LOGGER.info("Path fichero salida: " + pathOut);
+			Files.write(Paths.get(pathOut), content.toString().getBytes());
+
+		} catch (IOException e) {
+			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		MY_LOGGER.info("GALGOS-GbgbDownloader: FIN");
 
 	}
 

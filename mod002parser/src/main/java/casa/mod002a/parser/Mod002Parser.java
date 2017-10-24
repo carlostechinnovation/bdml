@@ -6,14 +6,18 @@ package casa.mod002a.parser;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-//import java.nio.charset.Charset;
-//import java.nio.file.Files;
-//import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import casa.galgos.gbgb.GbgbCarrerasInfoUtil;
-import casa.galgos.gbgb.GbgbParserCarreras;
+import casa.galgos.gbgb.GbgbCarrera;
+import casa.galgos.gbgb.GbgbCarreraDetalle;
+import casa.galgos.gbgb.GbgbCarrerasDeUnDia;
+import casa.galgos.gbgb.GbgbDownloader;
+import casa.galgos.gbgb.GbgbParserCarreraDetalle;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -169,35 +173,108 @@ public class Mod002Parser {
 			(new DM15Parser()).ejecutar(param2);
 
 		} else if (param1 != null && param1.equals("04") && param2 != null && param3 != null) {
-
-			String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";// Sin filtrar dia. Sirve para extraer
-																			// cookies y parametros ocultos...
-			String SUFIJO_CARRERAS_FILTRADAS = "_carreras_sin_filtrar_limpio";
-			// TODO DESCOMENTAR (new GbgbDownloader()).descargarCarreras(param3 +
-			// SUFIJO_CARRERAS_SIN_FILTRAR, true);
-			GbgbCarrerasInfoUtil infoUtil = (new GbgbParserCarreras()).ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
-
-			// TODO DESCOMENTAR
-			// if (infoUtil != null) {
-			// (new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, param3 +
-			// SUFIJO_CARRERAS_FILTRADAS,
-			// true);
-			//
-			// } else {
-			// MY_LOGGER.severe(
-			// "ERROR Esta vacio el objeto de info util (extraido de la pagina de carreras
-			// sin filtrar por dia)");
-			// }
-
-			// SALIDA:
-			// - Fichero bruto de carreras
-			// - Fichero bruto de galgos (historico)
+			descargarYparsearCarrerasDeGalgos(param2, param3);
 
 		} else {
 			MY_LOGGER.severe("ERROR Los parametros de entrada a Mod001Parser no son correctos.");
 		}
 
 		MY_LOGGER.info("FIN");
+	}
+
+	/**
+	 * @param param2
+	 * @param param3
+	 */
+	public static void descargarYparsearCarrerasDeGalgos(String param2, String param3) {
+
+		// String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";// Sin filtrar
+		// dia. Sirve para extraer
+		// cookies y parametros ocultos...
+
+		// TODO DESCOMENTAR
+		// (new GbgbDownloader()).descargarCarreras(param3
+		// +SUFIJO_CARRERAS_SIN_FILTRAR, true);
+
+		// TODO DESCOMENTAR
+		// GbgbCarrerasInfoUtilHttp infoUtil = (new
+		// GbgbParserCarrerasSinFiltrar()).ejecutar(param3 +
+		// SUFIJO_CARRERAS_SIN_FILTRAR);
+
+		// String SUFIJO_CARRERAS_FILTRADAS = "_carreras_sin_filtrar_limpio";
+
+		// TODO Descargar todas las carreras de un dia
+		// (new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, pathOut,
+		// true);
+
+		// GbgbCarrerasInfoUtil infoUtil = (new GbgbParserCarreras()).ejecutar(param3 +
+		// SUFIJO_CARRERAS_SIN_FILTRAR);
+
+		// TODO Quitar esto
+		GbgbCarrerasDeUnDia carrerasDia = generarCarrerasDePrueba(2030316L, 151752L);
+
+		HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // Lista de URLs de los historicos de los
+																		// galgos, SIN DUPLICADOS
+
+		if (carrerasDia != null) {
+
+			if (carrerasDia.carreras != null && !carrerasDia.carreras.isEmpty()) {
+
+				String SUFIJO_CARRERA = "_GBGB_bruto_carrera_";
+				String urlCarrera = "";
+				String pathFileCarreraDetalleBruto = "";
+				GbgbCarreraDetalle carreraDetalle = null;
+
+				for (GbgbCarrera carrera : carrerasDia.carreras) {
+
+					urlCarrera = Constantes.GALGOS_GBGB_CARRERA_DETALLE_PREFIJO + carrera.id_carrera;
+					pathFileCarreraDetalleBruto = "galgos_" + param3 + SUFIJO_CARRERA + carrera.id_carrera;
+
+					(new GbgbDownloader()).descargarCarreraDetalle(urlCarrera, pathFileCarreraDetalleBruto, true);
+
+					// TODO Parsear cada pagina de carrera, extrayendo todo
+					carreraDetalle = (new GbgbParserCarreraDetalle()).ejecutar(pathFileCarreraDetalleBruto);
+
+					// TODO En cada carrera-detalle, tenemos una lista con 6 URLs de los historicos
+					// de los galgos. Las vamos acumulando SIN DUPLICADOS.
+					urlsHistoricoGalgos.addAll(carreraDetalle.urlsGalgosHistorico);
+				}
+
+				// TODO Conocidas las URLs,Extraer todos los historicos de cada galgo
+
+			} else {
+				MY_LOGGER.warning("WARNING Este dia no ha habido carreras!!!");
+			}
+
+		} else {
+			MY_LOGGER.severe(
+					"ERROR Esta vacio el objeto de info util (extraido de la pagina de carreras sin filtrar por dia)");
+		}
+
+		// TODO SALIDA:
+		// - Fichero bruto de carreras -->Unificar todo lo que conozca de las carreras
+		// (desde el detalle de carreras actuales o desde historico de carreras)
+		// - Fichero bruto de galgos (historico) --->Unificar todo lo que conozca de los
+		// galgos
+
+	}
+
+	/**
+	 * @return
+	 */
+	public static GbgbCarrerasDeUnDia generarCarrerasDePrueba(Long id_gbgb, Long id_campeonato) {
+
+		Calendar fechayhora = Calendar.getInstance();
+		fechayhora.set(Calendar.YEAR, 2017);
+		fechayhora.set(Calendar.MONTH, 10);
+		fechayhora.set(Calendar.DAY_OF_MONTH, 22);
+		fechayhora.set(Calendar.HOUR_OF_DAY, 19);
+		fechayhora.set(Calendar.MINUTE, 54);
+
+		List<GbgbCarrera> carreras = new ArrayList<GbgbCarrera>();
+		carreras.add(new GbgbCarrera(id_gbgb, id_campeonato, "Central Park", "D3", fechayhora, 265, null));
+
+		return new GbgbCarrerasDeUnDia(fechayhora, carreras);
 	}
 
 }
