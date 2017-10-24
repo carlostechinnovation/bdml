@@ -132,7 +132,7 @@ public class GbgbDownloader {
 			}
 
 			// Request
-			URL url = new URL(Constantes.GALGOS_GBGB_CARRERAS);
+			URL url = new URL(Constantes.GALGOS_GBGB_CARRERAS.replace(" ", "%20"));
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(true); // Conexion usada para output
@@ -181,7 +181,7 @@ public class GbgbDownloader {
 			int status = con.getResponseCode();
 			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
 				String location = con.getHeaderField("Location");
-				URL newUrl = new URL(location);
+				URL newUrl = new URL(location.replace(" ", "%20"));
 				con = (HttpURLConnection) newUrl.openConnection();
 			}
 
@@ -254,7 +254,7 @@ public class GbgbDownloader {
 			}
 
 			// Request
-			URL url = new URL(urlCarrera);
+			URL url = new URL(urlCarrera.replace(" ", "%20"));
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(true); // Conexion usada para output
@@ -279,7 +279,84 @@ public class GbgbDownloader {
 			int status = con.getResponseCode();
 			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
 				String location = con.getHeaderField("Location");
-				URL newUrl = new URL(location);
+				URL newUrl = new URL(location.replace(" ", "%20"));
+				con = (HttpURLConnection) newUrl.openConnection();
+			}
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				content.append(inputLine);
+			}
+			in.close();
+
+			// close the connection
+			con.disconnect();
+
+			// Escribir SALIDA
+			MY_LOGGER.info("GALGOS-GbgbDownloader: Escribiendo a fichero...");
+			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
+			MY_LOGGER.info("Path fichero salida: " + pathOut);
+			Files.write(Paths.get(pathOut), content.toString().getBytes());
+
+		} catch (IOException e) {
+			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			e.printStackTrace();
+		}
+
+		MY_LOGGER.info("GALGOS-GbgbDownloader: FIN");
+
+	}
+
+	/**
+	 * @param pathOut
+	 * @param borrarSiExiste
+	 */
+	public void descargarHistoricoGalgo(String urlHistoricoGalgo, String pathOut, Boolean borrarSiExiste) {
+
+		MY_LOGGER.info("GALGOS-GbgbDownloader.descargarHistoricoGalgo:  ");
+		MY_LOGGER.info("GALGOS-GbgbDownloader - urlCarrera=" + urlHistoricoGalgo);
+		MY_LOGGER.info("GALGOS-GbgbDownloader - pathOut=" + pathOut);
+		MY_LOGGER.info("GALGOS-GbgbDownloader - borrarSiExiste=" + borrarSiExiste);
+
+		try {
+
+			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
+			if (Files.exists(Paths.get(pathOut))) {
+				MY_LOGGER.warning("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				if (borrarSiExiste) {
+					Files.delete(Paths.get(pathOut));
+				}
+			}
+
+			// Request
+			URL url = new URL(urlHistoricoGalgo.replace(" ", "%20"));
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("GET");
+			con.setDoOutput(true); // Conexion usada para output
+
+			// Request Headers
+			con.setRequestProperty("Content-Type",
+					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+			String contentType = con.getHeaderField("Content-Type");
+
+			// TIMEOUTs
+			con.setConnectTimeout(5000);
+			con.setReadTimeout(5000);
+
+			// Handling Redirects
+			con.setInstanceFollowRedirects(false);
+			HttpURLConnection.setFollowRedirects(true);
+
+			MY_LOGGER.info("GALGOS-GbgbDownloader: HTTP GET " + url + " ...");
+			con = (HttpURLConnection) url.openConnection();
+
+			// CODIGO de RESPUESTA
+			int status = con.getResponseCode();
+			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
+				String location = con.getHeaderField("Location");
+				URL newUrl = new URL(location.replace(" ", "%20"));
 				con = (HttpURLConnection) newUrl.openConnection();
 			}
 

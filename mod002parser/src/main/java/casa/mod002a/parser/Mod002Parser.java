@@ -204,29 +204,33 @@ public class Mod002Parser {
 	 */
 	public static void descargarYparsearCarrerasDeGalgos(String param2, String param3) {
 
+		MY_LOGGER.info("Descargando carreras SIN filtrar por dia...");
 		// String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";// Sin filtrar
 		// dia. Sirve para extraer
 		// cookies y parametros ocultos...
 
-		// TODO DESCOMENTAR
 		// (new GbgbDownloader()).descargarCarreras(param3
 		// +SUFIJO_CARRERAS_SIN_FILTRAR, true);
 
+		MY_LOGGER.info("Parseando carreras SIN filtrar por dia...");
 		// TODO DESCOMENTAR
 		// GbgbCarrerasInfoUtilHttp infoUtil = (new
 		// GbgbParserCarrerasSinFiltrar()).ejecutar(param3 +
 		// SUFIJO_CARRERAS_SIN_FILTRAR);
 
-		// String SUFIJO_CARRERAS_FILTRADAS = "_carreras_sin_filtrar_limpio";
-
+		MY_LOGGER.info("Descargando carreras FILTRADAS por DIA...");
 		// TODO Descargar todas las carreras de un dia
+		// String SUFIJO_CARRERAS_FILTRADAS = "_carrers_filtradas";
 		// (new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, pathOut,
 		// true);
 
-		// GbgbCarrerasInfoUtil infoUtil = (new GbgbParserCarreras()).ejecutar(param3 +
+		MY_LOGGER.info("Parseando carreras FILTRADAS por DIA...");
+		// TODO
+		// gbgbCarrerasDia = (new GbgbParserCarreras()).ejecutar(param3 +
 		// SUFIJO_CARRERAS_SIN_FILTRAR);
 
 		// TODO Quitar esto
+		MY_LOGGER.info("######## TESTING con carreras de prueba (MOCK) ######...");
 		gbgbCarrerasDia = generarCarrerasDePrueba(2030316L, 151752L);
 
 		HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // Lista de URLs de los historicos de los
@@ -236,35 +240,52 @@ public class Mod002Parser {
 
 			if (gbgbCarrerasDia.carreras != null && !gbgbCarrerasDia.carreras.isEmpty()) {
 
-				String SUFIJO_CARRERA = "_GBGB_bruto_carrera_";
+				String SUFIJO_CARRERA = "_carrera_";
 				String urlCarrera = "";
 				String pathFileCarreraDetalleBruto = "";
 				GbgbCarreraDetalle carreraDetalle = null;
 				String pathFileGalgoHistorico = "";
 
+				MY_LOGGER.info("------ CARRERAS DE UN DIA: " + gbgbCarrerasDia.carreras.size() + " -------");
+
 				for (GbgbCarrera carrera : gbgbCarrerasDia.carreras) {
 
-					urlCarrera = Constantes.GALGOS_GBGB_CARRERA_DETALLE_PREFIJO + carrera.id_carrera;
-					pathFileCarreraDetalleBruto = "galgos_" + param3 + SUFIJO_CARRERA + carrera.id_carrera;
+					MY_LOGGER.info("CARRERA id = " + carrera.id_carrera);
 
+					urlCarrera = Constantes.GALGOS_GBGB_CARRERA_DETALLE_PREFIJO + carrera.id_carrera;
+					pathFileCarreraDetalleBruto = param3 + SUFIJO_CARRERA + carrera.id_carrera;
+
+					MY_LOGGER.info("URL = " + urlCarrera);
+					MY_LOGGER.info("Fichero carrera bruto = " + pathFileCarreraDetalleBruto);
 					(new GbgbDownloader()).descargarCarreraDetalle(urlCarrera, pathFileCarreraDetalleBruto, true);
 
-					// Parsear cada pagina de carrera, extrayendo todo
+					MY_LOGGER.info("Parseando carrera...");
 					carreraDetalle = (new GbgbParserCarreraDetalle()).ejecutar(pathFileCarreraDetalleBruto);
 					carrera.setDetalle(carreraDetalle);
 
-					// TODO En cada carrera-detalle, tenemos una lista con 6 URLs de los historicos
+					// En cada carrera-detalle, tenemos una lista con 6 URLs de los historicos
 					// de los galgos. Las vamos acumulando SIN DUPLICADOS.
+					MY_LOGGER.info("Anhadiendo " + carreraDetalle.urlsGalgosHistorico.size()
+							+ " URLs de historicos de galgos (EVITANDO DUPLICADOS)");
 					urlsHistoricoGalgos.addAll(carreraDetalle.urlsGalgosHistorico);
 				}
 
 				// TODO Conocidas las URLs,Extraer todos los historicos de cada galgo
+				MY_LOGGER.info("------- HISTORICOS (" + urlsHistoricoGalgos.size() + " URLs) -------");
 				for (String urlGalgo : urlsHistoricoGalgos) {
-					MY_LOGGER.warning("Historico galgo: " + urlGalgo);
+
 					String galgo_nombre = urlGalgo.split("=")[1];
 					pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
+					MY_LOGGER.info("URL Historico galgo = " + urlGalgo);
+					MY_LOGGER.info("Galgo nombre = " + galgo_nombre);
+					MY_LOGGER.info("Path historico = " + pathFileGalgoHistorico);
 
-					historicosGalgos.add((new GbgbParserGalgoHistorico()).ejecutar(pathFileGalgoHistorico));
+					MY_LOGGER.info("Descargando historico...");
+					(new GbgbDownloader()).descargarHistoricoGalgo(urlGalgo, pathFileGalgoHistorico, true);
+
+					MY_LOGGER.info("Parseando historico...");
+					historicosGalgos
+							.add((new GbgbParserGalgoHistorico()).ejecutar(pathFileGalgoHistorico, galgo_nombre));
 				}
 
 			} else {

@@ -8,11 +8,14 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 
 /**
  * @author root
@@ -35,7 +38,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
-	public GbgbGalgoHistorico ejecutar(String pathIn) {
+	public GbgbGalgoHistorico ejecutar(String pathIn, String galgo_nombre) {
 
 		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: INICIO");
 		MY_LOGGER.info("GALGOS-GbgbDownloader - pathIn=" + pathIn);
@@ -45,7 +48,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 		try {
 			bruto = GbgbParserGalgoHistorico.readFile(pathIn, Charset.forName("ISO-8859-1"));
-			out = parsear(bruto);
+			out = parsear(bruto, galgo_nombre);
 			MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
 
 		} catch (IOException e) {
@@ -73,18 +76,33 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	}
 
 	/**
-	 * Extrae info util
-	 * 
 	 * @param in
+	 * @param galgo_nombre
 	 * @return
 	 */
-	public static GbgbGalgoHistorico parsear(String in) {
+	public static GbgbGalgoHistorico parsear(String in, String galgo_nombre) {
 
 		Document doc = Jsoup.parse(in);
+		Element tablaContenido = doc.getElementById("ctl00_ctl00_mainContent_cmscontent_DogRaceCard_lvDogRaceCard");
+		List<Node> filas = tablaContenido.childNode(0).childNode(4).childNodes();
 
-		GbgbGalgoHistorico out = null;
+		GbgbGalgoHistorico out = new GbgbGalgoHistorico(galgo_nombre);
+
+		for (Node fila : filas) {
+			if (fila instanceof Element) {
+				rellenarFilaEnHistorico(out, (Element) fila);
+			}
+		}
 
 		return out;
+	}
+
+	/**
+	 * @param modelo
+	 * @param fila
+	 */
+	public static void rellenarFilaEnHistorico(GbgbGalgoHistorico modelo, Element fila) {
+		int x = 0;
 	}
 
 }
