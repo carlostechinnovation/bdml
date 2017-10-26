@@ -8,7 +8,7 @@ var fs = require('fs');
 
 var segundos_wait=10;
 var periodicidad='d'  // 'd' (daily), 'w' (weekly), 'm' (monthly), 'v' (dividends only);
-var pathDirOut="/home/carloslinux/Desktop/DATOS_BRUTO/";
+var pathDirOut="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/";
 
 
 console.log("--PARAMETROS DE ENTRADA--")

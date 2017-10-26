@@ -1,5 +1,7 @@
 package casa.galgos.gbgb;
 
+import java.util.Calendar;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,8 +31,32 @@ public class GbgbParserGalgoHistoricoTest {
 
 		Assert.assertTrue(out != null);
 		Assert.assertTrue(out.galgo_nombre.equals(galgo_nombre));
+		Assert.assertTrue(out.padre_madre_nacimiento.equals("wbk b Daves Mentor - Time Flies Dec-2013"));
+		Assert.assertTrue(out.entrenador.equals("S MAVRIAS"));
+
 		Assert.assertTrue(!out.carrerasHistorico.isEmpty());
-		// TODO rellenar
+		Assert.assertTrue(out.carrerasHistorico.size() > 1);
+		GbgbGalgoHistoricoCarrera hc = out.carrerasHistorico.get(0);
+
+		Assert.assertTrue(hc.by.equals("1/2"));
+		Assert.assertTrue(hc.calculatedTime.equals("16.74"));
+		Assert.assertTrue(hc.clase.equals("D3"));
+		Assert.assertTrue(hc.distancia.equals(265));
+		Assert.assertTrue(hc.fecha.get(Calendar.YEAR) == 2017);
+		Assert.assertTrue(hc.fecha.get(Calendar.MONTH) == 10);
+		Assert.assertTrue(hc.fecha.get(Calendar.DAY_OF_MONTH) == 22);
+		Assert.assertTrue(hc.galgo_primero_o_segundo.equals("Carrigeen Mastro"));
+		Assert.assertTrue(hc.going.equals("N"));
+		Assert.assertTrue(hc.id_campeonato.equals(151752L));
+		Assert.assertTrue(hc.id_carrera.equals(2030316L));
+		Assert.assertTrue(hc.posicion.equals("2"));
+		Assert.assertTrue(hc.remarks.equals("EP,Ld1-RnIn"));
+		Assert.assertTrue(hc.sp.equals("6/4"));
+		// TODO Assert.assertTrue(hc.stmHcp.equals(" "));
+		Assert.assertTrue(hc.trap.equals("1"));
+		Assert.assertTrue(hc.venue.equals("Central Park"));
+		Assert.assertTrue(hc.winTime.equals("16.70"));
+
 	}
 
 }

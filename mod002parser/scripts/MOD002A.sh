@@ -4,9 +4,10 @@ set -x
 
 echo -e "Modulo 002A - Parsear datos"
 
-PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/"
-PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/"
+PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
+PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/"
 PATH_JAR="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_SCRIPTS="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/"
 
 TAG_BOE="BOE"
 TAG_GF="GOOGLEFINANCE"
@@ -51,21 +52,21 @@ java -jar ${PATH_JAR} "03" ${DIA}
 
 for GFindice in {1..6}
 do
-   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_gf0${GFindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/${dia}_GOOGLEFINANCE_0${GFindice}_OUT' INTO TABLE datos_desa.tb_gf0${GFindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_gf0${GFindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_GOOGLEFINANCE_0${GFindice}_OUT' INTO TABLE datos_desa.tb_gf0${GFindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
 done
 
 
 for BMindice in {1..6}
 do
-   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_bm0${BMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/${dia}_BOLSAMADRID_0${BMindice}_OUT' INTO TABLE datos_desa.tb_bm0${BMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_bm0${BMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_BOLSAMADRID_0${BMindice}_OUT' INTO TABLE datos_desa.tb_bm0${BMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
 done
 
 
-mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_ine WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/${dia}_INE_01_OUT' INTO TABLE datos_desa.tb_ine FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_ine WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_INE_01_OUT' INTO TABLE datos_desa.tb_ine FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
 
 for DMindice in 0{1..9} {10..15}
 do
-   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_dm${DMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/${dia}_DATOSMACRO_${DMFindice}_OUT' INTO TABLE datos_desa.tb_dm${DMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_dm${DMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_DATOSMACRO_${DMFindice}_OUT' INTO TABLE datos_desa.tb_dm${DMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
 done
 
 
@@ -96,7 +97,7 @@ then
     rm -f ${path_fichero_limpio}
 
     #procesar JSON hacia fichero CSV
-    node "./MOD002A_yahoo_finance.js" ${PATH_DIR_IN}${yf_nombre_fichero} > ${path_fichero_limpio}
+    node ${PATH_SCRIPTS}"MOD002A_yahoo_finance.js" ${PATH_DIR_IN}${yf_nombre_fichero} > ${path_fichero_limpio}
 
     mysql -u root --password=datos1986 --execute="TRUNCATE TABLE datos_desa.tb_yf01_previa;"
 

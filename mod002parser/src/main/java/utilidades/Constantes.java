@@ -2,8 +2,8 @@ package utilidades;
 
 public class Constantes {
 
-	public static final String PATH_DIR_DATOS_BRUTOS = "/home/carloslinux/Desktop/DATOS_BRUTO/";
-	public static final String PATH_DIR_DATOS_LIMPIOS = "/home/carloslinux/Desktop/DATOS_LIMPIO/";
+	public static final String PATH_DIR_DATOS_BRUTOS_BOLSA = "/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/";
+	public static final String PATH_DIR_DATOS_LIMPIOS_BOLSA = "/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/";
 
 	public static final String BOE_IN = "BOE_in";
 	public static final String BOE_OUT = "BOE_out";
@@ -15,6 +15,8 @@ public class Constantes {
 
 	public static final String OUT = "_OUT";
 
+	public static final String PATH_DIR_DATOS_BRUTOS_GALGOS = "/home/carloslinux/Desktop/DATOS_BRUTO/galgos/";
+	public static final String PATH_DIR_DATOS_LIMPIOS_GALGOS = "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/";
 	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";

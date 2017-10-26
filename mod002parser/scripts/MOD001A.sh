@@ -5,7 +5,7 @@ PATH_SCRIPTS="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/
 
 echo "Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${PATH_LOG}
 
-PATH_CARPETA="/home/carloslinux/Desktop/DATOS_BRUTO/"
+PATH_CARPETA="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
 PATH_JAR="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 
 

@@ -16,9 +16,12 @@ import java.util.logging.Logger;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbCarreraDetalle;
 import casa.galgos.gbgb.GbgbCarrerasDeUnDia;
+import casa.galgos.gbgb.GbgbCarrerasInfoUtilHttp;
 import casa.galgos.gbgb.GbgbDownloader;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.galgos.gbgb.GbgbParserCarreraDetalle;
+import casa.galgos.gbgb.GbgbParserCarrerasDeUnDia;
+import casa.galgos.gbgb.GbgbParserCarrerasSinFiltrar;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
@@ -94,8 +97,8 @@ public class Mod002Parser {
 
 		if (param1 != null && param1.equals("01")) {
 
-			(new BoeParser()).ejecutar(Constantes.PATH_DIR_DATOS_BRUTOS + Constantes.BOE_IN,
-					Constantes.PATH_DIR_DATOS_BRUTOS + Constantes.BOE_OUT, false);
+			(new BoeParser()).ejecutar(Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + Constantes.BOE_IN,
+					Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + Constantes.BOE_OUT, false);
 
 		} else if (param1 != null && param1.equals("02")) {
 
@@ -131,13 +134,14 @@ public class Mod002Parser {
 			out += (new DM14Parser()).generarSqlCreateTable();
 			out += (new DM15Parser()).generarSqlCreateTable();
 
-			MY_LOGGER.info(
-					"Escribiendo hacia " + Constantes.PATH_DIR_DATOS_LIMPIOS + "sentencias_create_table" + " ...");
+			MY_LOGGER.info("Escribiendo hacia " + Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + "sentencias_create_table"
+					+ " ...");
 
 			try {
 
 				// Forma nueva
-				Files.write(Paths.get(Constantes.PATH_DIR_DATOS_LIMPIOS + "sentencias_create_table"), out.getBytes());
+				Files.write(Paths.get(Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + "sentencias_create_table"),
+						out.getBytes());
 
 			} catch (IOException e) {
 				MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
@@ -189,6 +193,12 @@ public class Mod002Parser {
 			// TODO historicosGalgos --> Fichero bruto de galgos (historico) -->Unificar
 			// todo lo que conozca de los galgos
 
+		}
+		if (param1 != null && param1.equals("05")) {
+
+			(new BoeParser()).ejecutar(Constantes.PATH_DIR_DATOS_BRUTOS_GALGOS + Constantes.BOE_IN,
+					Constantes.PATH_DIR_DATOS_BRUTOS_GALGOS + Constantes.BOE_OUT, false);
+
 		} else {
 			MY_LOGGER.severe("ERROR Los parametros de entrada a Mod001Parser no son correctos.");
 		}
@@ -204,37 +214,48 @@ public class Mod002Parser {
 	 */
 	public static void descargarYparsearCarrerasDeGalgos(String param2, String param3) {
 
-		MY_LOGGER.info("Descargando carreras SIN filtrar por dia...");
-		// String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";// Sin filtrar
-		// dia. Sirve para extraer
-		// cookies y parametros ocultos...
+		// TODO Quitar pruebas
+		MY_LOGGER.info("######## TESTING con carreras de prueba (MOCK) ######...");
+		boolean PRUEBAS = true;
+		if (PRUEBAS) {
+			generarCarrerasDePrueba(2030316L, 151752L);
+		} else {
+			descargarCarrerasDeUnDia(param2, param3);
+		}
 
-		// (new GbgbDownloader()).descargarCarreras(param3
-		// +SUFIJO_CARRERAS_SIN_FILTRAR, true);
+		procesarCarrerasDeUnDia(param3);
+
+	}
+
+	/**
+	 * @param param2
+	 * @param param3
+	 */
+	public static void descargarCarrerasDeUnDia(String param2, String param3) {
+
+		MY_LOGGER.info(
+				"Descargando carreras SIN filtrar por dia... (sirve para extraer cookies y parametros ocultos...)");
+		String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";
+		(new GbgbDownloader()).descargarCarreras(param3 + SUFIJO_CARRERAS_SIN_FILTRAR, true);
 
 		MY_LOGGER.info("Parseando carreras SIN filtrar por dia...");
-		// TODO DESCOMENTAR
-		// GbgbCarrerasInfoUtilHttp infoUtil = (new
-		// GbgbParserCarrerasSinFiltrar()).ejecutar(param3 +
-		// SUFIJO_CARRERAS_SIN_FILTRAR);
+		GbgbCarrerasInfoUtilHttp infoUtil = (new GbgbParserCarrerasSinFiltrar())
+				.ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
 
 		MY_LOGGER.info("Descargando carreras FILTRADAS por DIA...");
-		// TODO Descargar todas las carreras de un dia
-		// String SUFIJO_CARRERAS_FILTRADAS = "_carrers_filtradas";
-		// (new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, pathOut,
-		// true);
+		// TODO descargar carreras filtradas por dia!!!!!!!!!
+		String SUFIJO_CARRERAS_FILTRADAS = "_carreras_filtradas";
+		(new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, param3 + SUFIJO_CARRERAS_SIN_FILTRAR, true);
 
 		MY_LOGGER.info("Parseando carreras FILTRADAS por DIA...");
-		// TODO
-		// gbgbCarrerasDia = (new GbgbParserCarreras()).ejecutar(param3 +
-		// SUFIJO_CARRERAS_SIN_FILTRAR);
+		gbgbCarrerasDia = (new GbgbParserCarrerasDeUnDia()).ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
 
-		// TODO Quitar esto
-		MY_LOGGER.info("######## TESTING con carreras de prueba (MOCK) ######...");
-		gbgbCarrerasDia = generarCarrerasDePrueba(2030316L, 151752L);
+	}
 
-		HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // Lista de URLs de los historicos de los
-																		// galgos, SIN DUPLICADOS
+	/**
+	 * @param param3
+	 */
+	public static void procesarCarrerasDeUnDia(String param3) {
 
 		if (gbgbCarrerasDia != null) {
 
@@ -247,6 +268,9 @@ public class Mod002Parser {
 				String pathFileGalgoHistorico = "";
 
 				MY_LOGGER.info("------ CARRERAS DE UN DIA: " + gbgbCarrerasDia.carreras.size() + " -------");
+
+				HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // Lista de URLs de los historicos de los
+				// galgos, SIN DUPLICADOS
 
 				for (GbgbCarrera carrera : gbgbCarrerasDia.carreras) {
 
@@ -300,9 +324,10 @@ public class Mod002Parser {
 	}
 
 	/**
-	 * @return
+	 * @param id_gbgb
+	 * @param id_campeonato
 	 */
-	public static GbgbCarrerasDeUnDia generarCarrerasDePrueba(Long id_gbgb, Long id_campeonato) {
+	public static void generarCarrerasDePrueba(Long id_gbgb, Long id_campeonato) {
 
 		Calendar fechayhora = Calendar.getInstance();
 		fechayhora.set(Calendar.YEAR, 2017);
@@ -314,7 +339,7 @@ public class Mod002Parser {
 		List<GbgbCarrera> carreras = new ArrayList<GbgbCarrera>();
 		carreras.add(new GbgbCarrera(id_gbgb, id_campeonato, "Central Park", "D3", fechayhora, 265, null));
 
-		return new GbgbCarrerasDeUnDia(fechayhora, carreras);
+		gbgbCarrerasDia = new GbgbCarrerasDeUnDia(fechayhora, carreras);
 	}
 
 }

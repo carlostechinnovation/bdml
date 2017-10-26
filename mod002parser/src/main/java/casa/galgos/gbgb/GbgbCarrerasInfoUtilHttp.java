@@ -1,5 +1,9 @@
 package casa.galgos.gbgb;
 
-public class GbgbCarrerasInfoUtilHttp {
+import java.io.Serializable;
+
+public class GbgbCarrerasInfoUtilHttp implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 }

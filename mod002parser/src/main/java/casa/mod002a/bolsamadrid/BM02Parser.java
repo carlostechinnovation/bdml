@@ -27,6 +27,7 @@ public class BM02Parser extends ParserDeDia {
 		super();
 	}
 
+	@Override
 	public String getPathEntrada(String tagDia) {
 		return tagDia + Constantes.BM + "02";
 	}
@@ -46,14 +47,14 @@ public class BM02Parser extends ParserDeDia {
 
 			for (int i = 1; i <= 7; i++) {
 
-				String pathEntrada = Constantes.PATH_DIR_DATOS_BRUTOS + getPathEntrada(TAG_DIA) + "_0" + i;
+				String pathEntrada = Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + getPathEntrada(TAG_DIA) + "_0" + i;
 				bruto = readFile(pathEntrada, Charset.forName("ISO-8859-1"));
 
 				// ACUMULAR DATOS
 				out += parsear(TAG_DIA, bruto);
 			}
 
-			String pathSalida = Constantes.PATH_DIR_DATOS_LIMPIOS + getPathEntrada(TAG_DIA) + Constantes.OUT;
+			String pathSalida = Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + getPathEntrada(TAG_DIA) + Constantes.OUT;
 
 			MY_LOGGER.info("Escribiendo hacia " + pathSalida + " ...");
 			Files.write(Paths.get(pathSalida), out.getBytes());
@@ -67,6 +68,7 @@ public class BM02Parser extends ParserDeDia {
 
 	}
 
+	@Override
 	public String parsear(String tagDia, String in) {
 
 		MY_LOGGER.info("Parseando...");
@@ -127,6 +129,7 @@ public class BM02Parser extends ParserDeDia {
 		return out;
 	}
 
+	@Override
 	public String generarSqlCreateTable() {
 
 		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_bm02 (tag_dia varchar(15), isin varchar(15), nombre varchar(20), sector varchar(20), subsector varchar(20)"

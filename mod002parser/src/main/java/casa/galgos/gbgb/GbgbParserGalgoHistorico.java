@@ -117,29 +117,29 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 		String[] fechaStr = ((TextNode) fila.childNode(1).childNode(0)).text().split("/");
 		Calendar fecha = Calendar.getInstance();
+		fecha.clear();
 		fecha.set(Calendar.DAY_OF_MONTH, Integer.valueOf(fechaStr[0]));
 		fecha.set(Calendar.MONTH, Integer.valueOf(fechaStr[1]));
 		fecha.set(Calendar.YEAR, 2000 + Integer.valueOf(fechaStr[2]));
 
 		Integer distancia = Integer.valueOf(((TextNode) fila.childNode(2).childNode(0)).text());
-		String trap = ((TextNode) fila.childNode(3).childNode(0)).text();
-		String stmHcp = ((TextNode) fila.childNode(4).childNode(0)).text();
-		String posicion = ((TextNode) fila.childNode(5).childNode(0)).text();
-		String by = ((TextNode) fila.childNode(6).childNode(0)).text();
-		String galgo_primero_o_segundo = ((TextNode) fila.childNode(7).childNode(0)).text();
-		String venue = ((TextNode) fila.childNode(8).childNode(0)).text();
-		String remarks = ((TextNode) fila.childNode(9).childNode(0)).text();
-		String winTime = ((TextNode) fila.childNode(10).childNode(0)).text();
-		String going = ((TextNode) fila.childNode(11).childNode(0)).text();
-		String sp = ((TextNode) fila.childNode(12).childNode(0)).text();
-		String clase = ((TextNode) fila.childNode(13).childNode(0)).text();
-		String calculatedTime = ((TextNode) fila.childNode(14).childNode(0)).text();
+		String trap = ((TextNode) fila.childNode(3).childNode(0)).text().trim();
+		String stmHcp = ((TextNode) fila.childNode(4).childNode(0)).text().trim();
+		String posicion = ((TextNode) fila.childNode(5).childNode(0)).text().trim();
+		String by = ((TextNode) fila.childNode(6).childNode(0)).text().trim();
+		String galgo_primero_o_segundo = ((TextNode) fila.childNode(7).childNode(0)).text().trim();
+		String venue = ((TextNode) fila.childNode(8).childNode(0)).text().trim();
+		String remarks = ((TextNode) fila.childNode(9).childNode(0)).text().trim();
+		String winTime = ((TextNode) fila.childNode(10).childNode(0)).text().trim();
+		String going = ((TextNode) fila.childNode(11).childNode(0)).text().trim();
+		String sp = ((TextNode) fila.childNode(12).childNode(0)).text().trim();
+		String clase = ((TextNode) fila.childNode(13).childNode(0)).text().trim();
+		String calculatedTime = ((TextNode) fila.childNode(14).childNode(0)).text().trim();
 
 		GbgbGalgoHistoricoCarrera filaModelo = new GbgbGalgoHistoricoCarrera(id_carrera, id_campeonato, fecha,
 				distancia, trap, stmHcp, posicion, by, galgo_primero_o_segundo, venue, remarks, winTime, going, sp,
 				clase, calculatedTime);
 		modelo.carrerasHistorico.add(filaModelo);
-		int x = 0;
 
 	}
 

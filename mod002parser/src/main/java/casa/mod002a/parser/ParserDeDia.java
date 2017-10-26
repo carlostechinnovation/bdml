@@ -27,12 +27,12 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 		String out = "";
 
 		try {
-			String pathEntrada = Constantes.PATH_DIR_DATOS_BRUTOS + getPathEntrada(TAG_DIA);
+			String pathEntrada = Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + getPathEntrada(TAG_DIA);
 			bruto = readFile(pathEntrada, Charset.forName("ISO-8859-1"));
 			out = parsear(TAG_DIA, bruto);
 			// MY_LOGGER.info("ParserDeDia: out=" + out);
 
-			String pathSalida = Constantes.PATH_DIR_DATOS_LIMPIOS + getPathEntrada(TAG_DIA) + Constantes.OUT;
+			String pathSalida = Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + getPathEntrada(TAG_DIA) + Constantes.OUT;
 
 			MY_LOGGER.info("Escribiendo hacia " + pathSalida + " ...");
 			Files.write(Paths.get(pathSalida), out.getBytes());

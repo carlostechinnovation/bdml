@@ -113,7 +113,7 @@ public class GbgbDownloader {
 	 *            fichero destino, si ya existe.
 	 * @return Path absoluto a fichero bruto descargado
 	 */
-	public void descargarCarrerasDeUnDia(GbgbCarrerasDeUnDia carrerasDeUnDia, String aaaammdd, String pathOut,
+	public void descargarCarrerasDeUnDia(GbgbCarrerasInfoUtilHttp carrerasDeUnDia, String aaaammdd, String pathOut,
 			Boolean borrarSiExiste) {
 
 		MY_LOGGER.info("GALGOS-GbgbDownloader.descargarCarrerasDeUnDia(): INICIO");
