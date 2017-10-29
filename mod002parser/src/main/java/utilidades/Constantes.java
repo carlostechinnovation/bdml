@@ -1,5 +1,7 @@
 package utilidades;
 
+import java.util.Calendar;
+
 public class Constantes {
 
 	public static final String PATH_DIR_DATOS_BRUTOS_BOLSA = "/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/";
@@ -20,6 +22,10 @@ public class Constantes {
 	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
+	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 6 * 30; // Solo cogemos las carreras de los
+																					// últimos 6 meses
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1000 * 5L;
 
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";
@@ -54,6 +60,32 @@ public class Constantes {
 		} else {
 			return in.replace(Constantes.SEPARADOR_CAMPO, "").replace(Constantes.SEPARADOR_FILA, "");
 		}
+	}
+
+	/**
+	 * @param fechaSrt
+	 *            22/10/17
+	 * @param horaStr
+	 *            19:54
+	 * @return
+	 */
+	public static Calendar parsearFechaHora(String fechaStr, String horaStr) {
+
+		Integer dia = Integer.valueOf(fechaStr.substring(0, 2));
+		Integer mes = Integer.valueOf(fechaStr.substring(3, 5));
+		Integer anio = Integer.valueOf(fechaStr.substring(6, 10));
+		Integer hora = Integer.valueOf(horaStr.substring(0, 2));
+		Integer minuto = Integer.valueOf(horaStr.substring(3, 5));
+
+		Calendar fechayhora = Calendar.getInstance();
+		fechayhora.clear();
+		fechayhora.set(Calendar.YEAR, anio);
+		fechayhora.set(Calendar.MONTH, mes);
+		fechayhora.set(Calendar.DAY_OF_MONTH, dia);
+		fechayhora.set(Calendar.HOUR_OF_DAY, hora);
+		fechayhora.set(Calendar.MINUTE, minuto);
+
+		return fechayhora;
 	}
 
 }

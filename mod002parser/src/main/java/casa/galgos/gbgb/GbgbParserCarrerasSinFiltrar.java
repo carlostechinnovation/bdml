@@ -8,8 +8,19 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+
+import utilidades.Constantes;
 
 /**
  *
@@ -31,12 +42,12 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
-	public GbgbCarrerasInfoUtilHttp ejecutar(String pathIn) {
+	public List<GbgbCarrera> ejecutar(String pathIn) {
 
 		MY_LOGGER.info("GALGOS-GbgbParserCarreras: INICIO");
 
 		String bruto = "";
-		GbgbCarrerasInfoUtilHttp out = null;
+		List<GbgbCarrera> out = null;
 
 		try {
 			bruto = GbgbParserCarrerasSinFiltrar.readFile(pathIn, Charset.forName("ISO-8859-1"));
@@ -73,12 +84,58 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 	 * @param in
 	 * @return
 	 */
-	public static GbgbCarrerasInfoUtilHttp parsear(String in) {
+	public static List<GbgbCarrera> parsear(String in) {
 
-		// TODO rellenar
-		GbgbCarrerasInfoUtilHttp out = new GbgbCarrerasInfoUtilHttp();
+		Document doc = Jsoup.parse(in);
+		Element tablaCarreras = doc.getElementById("ctl00_ctl00_mainContent_cmscontent_TrackRaces_lvTrackRaces_ctl00");
 
-		return out;
+		List<Node> listaCarrerasPre = tablaCarreras.childNode(4).childNodes();
+
+		List<GbgbCarrera> listaCarreras = parsearCarreras(listaCarrerasPre);
+
+		return listaCarreras;
+	}
+
+	/**
+	 * @param listaCarrerasPre
+	 * @return
+	 */
+	public static List<GbgbCarrera> parsearCarreras(List<Node> listaCarrerasPre) {
+
+		List<GbgbCarrera> listaCarreras = new ArrayList<GbgbCarrera>();
+
+		if (listaCarrerasPre != null) {
+
+			for (Node fila : listaCarrerasPre) {
+
+				if (fila instanceof Element) {
+					Element filae = (Element) fila;
+
+					if (filae instanceof Element) {
+
+						String track = ((TextNode) filae.childNode(1).childNode(0)).text();
+						String clase = ((TextNode) filae.childNode(2).childNode(0)).text();
+
+						Calendar fechayhora = Constantes.parsearFechaHora(
+								((TextNode) filae.childNode(3).childNode(0)).text(),
+								((TextNode) filae.childNode(4).childNode(0)).text());
+
+						Integer distancia = Integer.valueOf(((TextNode) filae.childNode(5).childNode(0)).text());
+
+						Long id_carrera = Long
+								.valueOf(filae.childNode(6).childNode(0).attr("href").split("=")[1].trim());
+						Long id_campeonato = Long
+								.valueOf(filae.childNode(7).childNode(0).attr("href").split("=")[1].trim());
+
+						listaCarreras.add(
+								new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora, distancia, null));
+					}
+				}
+
+			}
+		}
+
+		return listaCarreras;
 	}
 
 }

@@ -4,25 +4,13 @@
 package casa.mod002a.parser;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import casa.galgos.gbgb.GbgbCarrera;
-import casa.galgos.gbgb.GbgbCarreraDetalle;
-import casa.galgos.gbgb.GbgbCarrerasDeUnDia;
-import casa.galgos.gbgb.GbgbCarrerasInfoUtilHttp;
-import casa.galgos.gbgb.GbgbDownloader;
-import casa.galgos.gbgb.GbgbGalgoHistorico;
-import casa.galgos.gbgb.GbgbParserCarreraDetalle;
-import casa.galgos.gbgb.GbgbParserCarrerasDeUnDia;
-import casa.galgos.gbgb.GbgbParserCarrerasSinFiltrar;
-import casa.galgos.gbgb.GbgbParserGalgoHistorico;
+import casa.galgos.GalgosManager;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -58,13 +46,11 @@ import utilidades.Constantes;
  * @author root
  *
  */
-public class Mod002Parser {
+public class Mod002Parser implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
-
-	// GALGOS
-	static GbgbCarrerasDeUnDia gbgbCarrerasDia;
-	static List<GbgbGalgoHistorico> historicosGalgos = new ArrayList();
 
 	/**
 	 * PARAM1 - Tipo de proceso: 01 (obtener tag del dia con BoeParser) 02 (Generar
@@ -184,14 +170,15 @@ public class Mod002Parser {
 
 		} else if (param1 != null && param1.equals("04") && param2 != null && param3 != null) {
 
-			descargarYparsearCarrerasDeGalgos(param2, param3);
+			try {
+				MY_LOGGER.info("param2=" + param2);
+				MY_LOGGER.info("param3" + param3);
+				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3);
 
-			// TODO carrerasDia --> Fichero bruto de carreras (de muchos dias) -->Unificar
-			// todo lo que conozca de las carreras
-			// (desde el detalle de carreras actuales o desde historico de carreras)
-
-			// TODO historicosGalgos --> Fichero bruto de galgos (historico) -->Unificar
-			// todo lo que conozca de los galgos
+			} catch (InterruptedException e) {
+				MY_LOGGER.severe("ERROR Excepcion de galgos.");
+				e.printStackTrace();
+			}
 
 		}
 		if (param1 != null && param1.equals("05")) {
@@ -204,142 +191,6 @@ public class Mod002Parser {
 		}
 
 		MY_LOGGER.info("FIN");
-	}
-
-	/**
-	 * @param param2
-	 *            Dia de la descarga
-	 * @param param3
-	 *            Prefijo de ficheros brutos
-	 */
-	public static void descargarYparsearCarrerasDeGalgos(String param2, String param3) {
-
-		// TODO Quitar pruebas
-		MY_LOGGER.info("######## TESTING con carreras de prueba (MOCK) ######...");
-		boolean PRUEBAS = true;
-		if (PRUEBAS) {
-			generarCarrerasDePrueba(2030316L, 151752L);
-		} else {
-			descargarCarrerasDeUnDia(param2, param3);
-		}
-
-		procesarCarrerasDeUnDia(param3);
-
-	}
-
-	/**
-	 * @param param2
-	 * @param param3
-	 */
-	public static void descargarCarrerasDeUnDia(String param2, String param3) {
-
-		MY_LOGGER.info(
-				"Descargando carreras SIN filtrar por dia... (sirve para extraer cookies y parametros ocultos...)");
-		String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";
-		(new GbgbDownloader()).descargarCarreras(param3 + SUFIJO_CARRERAS_SIN_FILTRAR, true);
-
-		MY_LOGGER.info("Parseando carreras SIN filtrar por dia...");
-		GbgbCarrerasInfoUtilHttp infoUtil = (new GbgbParserCarrerasSinFiltrar())
-				.ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
-
-		MY_LOGGER.info("Descargando carreras FILTRADAS por DIA...");
-		// TODO descargar carreras filtradas por dia!!!!!!!!!
-		String SUFIJO_CARRERAS_FILTRADAS = "_carreras_filtradas";
-		(new GbgbDownloader()).descargarCarrerasDeUnDia(infoUtil, param2, param3 + SUFIJO_CARRERAS_SIN_FILTRAR, true);
-
-		MY_LOGGER.info("Parseando carreras FILTRADAS por DIA...");
-		gbgbCarrerasDia = (new GbgbParserCarrerasDeUnDia()).ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
-
-	}
-
-	/**
-	 * @param param3
-	 */
-	public static void procesarCarrerasDeUnDia(String param3) {
-
-		if (gbgbCarrerasDia != null) {
-
-			if (gbgbCarrerasDia.carreras != null && !gbgbCarrerasDia.carreras.isEmpty()) {
-
-				String SUFIJO_CARRERA = "_carrera_";
-				String urlCarrera = "";
-				String pathFileCarreraDetalleBruto = "";
-				GbgbCarreraDetalle carreraDetalle = null;
-				String pathFileGalgoHistorico = "";
-
-				MY_LOGGER.info("------ CARRERAS DE UN DIA: " + gbgbCarrerasDia.carreras.size() + " -------");
-
-				HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // Lista de URLs de los historicos de los
-				// galgos, SIN DUPLICADOS
-
-				for (GbgbCarrera carrera : gbgbCarrerasDia.carreras) {
-
-					MY_LOGGER.info("CARRERA id = " + carrera.id_carrera);
-
-					urlCarrera = Constantes.GALGOS_GBGB_CARRERA_DETALLE_PREFIJO + carrera.id_carrera;
-					pathFileCarreraDetalleBruto = param3 + SUFIJO_CARRERA + carrera.id_carrera;
-
-					MY_LOGGER.info("URL = " + urlCarrera);
-					MY_LOGGER.info("Fichero carrera bruto = " + pathFileCarreraDetalleBruto);
-					(new GbgbDownloader()).descargarCarreraDetalle(urlCarrera, pathFileCarreraDetalleBruto, true);
-
-					MY_LOGGER.info("Parseando carrera...");
-					carreraDetalle = (new GbgbParserCarreraDetalle()).ejecutar(pathFileCarreraDetalleBruto);
-					carrera.setDetalle(carreraDetalle);
-
-					// En cada carrera-detalle, tenemos una lista con 6 URLs de los historicos
-					// de los galgos. Las vamos acumulando SIN DUPLICADOS.
-					MY_LOGGER.info("Anhadiendo " + carreraDetalle.urlsGalgosHistorico.size()
-							+ " URLs de historicos de galgos (EVITANDO DUPLICADOS)");
-					urlsHistoricoGalgos.addAll(carreraDetalle.urlsGalgosHistorico);
-				}
-
-				// TODO Conocidas las URLs,Extraer todos los historicos de cada galgo
-				MY_LOGGER.info("------- HISTORICOS (" + urlsHistoricoGalgos.size() + " URLs) -------");
-				for (String urlGalgo : urlsHistoricoGalgos) {
-
-					String galgo_nombre = urlGalgo.split("=")[1];
-					pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
-					MY_LOGGER.info("URL Historico galgo = " + urlGalgo);
-					MY_LOGGER.info("Galgo nombre = " + galgo_nombre);
-					MY_LOGGER.info("Path historico = " + pathFileGalgoHistorico);
-
-					MY_LOGGER.info("Descargando historico...");
-					(new GbgbDownloader()).descargarHistoricoGalgo(urlGalgo, pathFileGalgoHistorico, true);
-
-					MY_LOGGER.info("Parseando historico...");
-					historicosGalgos
-							.add((new GbgbParserGalgoHistorico()).ejecutar(pathFileGalgoHistorico, galgo_nombre));
-				}
-
-			} else {
-				MY_LOGGER.warning("WARNING Este dia no ha habido carreras!!!");
-			}
-
-		} else {
-			MY_LOGGER.severe(
-					"ERROR Esta vacio el objeto de info util (extraido de la pagina de carreras sin filtrar por dia)");
-		}
-
-	}
-
-	/**
-	 * @param id_gbgb
-	 * @param id_campeonato
-	 */
-	public static void generarCarrerasDePrueba(Long id_gbgb, Long id_campeonato) {
-
-		Calendar fechayhora = Calendar.getInstance();
-		fechayhora.set(Calendar.YEAR, 2017);
-		fechayhora.set(Calendar.MONTH, 10);
-		fechayhora.set(Calendar.DAY_OF_MONTH, 22);
-		fechayhora.set(Calendar.HOUR_OF_DAY, 19);
-		fechayhora.set(Calendar.MINUTE, 54);
-
-		List<GbgbCarrera> carreras = new ArrayList<GbgbCarrera>();
-		carreras.add(new GbgbCarrera(id_gbgb, id_campeonato, "Central Park", "D3", fechayhora, 265, null));
-
-		gbgbCarrerasDia = new GbgbCarrerasDeUnDia(fechayhora, carreras);
 	}
 
 }

@@ -1,5 +1,7 @@
 package casa.galgos.gbgb;
 
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class GbgbParserCarrerasSinFiltrarTest {
 	@Test
 	public void testParsear() throws Exception {
 
-		GbgbCarrerasInfoUtilHttp out = GbgbParserCarrerasSinFiltrar.parsear(res.getContent("ISO-8859-1"));
+		List<GbgbCarrera> out = GbgbParserCarrerasSinFiltrar.parsear(res.getContent("ISO-8859-1"));
 
 		// TODO rellenar
 		Assert.assertTrue(out != null);

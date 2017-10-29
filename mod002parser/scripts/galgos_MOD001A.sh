@@ -29,15 +29,10 @@ echo ${TAG_GBGB}'...' 2>&1 1>>${PATH_LOG}
 
 
 #GBGB Descargar+parsear las carreras de ese dia concreto y descargar+parsear los detalles (galgos y sus historicos)
-java -jar ${PATH_JAR} "04" "${anio}${mes}${dia}" "${PATH_CARPETA}galgos_${anio}${mes}${dia}_${TAG_GBGB}_bruto" 
-
-
-
+java -jar ${PATH_JAR} "04" "${anio}${mes}${dia}" "${PATH_CARPETA}galgos_${TAG_GBGB}_bruto" 
 
 
 echo "Galgos-Modulo 001A - FIN" 2>&1 1>>${PATH_LOG}
-
-
 
 
 

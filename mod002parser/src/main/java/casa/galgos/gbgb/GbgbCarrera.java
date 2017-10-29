@@ -22,10 +22,10 @@ public class GbgbCarrera implements Serializable {
 	// Datos DETALLE
 	public GbgbCarreraDetalle detalle;
 
-	public GbgbCarrera(Long id_gbgb, Long id_campeonato, String track, String clase, Calendar fechayhora,
+	public GbgbCarrera(Long id_carrera, Long id_campeonato, String track, String clase, Calendar fechayhora,
 			Integer distancia, GbgbCarreraDetalle detalle) {
 		super();
-		this.id_carrera = id_gbgb;
+		this.id_carrera = id_carrera;
 		this.id_campeonato = id_campeonato;
 		this.track = track;
 		this.clase = clase;

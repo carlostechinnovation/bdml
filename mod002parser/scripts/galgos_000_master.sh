@@ -10,20 +10,22 @@ PATH_JAR="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/target/mod00
 
 TAG_BOE="BOE"
 #BOE_01: dia y hora oficial en este instante.
-curl 'https://www.boe.es/sede_electronica/informacion/hora_oficial.php' > "/home/carloslinux/Desktop/DATOS_BRUTO/galgos/BOE_in"
+#curl 'https://www.boe.es/sede_electronica/informacion/hora_oficial.php' > "/home/carloslinux/Desktop/DATOS_BRUTO/galgos/BOE_in"
 sleep 3s
-FILE_BOE_OUT="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/BOE_out"
-rm ${FILE_BOE_OUT}
-java -jar ${PATH_JAR} "05" -Djava.util.logging.SimpleFormatter.format='%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %2$s %5$s%6$s%n' 2>>${PATH_LOG} 1>>${PATH_LOG}
+#FILE_BOE_OUT="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/BOE_out"
+#rm -f ${FILE_BOE_OUT}
+#java -jar ${PATH_JAR} "05" -Djava.util.logging.SimpleFormatter.format='%1$tY-%1$tm-%1$td %1$tH:%1$tM:%1$tS %4$s %2$s %5$s%6$s%n' 2>>${PATH_LOG} 1>>${PATH_LOG}
 
-export TAG_DIA_DESCARGA=$(cat $FILE_BOE_OUT)
+#export TAG_DIA_DESCARGA=$(cat $FILE_BOE_OUT)
+export TAG_DIA_DESCARGA='X'
 echo -e "GALGOS - Dia BOE extraido: "$TAG_DIA_DESCARGA 2>&1 1>>${PATH_LOG}
 
 ############################################################
 
 echo -e "GALGOS - Cadena de procesos"
 
-echo -e ${PATH_SCRIPTS}
+echo -e "Ruta script="${PATH_SCRIPTS}
+echo -e "Dia="${TAG_DIA_DESCARGA}
 
 #Descarga de datos (planificado con CRON)
 ${PATH_SCRIPTS}'galgos_MOD001A.sh' $TAG_DIA_DESCARGA
