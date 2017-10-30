@@ -140,7 +140,7 @@ public class GbgbCarreraDetalle implements Serializable {
 	/**
 	 * @return
 	 */
-	public String generarCamposSqlCreateTableDeDetalle() {
+	public static String generarCamposSqlCreateTableDeDetalle() {
 		String out = "premio_primer_puesto INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1),"
 				+ "fc_1 SMALLINT, fc_2 SMALLINT, fc_pounds decimal(10,2),"
 				+ "tc_1 SMALLINT, tc_2 SMALLINT, tc_3 SMALLINT, tc_pounds decimal(10,2)";
@@ -149,8 +149,9 @@ public class GbgbCarreraDetalle implements Serializable {
 			out += ", ";
 			out += "p" + i + "_" + "galgo_nombre varchar(30), ";
 			out += "p" + i + "_" + "trap SMALLINT, ";
-			out += "p" + i + "_" + "sp varchar(10), ";
-			out += "p" + i + "_" + "time_sec decimal(6,2)," + " time_distance varchar(15), ";
+			out += "p" + i + "_" + "sp varchar(5), ";
+			out += "p" + i + "_" + "time_sec decimal(6,2), ";
+			out += "p" + i + "_" + "time_distance varchar(15), ";
 			out += "p" + i + "_" + "peso_galgo decimal(4,2), ";
 			out += "p" + i + "_" + "entrenador_nombre varchar(30), ";
 			out += "p" + i + "_" + "galgo_padre varchar(50), ";

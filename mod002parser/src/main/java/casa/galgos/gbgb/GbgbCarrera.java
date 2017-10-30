@@ -53,9 +53,9 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	@Override
 	public String generarSqlCreateTable() {
 		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_carreras ("
-				+ "id_carrera BIGINT, id_campeonato BIGINT, track varchar(40), clase varchar(5), "
+				+ "id_carrera BIGINT NOT NULL PRIMARY KEY, id_campeonato BIGINT NOT NULL, track varchar(40), clase varchar(5), "
 				+ "anio SMALLINT, mes SMALLINT, dia SMALLINT, hora SMALLINT, minuto SMALLINT, " + "distancia INT,"
-				+ detalle.generarCamposSqlCreateTableDeDetalle() + ");";
+				+ GbgbCarreraDetalle.generarCamposSqlCreateTableDeDetalle() + ");";
 	}
 
 	@Override
@@ -69,14 +69,13 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += sdf.format(fechayhora.getTime()) + SEP;
 		out += distancia + SEP;
 
-		out += detalle.generarDatosParaExportarSql();
+		out += detalle.generarDatosParaExportarSql() + Constantes.SEPARADOR_FILA;
 		return out;
 	}
 
 	@Override
-	public String generarPath() {
-		// TODO Auto-generated method stub
-		return null;
+	public String generarPath(String pathDirBase) {
+		return pathDirBase + "tb_galgos_carreras_file";
 	}
 
 }

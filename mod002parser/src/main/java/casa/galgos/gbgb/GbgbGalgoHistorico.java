@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import utilidades.Constantes;
+
 public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	private static final long serialVersionUID = 1L;
@@ -27,20 +29,29 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	@Override
 	public String generarSqlCreateTable() {
-		// TODO Auto-generated method stub
-		return null;
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_historico ("
+				+ "galgo_nombre varchar(30) NOT NULL PRIMARY KEY, entrenador varchar(30), "
+				+ GbgbGalgoHistoricoCarrera.generarCamposSqlCreateTableDeDetalle() + ");";
 	}
 
 	@Override
 	public String generarDatosParaExportarSql() {
-		// TODO Auto-generated method stub
-		return null;
+
+		String SEP = Constantes.SEPARADOR_CAMPO;
+
+		String out = "";
+
+		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
+			out += galgo_nombre + SEP + entrenador + SEP;
+			out += fila.generarDatosParaExportarSql() + Constantes.SEPARADOR_FILA;
+		}
+
+		return out;
 	}
 
 	@Override
-	public String generarPath() {
-		// TODO Auto-generated method stub
-		return null;
+	public String generarPath(String pathDirBase) {
+		return pathDirBase + "tb_galgos_historico_file";
 	}
 
 }

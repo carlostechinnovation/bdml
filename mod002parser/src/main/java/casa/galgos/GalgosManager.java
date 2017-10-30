@@ -121,7 +121,7 @@ public class GalgosManager implements Serializable {
 
 		if (listaFilas != null && !listaFilas.isEmpty()) {
 
-			String path = listaFilas.get(0).generarPath();
+			String path = listaFilas.get(0).generarPath(Constantes.PATH_DIR_DATOS_LIMPIOS_GALGOS);
 
 			MY_LOGGER.info("Guardando FICHEROS FINALES en: " + path);
 

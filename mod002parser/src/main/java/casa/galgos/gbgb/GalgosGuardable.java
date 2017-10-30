@@ -6,6 +6,6 @@ public interface GalgosGuardable {
 
 	public String generarDatosParaExportarSql();
 
-	public String generarPath();
+	public String generarPath(String pathDirBase);
 
 }
