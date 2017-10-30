@@ -8,9 +8,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,7 +27,7 @@ public class BoeParser {
 		super();
 	}
 
-	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+	static Logger MY_LOGGER = Logger.getLogger(BoeParser.class);
 
 	/**
 	 * @param pathIn
@@ -51,7 +50,7 @@ public class BoeParser {
 
 			MY_LOGGER.info("Escribiendo hacia " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warning("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -60,7 +59,7 @@ public class BoeParser {
 			Files.write(Paths.get(pathOut), out.getBytes());
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 

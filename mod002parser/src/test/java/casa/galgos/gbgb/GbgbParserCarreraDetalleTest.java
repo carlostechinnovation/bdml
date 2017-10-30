@@ -77,12 +77,26 @@ public class GbgbParserCarreraDetalleTest {
 		}
 
 		String abc = abcd.split("Weight")[0].replace("(", "");
-		String galgo_padre = "";
+		String galgo_padre = abc;
 		String galgo_madre = "";
 		String nacimiento = "";
 
 		String peso_galgo = abcd.split("Weight")[1].replace(")", "").replace(":", "").trim();
 		Assert.assertTrue(peso_galgo.equals("25.0"));
+	}
+
+	@Test
+	public void rellenarPremiosTest() throws Exception {
+
+		String premiosStr = "1st Â£110, 2nd Â£45, Others Â£40 Race Total Â£315 ";
+
+		GbgbCarreraDetalle out = new GbgbCarreraDetalle();
+
+		GbgbParserCarreraDetalle.rellenarPremios(premiosStr, out);
+
+		Assert.assertTrue(out.premio_primer_puesto.intValue() == 110);
+		Assert.assertTrue(out.premio_otros.intValue() == 45);
+		Assert.assertTrue(out.premio_total_carrera.intValue() == 40);
 
 	}
 

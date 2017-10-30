@@ -10,9 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,11 +28,11 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	static Logger MY_LOGGER = Logger.getLogger(GbgbParserCarreraDetalle.class);
+
 	public GbgbParserCarreraDetalle() {
 		super();
 	}
-
-	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
 	/**
 	 * @param pathIn
@@ -56,7 +55,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: out=" + out);
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -110,9 +109,13 @@ public class GbgbParserCarreraDetalle implements Serializable {
 					(Element) infoPosiciones.get(i + 4), detalle);
 		}
 		// --------------------------
+		MY_LOGGER.info("Sacando info abajo...");
 		List<Node> infoAbajo = a.childNode(0).childNode(6).childNodes();
-		String goingAllowanceStr = ((TextNode) ((Element) infoAbajo.get(1)).childNode(1)).text();
-		detalle.going_allowance = (goingAllowanceStr != null && "S".equalsIgnoreCase(goingAllowanceStr));
+
+		if (infoAbajo.toString().contains("Allowance")) {
+			String goingAllowanceStr = ((TextNode) ((Element) infoAbajo.get(1)).childNode(1)).text().trim();
+			detalle.going_allowance = (goingAllowanceStr != null && "S".equalsIgnoreCase(goingAllowanceStr));
+		}
 
 		String fc = ((TextNode) infoAbajo.get(3).childNode(1)).text();// (2-1) £11.75 |
 		String tc = ((TextNode) infoAbajo.get(3).childNode(3)).text();// (2-1-3) £23.19
@@ -123,7 +126,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").trim();
 		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").trim();
-		Calendar fechayhora = Constantes.parsearFechaHora(f, h);
+		Calendar fechayhora = Constantes.parsearFechaHora(f, h, true);
 
 		Integer distancia = Integer.valueOf(((TextNode) infoArriba.get(9).childNode(0)).text().split("m")[0]);
 
@@ -139,11 +142,13 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public static void rellenarPremios(String premiosStr, GbgbCarreraDetalle out) {
 
+		MY_LOGGER.info("rellenarPremios --> premiosStr=" + premiosStr);
+
 		String[] partes = premiosStr.split("£");
 
-		out.premio_primer_puesto = Integer.valueOf(partes[1].split(",")[0]);
-		out.premio_otros = Integer.valueOf(partes[2].split(" ")[0]);
-		out.premio_total_carrera = Integer.valueOf(partes[3].trim());
+		out.premio_primer_puesto = Integer.valueOf(partes[1].split(",")[0].trim());
+		out.premio_otros = Integer.valueOf(partes[2].split(",")[0].trim());
+		out.premio_total_carrera = Integer.valueOf(partes[3].split(" ")[0].trim());
 	}
 
 	/**
@@ -176,9 +181,13 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String[] partes = padre_madre_nacimiento_peso.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
 		String season = "";
 		String abcd = "";
-		if (partes.length == 1) {
+		if (partes.length == 2) {
 			abcd = partes[0];
-		} else if (partes.length == 2) {
+		} else if (partes.length == 3) {
+
+			MY_LOGGER.info("partes[0]=" + partes[0]);
+			MY_LOGGER.info("partes[1]=" + partes[1]);
+
 			season = partes[0].split("eason")[1].trim();
 			abcd = partes[1];
 		}
@@ -191,8 +200,9 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String peso_galgo = abcd.split("Weight")[1].replace(")", "").replace(":", "").trim();
 
 		// ----------------
-		out.rellenarPuesto(posicion, galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-				galgo_padre, galgo_madre, nacimiento, comment, url_galgo_historico);
+		out.rellenarPuesto(posicion, galgo_nombre, trap != null ? Integer.valueOf(trap) : null, sp, time_sec,
+				time_distance, peso_galgo != null ? Float.valueOf(peso_galgo) : null, entrenador_nombre, galgo_padre,
+				galgo_madre, nacimiento, comment, url_galgo_historico);
 
 	}
 

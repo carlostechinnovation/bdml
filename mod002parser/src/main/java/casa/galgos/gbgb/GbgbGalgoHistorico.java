@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GbgbGalgoHistorico implements Serializable {
+public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,6 +23,24 @@ public class GbgbGalgoHistorico implements Serializable {
 		this.entrenador = entrenador;
 		this.padre_madre_nacimiento = padre_madre_nacimiento;
 		carrerasHistorico = new ArrayList<GbgbGalgoHistoricoCarrera>();
+	}
+
+	@Override
+	public String generarSqlCreateTable() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String generarDatosParaExportarSql() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String generarPath() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

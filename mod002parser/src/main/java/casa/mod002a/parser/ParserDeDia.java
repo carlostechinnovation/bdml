@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 import utilidades.Constantes;
 
 public abstract class ParserDeDia implements ParserDeDiaAPI {
 
-	public static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+	protected static Logger MY_LOGGER = Logger.getLogger(ParserDeDia.class);
 
 	public static final Integer STR_MAX = Integer.valueOf(20);
 	public static final Integer STR_LARGO_MAX = Integer.valueOf(1500);
@@ -38,7 +38,7 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 			Files.write(Paths.get(pathSalida), out.getBytes());
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 

@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class GbgbCarrera implements Serializable {
+import utilidades.Constantes;
+
+public class GbgbCarrera implements Serializable, GalgosGuardable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -46,6 +48,35 @@ public class GbgbCarrera implements Serializable {
 
 	public void setDetalle(GbgbCarreraDetalle detalle) {
 		this.detalle = detalle;
+	}
+
+	@Override
+	public String generarSqlCreateTable() {
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_carreras ("
+				+ "id_carrera BIGINT, id_campeonato BIGINT, track varchar(40), clase varchar(5), "
+				+ "anio SMALLINT, mes SMALLINT, dia SMALLINT, hora SMALLINT, minuto SMALLINT, " + "distancia INT,"
+				+ detalle.generarCamposSqlCreateTableDeDetalle() + ");";
+	}
+
+	@Override
+	public String generarDatosParaExportarSql() {
+
+		String SEP = Constantes.SEPARADOR_CAMPO;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy" + SEP + "MM" + SEP + "dd" + SEP + "hh" + SEP + "mm");
+
+		String out = id_carrera + SEP + id_campeonato + SEP + track + SEP + clase + SEP;
+
+		out += sdf.format(fechayhora.getTime()) + SEP;
+		out += distancia + SEP;
+
+		out += detalle.generarDatosParaExportarSql();
+		return out;
+	}
+
+	@Override
+	public String generarPath() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import casa.galgos.GalgosManager;
 import casa.mod002a.boe.BoeParser;
@@ -50,18 +51,21 @@ public class Mod002Parser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
+	static Logger MY_LOGGER = Logger.getLogger(Mod002Parser.class);
 
 	/**
 	 * PARAM1 - Tipo de proceso: 01 (obtener tag del dia con BoeParser) 02 (Generar
 	 * Sentencias Create table) 03 (Procesar datos de un dia)
 	 * 04-galgos-Descargar_GBGB
 	 * 
-	 * PARAM2 - Path entrada: TAG del Día.
+	 * PARAM2 - Path entrada: TAG del día.
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+		// LOGS: Set up a simple configuration that logs on the console.
+		BasicConfigurator.configure();
 
 		MY_LOGGER.info("INICIO");
 
@@ -130,7 +134,7 @@ public class Mod002Parser implements Serializable {
 						out.getBytes());
 
 			} catch (IOException e) {
-				MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+				MY_LOGGER.error("Error:" + e.getMessage());
 				e.printStackTrace();
 			}
 
@@ -171,23 +175,20 @@ public class Mod002Parser implements Serializable {
 		} else if (param1 != null && param1.equals("04") && param2 != null && param3 != null) {
 
 			try {
-				MY_LOGGER.info("param2=" + param2);
-				MY_LOGGER.info("param3" + param3);
-				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3);
+				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3, true);
 
 			} catch (InterruptedException e) {
-				MY_LOGGER.severe("ERROR Excepcion de galgos.");
+				MY_LOGGER.error("ERROR Excepcion de galgos.");
 				e.printStackTrace();
 			}
 
-		}
-		if (param1 != null && param1.equals("05")) {
+		} else if (param1 != null && param1.equals("05")) {
 
 			(new BoeParser()).ejecutar(Constantes.PATH_DIR_DATOS_BRUTOS_GALGOS + Constantes.BOE_IN,
 					Constantes.PATH_DIR_DATOS_BRUTOS_GALGOS + Constantes.BOE_OUT, false);
 
 		} else {
-			MY_LOGGER.severe("ERROR Los parametros de entrada a Mod001Parser no son correctos.");
+			MY_LOGGER.error("ERROR Los parametros de entrada a Mod002Parser no son correctos.");
 		}
 
 		MY_LOGGER.info("FIN");

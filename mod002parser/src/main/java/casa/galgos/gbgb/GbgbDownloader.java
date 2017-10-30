@@ -10,8 +10,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 import utilidades.Constantes;
 
@@ -20,11 +20,11 @@ import utilidades.Constantes;
  */
 public class GbgbDownloader {
 
+	static Logger MY_LOGGER = Logger.getLogger(GbgbDownloader.class);
+
 	public GbgbDownloader() {
 		super();
 	}
-
-	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
 	/**
 	 * @param pathOut
@@ -34,15 +34,15 @@ public class GbgbDownloader {
 	 */
 	public void descargarCarreras(String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("GALGOS-GbgbDownloader: INICIO");
-		MY_LOGGER.info("GALGOS-GbgbDownloader - pathOut=" + pathOut);
-		MY_LOGGER.info("GALGOS-GbgbDownloader - borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.info("INICIO");
+		MY_LOGGER.info("pathOut=" + pathOut);
+		MY_LOGGER.info("borrarSiExiste=" + borrarSiExiste);
 
 		try {
 
 			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warning("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -67,7 +67,7 @@ public class GbgbDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("GALGOS-GbgbDownloader: HTTP GET " + url + " ...");
+			MY_LOGGER.info("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA
@@ -90,13 +90,13 @@ public class GbgbDownloader {
 			con.disconnect();
 
 			// Escribir SALIDA
-			MY_LOGGER.info("GALGOS-GbgbDownloader: Escribiendo a fichero...");
+			MY_LOGGER.info("Escribiendo a fichero...");
 			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
 			MY_LOGGER.info("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -132,15 +132,15 @@ public class GbgbDownloader {
 	 */
 	public void descargarCarreraDetalle(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("GALGOS-GbgbDownloader.descargarCarreraDetalle:  " + urlCarrera);
-		MY_LOGGER.info("GALGOS-GbgbDownloader - pathOut=" + pathOut);
-		MY_LOGGER.info("GALGOS-GbgbDownloader - borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.info("URL: " + urlCarrera);
+		MY_LOGGER.info("pathOut=" + pathOut);
+		MY_LOGGER.info("borrarSiExiste=" + borrarSiExiste);
 
 		try {
 
 			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warning("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -165,7 +165,7 @@ public class GbgbDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("GALGOS-GbgbDownloader: HTTP GET " + url + " ...");
+			MY_LOGGER.info("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA
@@ -188,17 +188,17 @@ public class GbgbDownloader {
 			con.disconnect();
 
 			// Escribir SALIDA
-			MY_LOGGER.info("GALGOS-GbgbDownloader: Escribiendo a fichero...");
+			MY_LOGGER.info("Escribiendo a fichero...");
 			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
 			MY_LOGGER.info("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbDownloader: FIN");
+		MY_LOGGER.info("FIN");
 
 	}
 
@@ -211,16 +211,16 @@ public class GbgbDownloader {
 	 */
 	public void descargarHistoricoGalgo(String urlHistoricoGalgo, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("GALGOS-GbgbDownloader.descargarHistoricoGalgo:  ");
-		MY_LOGGER.info("GALGOS-GbgbDownloader - urlCarrera=" + urlHistoricoGalgo);
-		MY_LOGGER.info("GALGOS-GbgbDownloader - pathOut=" + pathOut);
-		MY_LOGGER.info("GALGOS-GbgbDownloader - borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.info("DescargarHistoricoGalgo:  ");
+		MY_LOGGER.info("urlCarrera=" + urlHistoricoGalgo);
+		MY_LOGGER.info("pathOut=" + pathOut);
+		MY_LOGGER.info("borrarSiExiste=" + borrarSiExiste);
 
 		try {
 
 			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warning("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -245,7 +245,7 @@ public class GbgbDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("GALGOS-GbgbDownloader: HTTP GET " + url + " ...");
+			MY_LOGGER.info("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA
@@ -268,17 +268,17 @@ public class GbgbDownloader {
 			con.disconnect();
 
 			// Escribir SALIDA
-			MY_LOGGER.info("GALGOS-GbgbDownloader: Escribiendo a fichero...");
+			MY_LOGGER.info("Escribiendo a fichero...");
 			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
 			MY_LOGGER.info("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbDownloader: FIN");
+		MY_LOGGER.info("FIN");
 
 	}
 

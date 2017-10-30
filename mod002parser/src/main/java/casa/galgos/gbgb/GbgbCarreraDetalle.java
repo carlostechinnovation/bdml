@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import utilidades.Constantes;
+
 public class GbgbCarreraDetalle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -53,8 +55,8 @@ public class GbgbCarreraDetalle implements Serializable {
 	 * @param comment
 	 * @param url_galgo_historico
 	 */
-	public void rellenarPuesto(Short posicion, String galgo_nombre, String trap, String sp, String time_sec,
-			String time_distance, String peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
+	public void rellenarPuesto(Short posicion, String galgo_nombre, Integer trap, String sp, String time_sec,
+			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
 			String nacimiento, String comment, String url_galgo_historico) {
 
 		switch (posicion) {
@@ -105,10 +107,10 @@ public class GbgbCarreraDetalle implements Serializable {
 	 * @param comment
 	 * @return
 	 */
-	private String crearCadenaPuesto(String galgo_nombre, String trap, String sp, String time_sec, String time_distance,
-			String peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre, String nacimiento,
-			String comment) {
-		String SEP = "#";
+	private String crearCadenaPuesto(String galgo_nombre, Integer trap, String sp, String time_sec,
+			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
+			String nacimiento, String comment) {
+		String SEP = Constantes.SEPARADOR_CAMPO;
 		return galgo_nombre + SEP + trap + SEP + sp + SEP + time_sec + SEP + time_distance + SEP + peso_galgo + SEP
 				+ entrenador_nombre + SEP + galgo_padre + SEP + galgo_madre + SEP + nacimiento + SEP + comment;
 	}
@@ -121,19 +123,58 @@ public class GbgbCarreraDetalle implements Serializable {
 	 */
 	public void rellenarForecastyTricast(String fc, String tc) {
 
-		String[] fca = fc.split("£");
+		String[] fca = fc.replace("Â", "").split("£");
 		String[] fc_parte1 = fca[0].trim().replace("(", "").replace(")", "").split("-");
 		fc_1 = fc_parte1[0];
 		fc_2 = fc_parte1[1];
 		fc_pounds = fca[1].replace("|", "").trim();
 
-		String[] tca = tc.split("£");
+		String[] tca = tc.replace("Â", "").split("£");
 		String[] tc_parte1 = tca[0].trim().replace("(", "").replace(")", "").split("-");
 		tc_1 = tc_parte1[0];
 		tc_2 = tc_parte1[1];
 		tc_3 = tc_parte1[2];
 		tc_pounds = tca[1].replace("|", "").trim();
+	}
 
+	/**
+	 * @return
+	 */
+	public String generarCamposSqlCreateTableDeDetalle() {
+		String out = "premio_primer_puesto INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1),"
+				+ "fc_1 SMALLINT, fc_2 SMALLINT, fc_pounds decimal(10,2),"
+				+ "tc_1 SMALLINT, tc_2 SMALLINT, tc_3 SMALLINT, tc_pounds decimal(10,2)";
+
+		for (int i = 1; i <= 6; i++) {
+			out += ", ";
+			out += "p" + i + "_" + "galgo_nombre varchar(30), ";
+			out += "p" + i + "_" + "trap SMALLINT, ";
+			out += "p" + i + "_" + "sp varchar(10), ";
+			out += "p" + i + "_" + "time_sec decimal(6,2)," + " time_distance varchar(15), ";
+			out += "p" + i + "_" + "peso_galgo decimal(4,2), ";
+			out += "p" + i + "_" + "entrenador_nombre varchar(30), ";
+			out += "p" + i + "_" + "galgo_padre varchar(50), ";
+			out += "p" + i + "_" + "galgo_madre varchar(30), ";
+			out += "p" + i + "_" + "nacimiento varchar(30), ";
+			out += "p" + i + "_" + "comment varchar(20)";
+		}
+
+		return out;
+	}
+
+	/**
+	 * @return
+	 */
+	public String generarDatosParaExportarSql() {
+
+		String SEP = Constantes.SEPARADOR_CAMPO;
+
+		String out = premio_primer_puesto + SEP + premio_otros + SEP + premio_total_carrera + SEP + going_allowance
+				+ SEP + fc_1 + ", fc_2=" + fc_2 + SEP + fc_pounds + SEP + tc_1 + SEP + tc_2 + SEP + tc_3 + SEP
+				+ tc_pounds + SEP;
+		out += puesto1 + SEP + puesto2 + SEP + puesto3 + SEP + puesto4 + SEP + puesto5 + SEP + puesto6;
+
+		return out;
 	}
 
 }

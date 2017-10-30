@@ -20,7 +20,7 @@ public class GalgosManagerTest {
 
 		String param3 = "/galgos_20171021_GBGB_bruto";
 
-		GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3);
+		GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3, false);
 
 		Assert.assertTrue(GalgosManager.getInstancia().idCarrerasCampeonatoPendientes != null);
 

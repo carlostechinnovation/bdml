@@ -10,9 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,11 +26,11 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	static Logger MY_LOGGER = Logger.getLogger(GbgbParserGalgoHistorico.class);
+
 	public GbgbParserGalgoHistorico() {
 		super();
 	}
-
-	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
 	/**
 	 * @param pathIn
@@ -54,7 +53,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 			MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -95,7 +94,12 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 		GbgbGalgoHistorico out = new GbgbGalgoHistorico(galgo_nombre, entrenador, padre_madre_nacimiento);
 
-		List<Node> filas = tablaContenido.childNode(0).childNode(4).childNodes();
+		List<Node> filas = null;
+		for (Node item : tablaContenido.childNode(0).childNodes()) {
+			if (item.toString().contains("rgRow")) {
+				filas = item.childNodes();
+			}
+		}
 
 		for (Node fila : filas) {
 			if (fila instanceof Element) {

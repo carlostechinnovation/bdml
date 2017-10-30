@@ -25,7 +25,7 @@ public class Constantes {
 	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 6 * 30; // Solo cogemos las carreras de los
 																					// últimos 6 meses
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1000 * 5L;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1000 * 1L;
 
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";
@@ -69,13 +69,15 @@ public class Constantes {
 	 *            19:54
 	 * @return
 	 */
-	public static Calendar parsearFechaHora(String fechaStr, String horaStr) {
+	public static Calendar parsearFechaHora(String fechaStr, String horaStr, boolean anioIncompleto) {
 
-		Integer dia = Integer.valueOf(fechaStr.substring(0, 2));
-		Integer mes = Integer.valueOf(fechaStr.substring(3, 5));
-		Integer anio = Integer.valueOf(fechaStr.substring(6, 10));
-		Integer hora = Integer.valueOf(horaStr.substring(0, 2));
-		Integer minuto = Integer.valueOf(horaStr.substring(3, 5));
+		Integer dia = Integer.valueOf(fechaStr.trim().substring(0, 2));
+		Integer mes = Integer.valueOf(fechaStr.trim().substring(3, 5));
+		Integer anio = anioIncompleto ? (2000 + Integer.valueOf(fechaStr.trim().substring(6, 8)))
+				: Integer.valueOf(fechaStr.trim().substring(6, 10));
+
+		Integer hora = Integer.valueOf(horaStr.trim().substring(0, 2));
+		Integer minuto = Integer.valueOf(horaStr.trim().substring(3, 5));
 
 		Calendar fechayhora = Calendar.getInstance();
 		fechayhora.clear();

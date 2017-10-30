@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.logging.Level;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -60,7 +59,7 @@ public class BM02Parser extends ParserDeDia {
 			Files.write(Paths.get(pathSalida), out.getBytes());
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 

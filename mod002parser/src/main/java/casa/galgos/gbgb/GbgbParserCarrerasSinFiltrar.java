@@ -11,9 +11,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,11 +28,11 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	static Logger MY_LOGGER = Logger.getLogger(GbgbParserCarrerasSinFiltrar.class);
+
 	public GbgbParserCarrerasSinFiltrar() {
 		super();
 	}
-
-	private static Logger MY_LOGGER = Logger.getLogger(Thread.currentThread().getStackTrace()[0].getClassName());
 
 	/**
 	 * @param pathIn
@@ -44,7 +43,7 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 	 */
 	public List<GbgbCarrera> ejecutar(String pathIn) {
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarreras: INICIO");
+		MY_LOGGER.info("GALGOS-GbgbParserCarrerasSinFiltrar: INICIO");
 
 		String bruto = "";
 		List<GbgbCarrera> out = null;
@@ -52,14 +51,14 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 		try {
 			bruto = GbgbParserCarrerasSinFiltrar.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto);
-			MY_LOGGER.info("GALGOS-GbgbParserCarreras: out=" + out);
+			// MY_LOGGER.info("GALGOS-GbgbParserCarrerasSinFiltrar: out=" + out);
 
 		} catch (IOException e) {
-			MY_LOGGER.log(Level.SEVERE, "Error:" + e.getMessage());
+			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarreras: FIN");
+		MY_LOGGER.info("GALGOS-GbgbParserCarrerasSinFiltrar: FIN");
 		return out;
 	}
 
@@ -118,7 +117,7 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 
 						Calendar fechayhora = Constantes.parsearFechaHora(
 								((TextNode) filae.childNode(3).childNode(0)).text(),
-								((TextNode) filae.childNode(4).childNode(0)).text());
+								((TextNode) filae.childNode(4).childNode(0)).text(), false);
 
 						Integer distancia = Integer.valueOf(((TextNode) filae.childNode(5).childNode(0)).text());
 
