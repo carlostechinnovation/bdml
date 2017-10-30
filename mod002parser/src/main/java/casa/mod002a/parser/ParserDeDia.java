@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.log4j.Logger;
 
@@ -35,7 +36,7 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 			String pathSalida = Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + getPathEntrada(TAG_DIA) + Constantes.OUT;
 
 			MY_LOGGER.info("Escribiendo hacia " + pathSalida + " ...");
-			Files.write(Paths.get(pathSalida), out.getBytes());
+			Files.write(Paths.get(pathSalida), out.getBytes(), StandardOpenOption.CREATE);
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error:" + e.getMessage());

@@ -98,7 +98,7 @@ public class GalgosManager implements Serializable {
 			} while (!idCarrerasCampeonatoPendientes.isEmpty()
 					&& guardableCarreras.size() <= Constantes.MAX_NUM_CARRERAS_PROCESADAS);
 
-			MY_LOGGER.info("El BUCLE ha TERMINADO: carreas_pendientes=" + idCarrerasCampeonatoPendientes.size()
+			MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes=" + idCarrerasCampeonatoPendientes.size()
 					+ " carreras_guardadas=" + guardableCarreras.size() + " historicos_galgos="
 					+ guardableHistoricosGalgos.size());
 
@@ -132,7 +132,7 @@ public class GalgosManager implements Serializable {
 				MY_LOGGER.info("Escribiendo...");
 				for (GalgosGuardable fila : listaFilas) {
 					Files.write(Paths.get(path), fila.generarDatosParaExportarSql().getBytes(),
-							StandardOpenOption.APPEND);
+							StandardOpenOption.CREATE);
 				}
 
 			} catch (IOException e) {

@@ -27,6 +27,9 @@ echo -e "GALGOS - Cadena de procesos"
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Dia="${TAG_DIA_DESCARGA}
 
+#limpiar log
+rm -f "/home/carloslinux/Desktop/log4j-application.log"
+
 #Descarga de datos (planificado con CRON)
 ${PATH_SCRIPTS}'galgos_MOD001A.sh' $TAG_DIA_DESCARGA
 

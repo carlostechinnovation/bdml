@@ -137,7 +137,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public static void rellenarPremios(String premiosStr, GbgbCarreraDetalle out) {
 
-		MY_LOGGER.info("rellenarPremios --> premiosStr=" + premiosStr);
+		MY_LOGGER.debug("rellenarPremios --> premiosStr=" + premiosStr);
 
 		String[] partes = premiosStr.split("£");
 
@@ -170,8 +170,6 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String comment = ((TextNode) e3.childNode(1).childNode(1)).text().trim();
 
 		// ----------------------------------
-		// TODO Parsear (hay otros formatos!!!) "bk d Sparta Maestro - Buds Of May
-		// Sep-2015 ( Weight: 30.7 )"
 
 		String[] partes = padre_madre_nacimiento_peso.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
 		String season = "";
@@ -187,18 +185,14 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			abcd = partes[1].trim();
 		}
 
-		String abc = abcd.split("Weight")[0].replace("(", "");
 		String galgo_padre = "";
 		String galgo_madre = "";
 		String nacimiento = "";
 
-		System.out.println(padre_madre_nacimiento_peso);
+		MY_LOGGER.debug("padre_madre_nacimiento_peso-->" + padre_madre_nacimiento_peso);
 
-		String[] a1 = abcd.split("Weight");
-		String a2 = abcd.split("Weight")[1].replace(")", "");
-		String a3 = abcd.split("Weight")[1].replace(")", "").replace(":", "");
-
-		String peso_galgo = abcd.split("Weight")[1].replace(")", "").replace(":", "").trim();
+		String peso_galgo = abcd.contains("eight") ? abcd.split("Weight")[1].replace(")", "").replace(":", "").trim()
+				: null;
 
 		// ----------------
 		out.rellenarPuesto(posicion, galgo_nombre, trap != null ? Integer.valueOf(trap) : null, sp, time_sec,
