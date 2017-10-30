@@ -92,11 +92,6 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		Element a = doc.getElementById("CMSContent");
 
-		// List<Node> contenedorInfo =
-		// doc.childNode(1).childNode(1).childNode(1).childNode(5).childNode(1).childNode(1)
-		// .childNode(1).childNode(5).childNode(1).childNode(3).childNode(1).childNode(0).childNode(0)
-		// .childNodes();
-
 		GbgbCarreraDetalle detalle = new GbgbCarreraDetalle();
 		// --------------------------
 		List<Node> infoArriba = a.childNode(0).childNode(2).childNodes();
@@ -121,8 +116,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String tc = ((TextNode) infoAbajo.get(3).childNode(3)).text();// (2-1-3) £23.19
 		detalle.rellenarForecastyTricast(fc, tc);
 
-		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].trim();
-		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text();
+		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].replace("|", "").trim();
+		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").trim();
 
 		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").trim();
 		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").trim();
@@ -146,8 +141,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		String[] partes = premiosStr.split("£");
 
-		out.premio_primer_puesto = Integer.valueOf(partes[1].split(",")[0].trim());
-		out.premio_otros = Integer.valueOf(partes[2].split(",")[0].trim());
+		out.premio_primer_puesto = Integer.valueOf(partes[1].split("Others")[0].replace(",", "").trim());
+		out.premio_otros = Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
 		out.premio_total_carrera = Integer.valueOf(partes[3].split(" ")[0].trim());
 	}
 
@@ -161,16 +156,16 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public static void rellenarPosicion(Element e1, Element e2, Element e3, GbgbCarreraDetalle out) {
 
-		Short posicion = Short.valueOf(((TextNode) e1.childNode(1).childNode(0)).text());
-		String galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text();
-		String url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href");
-		String trap = ((TextNode) e1.childNode(5).childNode(0)).text();
-		String sp = ((TextNode) e1.childNode(7).childNode(0)).text();
-		String time_sec = ((TextNode) e1.childNode(9).childNode(0)).text();
-		String time_distance = ((TextNode) e1.childNode(11).childNode(0)).text();
+		Short posicion = Short.valueOf(((TextNode) e1.childNode(1).childNode(0)).text().trim());
+		String galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text().trim();
+		String url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
+		String trap = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
+		String sp = ((TextNode) e1.childNode(7).childNode(0)).text().trim();
+		String time_sec = ((TextNode) e1.childNode(9).childNode(0)).text().trim();
+		String time_distance = ((TextNode) e1.childNode(11).childNode(0)).text().trim();
 
-		String padre_madre_nacimiento_peso = ((TextNode) e2.childNode(1).childNode(0)).text();
-		String entrenador_nombre = ((TextNode) e2.childNode(3).childNode(2)).text().replace(")", "");
+		String padre_madre_nacimiento_peso = ((TextNode) e2.childNode(1).childNode(0)).text().trim();
+		String entrenador_nombre = ((TextNode) e2.childNode(3).childNode(2)).text().replace(")", "").trim();
 
 		String comment = ((TextNode) e3.childNode(1).childNode(1)).text().trim();
 
@@ -181,21 +176,27 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String[] partes = padre_madre_nacimiento_peso.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
 		String season = "";
 		String abcd = "";
-		if (partes.length == 2) {
-			abcd = partes[0];
+		if (partes.length <= 2) {
+			abcd = (partes[0].contains("eason")) ? partes[1] : partes[0];
 		} else if (partes.length == 3) {
 
 			MY_LOGGER.info("partes[0]=" + partes[0]);
 			MY_LOGGER.info("partes[1]=" + partes[1]);
 
 			season = partes[0].split("eason")[1].trim();
-			abcd = partes[1];
+			abcd = partes[1].trim();
 		}
 
 		String abc = abcd.split("Weight")[0].replace("(", "");
 		String galgo_padre = "";
 		String galgo_madre = "";
 		String nacimiento = "";
+
+		System.out.println(padre_madre_nacimiento_peso);
+
+		String[] a1 = abcd.split("Weight");
+		String a2 = abcd.split("Weight")[1].replace(")", "");
+		String a3 = abcd.split("Weight")[1].replace(")", "").replace(":", "");
 
 		String peso_galgo = abcd.split("Weight")[1].replace(")", "").replace(":", "").trim();
 

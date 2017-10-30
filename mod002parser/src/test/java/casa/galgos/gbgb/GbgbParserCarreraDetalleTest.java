@@ -34,12 +34,12 @@ public class GbgbParserCarreraDetalleTest {
 
 		Assert.assertTrue(out.id_carrera.equals(idCarrera));
 		Assert.assertTrue(out.id_campeonato.equals(idCampeonato));
-		Assert.assertTrue(out.track.equals("Central Park"));
-		Assert.assertTrue(out.clase.equals("D3"));
+		Assert.assertTrue(out.track.contains("Central Park"));
+		Assert.assertTrue(out.clase.contains("D3"));
 		Assert.assertTrue(out.fechayhora.get(Calendar.DAY_OF_MONTH) == 22);
 		Assert.assertTrue(out.fechayhora.get(Calendar.MONTH) == 10);
 		Assert.assertTrue(out.fechayhora.get(Calendar.YEAR) == 2017);
-		Assert.assertTrue(out.fechayhora.get(Calendar.HOUR) == 19);
+		Assert.assertTrue(out.fechayhora.get(Calendar.HOUR_OF_DAY) == 19);
 		Assert.assertTrue(out.fechayhora.get(Calendar.MINUTE) == 54);
 		Assert.assertTrue(out.distancia.equals(265));
 
@@ -57,7 +57,7 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.detalle.tc_3.equals("3"));
 		Assert.assertTrue(out.detalle.tc_pounds.equals("23.19"));
 
-		Assert.assertTrue(out.detalle.puesto6.equals("Dunham Tiffany#6#9/2# #17.22 (HD)#28.4#R J Holloway####Wide"));
+		Assert.assertTrue(out.detalle.puesto6.equals("Dunham Tiffany|6|9/2| |17.22 (HD)|28.4|R J Holloway||||Wide"));
 
 	}
 
@@ -88,15 +88,15 @@ public class GbgbParserCarreraDetalleTest {
 	@Test
 	public void rellenarPremiosTest() throws Exception {
 
-		String premiosStr = "1st Â£110, 2nd Â£45, Others Â£40 Race Total Â£315 ";
+		String premiosStr = "premiosStr=1st Â£78, Others Â£25 Race Total Â£203 ";
 
 		GbgbCarreraDetalle out = new GbgbCarreraDetalle();
 
 		GbgbParserCarreraDetalle.rellenarPremios(premiosStr, out);
 
-		Assert.assertTrue(out.premio_primer_puesto.intValue() == 110);
-		Assert.assertTrue(out.premio_otros.intValue() == 45);
-		Assert.assertTrue(out.premio_total_carrera.intValue() == 40);
+		Assert.assertTrue(out.premio_primer_puesto.intValue() == 78);
+		Assert.assertTrue(out.premio_otros.intValue() == 25);
+		Assert.assertTrue(out.premio_total_carrera.intValue() == 203);
 
 	}
 
