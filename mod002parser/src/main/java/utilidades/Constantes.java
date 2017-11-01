@@ -24,8 +24,8 @@ public class Constantes {
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
 	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 6 * 30; // Solo cogemos las carreras de los
 																					// últimos 6 meses
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 3;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 500;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 1000L;
 
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";

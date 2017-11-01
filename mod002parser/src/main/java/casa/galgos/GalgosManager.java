@@ -161,7 +161,7 @@ public class GalgosManager implements Serializable {
 	 */
 	public List<GbgbCarrera> descargarCarrerasSinFiltrarPorDia(String prefijoPathDatosBruto) {
 
-		MY_LOGGER.debug(
+		MY_LOGGER.info(
 				"Descargando carreras SIN filtrar por dia... (sirve para extraer cookies y parametros ocultos...)");
 		String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";
 		(new GbgbDownloader()).descargarCarreras(prefijoPathDatosBruto + SUFIJO_CARRERAS_SIN_FILTRAR, true);

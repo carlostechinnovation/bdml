@@ -161,16 +161,18 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		detalle.rellenarForecastyTricast(fc, tc);
 
 		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].replace("|", "")
-				.replace("Â", "").replace("$nbsp", "").trim();
+				.replace("Â", "").replace("$nbsp", "").replace(" ", "").trim();
 		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").replace("Â", "")
-				.replace("$nbsp", "").trim();
+				.replace("$nbsp", "").replace(" ", "").trim();
 
-		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").replace("$nbsp", "").trim();
-		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").replace("$nbsp", "").trim();
+		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").replace("$nbsp", "")
+				.replace(" ", "").trim();
+		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").replace("$nbsp", "")
+				.replace(" ", "").trim();
 		Calendar fechayhora = Constantes.parsearFechaHora(f, h, true);
 
-		Integer distancia = Integer
-				.valueOf(((TextNode) infoArriba.get(9).childNode(0)).text().split("m")[0].replace("$nbsp", "").trim());
+		Integer distancia = Integer.valueOf(((TextNode) infoArriba.get(9).childNode(0)).text().split("m")[0]
+				.replace("$nbsp", "").replace(" ", "").trim());
 
 		GbgbCarrera carrera = new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora, distancia, detalle);
 
@@ -214,7 +216,11 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String trap = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
 		String sp = ((TextNode) e1.childNode(7).childNode(0)).text().trim();
 		String time_sec = ((TextNode) e1.childNode(9).childNode(0)).text().trim();
+
 		String time_distance = ((TextNode) e1.childNode(11).childNode(0)).text().trim();
+		time_distance = time_distance.contains("(")
+				? time_distance.replace("(", "XXXDIVISORXXX").split("XXXDIVISORXXX")[0].trim()
+				: time_distance;
 
 		String padre_madre_nacimiento_peso = ((TextNode) e2.childNode(1).childNode(0)).text().trim();
 		String entrenador_nombre = ((TextNode) e2.childNode(3).childNode(2)).text().replace(")", "").trim();
