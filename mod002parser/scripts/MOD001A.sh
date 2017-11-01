@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PATH_LOG="/home/carloslinux/Desktop/descarga_bruto.log"
+PATH_LOG="/home/carloslinux/Desktop/LOGS/descarga_bruto.log"
 PATH_SCRIPTS="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/"
 
 echo "Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${PATH_LOG}

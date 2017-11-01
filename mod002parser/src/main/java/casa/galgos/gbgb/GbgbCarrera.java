@@ -16,8 +16,8 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	public Long id_campeonato; // Ej. http://www.gbgb.org.uk/resultsMeeting.aspx?id=151735
 
 	// Datos BASICOS
-	public String track = "";
-	public String clase = "";
+	public String track = "\\N";
+	public String clase = "\\N";
 	public Calendar fechayhora;
 	public Integer distancia;
 
@@ -66,21 +66,17 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 
 		String out = "";
 
-		out += id_carrera != null ? id_carrera : "";
+		out += id_carrera != null ? id_carrera : "\\N";
 		out += SEP;
-
-		out += id_campeonato != null ? id_campeonato : "";
+		out += id_campeonato != null ? id_campeonato : "\\N";
 		out += SEP;
-
 		out += track != null ? track : "";
 		out += SEP;
-
 		out += clase != null ? clase : "";
 		out += SEP;
-
-		out += sdf.format(fechayhora.getTime()) + SEP;
-
-		out += distancia != null ? distancia : "";
+		out += sdf.format(fechayhora.getTime());
+		out += SEP;
+		out += distancia != null ? distancia : "\\N";
 		out += SEP;
 
 		out += detalle.generarDatosParaExportarSql() + Constantes.SEPARADOR_FILA;

@@ -59,7 +59,7 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.detalle.tc_3.equals("3"));
 		Assert.assertTrue(out.detalle.tc_pounds.equals("23.19"));
 
-		Assert.assertTrue(out.detalle.puesto6.equals("Dunham Tiffany|6|9/2| |17.22 (HD)|28.4|R J Holloway||||Wide"));
+		Assert.assertTrue(out.detalle.puesto6.equals("Dunham Tiffany|6|9/2| |17.22|28.4|R J Holloway||||Wide"));
 
 	}
 

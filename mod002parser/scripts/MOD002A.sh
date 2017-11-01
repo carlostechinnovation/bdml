@@ -14,7 +14,7 @@ TAG_GF="GOOGLEFINANCE"
 TAG_BM="BOLSAMADRID"
 TAG_INE="INE"
 TAG_DM="DATOSMACRO"
-TAG_YF="YF"
+
 
 FILE_SENTENCIAS_CREATE_TABLE=${PATH_DIR_OUT}"sentencias_create_table"
 
@@ -52,71 +52,46 @@ java -jar ${PATH_JAR} "03" ${DIA}
 
 for GFindice in {1..6}
 do
-   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_gf0${GFindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_GOOGLEFINANCE_0${GFindice}_OUT' INTO TABLE datos_desa.tb_gf0${GFindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_gf0${GFindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_GOOGLEFINANCE_0${GFindice}_OUT' INTO TABLE datos_desa.tb_gf0${GFindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 done
 
 
 for BMindice in {1..6}
 do
-   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_bm0${BMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_BOLSAMADRID_0${BMindice}_OUT' INTO TABLE datos_desa.tb_bm0${BMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_bm0${BMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_BOLSAMADRID_0${BMindice}_OUT' INTO TABLE datos_desa.tb_bm0${BMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 done
 
 
-mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_ine WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_INE_01_OUT' INTO TABLE datos_desa.tb_ine FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_ine WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_INE_01_OUT' INTO TABLE datos_desa.tb_ine FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 
 for DMindice in 0{1..9} {10..15}
 do
-   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_dm${DMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_DATOSMACRO_${DMFindice}_OUT' INTO TABLE datos_desa.tb_dm${DMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES;" >&1
+   mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_dm${DMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_DATOSMACRO_${DMFindice}_OUT' INTO TABLE datos_desa.tb_dm${DMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 done
 
 
 
 ###### YAHOO FINANCE (Solo ejecuto los lunes, porque realmente son datos historicos) (se podria ejecutar cada dia...) #########
 
-mysql -u root --password=datos1986 --execute="CREATE TABLE IF NOT EXISTS datos_desa.tb_yf01_previa (ticker varchar(10) DEFAULT NULL, date int(8) DEFAULT NULL, open decimal(14,4) DEFAULT NULL, high decimal(14,4) DEFAULT NULL, low decimal(14,4) DEFAULT NULL, close decimal(14,4) DEFAULT NULL, volumen bigint(20) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
-
-mysql -u root --password=datos1986 --execute="CREATE TABLE IF NOT EXISTS datos_desa.tb_yf01 (ticker varchar(10) DEFAULT NULL, date int(8) DEFAULT NULL, open decimal(14,4) DEFAULT NULL, gap_high_low decimal(14,4) DEFAULT NULL, gap_close_open decimal(14,4) DEFAULT NULL, gap_high_close decimal(14,4) DEFAULT NULL, gap_close_low decimal(14,4) DEFAULT NULL, volumen bigint(20) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2005"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2006"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2007"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2008"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2009"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2010"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2011"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2012"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2013"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2014"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2015"
+#${PATH_SCRIPTS}MOD002A_YF.sh "2016"
 
 
 #Una vez a la semana
 if [ ${dia_semana} = "L" ]
 then
-
-  yf_prefijo_jons_anualizados=${TAG_YF}"_"${anio}"_"
-  echo -e "Procesando JSONs de Yahoo Finance. Patron: "${yf_prefijo_jons_anualizados}
-  yf_temp_files="${PATH_DIR_IN}MOD002A_ficherosParaProcesarDeYahooFinance_"${anio}
-  ls ${PATH_DIR_IN} | grep ${yf_prefijo_jons_anualizados} > ${yf_temp_files}
-
-  while read -r line
-  do
-    yf_nombre_fichero="$line"
-    yf_empresa=$(echo ${yf_nombre_fichero} | cut -d"_" -f4)
-
-    path_fichero_limpio=${PATH_DIR_OUT}${TAG_YF}"_"${anio}"_"${yf_empresa}
-    echo -e "CSV limpio: "${path_fichero_limpio}
-    rm -f ${path_fichero_limpio}
-
-    #procesar JSON hacia fichero CSV
-    node ${PATH_SCRIPTS}"MOD002A_yahoo_finance.js" ${PATH_DIR_IN}${yf_nombre_fichero} > ${path_fichero_limpio}
-
-    mysql -u root --password=datos1986 --execute="TRUNCATE TABLE datos_desa.tb_yf01_previa;"
-
-    mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${path_fichero_limpio}' INTO TABLE datos_desa.tb_yf01_previa FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES;" >&1
-    
-    echo -e "Insertando empresa: "${yf_empresa}
-    mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_yf01 WHERE ticker=${yf_empresa} AND date >=${anio}0000 AND date <=${anio}9999;" >&1
-
-    mysql -u root --password=datos1986 --execute="INSERT INTO datos_desa.tb_yf01 (ticker, date, open, gap_high_low, gap_close_open, gap_high_close, gap_close_low, volumen) SELECT ticker, date, open, (high-low) AS gap_high_low, (close-open) AS gap_close_open, (high-close) AS gap_high_close, (close-low) AS gap_close_low, volumen FROM datos_desa.tb_yf01_previa WHERE date>=19950000 AND date<=20500000;" >&1
-
-    
-  done < "${yf_temp_files}"
-  
-
+    ${PATH_SCRIPTS}MOD002A_YF.sh "${anio}"
 fi
-
-echo -e "Filas insertadas en tabla de YAHOO FINANCE: "
-mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as contador FROM datos_desa.tb_yf01 LIMIT 1;"
-
 
 
 ##############################################################

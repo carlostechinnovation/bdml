@@ -13,9 +13,9 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	public static final SimpleDateFormat FORMATO = new SimpleDateFormat("yyyyMMddhhmm");
 
-	public String galgo_nombre = "";
-	public String entrenador = "";
-	public String padre_madre_nacimiento = "";
+	public String galgo_nombre = "\\N";
+	public String entrenador = "\\N";
+	public String padre_madre_nacimiento = "\\N";
 
 	public List<GbgbGalgoHistoricoCarrera> carrerasHistorico;
 
@@ -30,7 +30,7 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 	@Override
 	public String generarSqlCreateTable() {
 		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_historico ("
-				+ "galgo_nombre varchar(30) NOT NULL PRIMARY KEY, entrenador varchar(30), "
+				+ "galgo_nombre varchar(30) NOT NULL, entrenador varchar(30), "
 				+ GbgbGalgoHistoricoCarrera.generarCamposSqlCreateTableDeDetalle() + ");";
 	}
 

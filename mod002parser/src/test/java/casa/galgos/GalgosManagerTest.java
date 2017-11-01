@@ -20,10 +20,11 @@ public class GalgosManagerTest {
 
 		GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param3, false);
 
-		Assert.assertTrue(GalgosManager.getInstancia().idCarrerasCampeonatoPendientes != null);
+		Assert.assertTrue(GalgosManager.getInstancia().idCarrerasCampeonatoProcesadas != null);
 
 		// 0 carreras pendientes
-		Assert.assertTrue(GalgosManager.getInstancia().idCarrerasCampeonatoPendientes.size() == 0);
+		Assert.assertTrue(GalgosManager.getInstancia().extraerSoloCarrerasPendientes().size() == 0);
+		Assert.assertTrue(GalgosManager.getInstancia().contarPendientes() == 0);
 
 	}
 

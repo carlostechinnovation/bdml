@@ -2,7 +2,7 @@
 
 #Script principal COORDINADOR de todas las tareas. Lo que no quiera ejecutar, lo comento.
 
-PATH_LOG="/home/carloslinux/Desktop/galgos_coordinador.log"
+PATH_LOG="/home/carloslinux/Desktop/LOGS/galgos_coordinador.log"
 PATH_SCRIPTS="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/"
 
 echo -e "GALGOS - Cadena de procesos"
@@ -10,7 +10,7 @@ echo -e "GALGOS - Cadena de procesos"
 echo -e "Ruta script="${PATH_SCRIPTS}
 
 #limpiar log
-rm -f "/home/carloslinux/Desktop/log4j-application.log"
+rm -f "/home/carloslinux/Desktop/LOGS/log4j-application.log"
 
 #Descarga de datos (planificado con CRON)
 ${PATH_SCRIPTS}'galgos_MOD001A.sh'

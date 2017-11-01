@@ -15,25 +15,25 @@ public class GbgbCarreraDetalle implements Serializable {
 	public Integer premio_otros;
 	public Integer premio_total_carrera;
 
-	public Boolean going_allowance;
+	public Boolean going_allowance = false;// por defecto=NO
 
 	// FORECAST 2 puestos
-	public String fc_1 = "";
-	public String fc_2 = "";
-	public String fc_pounds = "";
+	public String fc_1 = "\\N";
+	public String fc_2 = "\\N";
+	public String fc_pounds = "\\N";
 
 	// TRICAST 3 puestos
-	public String tc_1 = "";
-	public String tc_2 = "";
-	public String tc_3 = "";
-	public String tc_pounds = "";
+	public String tc_1 = "\\N";
+	public String tc_2 = "\\N";
+	public String tc_3 = "\\N";
+	public String tc_pounds = "\\N";
 
-	public String puesto1 = "";
-	public String puesto2 = "";
-	public String puesto3 = "";
-	public String puesto4 = "";
-	public String puesto5 = "";
-	public String puesto6 = "";
+	public String puesto1 = "\\N";
+	public String puesto2 = "\\N";
+	public String puesto3 = "\\N";
+	public String puesto4 = "\\N";
+	public String puesto5 = "\\N";
+	public String puesto6 = "\\N";
 
 	public Set<String> urlsGalgosHistorico = new HashSet<String>();
 
@@ -116,27 +116,27 @@ public class GbgbCarreraDetalle implements Serializable {
 
 		String out = "";
 
-		out += galgo_nombre != null ? galgo_nombre : "";
+		out += galgo_nombre != null ? galgo_nombre : "\\N";
 		out += SEP;
-		out += trap != null ? trap : "";
+		out += trap != null ? trap : "\\N";
 		out += SEP;
-		out += sp != null ? sp : "";
+		out += sp != null ? sp : "\\N";
 		out += SEP;
-		out += time_sec != null ? time_sec : "";
+		out += time_sec != null ? time_sec : "\\N";
 		out += SEP;
-		out += time_distance != null ? time_distance : "";
+		out += time_distance != null ? time_distance : "\\N";
 		out += SEP;
-		out += peso_galgo != null ? peso_galgo : "";
+		out += peso_galgo != null ? peso_galgo : "\\N";
 		out += SEP;
-		out += entrenador_nombre != null ? entrenador_nombre : "";
+		out += entrenador_nombre != null ? entrenador_nombre : "\\N";
 		out += SEP;
-		out += galgo_padre != null ? galgo_padre : "";
+		out += galgo_padre != null ? galgo_padre : "\\N";
 		out += SEP;
-		out += galgo_madre != null ? galgo_madre : "";
+		out += galgo_madre != null ? galgo_madre : "\\N";
 		out += SEP;
-		out += nacimiento != null ? nacimiento : "";
+		out += nacimiento != null ? nacimiento : "\\N";
 		out += SEP;
-		out += comment != null ? comment : "";
+		out += comment != null ? comment : "\\N";
 
 		return out;
 
@@ -172,8 +172,8 @@ public class GbgbCarreraDetalle implements Serializable {
 	 * @return
 	 */
 	public static String generarCamposSqlCreateTableDeDetalle() {
-		String out = "premio_primero INT, premio_segundo INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1),"
-				+ "fc_1 SMALLINT, fc_2 SMALLINT, fc_pounds decimal(10,2),"
+		String out = "premio_primero INT, premio_segundo INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1), "
+				+ "fc_1 SMALLINT, fc_2 SMALLINT, fc_pounds decimal(10,2), "
 				+ "tc_1 SMALLINT, tc_2 SMALLINT, tc_3 SMALLINT, tc_pounds decimal(10,2)";
 
 		for (int i = 1; i <= 6; i++) {
@@ -201,42 +201,44 @@ public class GbgbCarreraDetalle implements Serializable {
 
 		String SEP = Constantes.SEPARADOR_CAMPO;
 
+		String puestoTodoVacio = crearCadenaPuesto(null, null, null, null, null, null, null, null, null, null, null);
+
 		String out = "";
 
-		out += premio_primero != null ? premio_primero : "";
+		out += premio_primero != null ? premio_primero : "\\N";
 		out += SEP;
 
-		out += premio_segundo != null ? premio_segundo : "";
+		out += premio_segundo != null ? premio_segundo : "\\N";
 		out += SEP;
 
-		out += premio_otros != null ? premio_otros : "";
+		out += premio_otros != null ? premio_otros : "\\N";
 		out += SEP;
 
-		out += premio_total_carrera != null ? premio_total_carrera : "";
+		out += premio_total_carrera != null ? premio_total_carrera : "\\N";
 		out += SEP;
 
-		out += going_allowance != null ? going_allowance : "";
+		out += (going_allowance != null && going_allowance) ? "S" : "N";// Por defecto NO (false)
 		out += SEP;
 
-		out += fc_1 != null ? fc_1 : "";
+		out += fc_1 != null ? fc_1 : "\\N";
 		out += SEP;
 
-		out += fc_2 != null ? fc_2 : "";
+		out += fc_2 != null ? fc_2 : "\\N";
 		out += SEP;
 
-		out += fc_pounds != null ? fc_pounds : "";
+		out += fc_pounds != null ? fc_pounds : "\\N";
 		out += SEP;
 
-		out += tc_1 != null ? tc_1 : "";
+		out += tc_1 != null ? tc_1 : "\\N";
 		out += SEP;
 
-		out += tc_2 != null ? tc_2 : "";
+		out += tc_2 != null ? tc_2 : "\\N";
 		out += SEP;
 
-		out += tc_3 != null ? tc_3 : "";
+		out += tc_3 != null ? tc_3 : "\\N";
 		out += SEP;
 
-		out += tc_pounds != null ? tc_pounds : "";
+		out += tc_pounds != null ? tc_pounds : "\\N";
 		out += SEP;
 
 		out += puesto1 != null ? puesto1 : "";

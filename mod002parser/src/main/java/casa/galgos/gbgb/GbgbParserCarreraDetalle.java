@@ -214,18 +214,22 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text().trim();
 		String url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
 		String trap = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
-		String sp = ((TextNode) e1.childNode(7).childNode(0)).text().trim();
-		String time_sec = ((TextNode) e1.childNode(9).childNode(0)).text().trim();
+		String sp = ((TextNode) e1.childNode(7).childNode(0)).text().replace("$nbsp", "").replace(" ", "").trim();
+		String time_sec = ((TextNode) e1.childNode(9).childNode(0)).text().replace("Â", "").replace("$nbsp", "")
+				.replace(" ", "").trim();
 
-		String time_distance = ((TextNode) e1.childNode(11).childNode(0)).text().trim();
+		String time_distance = ((TextNode) e1.childNode(11).childNode(0)).text().replace("$nbsp", "").replace(" ", "")
+				.trim();
 		time_distance = time_distance.contains("(")
 				? time_distance.replace("(", "XXXDIVISORXXX").split("XXXDIVISORXXX")[0].trim()
 				: time_distance;
 
-		String padre_madre_nacimiento_peso = ((TextNode) e2.childNode(1).childNode(0)).text().trim();
-		String entrenador_nombre = ((TextNode) e2.childNode(3).childNode(2)).text().replace(")", "").trim();
+		String padre_madre_nacimiento_peso = ((TextNode) e2.childNode(1).childNode(0)).text().replace("$nbsp", "")
+				.replace(" ", "").trim();
+		String entrenador_nombre = ((TextNode) e2.childNode(3).childNode(2)).text().replace(")", "")
+				.replace("$nbsp", "").replace(" ", "").trim();
 
-		String comment = ((TextNode) e3.childNode(1).childNode(1)).text().trim();
+		String comment = ((TextNode) e3.childNode(1).childNode(1)).text().replace("$nbsp", "").replace(" ", "").trim();
 
 		// ----------------------------------
 

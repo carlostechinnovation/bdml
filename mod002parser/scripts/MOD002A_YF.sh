@@ -4,22 +4,17 @@ set -x
 
 echo -e "Modulo 002A - Parsear datos"
 
-PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/"
-PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/"
+PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
+PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/"
 PATH_JAR="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 
-TAG_BOE="BOE"
-TAG_GF="GOOGLEFINANCE"
-TAG_BM="BOLSAMADRID"
-TAG_INE="INE"
-TAG_DM="DATOSMACRO"
 TAG_YF="YF"
 
 FILE_SENTENCIAS_CREATE_TABLE=${PATH_DIR_OUT}"sentencias_create_table"
 
 
 
-######## PARAMETROS: DIA ##################################
+######## PARAMETROS: ANIO ##################################
 if [ $# -eq 0 ]
   then
     echo "ERROR Parametro de entrada vacio. Debes indicar el anio que quieres procesar!"
@@ -59,7 +54,7 @@ mysql -u root --password=datos1986 --execute="CREATE TABLE IF NOT EXISTS datos_d
 
     mysql -u root --password=datos1986 --execute="TRUNCATE TABLE datos_desa.tb_yf01_previa;"
 
-    mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${path_fichero_limpio}' INTO TABLE datos_desa.tb_yf01_previa FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES;" >&1
+    mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${path_fichero_limpio}' INTO TABLE datos_desa.tb_yf01_previa FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" >&1
 
 sleep 1s    
 
