@@ -116,27 +116,27 @@ public class GbgbCarreraDetalle implements Serializable {
 
 		String out = "";
 
-		out += galgo_nombre != null ? galgo_nombre : "\\N";
+		out += (galgo_nombre != null && !"".equals(galgo_nombre)) ? galgo_nombre : "\\N";
 		out += SEP;
 		out += trap != null ? trap : "\\N";
 		out += SEP;
-		out += sp != null ? sp : "\\N";
+		out += (sp != null && !"".equals(sp)) ? sp : "\\N";
 		out += SEP;
-		out += time_sec != null ? time_sec : "\\N";
+		out += (time_sec != null && !"".equals(time_sec)) ? time_sec : "\\N";
 		out += SEP;
-		out += time_distance != null ? time_distance : "\\N";
+		out += (time_distance != null && !"".equals(time_distance)) ? time_distance : "\\N";
 		out += SEP;
 		out += peso_galgo != null ? peso_galgo : "\\N";
 		out += SEP;
-		out += entrenador_nombre != null ? entrenador_nombre : "\\N";
+		out += (entrenador_nombre != null && !"".equals(entrenador_nombre)) ? entrenador_nombre : "\\N";
 		out += SEP;
-		out += galgo_padre != null ? galgo_padre : "\\N";
+		out += (galgo_padre != null && !"".equals(galgo_padre)) ? galgo_padre : "\\N";
 		out += SEP;
-		out += galgo_madre != null ? galgo_madre : "\\N";
+		out += (galgo_madre != null && !"".equals(galgo_madre)) ? galgo_madre : "\\N";
 		out += SEP;
-		out += nacimiento != null ? nacimiento : "\\N";
+		out += (nacimiento != null && !"".equals(nacimiento)) ? nacimiento : "\\N";
 		out += SEP;
-		out += comment != null ? comment : "\\N";
+		out += (comment != null && !"".equals(comment)) ? comment : "\\N";
 
 		return out;
 
@@ -241,22 +241,22 @@ public class GbgbCarreraDetalle implements Serializable {
 		out += tc_pounds != null ? tc_pounds : "\\N";
 		out += SEP;
 
-		out += puesto1 != null ? puesto1 : "";
+		out += puesto1 != null ? puesto1 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto2 != null ? puesto2 : "";
+		out += puesto2 != null ? puesto2 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto3 != null ? puesto3 : "";
+		out += puesto3 != null ? puesto3 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto4 != null ? puesto4 : "";
+		out += puesto4 != null ? puesto4 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto5 != null ? puesto5 : "";
+		out += puesto5 != null ? puesto5 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto6 != null ? puesto6 : "";
+		out += puesto6 != null ? puesto6 : puestoTodoVacio;
 
 		return out;
 	}
