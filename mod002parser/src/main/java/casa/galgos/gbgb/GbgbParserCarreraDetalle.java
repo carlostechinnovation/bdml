@@ -44,8 +44,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public GbgbCarrera ejecutar(Long id_carrera, Long id_campeonato, String pathIn) {
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: INICIO");
-		MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle - pathIn=" + pathIn);
+		MY_LOGGER.debug("GALGOS-GbgbParserCarreraDetalle: INICIO");
+		MY_LOGGER.debug("GALGOS-GbgbParserCarreraDetalle - pathIn=" + pathIn);
 
 		String bruto = "";
 		GbgbCarrera out = null;
@@ -53,14 +53,14 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		try {
 			bruto = GbgbParserCarreraDetalle.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(id_carrera, id_campeonato, bruto);
-			MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: out=" + out);
+			MY_LOGGER.debug("GALGOS-GbgbParserCarreraDetalle: out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarreraDetalle: FIN");
+		MY_LOGGER.debug("GALGOS-GbgbParserCarreraDetalle: FIN");
 		return out;
 	}
 
@@ -74,7 +74,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
 
-		MY_LOGGER.info("Leyendo " + path + " ...");
+		MY_LOGGER.debug("Leyendo " + path + " ...");
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}
@@ -146,7 +146,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		// --------------------------
 
-		MY_LOGGER.info("Sacando info abajo...");
+		MY_LOGGER.debug("Sacando info abajo...");
 		List<Node> infoAbajo = a.getElementsByClass("resultsBlockFooter").get(0).childNodes();
 
 		if (infoAbajo.toString().contains("Allowance")) {
@@ -154,19 +154,23 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			detalle.going_allowance = (goingAllowanceStr != null && "S".equalsIgnoreCase(goingAllowanceStr));
 		}
 
-		String fc = ((TextNode) infoAbajo.get(3).childNode(1)).text();// (2-1) £11.75 |
-		String tc = ((TextNode) infoAbajo.get(3).childNode(3)).text();// (2-1-3) £23.19
+		String fc = infoAbajo.toString().contains("Forecast") ? ((TextNode) infoAbajo.get(3).childNode(1)).text()
+				: null;// (2-1) £11.75 |
+		String tc = infoAbajo.toString().contains("Tricast") ? ((TextNode) infoAbajo.get(3).childNode(3)).text() : null;// (2-1-3)
+																														// £23.19
 		detalle.rellenarForecastyTricast(fc, tc);
 
 		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].replace("|", "")
-				.replace("Â", "").trim();
-		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").replace("Â", "").trim();
+				.replace("Â", "").replace("$nbsp", "").trim();
+		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").replace("Â", "")
+				.replace("$nbsp", "").trim();
 
-		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").trim();
-		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").trim();
+		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").replace("$nbsp", "").trim();
+		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").replace("$nbsp", "").trim();
 		Calendar fechayhora = Constantes.parsearFechaHora(f, h, true);
 
-		Integer distancia = Integer.valueOf(((TextNode) infoArriba.get(9).childNode(0)).text().split("m")[0]);
+		Integer distancia = Integer
+				.valueOf(((TextNode) infoArriba.get(9).childNode(0)).text().split("m")[0].replace("$nbsp", "").trim());
 
 		GbgbCarrera carrera = new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora, distancia, detalle);
 
@@ -226,8 +230,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			abcd = (partes[0].contains("eason")) ? partes[1] : partes[0];
 		} else if (partes.length == 3) {
 
-			MY_LOGGER.info("partes[0]=" + partes[0]);
-			MY_LOGGER.info("partes[1]=" + partes[1]);
+			MY_LOGGER.debug("partes[0]=" + partes[0]);
+			MY_LOGGER.debug("partes[1]=" + partes[1]);
 
 			season = partes[0].split("eason")[1].trim();
 			abcd = partes[1].trim();

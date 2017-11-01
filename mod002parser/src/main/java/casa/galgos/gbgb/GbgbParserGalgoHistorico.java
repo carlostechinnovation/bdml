@@ -41,8 +41,8 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public GbgbGalgoHistorico ejecutar(String pathIn, String galgo_nombre) {
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: INICIO");
-		MY_LOGGER.info("GALGOS-GbgbDownloader - pathIn=" + pathIn);
+		MY_LOGGER.debug("GALGOS-GbgbParserCarrerasDeUnDia: INICIO");
+		MY_LOGGER.debug("GALGOS-GbgbDownloader - pathIn=" + pathIn);
 
 		String bruto = "";
 		GbgbGalgoHistorico out = null;
@@ -50,14 +50,14 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		try {
 			bruto = GbgbParserGalgoHistorico.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto, galgo_nombre);
-			MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
+			MY_LOGGER.debug("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarrerasDeUnDia: FIN");
+		MY_LOGGER.debug("GALGOS-GbgbParserCarrerasDeUnDia: FIN");
 		return out;
 	}
 
@@ -71,7 +71,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
 
-		MY_LOGGER.info("Leyendo " + path + " ...");
+		MY_LOGGER.debug("Leyendo " + path + " ...");
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}

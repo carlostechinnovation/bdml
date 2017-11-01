@@ -34,15 +34,15 @@ public class GbgbDownloader {
 	 */
 	public void descargarCarreras(String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("INICIO");
-		MY_LOGGER.info("pathOut=" + pathOut);
-		MY_LOGGER.info("borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.debug("INICIO");
+		MY_LOGGER.debug("pathOut=" + pathOut);
+		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
 
 		try {
 
-			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
+			MY_LOGGER.debug("Borrando fichero de salida preexistente " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.debug("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -90,9 +90,9 @@ public class GbgbDownloader {
 			con.disconnect();
 
 			// Escribir SALIDA
-			MY_LOGGER.info("Escribiendo a fichero...");
-			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.info("Path fichero salida: " + pathOut);
+			MY_LOGGER.debug("Escribiendo a fichero...");
+			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
+			MY_LOGGER.debug("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {
@@ -100,31 +100,9 @@ public class GbgbDownloader {
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbDownloader: FIN");
+		MY_LOGGER.debug("GALGOS-GbgbDownloader: FIN");
 
 	}
-
-	// public class ParameterStringBuilder {
-	//
-	//
-	// public static String getParamsString(Map<String, String> params) throws
-	// UnsupportedEncodingException {
-	// StringBuilder result = new StringBuilder();
-	//
-	// for (Map.Entry<String, String> entry : params.entrySet()) {
-	// result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-	// result.append("=");
-	// result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-	// result.append("&");
-	// }
-	//
-	// String resultString = result.toString();
-	// return resultString.length() > 0 ? resultString.substring(0,
-	// resultString.length() - 1) : resultString;
-	// }
-	//
-	//
-	// }
 
 	/**
 	 * @param pathOut
@@ -132,15 +110,15 @@ public class GbgbDownloader {
 	 */
 	public void descargarCarreraDetalle(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("URL: " + urlCarrera);
-		MY_LOGGER.info("pathOut=" + pathOut);
-		MY_LOGGER.info("borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.debug("URL: " + urlCarrera);
+		MY_LOGGER.debug("pathOut=" + pathOut);
+		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
 
 		try {
 
-			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
+			MY_LOGGER.debug("Borrando fichero de salida preexistente " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.debug("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -188,9 +166,9 @@ public class GbgbDownloader {
 			con.disconnect();
 
 			// Escribir SALIDA
-			MY_LOGGER.info("Escribiendo a fichero...");
-			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.info("Path fichero salida: " + pathOut);
+			MY_LOGGER.debug("Escribiendo a fichero...");
+			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
+			MY_LOGGER.debug("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {
@@ -198,7 +176,7 @@ public class GbgbDownloader {
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("FIN");
+		MY_LOGGER.debug("FIN");
 
 	}
 
@@ -211,16 +189,16 @@ public class GbgbDownloader {
 	 */
 	public void descargarHistoricoGalgo(String urlHistoricoGalgo, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("DescargarHistoricoGalgo:  ");
-		MY_LOGGER.info("urlCarrera=" + urlHistoricoGalgo);
-		MY_LOGGER.info("pathOut=" + pathOut);
-		MY_LOGGER.info("borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.debug("DescargarHistoricoGalgo:  ");
+		MY_LOGGER.debug("urlCarrera=" + urlHistoricoGalgo);
+		MY_LOGGER.debug("pathOut=" + pathOut);
+		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
 
 		try {
 
-			MY_LOGGER.info("Borrando fichero de salida preexistente " + pathOut + " ...");
+			MY_LOGGER.debug("Borrando fichero de salida preexistente " + pathOut + " ...");
 			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.warn("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
+				MY_LOGGER.debug("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
 				if (borrarSiExiste) {
 					Files.delete(Paths.get(pathOut));
 				}
@@ -268,9 +246,9 @@ public class GbgbDownloader {
 			con.disconnect();
 
 			// Escribir SALIDA
-			MY_LOGGER.info("Escribiendo a fichero...");
-			MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.info("Path fichero salida: " + pathOut);
+			MY_LOGGER.debug("Escribiendo a fichero...");
+			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
+			MY_LOGGER.debug("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {
@@ -278,7 +256,7 @@ public class GbgbDownloader {
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("FIN");
+		MY_LOGGER.debug("FIN");
 
 	}
 
@@ -287,10 +265,10 @@ public class GbgbDownloader {
 	// StringBuffer content = new StringBuffer();
 	// content.append("cadena");
 	//
-	// MY_LOGGER.info("GALGOS-GbgbDownloader: Escribiendo a fichero...");
-	// MY_LOGGER.info("StringBuffer con " + content.length() + " elementos de
+	// MY_LOGGER.debug("GALGOS-GbgbDownloader: Escribiendo a fichero...");
+	// MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de
 	// 16-bits)");
-	// MY_LOGGER.info("Path fichero salida: "+pathOut);
+	// MY_LOGGER.debug("Path fichero salida: "+pathOut);
 	// Files.write(Paths.get(pathOut), content.toString().getBytes());
 	//
 	// }

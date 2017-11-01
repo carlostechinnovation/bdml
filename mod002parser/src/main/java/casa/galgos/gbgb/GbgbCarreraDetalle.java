@@ -150,18 +150,22 @@ public class GbgbCarreraDetalle implements Serializable {
 	 */
 	public void rellenarForecastyTricast(String fc, String tc) {
 
-		String[] fca = fc.replace("Â", "").split("£");
-		String[] fc_parte1 = fca[0].trim().replace("(", "").replace(")", "").split("-");
-		fc_1 = fc_parte1[0];
-		fc_2 = fc_parte1[1];
-		fc_pounds = fca[1].replace("|", "").trim();
+		if (fc != null) {
+			String[] fca = fc.replace("Â", "").split("£");
+			String[] fc_parte1 = fca[0].trim().replace("(", "").replace(")", "").split("-");
+			fc_1 = fc_parte1[0];
+			fc_2 = fc_parte1[1];
+			fc_pounds = fca[1].replace("|", "").trim();
+		}
 
-		String[] tca = tc.replace("Â", "").split("£");
-		String[] tc_parte1 = tca[0].trim().replace("(", "").replace(")", "").split("-");
-		tc_1 = tc_parte1[0];
-		tc_2 = tc_parte1[1];
-		tc_3 = tc_parte1[2];
-		tc_pounds = tca[1].replace("|", "").trim();
+		if (tc != null) {
+			String[] tca = tc.replace("Â", "").split("£");
+			String[] tc_parte1 = tca[0].trim().replace("(", "").replace(")", "").split("-");
+			tc_1 = tc_parte1[0];
+			tc_2 = tc_parte1[1];
+			tc_3 = tc_parte1[2];
+			tc_pounds = tca[1].replace("|", "").trim();
+		}
 	}
 
 	/**

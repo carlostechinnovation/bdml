@@ -76,7 +76,7 @@ public class GalgosManager implements Serializable {
 			// ------ Procesar las carreras de las que conozco la URL
 			// (embuclandose)-----------------------------------
 			do {
-				MY_LOGGER.info(
+				MY_LOGGER.debug(
 						"Carreras PENDIENTES de procesar (IDs acumulados): " + idCarrerasCampeonatoPendientes.size());
 
 				String idCarreraIdcampeonatoAProcesar = idCarrerasCampeonatoPendientes.iterator().next();
@@ -92,7 +92,7 @@ public class GalgosManager implements Serializable {
 
 				idCarrerasCampeonatoPendientes.remove(idCarreraIdcampeonatoAProcesar);
 
-				MY_LOGGER.info("Esperando " + Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC + " mseg...");
+				MY_LOGGER.debug("Esperando " + Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC + " mseg...");
 				Thread.sleep(Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC);
 
 			} while (!idCarrerasCampeonatoPendientes.isEmpty()
@@ -126,10 +126,10 @@ public class GalgosManager implements Serializable {
 			MY_LOGGER.info("Guardando FICHEROS FINALES en: " + path);
 
 			try {
-				MY_LOGGER.info("Borrando posible fichero preexistente...");
+				MY_LOGGER.debug("Borrando posible fichero preexistente...");
 				Files.deleteIfExists(Paths.get(path));
 
-				MY_LOGGER.info("Escribiendo...");
+				MY_LOGGER.debug("Escribiendo...");
 				boolean primero = true;
 				for (GalgosGuardable fila : listaFilas) {
 					if (primero) {
