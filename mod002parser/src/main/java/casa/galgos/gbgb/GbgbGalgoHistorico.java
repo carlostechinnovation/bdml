@@ -13,9 +13,9 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	public static final SimpleDateFormat FORMATO = new SimpleDateFormat("yyyyMMddhhmm");
 
-	public String galgo_nombre;
-	public String entrenador;
-	public String padre_madre_nacimiento;
+	public String galgo_nombre = "";
+	public String entrenador = "";
+	public String padre_madre_nacimiento = "";
 
 	public List<GbgbGalgoHistoricoCarrera> carrerasHistorico;
 

@@ -61,11 +61,11 @@ public class GalgosManager implements Serializable {
 	 * @param guardarEnFicheros
 	 * @throws InterruptedException
 	 */
-	public void descargarYparsearCarrerasDeGalgos(String param2, String param3, boolean guardarEnFicheros)
+	public void descargarYparsearCarrerasDeGalgos(String prefijoPathDatosBruto, boolean guardarEnFicheros)
 			throws InterruptedException {
 
 		List<GbgbCarrera> carreras = null;
-		carreras = descargarCarrerasSinFiltrarPorDia(param2, param3);
+		carreras = descargarCarrerasSinFiltrarPorDia(prefijoPathDatosBruto);
 
 		if (carreras != null && !carreras.isEmpty()) {
 
@@ -86,9 +86,9 @@ public class GalgosManager implements Serializable {
 				String[] partes = idCarreraIdcampeonatoAProcesar.split("-");
 
 				descargarYProcesarCarreraYAcumularUrlsHistoricos(Long.valueOf(partes[0]), Long.valueOf(partes[1]),
-						param3);
+						prefijoPathDatosBruto);
 
-				descargarTodosLosHistoricos(param3);
+				descargarTodosLosHistoricos(prefijoPathDatosBruto);
 
 				idCarrerasCampeonatoPendientes.remove(idCarreraIdcampeonatoAProcesar);
 
@@ -130,9 +130,17 @@ public class GalgosManager implements Serializable {
 				Files.deleteIfExists(Paths.get(path));
 
 				MY_LOGGER.info("Escribiendo...");
+				boolean primero = true;
 				for (GalgosGuardable fila : listaFilas) {
-					Files.write(Paths.get(path), fila.generarDatosParaExportarSql().getBytes(),
-							StandardOpenOption.CREATE);
+					if (primero) {
+						Files.write(Paths.get(path), fila.generarDatosParaExportarSql().getBytes(),
+								StandardOpenOption.CREATE);
+						primero = false;
+					} else {
+						Files.write(Paths.get(path), fila.generarDatosParaExportarSql().getBytes(),
+								StandardOpenOption.APPEND);
+					}
+
 				}
 
 			} catch (IOException e) {
@@ -151,18 +159,18 @@ public class GalgosManager implements Serializable {
 	 * @param param3
 	 * @return
 	 */
-	public List<GbgbCarrera> descargarCarrerasSinFiltrarPorDia(String param2, String param3) {
+	public List<GbgbCarrera> descargarCarrerasSinFiltrarPorDia(String prefijoPathDatosBruto) {
 
-		MY_LOGGER.info(
+		MY_LOGGER.debug(
 				"Descargando carreras SIN filtrar por dia... (sirve para extraer cookies y parametros ocultos...)");
 		String SUFIJO_CARRERAS_SIN_FILTRAR = "_carreras_sin_filtrar";
-		(new GbgbDownloader()).descargarCarreras(param3 + SUFIJO_CARRERAS_SIN_FILTRAR, true);
+		(new GbgbDownloader()).descargarCarreras(prefijoPathDatosBruto + SUFIJO_CARRERAS_SIN_FILTRAR, true);
 
-		MY_LOGGER.info("Parseando carreras SIN filtrar por dia...");
+		MY_LOGGER.debug("Parseando carreras SIN filtrar por dia...");
 		List<GbgbCarrera> carreras = (new GbgbParserCarrerasSinFiltrar())
-				.ejecutar(param3 + SUFIJO_CARRERAS_SIN_FILTRAR);
+				.ejecutar(prefijoPathDatosBruto + SUFIJO_CARRERAS_SIN_FILTRAR);
 
-		MY_LOGGER.info("Cogemos la URL de carreras que queremos descargar...");
+		MY_LOGGER.debug("Cogemos la URL de carreras que queremos descargar...");
 		for (GbgbCarrera carrera : carreras) {
 			idCarrerasCampeonatoPendientes.add(carrera.id_carrera + "-" + carrera.id_campeonato);
 		}
@@ -184,21 +192,20 @@ public class GalgosManager implements Serializable {
 
 		String urlCarrera = Constantes.GALGOS_GBGB_CARRERA_DETALLE_PREFIJO + idCarrera;
 
-		MY_LOGGER.info("Descargando DETALLE de CARRERA con URL = " + urlCarrera);
+		MY_LOGGER.debug("Descargando DETALLE de CARRERA con URL = " + urlCarrera);
 
 		pathFileCarreraDetalleBruto = param3 + SUFIJO_CARRERA + idCarrera;
 
-		MY_LOGGER.info("URL = " + urlCarrera);
-		MY_LOGGER.info("Fichero carrera bruto = " + pathFileCarreraDetalleBruto);
+		MY_LOGGER.debug("Fichero carrera bruto = " + pathFileCarreraDetalleBruto);
 		(new GbgbDownloader()).descargarCarreraDetalle(urlCarrera, pathFileCarreraDetalleBruto, true);
 
-		MY_LOGGER.info("Parseando carrera...");
+		MY_LOGGER.debug("Parseando carrera...");
 		carrera = (new GbgbParserCarreraDetalle()).ejecutar(idCarrera, idCampeonato, pathFileCarreraDetalleBruto);
 
-		MY_LOGGER.info("GUARDABLE - Carrera (EVITANDO DUPLICADOS)");
+		MY_LOGGER.debug("GUARDABLE - Carrera (EVITANDO DUPLICADOS)");
 		guardableCarreras.add(carrera);
 
-		MY_LOGGER.info("GUARDABLE - URLs de historicos de galgos (EVITANDO DUPLICADOS)");
+		MY_LOGGER.debug("GUARDABLE - URLs de historicos de galgos (EVITANDO DUPLICADOS)");
 		urlsHistoricoGalgos.addAll(carrera.detalle.urlsGalgosHistorico);
 
 	}
@@ -209,7 +216,7 @@ public class GalgosManager implements Serializable {
 	 */
 	public void descargarTodosLosHistoricos(String param3) {
 
-		MY_LOGGER.info("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
+		MY_LOGGER.debug("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
 		String pathFileGalgoHistorico = "";
 
 		Calendar fechaUmbral = Calendar.getInstance();
@@ -220,21 +227,21 @@ public class GalgosManager implements Serializable {
 
 			String galgo_nombre = urlGalgo.split("=")[1];
 			pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
-			MY_LOGGER.info("URL Historico galgo = " + urlGalgo);
-			MY_LOGGER.info("Galgo nombre = " + galgo_nombre);
-			MY_LOGGER.info("Path historico = " + pathFileGalgoHistorico);
+			MY_LOGGER.debug("URL Historico galgo = " + urlGalgo);
+			MY_LOGGER.debug("Galgo nombre = " + galgo_nombre);
+			MY_LOGGER.debug("Path historico = " + pathFileGalgoHistorico);
 
-			MY_LOGGER.info("Descargando historico...");
+			MY_LOGGER.debug("Descargando historico...");
 			(new GbgbDownloader()).descargarHistoricoGalgo(urlGalgo, pathFileGalgoHistorico, true);
 
-			MY_LOGGER.info("GUARDABLE - Historico de galgo (EVITANDO DUPLICADOS)");
+			MY_LOGGER.debug("GUARDABLE - Historico de galgo (EVITANDO DUPLICADOS)");
 			GbgbGalgoHistorico historico = (new GbgbParserGalgoHistorico()).ejecutar(pathFileGalgoHistorico,
 					galgo_nombre);
 			guardableHistoricosGalgos.add(historico);
 
-			MY_LOGGER.info(
+			MY_LOGGER.debug(
 					"Del historico, cogemos la URL de carreras anteriores que queremos descargar (de los ultimos X meses)...");
-			MY_LOGGER.info("Fecha umbral (hace X meses): " + GbgbCarrera.FORMATO.format(fechaUmbral.getTime()));
+			MY_LOGGER.debug("Fecha umbral (hace X meses): " + GbgbCarrera.FORMATO.format(fechaUmbral.getTime()));
 			for (GbgbGalgoHistoricoCarrera fila : historico.carrerasHistorico) {
 				if (fila.fecha != null && fila.fecha.after(fechaUmbral)) {
 					idCarrerasCampeonatoPendientes.add(fila.id_carrera + "-" + fila.id_campeonato);

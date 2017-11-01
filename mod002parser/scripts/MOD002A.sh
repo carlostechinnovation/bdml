@@ -39,7 +39,7 @@ echo 'ID de ejecucion parseado = $anio/$mes/$dia'
 ########## CREATE TABLES #############
 echo -e "Crear tablas SQL (IF NOT EXISTS)"
 rm $FILE_SENTENCIAS_CREATE_TABLE
-java -jar ${PATH_JAR} "02"
+java -jar ${PATH_JAR} "02" "$FILE_SENTENCIAS_CREATE_TABLE"
 SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 echo -e ${SENTENCIAS_CREATE_TABLE}
 mysql -u root --password=datos1986 --execute="$SENTENCIAS_CREATE_TABLE" >&1

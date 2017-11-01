@@ -12,6 +12,8 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import casa.galgos.GalgosManager;
+import casa.galgos.gbgb.GbgbCarrera;
+import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -90,7 +92,7 @@ public class Mod002Parser implements Serializable {
 			(new BoeParser()).ejecutar(Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + Constantes.BOE_IN,
 					Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + Constantes.BOE_OUT, false);
 
-		} else if (param1 != null && param1.equals("02")) {
+		} else if (param1 != null && param1.equals("02") && param2 != null) {
 
 			out += (new GF01Parser()).generarSqlCreateTable();
 			out += (new GF02Parser()).generarSqlCreateTable();
@@ -124,14 +126,12 @@ public class Mod002Parser implements Serializable {
 			out += (new DM14Parser()).generarSqlCreateTable();
 			out += (new DM15Parser()).generarSqlCreateTable();
 
-			MY_LOGGER.info("Escribiendo hacia " + Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + "sentencias_create_table"
-					+ " ...");
+			MY_LOGGER.info("Escribiendo sentencias_create_table en: " + param2);
 
 			try {
 
 				// Forma nueva
-				Files.write(Paths.get(Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + "sentencias_create_table"),
-						out.getBytes());
+				Files.write(Paths.get(param2), out.getBytes());
 
 			} catch (IOException e) {
 				MY_LOGGER.error("Error:" + e.getMessage());
@@ -172,20 +172,32 @@ public class Mod002Parser implements Serializable {
 			(new DM14Parser()).ejecutar(param2);
 			(new DM15Parser()).ejecutar(param2);
 
-		} else if (param1 != null && param1.equals("04") && param2 != null && param3 != null) {
+		} else if (param1 != null && param1.equals("04") && param2 != null) {
+
+			MY_LOGGER.info("Escribiendo sentencias_create_table en: " + param2);
+
+			out += (new GbgbGalgoHistorico(null, null, null)).generarSqlCreateTable();
+			out += (new GbgbCarrera(null, null, null, null, null, null, null)).generarSqlCreateTable();
 
 			try {
-				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3, true);
+
+				// Forma nueva
+				Files.write(Paths.get(param2), out.getBytes());
+
+			} catch (IOException e) {
+				MY_LOGGER.error("Error:" + e.getMessage());
+				e.printStackTrace();
+			}
+
+		} else if (param1 != null && param1.equals("05") && param2 != null) {
+
+			try {
+				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, true);
 
 			} catch (InterruptedException e) {
 				MY_LOGGER.error("ERROR Excepcion de galgos.");
 				e.printStackTrace();
 			}
-
-		} else if (param1 != null && param1.equals("05")) {
-
-			(new BoeParser()).ejecutar(Constantes.PATH_DIR_DATOS_BRUTOS_GALGOS + Constantes.BOE_IN,
-					Constantes.PATH_DIR_DATOS_BRUTOS_GALGOS + Constantes.BOE_OUT, false);
 
 		} else {
 			MY_LOGGER.error("ERROR Los parametros de entrada a Mod002Parser no son correctos.");

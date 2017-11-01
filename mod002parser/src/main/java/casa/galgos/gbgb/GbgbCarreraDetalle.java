@@ -10,29 +10,30 @@ public class GbgbCarreraDetalle implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Integer premio_primer_puesto;
+	public Integer premio_primero;
+	public Integer premio_segundo;
 	public Integer premio_otros;
 	public Integer premio_total_carrera;
 
 	public Boolean going_allowance;
 
 	// FORECAST 2 puestos
-	public String fc_1;
-	public String fc_2;
-	public String fc_pounds;
+	public String fc_1 = "";
+	public String fc_2 = "";
+	public String fc_pounds = "";
 
 	// TRICAST 3 puestos
-	public String tc_1;
-	public String tc_2;
-	public String tc_3;
-	public String tc_pounds;
+	public String tc_1 = "";
+	public String tc_2 = "";
+	public String tc_3 = "";
+	public String tc_pounds = "";
 
-	public String puesto1;
-	public String puesto2;
-	public String puesto3;
-	public String puesto4;
-	public String puesto5;
-	public String puesto6;
+	public String puesto1 = "";
+	public String puesto2 = "";
+	public String puesto3 = "";
+	public String puesto4 = "";
+	public String puesto5 = "";
+	public String puesto6 = "";
 
 	public Set<String> urlsGalgosHistorico = new HashSet<String>();
 
@@ -110,9 +111,35 @@ public class GbgbCarreraDetalle implements Serializable {
 	private String crearCadenaPuesto(String galgo_nombre, Integer trap, String sp, String time_sec,
 			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
 			String nacimiento, String comment) {
+
 		String SEP = Constantes.SEPARADOR_CAMPO;
-		return galgo_nombre + SEP + trap + SEP + sp + SEP + time_sec + SEP + time_distance + SEP + peso_galgo + SEP
-				+ entrenador_nombre + SEP + galgo_padre + SEP + galgo_madre + SEP + nacimiento + SEP + comment;
+
+		String out = "";
+
+		out += galgo_nombre != null ? galgo_nombre : "";
+		out += SEP;
+		out += trap != null ? trap : "";
+		out += SEP;
+		out += sp != null ? sp : "";
+		out += SEP;
+		out += time_sec != null ? time_sec : "";
+		out += SEP;
+		out += time_distance != null ? time_distance : "";
+		out += SEP;
+		out += peso_galgo != null ? peso_galgo : "";
+		out += SEP;
+		out += entrenador_nombre != null ? entrenador_nombre : "";
+		out += SEP;
+		out += galgo_padre != null ? galgo_padre : "";
+		out += SEP;
+		out += galgo_madre != null ? galgo_madre : "";
+		out += SEP;
+		out += nacimiento != null ? nacimiento : "";
+		out += SEP;
+		out += comment != null ? comment : "";
+
+		return out;
+
 	}
 
 	/**
@@ -141,7 +168,7 @@ public class GbgbCarreraDetalle implements Serializable {
 	 * @return
 	 */
 	public static String generarCamposSqlCreateTableDeDetalle() {
-		String out = "premio_primer_puesto INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1),"
+		String out = "premio_primero INT, premio_segundo INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1),"
 				+ "fc_1 SMALLINT, fc_2 SMALLINT, fc_pounds decimal(10,2),"
 				+ "tc_1 SMALLINT, tc_2 SMALLINT, tc_3 SMALLINT, tc_pounds decimal(10,2)";
 
@@ -170,10 +197,60 @@ public class GbgbCarreraDetalle implements Serializable {
 
 		String SEP = Constantes.SEPARADOR_CAMPO;
 
-		String out = premio_primer_puesto + SEP + premio_otros + SEP + premio_total_carrera + SEP + going_allowance
-				+ SEP + fc_1 + ", fc_2=" + fc_2 + SEP + fc_pounds + SEP + tc_1 + SEP + tc_2 + SEP + tc_3 + SEP
-				+ tc_pounds + SEP;
-		out += puesto1 + SEP + puesto2 + SEP + puesto3 + SEP + puesto4 + SEP + puesto5 + SEP + puesto6;
+		String out = "";
+
+		out += premio_primero != null ? premio_primero : "";
+		out += SEP;
+
+		out += premio_segundo != null ? premio_segundo : "";
+		out += SEP;
+
+		out += premio_otros != null ? premio_otros : "";
+		out += SEP;
+
+		out += premio_total_carrera != null ? premio_total_carrera : "";
+		out += SEP;
+
+		out += going_allowance != null ? going_allowance : "";
+		out += SEP;
+
+		out += fc_1 != null ? fc_1 : "";
+		out += SEP;
+
+		out += fc_2 != null ? fc_2 : "";
+		out += SEP;
+
+		out += fc_pounds != null ? fc_pounds : "";
+		out += SEP;
+
+		out += tc_1 != null ? tc_1 : "";
+		out += SEP;
+
+		out += tc_2 != null ? tc_2 : "";
+		out += SEP;
+
+		out += tc_3 != null ? tc_3 : "";
+		out += SEP;
+
+		out += tc_pounds != null ? tc_pounds : "";
+		out += SEP;
+
+		out += puesto1 != null ? puesto1 : "";
+		out += SEP;
+
+		out += puesto2 != null ? puesto2 : "";
+		out += SEP;
+
+		out += puesto3 != null ? puesto3 : "";
+		out += SEP;
+
+		out += puesto4 != null ? puesto4 : "";
+		out += SEP;
+
+		out += puesto5 != null ? puesto5 : "";
+		out += SEP;
+
+		out += puesto6 != null ? puesto6 : "";
 
 		return out;
 	}

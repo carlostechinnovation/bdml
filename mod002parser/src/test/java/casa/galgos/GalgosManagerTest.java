@@ -9,8 +9,6 @@ import junit.framework.Assert;
 
 public class GalgosManagerTest {
 
-	String param2 = "20171021";
-
 	@Before
 	public void iniciar() {
 	}
@@ -20,7 +18,7 @@ public class GalgosManagerTest {
 
 		String param3 = "/galgos_20171021_GBGB_bruto";
 
-		GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, param3, false);
+		GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param3, false);
 
 		Assert.assertTrue(GalgosManager.getInstancia().idCarrerasCampeonatoPendientes != null);
 
@@ -33,7 +31,7 @@ public class GalgosManagerTest {
 	public void descargarCarrerasSinFiltrarPorDiaTest() throws IOException {
 
 		String param3 = "/galgos_20171021_GBGB_bruto";
-		GalgosManager.getInstancia().descargarCarrerasSinFiltrarPorDia(param2, param3);
+		GalgosManager.getInstancia().descargarCarrerasSinFiltrarPorDia(param3);
 
 		int x = 0;
 

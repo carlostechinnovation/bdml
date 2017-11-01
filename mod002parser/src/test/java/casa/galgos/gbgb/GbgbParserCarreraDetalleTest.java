@@ -28,7 +28,8 @@ public class GbgbParserCarreraDetalleTest {
 	@Test
 	public void testParsear() throws Exception {
 
-		GbgbCarrera out = GbgbParserCarreraDetalle.parsear(idCarrera, idCampeonato, res.getContent("ISO-8859-1"));
+		GbgbCarrera out = (new GbgbParserCarreraDetalle()).parsear(idCarrera, idCampeonato,
+				res.getContent("ISO-8859-1"));
 
 		Assert.assertTrue(out != null);
 
@@ -44,7 +45,8 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.distancia.equals(265));
 
 		// DETALLE
-		Assert.assertTrue(out.detalle.premio_primer_puesto.equals(43));
+		Assert.assertTrue(out.detalle.premio_primero.equals(43));
+		Assert.assertTrue(out.detalle.premio_segundo == null);
 		Assert.assertTrue(out.detalle.premio_otros.equals(30));
 		Assert.assertTrue(out.detalle.premio_total_carrera.equals(193));
 
@@ -88,15 +90,16 @@ public class GbgbParserCarreraDetalleTest {
 	@Test
 	public void rellenarPremiosTest() throws Exception {
 
-		String premiosStr = "premiosStr=1st Â£78, Others Â£25 Race Total Â£203 ";
+		String premiosStr = "premiosStr=1st Â£175, 2nd Â£60, Others Â£50 Race Total Â£435 ";
 
 		GbgbCarreraDetalle out = new GbgbCarreraDetalle();
 
 		GbgbParserCarreraDetalle.rellenarPremios(premiosStr, out);
 
-		Assert.assertTrue(out.premio_primer_puesto.intValue() == 78);
-		Assert.assertTrue(out.premio_otros.intValue() == 25);
-		Assert.assertTrue(out.premio_total_carrera.intValue() == 203);
+		Assert.assertTrue(out.premio_primero.intValue() == 175);
+		Assert.assertTrue(out.premio_segundo.intValue() == 60);
+		Assert.assertTrue(out.premio_otros.intValue() == 50);
+		Assert.assertTrue(out.premio_total_carrera.intValue() == 435);
 
 	}
 

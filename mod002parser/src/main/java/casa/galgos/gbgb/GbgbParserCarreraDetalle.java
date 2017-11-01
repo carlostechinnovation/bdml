@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -79,6 +80,21 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	}
 
 	/**
+	 * Clase Auxiliar
+	 *
+	 */
+	public class Tripleta {
+		public Element linea1;
+		public Element linea2;
+		public Element linea3;
+
+		public Tripleta() {
+			super();
+		}
+
+	}
+
+	/**
 	 * Extrae info util
 	 * 
 	 * @param id_carrera
@@ -86,7 +102,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 * @param in
 	 * @return
 	 */
-	public static GbgbCarrera parsear(Long id_carrera, Long id_campeonato, String in) {
+	public GbgbCarrera parsear(Long id_carrera, Long id_campeonato, String in) {
 
 		Document doc = Jsoup.parse(in);
 
@@ -94,18 +110,44 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		GbgbCarreraDetalle detalle = new GbgbCarreraDetalle();
 		// --------------------------
-		List<Node> infoArriba = a.childNode(0).childNode(2).childNodes();
+
+		List<Node> infoArriba = a.getElementsByClass("resultsBlockHeader").get(0).childNodes();
 		rellenarPremios(((TextNode) infoArriba.get(11).childNode(0)).text(), detalle);
 
 		// --------------------------
-		List<Node> infoPosiciones = a.childNode(0).childNode(4).childNodes();
-		for (int i = 3; i <= 33; i += 6) {
-			rellenarPosicion((Element) infoPosiciones.get(i), (Element) infoPosiciones.get(i + 2),
-					(Element) infoPosiciones.get(i + 4), detalle);
+		List<Node> infoPosiciones = a.getElementsByClass("resultsBlock").get(0).childNodes();
+
+		List<Element> infoPosicionesSoloConContents = new ArrayList<Element>();
+		for (Node item : infoPosiciones) {
+			if (item instanceof Element && ((Element) item).hasClass("contents")) {
+				infoPosicionesSoloConContents.add((Element) item);
+			}
 		}
+
+		List<Tripleta> tripletas = new ArrayList<Tripleta>();
+		int j = -1;
+		for (Element item : infoPosicionesSoloConContents) {
+
+			if (item.toString().contains("line1")) {
+				j++;
+				tripletas.add(new GbgbParserCarreraDetalle.Tripleta()); // NUEVA
+				tripletas.get(j).linea1 = item;
+			} else if (item.toString().contains("line2")) {
+				tripletas.get(j).linea2 = item;
+			} else if (item.toString().contains("line3")) {
+				tripletas.get(j).linea3 = item;
+			}
+
+		}
+
+		for (Tripleta t : tripletas) {
+			rellenarPosicion(t.linea1, t.linea2, t.linea3, detalle);
+		}
+
 		// --------------------------
+
 		MY_LOGGER.info("Sacando info abajo...");
-		List<Node> infoAbajo = a.childNode(0).childNode(6).childNodes();
+		List<Node> infoAbajo = a.getElementsByClass("resultsBlockFooter").get(0).childNodes();
 
 		if (infoAbajo.toString().contains("Allowance")) {
 			String goingAllowanceStr = ((TextNode) ((Element) infoAbajo.get(1)).childNode(1)).text().trim();
@@ -116,8 +158,9 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String tc = ((TextNode) infoAbajo.get(3).childNode(3)).text();// (2-1-3) £23.19
 		detalle.rellenarForecastyTricast(fc, tc);
 
-		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].replace("|", "").trim();
-		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").trim();
+		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].replace("|", "")
+				.replace("Â", "").trim();
+		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").replace("Â", "").trim();
 
 		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").trim();
 		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").trim();
@@ -132,18 +175,23 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 	/**
 	 * @param premiosStr
-	 *            Cadena con este formato: "1st £43, Others £30 Race Total £193 "
+	 *            Cadena con este formato: "1st Â£175, 2nd Â£60, Others Â£50 Race
+	 *            Total Â£435 "
 	 * @param out
 	 */
 	public static void rellenarPremios(String premiosStr, GbgbCarreraDetalle out) {
 
 		MY_LOGGER.debug("rellenarPremios --> premiosStr=" + premiosStr);
 
-		String[] partes = premiosStr.split("£");
+		String[] partes = premiosStr.replace("Â", "").split("£");
 
-		out.premio_primer_puesto = Integer.valueOf(partes[1].split("Others")[0].replace(",", "").trim());
-		out.premio_otros = Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
-		out.premio_total_carrera = Integer.valueOf(partes[3].split(" ")[0].trim());
+		out.premio_primero = premiosStr.contains("1st") ? Integer.valueOf(partes[1].split(",")[0].trim()) : null;
+		out.premio_segundo = premiosStr.contains("2nd") ? Integer.valueOf(partes[2].split(",")[0].trim()) : null;
+		out.premio_otros = premiosStr.contains("2nd")
+				? Integer.valueOf(partes[3].split("Race")[0].replace(",", "").trim())
+				: Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
+		out.premio_total_carrera = premiosStr.contains("2nd") ? Integer.valueOf(partes[4].split(" ")[0].trim())
+				: Integer.valueOf(partes[3].split(" ")[0].trim());
 	}
 
 	/**
@@ -195,6 +243,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 				: null;
 
 		// ----------------
+
 		out.rellenarPuesto(posicion, galgo_nombre, trap != null ? Integer.valueOf(trap) : null, sp, time_sec,
 				time_distance, peso_galgo != null ? Float.valueOf(peso_galgo) : null, entrenador_nombre, galgo_padre,
 				galgo_madre, nacimiento, comment, url_galgo_historico);
