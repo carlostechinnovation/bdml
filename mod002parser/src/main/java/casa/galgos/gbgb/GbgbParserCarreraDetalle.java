@@ -160,19 +160,15 @@ public class GbgbParserCarreraDetalle implements Serializable {
 																														// £23.19
 		detalle.rellenarForecastyTricast(fc, tc);
 
-		String track = ((TextNode) infoArriba.get(1).childNode(0)).text().split("&")[0].replace("|", "")
-				.replace("Â", "").replace("$nbsp", "").replace(" ", "").trim();
-		String clase = ((TextNode) infoArriba.get(7).childNode(0)).text().replace("|", "").replace("Â", "")
-				.replace("$nbsp", "").replace(" ", "").trim();
+		String track = Constantes.limpiarTexto(((TextNode) infoArriba.get(1).childNode(0)).text()).split("&")[0].trim();
+		String clase = Constantes.limpiarTexto(((TextNode) infoArriba.get(7).childNode(0)).text()).trim();
 
-		String f = ((TextNode) infoArriba.get(3).childNode(0)).text().replace("|", "").replace("$nbsp", "")
-				.replace(" ", "").trim();
-		String h = ((TextNode) infoArriba.get(5).childNode(0)).text().replace("|", "").replace("$nbsp", "")
-				.replace(" ", "").trim();
+		String f = Constantes.limpiarTexto(((TextNode) infoArriba.get(3).childNode(0)).text());
+		String h = Constantes.limpiarTexto(((TextNode) infoArriba.get(5).childNode(0)).text()).trim();
 		Calendar fechayhora = Constantes.parsearFechaHora(f, h, true);
 
-		Integer distancia = Integer.valueOf(((TextNode) infoArriba.get(9).childNode(0)).text().split("m")[0]
-				.replace("$nbsp", "").replace(" ", "").trim());
+		Integer distancia = Integer.valueOf(
+				Constantes.limpiarTexto(((TextNode) infoArriba.get(9).childNode(0)).text()).split("m")[0].trim());
 
 		GbgbCarrera carrera = new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora, distancia, detalle);
 
@@ -214,22 +210,19 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text().trim();
 		String url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
 		String trap = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
-		String sp = ((TextNode) e1.childNode(7).childNode(0)).text().replace("$nbsp", "").replace(" ", "").trim();
-		String time_sec = ((TextNode) e1.childNode(9).childNode(0)).text().replace("Â", "").replace("$nbsp", "")
-				.replace(" ", "").trim();
+		String sp = Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text());
+		String time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());
 
-		String time_distance = ((TextNode) e1.childNode(11).childNode(0)).text().replace("$nbsp", "").replace(" ", "")
-				.trim();
+		String time_distance = Constantes.limpiarTexto(((TextNode) e1.childNode(11).childNode(0)).text());
 		time_distance = time_distance.contains("(")
 				? time_distance.replace("(", "XXXDIVISORXXX").split("XXXDIVISORXXX")[0].trim()
 				: time_distance;
 
-		String padre_madre_nacimiento_peso = ((TextNode) e2.childNode(1).childNode(0)).text().replace("$nbsp", "")
-				.replace(" ", "").trim();
-		String entrenador_nombre = ((TextNode) e2.childNode(3).childNode(2)).text().replace(")", "")
-				.replace("$nbsp", "").replace(" ", "").trim();
+		String padre_madre_nacimiento_peso = Constantes.limpiarTexto(((TextNode) e2.childNode(1).childNode(0)).text());
+		String entrenador_nombre = Constantes.limpiarTexto(((TextNode) e2.childNode(3).childNode(2)).text())
+				.replace(")", "").trim();
 
-		String comment = ((TextNode) e3.childNode(1).childNode(1)).text().replace("$nbsp", "").replace(" ", "").trim();
+		String comment = Constantes.limpiarTexto(((TextNode) e3.childNode(1).childNode(1)).text());
 
 		// ----------------------------------
 
@@ -247,9 +240,9 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			abcd = partes[1].trim();
 		}
 
-		String galgo_padre = "";
-		String galgo_madre = "";
-		String nacimiento = "";
+		String galgo_padre = extraerPadre(padre_madre_nacimiento_peso);
+		String galgo_madre = extraerMadre(padre_madre_nacimiento_peso);
+		Integer nacimiento = extraerFechaNacimiento(padre_madre_nacimiento_peso);
 
 		MY_LOGGER.debug("padre_madre_nacimiento_peso-->" + padre_madre_nacimiento_peso);
 
@@ -262,6 +255,39 @@ public class GbgbParserCarreraDetalle implements Serializable {
 				time_distance, peso_galgo != null ? Float.valueOf(peso_galgo) : null, entrenador_nombre, galgo_padre,
 				galgo_madre, nacimiento, comment, url_galgo_historico);
 
+	}
+
+	/**
+	 * @param in
+	 * @return
+	 */
+	public static String extraerPadre(String in) {
+		String out = null;
+		if (in != null && in.contains("-")) {
+			out = in.split("-")[0].trim();
+		}
+		return out;
+	}
+
+	/**
+	 * @param in
+	 * @return
+	 */
+	public static String extraerMadre(String in) {
+		String out = null;
+		if (in != null && in.contains("-")) {
+			out = in.split("-")[1].trim();
+		}
+		return out;
+	}
+
+	/**
+	 * @param in
+	 * @return YYYYMMDD
+	 */
+	public static Integer extraerFechaNacimiento(String in) {
+
+		return null;
 	}
 
 }

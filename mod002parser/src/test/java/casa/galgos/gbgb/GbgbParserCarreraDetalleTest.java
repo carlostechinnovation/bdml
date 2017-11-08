@@ -1,6 +1,8 @@
 package casa.galgos.gbgb;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -59,7 +61,8 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.detalle.tc_3.equals("3"));
 		Assert.assertTrue(out.detalle.tc_pounds.equals("23.19"));
 
-		Assert.assertTrue(out.detalle.puesto6.equals("Dunham Tiffany|6|9/2| |17.22|28.4|R J Holloway||||Wide"));
+		Assert.assertTrue(
+				out.detalle.puesto6.equals("Dunham Tiffany|6|9/2|\\N|17.22|28.4|R J Holloway|\\N|\\N|\\N|Wide"));
 
 	}
 
@@ -100,6 +103,59 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.premio_segundo.intValue() == 60);
 		Assert.assertTrue(out.premio_otros.intValue() == 50);
 		Assert.assertTrue(out.premio_total_carrera.intValue() == 435);
+	}
+
+	@Test
+	public void extraerPadreTest() {
+
+		Map<String, String> mapaInOut = new HashMap<String, String>();
+		mapaInOut.put("bkw b Tullymurry Act - Skate On Oct-2015 ( Weight: 27.7 )", "Tullymurry Act");
+		mapaInOut.put("(Season: 06.Au.17) bd b Ballymac Eske - Hollyoak Airwave Jan-2015 ( Weight: 27.2 )",
+				"Ballymac Eske");
+		mapaInOut.put("bk d Romeo Recruit - Droopys Alabama May-2014 ( Weight: 34.6 )", "Romeo Recruit");
+		mapaInOut.put("bk b Paradise Madison - Tip Top Jess Jun-2014 ( Weight: 31.3 )", "Paradise Madison");
+		mapaInOut.put("bk b Top Honcho - Tyrur Fergie May-2015 ( Weight: 27.8 )", "Top Honcho");
+		mapaInOut.put("bk d Superior Product - Oneco Joy Aug-2015 ( Weight: 31.8 )", "Superior Product");
+
+		for (String in : mapaInOut.keySet()) {
+			String out = GbgbParserCarreraDetalle.extraerPadre(in);
+			Assert.assertTrue(out.equals(mapaInOut.get(in)));
+		}
+	}
+
+	@Test
+	public void extraerMadreTest() {
+		Map<String, String> mapaInOut = new HashMap<String, String>();
+		mapaInOut.put("bkw b Tullymurry Act - Skate On Oct-2015 ( Weight: 27.7 )", "Skate On");
+		mapaInOut.put("(Season: 06.Au.17) bd b Ballymac Eske - Hollyoak Airwave Jan-2015 ( Weight: 27.2 )",
+				"Hollyoak Airwave");
+		mapaInOut.put("bk d Romeo Recruit - Droopys Alabama May-2014 ( Weight: 34.6 )", "Droopys Alabama");
+		mapaInOut.put("bk b Paradise Madison - Tip Top Jess Jun-2014 ( Weight: 31.3 )", "Tip Top Jess");
+		mapaInOut.put("bk b Top Honcho - Tyrur Fergie May-2015 ( Weight: 27.8 )", "Tyrur Fergie");
+		mapaInOut.put("bk d Superior Product - Oneco Joy Aug-2015 ( Weight: 31.8 )", "Oneco Joy");
+
+		for (String in : mapaInOut.keySet()) {
+			String out = GbgbParserCarreraDetalle.extraerMadre(in);
+			Assert.assertTrue(out.equals(mapaInOut.get(in)));
+		}
+	}
+
+	@Test
+	public void extraerFechaNacimientoTest() {
+
+		Map<String, Integer> mapaInOut = new HashMap<String, Integer>();
+		mapaInOut.put("bkw b Tullymurry Act - Skate On Oct-2015 ( Weight: 27.7 )", Integer.valueOf(20151001));
+		mapaInOut.put("(Season: 06.Au.17) bd b Ballymac Eske - Hollyoak Airwave Jan-2015 ( Weight: 27.2 )",
+				Integer.valueOf(20150101));
+		mapaInOut.put("bk d Romeo Recruit - Droopys Alabama May-2014 ( Weight: 34.6 )", Integer.valueOf(20140501));
+		mapaInOut.put("bk b Paradise Madison - Tip Top Jess Jun-2014 ( Weight: 31.3 )", Integer.valueOf(20140601));
+		mapaInOut.put("bk b Top Honcho - Tyrur Fergie May-2015 ( Weight: 27.8 )", Integer.valueOf(20150501));
+		mapaInOut.put("bk d Superior Product - Oneco Joy Aug-2015 ( Weight: 31.8 )", Integer.valueOf(20150801));
+
+		for (String in : mapaInOut.keySet()) {
+			Integer out = GbgbParserCarreraDetalle.extraerFechaNacimiento(in);
+			Assert.assertTrue(out.equals(mapaInOut.get(in)));
+		}
 
 	}
 

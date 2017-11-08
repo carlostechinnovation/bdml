@@ -325,23 +325,31 @@ public class GalgosManager implements Serializable {
 					.debug("Fecha umbral (hace X meses): " + GbgbCarrera.FORMATO.format(fechaUmbralAnterior.getTime()));
 
 			for (GbgbGalgoHistoricoCarrera fila : historico.carrerasHistorico) {
-				if (
-				// FECHA POSTERIOR AL UMBRAL
-				fila.fecha != null && fila.fecha.after(fechaUmbralAnterior)
-
-				// FECHA SIEMPRE ANTERIOR A AHORA (no coger futuras)
-						&& fila.fecha.before(Calendar.getInstance())
-
-						// evitamos descargar carreras que YA TENEMOS
-						&& idCarrerasCampeonatoProcesadas
-								.containsKey(fila.id_carrera + "-" + fila.id_campeonato) == false
-
-				) {
+				if (isHistoricoInsertable(fila, fechaUmbralAnterior)) {
 					idCarrerasCampeonatoProcesadas.put(fila.id_carrera + "-" + fila.id_campeonato, false);
 				}
 			}
 		}
 
+	}
+
+	/**
+	 * @param fila
+	 * @param fechaUmbralAnterior
+	 * @return TRUE si hay que insertar esta fila
+	 */
+	public boolean isHistoricoInsertable(GbgbGalgoHistoricoCarrera fila, Calendar fechaUmbralAnterior) {
+		return
+		// FECHA POSTERIOR AL UMBRAL
+		fila.fecha != null && fila.fecha.after(fechaUmbralAnterior)
+
+		// FECHA SIEMPRE ANTERIOR A AHORA (no coger futuras)
+				&& fila.fecha.before(Calendar.getInstance())
+
+				// evitamos descargar carreras que YA TENEMOS
+				&& idCarrerasCampeonatoProcesadas.containsKey(fila.id_carrera + "-" + fila.id_campeonato) == false
+
+		;
 	}
 
 }

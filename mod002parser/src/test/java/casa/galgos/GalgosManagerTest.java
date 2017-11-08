@@ -1,10 +1,12 @@
 package casa.galgos;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
 import junit.framework.Assert;
 
 public class GalgosManagerTest {
@@ -55,6 +57,29 @@ public class GalgosManagerTest {
 
 		int x = 0;
 
+	}
+
+	@Test
+	public void isHistoricoInsertable() {
+
+		GalgosManager instancia = GalgosManager.getInstancia();
+		Calendar fechaUmbralAnterior = Calendar.getInstance();
+		fechaUmbralAnterior.set(Calendar.YEAR, 2015);
+
+		Calendar fechaFutura = Calendar.getInstance();
+		fechaFutura.set(Calendar.YEAR, 2050);
+
+		GbgbGalgoHistoricoCarrera filaFutura = new GbgbGalgoHistoricoCarrera(null, null, fechaFutura, null, null, null,
+				null, null, null, null, null, null, null, null, null, null);
+		boolean outFutura = instancia.isHistoricoInsertable(filaFutura, fechaUmbralAnterior);
+		Assert.assertTrue(outFutura == false);
+
+		Calendar fechaMuyAntigua = Calendar.getInstance();
+		fechaMuyAntigua.set(Calendar.YEAR, 2010);
+		GbgbGalgoHistoricoCarrera filaMuyAntigua = new GbgbGalgoHistoricoCarrera(null, null, fechaMuyAntigua, null,
+				null, null, null, null, null, null, null, null, null, null, null, null);
+		boolean outMuyAntigua = instancia.isHistoricoInsertable(filaMuyAntigua, fechaUmbralAnterior);
+		Assert.assertTrue(outMuyAntigua == false);
 	}
 
 }

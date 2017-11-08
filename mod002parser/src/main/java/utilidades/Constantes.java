@@ -25,7 +25,7 @@ public class Constantes {
 	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 6 * 30; // Solo cogemos las carreras de los
 																					// últimos 6 meses
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 3;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 500L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 100;
 
 	public static final String SEPARADOR_CAMPO = "|";
@@ -89,6 +89,15 @@ public class Constantes {
 		fechayhora.set(Calendar.MINUTE, minuto);
 
 		return fechayhora;
+	}
+
+	/**
+	 * @param in
+	 * @return
+	 */
+	public static String limpiarTexto(String in) {
+		return in.replace(SEPARADOR_CAMPO, "").replace(SEPARADOR_FILA, "").replace("Â", "").replace("$nbsp", "")
+				.replace(" ", "").trim();
 	}
 
 }

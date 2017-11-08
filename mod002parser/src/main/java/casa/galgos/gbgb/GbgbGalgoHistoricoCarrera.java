@@ -85,29 +85,30 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += SEP;
 		out += distancia != null ? distancia : "\\N";
 		out += SEP;
-		out += trap != null ? trap : "\\N";
+		out += (trap != null && !"".equals(trap)) ? trap : "\\N";
 		out += SEP;
-		out += stmHcp != null ? stmHcp : "\\N";
+		out += (stmHcp != null && !"".equals(stmHcp)) ? stmHcp : "\\N";
 		out += SEP;
-		out += posicion != null ? posicion : "\\N";
+		out += (posicion != null && !"".equals(posicion)) ? posicion : "\\N";
 		out += SEP;
-		out += by != null ? by : "\\N";
+		out += (by != null && !"".equals(by)) ? by : "\\N";
 		out += SEP;
-		out += galgo_primero_o_segundo != null ? galgo_primero_o_segundo : "\\N";
+		out += (galgo_primero_o_segundo != null && !"".equals(galgo_primero_o_segundo)) ? galgo_primero_o_segundo
+				: "\\N";
 		out += SEP;
-		out += venue != null ? venue : "\\N";
+		out += (venue != null && !"".equals(venue)) ? venue : "\\N";
 		out += SEP;
-		out += remarks != null ? remarks : "\\N";
+		out += (remarks != null && !"".equals(remarks)) ? remarks : "\\N";
 		out += SEP;
-		out += winTime != null ? winTime : "\\N";
+		out += (winTime != null && !"".equals(winTime)) ? winTime : "\\N";
 		out += SEP;
-		out += going != null ? going : "\\N";
+		out += (going != null && !"".equals(going)) ? going : "\\N";
 		out += SEP;
-		out += sp != null ? sp : "\\N";
+		out += (sp != null && !"".equals(sp)) ? sp : "\\N";
 		out += SEP;
-		out += clase != null ? clase : "\\N";
+		out += (clase != null && !"".equals(clase)) ? clase : "\\N";
 		out += SEP;
-		out += calculatedTime != null ? calculatedTime : "\\N";
+		out += (calculatedTime != null && !"".equals(calculatedTime)) ? calculatedTime : "\\N";
 
 		return out;
 

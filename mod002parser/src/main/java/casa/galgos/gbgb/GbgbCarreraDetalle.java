@@ -58,7 +58,7 @@ public class GbgbCarreraDetalle implements Serializable {
 	 */
 	public void rellenarPuesto(Short posicion, String galgo_nombre, Integer trap, String sp, String time_sec,
 			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
-			String nacimiento, String comment, String url_galgo_historico) {
+			Integer nacimiento, String comment, String url_galgo_historico) {
 
 		switch (posicion) {
 		case 1:
@@ -110,7 +110,7 @@ public class GbgbCarreraDetalle implements Serializable {
 	 */
 	private String crearCadenaPuesto(String galgo_nombre, Integer trap, String sp, String time_sec,
 			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
-			String nacimiento, String comment) {
+			Integer nacimiento, String comment) {
 
 		String SEP = Constantes.SEPARADOR_CAMPO;
 
@@ -134,7 +134,7 @@ public class GbgbCarreraDetalle implements Serializable {
 		out += SEP;
 		out += (galgo_madre != null && !"".equals(galgo_madre)) ? galgo_madre : "\\N";
 		out += SEP;
-		out += (nacimiento != null && !"".equals(nacimiento)) ? nacimiento : "\\N";
+		out += (nacimiento != null) ? nacimiento.toString() : "\\N";
 		out += SEP;
 		out += (comment != null && !"".equals(comment)) ? comment : "\\N";
 
@@ -151,20 +151,20 @@ public class GbgbCarreraDetalle implements Serializable {
 	public void rellenarForecastyTricast(String fc, String tc) {
 
 		if (fc != null) {
-			String[] fca = fc.replace("Â", "").split("£");
+			String[] fca = Constantes.limpiarTexto(fc).split("£");
 			String[] fc_parte1 = fca[0].trim().replace("(", "").replace(")", "").split("-");
 			fc_1 = fc_parte1[0];
 			fc_2 = fc_parte1[1];
-			fc_pounds = fca[1].replace("|", "").trim();
+			fc_pounds = Constantes.limpiarTexto(fca[1]);
 		}
 
 		if (tc != null) {
-			String[] tca = tc.replace("Â", "").split("£");
+			String[] tca = Constantes.limpiarTexto(tc).split("£");
 			String[] tc_parte1 = tca[0].trim().replace("(", "").replace(")", "").split("-");
 			tc_1 = tc_parte1[0];
 			tc_2 = tc_parte1[1];
 			tc_3 = tc_parte1[2];
-			tc_pounds = tca[1].replace("|", "").trim();
+			tc_pounds = Constantes.limpiarTexto(tca[1]);
 		}
 	}
 

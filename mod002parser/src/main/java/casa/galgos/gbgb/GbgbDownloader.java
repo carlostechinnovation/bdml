@@ -260,17 +260,4 @@ public class GbgbDownloader {
 
 	}
 
-	// public static void main(String[] args) {
-	//
-	// StringBuffer content = new StringBuffer();
-	// content.append("cadena");
-	//
-	// MY_LOGGER.debug("GALGOS-GbgbDownloader: Escribiendo a fichero...");
-	// MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de
-	// 16-bits)");
-	// MY_LOGGER.debug("Path fichero salida: "+pathOut);
-	// Files.write(Paths.get(pathOut), content.toString().getBytes());
-	//
-	// }
-
 }
