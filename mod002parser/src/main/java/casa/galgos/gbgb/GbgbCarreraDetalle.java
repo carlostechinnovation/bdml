@@ -1,6 +1,7 @@
 package casa.galgos.gbgb;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,12 +29,12 @@ public class GbgbCarreraDetalle implements Serializable {
 	public String tc_3 = "\\N";
 	public String tc_pounds = "\\N";
 
-	public String puesto1 = "\\N";
-	public String puesto2 = "\\N";
-	public String puesto3 = "\\N";
-	public String puesto4 = "\\N";
-	public String puesto5 = "\\N";
-	public String puesto6 = "\\N";
+	public String puesto1 = crearCadenaPuestoVacio();
+	public String puesto2 = crearCadenaPuestoVacio();
+	public String puesto3 = crearCadenaPuestoVacio();
+	public String puesto4 = crearCadenaPuestoVacio();
+	public String puesto5 = crearCadenaPuestoVacio();
+	public String puesto6 = crearCadenaPuestoVacio();
 
 	public Set<String> urlsGalgosHistorico = new HashSet<String>();
 
@@ -55,35 +56,36 @@ public class GbgbCarreraDetalle implements Serializable {
 	 * @param nacimiento
 	 * @param comment
 	 * @param url_galgo_historico
+	 * @param fechaDeLaCarrera
 	 */
 	public void rellenarPuesto(Short posicion, String galgo_nombre, Integer trap, String sp, String time_sec,
 			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
-			Integer nacimiento, String comment, String url_galgo_historico) {
+			Integer nacimiento, String comment, String url_galgo_historico, Calendar fechaDeLaCarrera) {
 
 		switch (posicion) {
 		case 1:
 			puesto1 = crearCadenaPuesto(galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-					galgo_padre, galgo_madre, nacimiento, comment);
+					galgo_padre, galgo_madre, nacimiento, comment, fechaDeLaCarrera);
 			break;
 		case 2:
 			puesto2 = crearCadenaPuesto(galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-					galgo_padre, galgo_madre, nacimiento, comment);
+					galgo_padre, galgo_madre, nacimiento, comment, fechaDeLaCarrera);
 			break;
 		case 3:
 			puesto3 = crearCadenaPuesto(galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-					galgo_padre, galgo_madre, nacimiento, comment);
+					galgo_padre, galgo_madre, nacimiento, comment, fechaDeLaCarrera);
 			break;
 		case 4:
 			puesto4 = crearCadenaPuesto(galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-					galgo_padre, galgo_madre, nacimiento, comment);
+					galgo_padre, galgo_madre, nacimiento, comment, fechaDeLaCarrera);
 			break;
 		case 5:
 			puesto5 = crearCadenaPuesto(galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-					galgo_padre, galgo_madre, nacimiento, comment);
+					galgo_padre, galgo_madre, nacimiento, comment, fechaDeLaCarrera);
 			break;
 		case 6:
 			puesto6 = crearCadenaPuesto(galgo_nombre, trap, sp, time_sec, time_distance, peso_galgo, entrenador_nombre,
-					galgo_padre, galgo_madre, nacimiento, comment);
+					galgo_padre, galgo_madre, nacimiento, comment, fechaDeLaCarrera);
 			break;
 
 		default:
@@ -95,24 +97,19 @@ public class GbgbCarreraDetalle implements Serializable {
 	}
 
 	/**
-	 * @param galgo_nombre
-	 * @param trap
-	 * @param sp
-	 * @param time_sec
-	 * @param time_distance
-	 * @param peso_galgo
-	 * @param entrenador_nombre
-	 * @param galgo_padre
-	 * @param galgo_madre
-	 * @param nacimiento
-	 * @param comment
 	 * @return
 	 */
-	private String crearCadenaPuesto(String galgo_nombre, Integer trap, String sp, String time_sec,
+	private static String crearCadenaPuestoVacio() {
+		return crearCadenaPuesto(null, null, null, null, null, null, null, null, null, null, null, null);
+	}
+
+	private static String crearCadenaPuesto(String galgo_nombre, Integer trap, String sp, String time_sec,
 			String time_distance, Float peso_galgo, String entrenador_nombre, String galgo_padre, String galgo_madre,
-			Integer nacimiento, String comment) {
+			Integer nacimiento, String comment, Calendar fechaDeLaCarrera) {
 
 		String SEP = Constantes.SEPARADOR_CAMPO;
+
+		Integer edadEnDias = calcularEdadGalgoEnDias(nacimiento, fechaDeLaCarrera);
 
 		String out = "";
 
@@ -137,9 +134,33 @@ public class GbgbCarreraDetalle implements Serializable {
 		out += (nacimiento != null) ? nacimiento.toString() : "\\N";
 		out += SEP;
 		out += (comment != null && !"".equals(comment)) ? comment : "\\N";
+		out += SEP;
+		out += (edadEnDias != null) ? edadEnDias : "\\N";
 
 		return out;
 
+	}
+
+	/**
+	 * @param nacimiento
+	 *            20150501
+	 * @param fechaDeLaCarrera
+	 *            Calendar
+	 * @return Edad del perro en dias = fechaDeLaCarrera - nacimiento (ojo, no
+	 *         restar Integers, sin Calendar.subtract)
+	 */
+	public static Integer calcularEdadGalgoEnDias(Integer nacimiento, Calendar fechaDeLaCarrera) {
+
+		Calendar fechaNacimiento = Calendar.getInstance();
+		fechaNacimiento.clear();
+		fechaNacimiento.set(Calendar.YEAR, value);
+		fechaNacimiento.set(Calendar.MONTH, value);
+		fechaNacimiento.set(Calendar.DAY_OF_MONTH, value);
+
+		Long resta = fechaDeLaCarrera.getTimeInMillis() / (1000 * 60 * 60 * 24)
+				- fechaNacimiento.getTimeInMillis() / (1000 * 60 * 60 * 24);
+
+		return resta.intValue();
 	}
 
 	/**
@@ -189,19 +210,23 @@ public class GbgbCarreraDetalle implements Serializable {
 			out += "p" + i + "_" + "galgo_madre varchar(30), ";
 			out += "p" + i + "_" + "nacimiento varchar(30), ";
 			out += "p" + i + "_" + "comment varchar(20)";
+			out += "p" + i + "_" + "edad_en_dias INT";
 		}
 
 		return out;
 	}
 
 	/**
+	 * @param fechaDeLaCarrera
+	 *            Sirve para calcular la edad del perro (días) en el día de la
+	 *            carrera.
 	 * @return
 	 */
-	public String generarDatosParaExportarSql() {
+	public String generarDatosParaExportarSql(Calendar fechaDeLaCarrera) {
 
 		String SEP = Constantes.SEPARADOR_CAMPO;
 
-		String puestoTodoVacio = crearCadenaPuesto(null, null, null, null, null, null, null, null, null, null, null);
+		String puestoTodoVacio = crearCadenaPuestoVacio();
 
 		String out = "";
 
@@ -241,22 +266,22 @@ public class GbgbCarreraDetalle implements Serializable {
 		out += tc_pounds != null ? tc_pounds : "\\N";
 		out += SEP;
 
-		out += puesto1 != null ? puesto1 : puestoTodoVacio;
+		out += (puesto1 != null) ? puesto1 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto2 != null ? puesto2 : puestoTodoVacio;
+		out += (puesto2 != null) ? puesto2 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto3 != null ? puesto3 : puestoTodoVacio;
+		out += (puesto3 != null) ? puesto3 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto4 != null ? puesto4 : puestoTodoVacio;
+		out += (puesto4 != null) ? puesto4 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto5 != null ? puesto5 : puestoTodoVacio;
+		out += (puesto5 != null) ? puesto5 : puestoTodoVacio;
 		out += SEP;
 
-		out += puesto6 != null ? puesto6 : puestoTodoVacio;
+		out += (puesto6 != null) ? puesto6 : puestoTodoVacio;
 
 		return out;
 	}

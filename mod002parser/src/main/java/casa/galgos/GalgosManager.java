@@ -296,7 +296,7 @@ public class GalgosManager implements Serializable {
 	 */
 	public void descargarTodosLosHistoricos(String param3) {
 
-		MY_LOGGER.debug("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
+		MY_LOGGER.info("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
 		String pathFileGalgoHistorico = "";
 
 		Calendar fechaUmbralAnterior = Calendar.getInstance();

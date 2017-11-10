@@ -20,7 +20,7 @@ empresas="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/bols
 while read -r line
 do
     empresa="$line"
-    node MOD001A_yahoo_finance.js ${empresa} ${anio}
+    node /home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/bolsa/MOD001A_yahoo_finance.js ${empresa} ${anio}
 done < "$empresas"
 
 

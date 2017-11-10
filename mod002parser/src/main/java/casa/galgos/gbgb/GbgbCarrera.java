@@ -62,7 +62,6 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	public String generarDatosParaExportarSql() {
 
 		String SEP = Constantes.SEPARADOR_CAMPO;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy" + SEP + "MM" + SEP + "dd" + SEP + "hh" + SEP + "mm");
 
 		String out = "";
 
@@ -74,13 +73,40 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += clase != null ? clase : "";
 		out += SEP;
-		out += sdf.format(fechayhora.getTime());
+		out += formatearFechaParaExportar(fechayhora);
 		out += SEP;
 		out += distancia != null ? distancia : "\\N";
 		out += SEP;
 
-		out += detalle.generarDatosParaExportarSql() + Constantes.SEPARADOR_FILA;
+		out += detalle.generarDatosParaExportarSql(fechayhora) + Constantes.SEPARADOR_FILA;
 		return out;
+	}
+
+	/**
+	 * @param in
+	 *            Calendar
+	 * @return 2017|11|09|20|52
+	 */
+	public static String formatearFechaParaExportar(Calendar in) {
+
+		String out = "";
+
+		out += in.get(Calendar.YEAR) + Constantes.SEPARADOR_CAMPO;
+
+		int mes = in.get(Calendar.MONTH);
+		out += ((mes >= 10) ? mes : ("0" + mes)) + Constantes.SEPARADOR_CAMPO;
+
+		int dia = in.get(Calendar.DAY_OF_MONTH);
+		out += ((dia >= 10) ? dia : ("0" + dia)) + Constantes.SEPARADOR_CAMPO;
+
+		int hora = in.get(Calendar.HOUR_OF_DAY);
+		out += ((hora >= 10) ? hora : ("0" + hora)) + Constantes.SEPARADOR_CAMPO;
+
+		int minuto = in.get(Calendar.MINUTE);
+		out += (minuto >= 10) ? minuto : ("0" + minuto);
+
+		return out;
+
 	}
 
 	@Override

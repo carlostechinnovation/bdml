@@ -10,7 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -33,6 +35,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 	public GbgbParserCarreraDetalle() {
 		super();
+
 	}
 
 	/**
@@ -114,6 +117,16 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		List<Node> infoArriba = a.getElementsByClass("resultsBlockHeader").get(0).childNodes();
 		rellenarPremios(((TextNode) infoArriba.get(11).childNode(0)).text(), detalle);
 
+		String track = Constantes.limpiarTexto(((TextNode) infoArriba.get(1).childNode(0)).text()).split("&")[0].trim();
+		String clase = Constantes.limpiarTexto(((TextNode) infoArriba.get(7).childNode(0)).text()).trim();
+
+		String f = Constantes.limpiarTexto(((TextNode) infoArriba.get(3).childNode(0)).text());
+		String h = Constantes.limpiarTexto(((TextNode) infoArriba.get(5).childNode(0)).text()).trim();
+		Calendar fechayhoraDeLaCarrera = Constantes.parsearFechaHora(f, h, true);
+
+		Integer distancia = Integer.valueOf(
+				Constantes.limpiarTexto(((TextNode) infoArriba.get(9).childNode(0)).text()).split("m")[0].trim());
+
 		// --------------------------
 		List<Node> infoPosiciones = a.getElementsByClass("resultsBlock").get(0).childNodes();
 
@@ -141,7 +154,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		}
 
 		for (Tripleta t : tripletas) {
-			rellenarPosicion(t.linea1, t.linea2, t.linea3, detalle);
+			rellenarPosicion(t.linea1, t.linea2, t.linea3, detalle, fechayhoraDeLaCarrera);
 		}
 
 		// --------------------------
@@ -160,17 +173,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 																														// £23.19
 		detalle.rellenarForecastyTricast(fc, tc);
 
-		String track = Constantes.limpiarTexto(((TextNode) infoArriba.get(1).childNode(0)).text()).split("&")[0].trim();
-		String clase = Constantes.limpiarTexto(((TextNode) infoArriba.get(7).childNode(0)).text()).trim();
-
-		String f = Constantes.limpiarTexto(((TextNode) infoArriba.get(3).childNode(0)).text());
-		String h = Constantes.limpiarTexto(((TextNode) infoArriba.get(5).childNode(0)).text()).trim();
-		Calendar fechayhora = Constantes.parsearFechaHora(f, h, true);
-
-		Integer distancia = Integer.valueOf(
-				Constantes.limpiarTexto(((TextNode) infoArriba.get(9).childNode(0)).text()).split("m")[0].trim());
-
-		GbgbCarrera carrera = new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora, distancia, detalle);
+		GbgbCarrera carrera = new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhoraDeLaCarrera, distancia,
+				detalle);
 
 		return carrera;
 	}
@@ -203,8 +207,10 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 *            Sobre el galgo
 	 * @param e3
 	 *            Comentarios
+	 * @param fechayhoraDeLaCarrera
 	 */
-	public static void rellenarPosicion(Element e1, Element e2, Element e3, GbgbCarreraDetalle out) {
+	public static void rellenarPosicion(Element e1, Element e2, Element e3, GbgbCarreraDetalle out,
+			Calendar fechayhoraDeLaCarrera) {
 
 		Short posicion = Short.valueOf(((TextNode) e1.childNode(1).childNode(0)).text().trim());
 		String galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text().trim();
@@ -218,7 +224,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 				? time_distance.replace("(", "XXXDIVISORXXX").split("XXXDIVISORXXX")[0].trim()
 				: time_distance;
 
-		String padre_madre_nacimiento_peso = Constantes.limpiarTexto(((TextNode) e2.childNode(1).childNode(0)).text());
+		String season_padre_madre_nacimiento_peso = Constantes
+				.limpiarTexto(((TextNode) e2.childNode(1).childNode(0)).text());
 		String entrenador_nombre = Constantes.limpiarTexto(((TextNode) e2.childNode(3).childNode(2)).text())
 				.replace(")", "").trim();
 
@@ -226,18 +233,18 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		// ----------------------------------
 
-		String[] partes = padre_madre_nacimiento_peso.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
+		String[] partes = season_padre_madre_nacimiento_peso.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
 		String season = "";
-		String abcd = "";
+		String padre_madre_nacimiento_peso = "";
 		if (partes.length <= 2) {
-			abcd = (partes[0].contains("eason")) ? partes[1] : partes[0];
+			padre_madre_nacimiento_peso = (partes[0].contains("eason")) ? partes[1] : partes[0];
 		} else if (partes.length == 3) {
 
 			MY_LOGGER.debug("partes[0]=" + partes[0]);
 			MY_LOGGER.debug("partes[1]=" + partes[1]);
 
 			season = partes[0].split("eason")[1].trim();
-			abcd = partes[1].trim();
+			padre_madre_nacimiento_peso = partes[1].trim();
 		}
 
 		String galgo_padre = extraerPadre(padre_madre_nacimiento_peso);
@@ -246,14 +253,15 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		MY_LOGGER.debug("padre_madre_nacimiento_peso-->" + padre_madre_nacimiento_peso);
 
-		String peso_galgo = abcd.contains("eight") ? abcd.split("Weight")[1].replace(")", "").replace(":", "").trim()
+		String peso_galgo = padre_madre_nacimiento_peso.contains("eight")
+				? padre_madre_nacimiento_peso.split("Weight")[1].replace(")", "").replace(":", "").trim()
 				: null;
 
 		// ----------------
 
 		out.rellenarPuesto(posicion, galgo_nombre, trap != null ? Integer.valueOf(trap) : null, sp, time_sec,
 				time_distance, peso_galgo != null ? Float.valueOf(peso_galgo) : null, entrenador_nombre, galgo_padre,
-				galgo_madre, nacimiento, comment, url_galgo_historico);
+				galgo_madre, nacimiento, comment, url_galgo_historico, fechayhoraDeLaCarrera);
 
 	}
 
@@ -262,11 +270,27 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 * @return
 	 */
 	public static String extraerPadre(String in) {
-		String out = null;
-		if (in != null && in.contains("-")) {
-			out = in.split("-")[0].trim();
+		String out = "";
+		if (in != null && in.contains(" - ")) {
+			String[] miArray = in.split(" - ")[0].trim().split(" ");
+			if (miArray.length >= 2) {
+
+				// No cojo nunca los 2 primeros elementos
+				boolean primero = true;
+				for (int i = 0; i < miArray.length; i++) {
+					if (i >= 2) {
+						if (!primero) {
+							out += " ";
+						}
+						out += miArray[i];
+						primero = false;
+					}
+				}
+			}
+
 		}
-		return out;
+
+		return out.trim();
 	}
 
 	/**
@@ -274,11 +298,30 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 * @return
 	 */
 	public static String extraerMadre(String in) {
-		String out = null;
-		if (in != null && in.contains("-")) {
-			out = in.split("-")[1].trim();
+
+		String out = "";
+		if (in != null && in.contains(" - ")) {
+			String[] miArray = in.split(" - ")[1].trim().split(" ");
+
+			boolean primero = true;
+			for (String parte : miArray) {
+				if (!primero) {
+					out += " ";
+				}
+
+				if (parte.contains("-")// fecha de nacimiento
+						|| parte.contains("(")// peso
+				) {
+					break;
+				} else {
+					out += parte;
+				}
+				primero = false;
+			}
+
 		}
-		return out;
+
+		return out.trim();
 	}
 
 	/**
@@ -287,7 +330,47 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public static Integer extraerFechaNacimiento(String in) {
 
-		return null;
+		Integer out = null;
+		if (in != null) {
+			String[] partes = in.split(" ");
+			if (partes != null && partes.length > 0) {
+				for (String parte : partes) {
+					if (parte.contains("-") && parte.length() >= 3) {
+						out = convertirFechaStrAFechaInt(parte);
+					}
+				}
+			}
+
+		}
+
+		return out;
+	}
+
+	/**
+	 * @param in
+	 *            May-2015
+	 * @return 20150501
+	 */
+	public static Integer convertirFechaStrAFechaInt(String in) {
+
+		Map<String, String> GALGOS_MESES_NACIMIENTO = new HashMap<String, String>();
+		GALGOS_MESES_NACIMIENTO.put("Jan", "01");
+		GALGOS_MESES_NACIMIENTO.put("Feb", "02");
+		GALGOS_MESES_NACIMIENTO.put("Mar", "03");
+		GALGOS_MESES_NACIMIENTO.put("Apr", "04");
+		GALGOS_MESES_NACIMIENTO.put("May", "05");
+		GALGOS_MESES_NACIMIENTO.put("Jun", "06");
+		GALGOS_MESES_NACIMIENTO.put("Jul", "07");
+		GALGOS_MESES_NACIMIENTO.put("Aug", "08");
+		GALGOS_MESES_NACIMIENTO.put("Sep", "09");
+		GALGOS_MESES_NACIMIENTO.put("Oct", "10");
+		GALGOS_MESES_NACIMIENTO.put("Nov", "11");
+		GALGOS_MESES_NACIMIENTO.put("Dec", "12");
+
+		String[] partes = in.split("-");
+		String mes = GALGOS_MESES_NACIMIENTO.get(partes[0]);
+		String anio = partes[1];
+		return Integer.valueOf(anio + mes + "01");
 	}
 
 }
