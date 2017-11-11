@@ -20,6 +20,8 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	public String clase = "\\N";
 	public Calendar fechayhora;
 	public Integer distancia;
+	public Short numGalgos;// Hay carreras en las que corren menos de 6 galgos (porque alguno está
+							// lesionado...)
 
 	// Datos DETALLE
 	public GbgbCarreraDetalle detalle;
@@ -38,8 +40,9 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 
 	@Override
 	public String toString() {
-		return id_carrera + "|" + id_campeonato + "|" + track + "|" + clase + "|" + FORMATO.format(fechayhora.getTime())
-				+ "|" + distancia;
+		return id_carrera + Constantes.SEPARADOR_CAMPO + id_campeonato + Constantes.SEPARADOR_CAMPO + track
+				+ Constantes.SEPARADOR_CAMPO + clase + Constantes.SEPARADOR_CAMPO + FORMATO.format(fechayhora.getTime())
+				+ Constantes.SEPARADOR_CAMPO + distancia + Constantes.SEPARADOR_CAMPO + numGalgos;
 	}
 
 	public GbgbCarreraDetalle getDetalle() {
@@ -54,8 +57,9 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	public String generarSqlCreateTable() {
 		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_carreras ("
 				+ "id_carrera BIGINT NOT NULL PRIMARY KEY, id_campeonato BIGINT NOT NULL, track varchar(40), clase varchar(5), "
-				+ "anio SMALLINT, mes SMALLINT, dia SMALLINT, hora SMALLINT, minuto SMALLINT, " + "distancia INT,"
-				+ GbgbCarreraDetalle.generarCamposSqlCreateTableDeDetalle() + ");";
+				+ "anio SMALLINT, mes SMALLINT, dia SMALLINT, hora SMALLINT, minuto SMALLINT, "
+				+ "distancia INT, num_galgos SMALLINT," + GbgbCarreraDetalle.generarCamposSqlCreateTableDeDetalle()
+				+ ");";
 	}
 
 	@Override

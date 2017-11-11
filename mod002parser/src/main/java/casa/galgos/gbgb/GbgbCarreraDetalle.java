@@ -151,11 +151,15 @@ public class GbgbCarreraDetalle implements Serializable {
 	 */
 	public static Integer calcularEdadGalgoEnDias(Integer nacimiento, Calendar fechaDeLaCarrera) {
 
+		int anio = Double.valueOf(nacimiento / 10000.0D).intValue();
+		int mes = Double.valueOf((nacimiento - anio * 10000) / 100.0D).intValue();
+		int dia = Double.valueOf(nacimiento - anio * 10000 - mes * 100).intValue();
+
 		Calendar fechaNacimiento = Calendar.getInstance();
 		fechaNacimiento.clear();
-		fechaNacimiento.set(Calendar.YEAR, value);
-		fechaNacimiento.set(Calendar.MONTH, value);
-		fechaNacimiento.set(Calendar.DAY_OF_MONTH, value);
+		fechaNacimiento.set(Calendar.YEAR, anio);
+		fechaNacimiento.set(Calendar.MONTH, mes);
+		fechaNacimiento.set(Calendar.DAY_OF_MONTH, dia);
 
 		Long resta = fechaDeLaCarrera.getTimeInMillis() / (1000 * 60 * 60 * 24)
 				- fechaNacimiento.getTimeInMillis() / (1000 * 60 * 60 * 24);
