@@ -164,7 +164,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		if (infoAbajo.toString().contains("Allowance")) {
 			String goingAllowanceStr = ((TextNode) ((Element) infoAbajo.get(1)).childNode(1)).text().trim();
-			detalle.going_allowance = (goingAllowanceStr != null && "S".equalsIgnoreCase(goingAllowanceStr));
+			detalle.going_allowance_segundos = parsearGoingAllowance(goingAllowanceStr);
 		}
 
 		String fc = infoAbajo.toString().contains("Forecast") ? ((TextNode) infoAbajo.get(3).childNode(1)).text()
@@ -180,9 +180,34 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	}
 
 	/**
+	 * @param goingAllowanceStr
+	 *            N, -20, +20, +60
+	 * @return
+	 */
+	public static Float parsearGoingAllowance(String goingAllowanceStr) {
+
+		Float out = 0.0F;
+
+		if (goingAllowanceStr != null) {
+			if (goingAllowanceStr.equalsIgnoreCase("N")) {
+				out = 0.0F;
+			} else {
+				boolean negativo = goingAllowanceStr.contains("-");
+				out = Float.valueOf(goingAllowanceStr.replace("-", "").replace("+", "").trim());
+				out = negativo ? (-1 * out) : out;
+
+				// centesimas de segundos --> Segundos
+				out = out / 100.0F;
+			}
+		}
+
+		return out;
+	}
+
+	/**
 	 * @param premiosStr
-	 *            Cadena con este formato: "1st Â£175, 2nd Â£60, Others Â£50 Race
-	 *            Total Â£435 "
+	 *            Cadena con este formato: "1st Â£175, 2nd Â£60, Others Â£50
+	 *            Race Total Â£435 "
 	 * @param out
 	 */
 	public static void rellenarPremios(String premiosStr, GbgbCarreraDetalle out) {

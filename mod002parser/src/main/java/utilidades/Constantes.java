@@ -22,7 +22,7 @@ public class Constantes {
 	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
-	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 6 * 30; // Solo cogemos las carreras de los
+	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 3 * 30; // Solo cogemos las carreras de los
 																					// últimos 6 meses
 
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;

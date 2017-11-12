@@ -143,10 +143,57 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		String clase = Constantes.limpiarTexto(((TextNode) fila.childNode(13).childNode(0)).text());
 		String calculatedTime = Constantes.limpiarTexto(((TextNode) fila.childNode(14).childNode(0)).text());
 
+		// VELOCIDADES
+		Float velocidadReal = calcularVelocidadReal(distancia, calculatedTime, going);
+		Float velocidadConGoing = calcularVelocidadConGoing(distancia, calculatedTime);
+
+		// SCORINGS
+		Float scoringRemarks = calcularScoring(remarks);
+
 		GbgbGalgoHistoricoCarrera filaModelo = new GbgbGalgoHistoricoCarrera(id_carrera, id_campeonato, fecha,
 				distancia, trap, stmHcp, posicion, by, galgo_primero_o_segundo, venue, remarks, winTime, going, sp,
-				clase, calculatedTime);
+				clase, calculatedTime, velocidadReal, velocidadConGoing, scoringRemarks);
 		modelo.carrerasHistorico.add(filaModelo);
+
+	}
+
+	/**
+	 * Velocidad REAL
+	 * 
+	 * @param distancia
+	 * @param calculatedTime
+	 *            Tiempo calculado = Real + going_allowance
+	 * @param goingAllowance
+	 * @return
+	 */
+	public static Float calcularVelocidadReal(Integer distancia, String calculatedTime, String goingAllowance) {
+
+		Float goingAllowanceFloat = (goingAllowance != null && goingAllowance.equals("N")) ? 0
+				: Float.valueOf(goingAllowance);
+
+		Float velocidadReal = distancia / (Float.valueOf(calculatedTime) - goingAllowanceFloat);
+		return velocidadReal;
+	}
+
+	/**
+	 * Velocidad CALCULADA
+	 * 
+	 * @param distancia
+	 * @param calculatedTime
+	 *            Tiempo calculado = Real + going_allowance
+	 * @return
+	 */
+	public static Float calcularVelocidadConGoing(Integer distancia, String calculatedTime) {
+
+		Float velocidadCalculada = distancia / Float.valueOf(calculatedTime);
+		return velocidadCalculada;
+	}
+
+	/**
+	 * @param remarks
+	 * @return
+	 */
+	public static Float calcularScoring(String remarks) {
 
 	}
 

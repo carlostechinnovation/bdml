@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import casa.galgos.gbgb.GalgoAgregados;
 import casa.galgos.gbgb.GalgosGuardable;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbDownloader;
@@ -38,6 +39,7 @@ public class GalgosManager implements Serializable {
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // URLs de historicos SIN DUPLICADOS
 	public List<GalgosGuardable> guardableHistoricosGalgos = new ArrayList<GalgosGuardable>();
+	public List<GalgosGuardable> guardableGalgoAgregados = new ArrayList<GalgosGuardable>();
 
 	// --- SINGLETON
 	private static GalgosManager instancia;
@@ -109,6 +111,7 @@ public class GalgosManager implements Serializable {
 
 					guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
+					guardarEnFicheroYLimpiarLista(guardableGalgoAgregados, primeraEscritura);
 
 					primeraEscritura = false;
 				}
@@ -121,10 +124,12 @@ public class GalgosManager implements Serializable {
 			MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes=" + contarPendientes() + " carreras_guardadas="
 					+ guardableCarreras.size() + " historicos_galgos=" + guardableHistoricosGalgos.size());
 
-			// RESTANTES
+			// RESTANTES: fuera del bucle while, guardo lo que ya tenga descargado, pero no
+			// descargo nada más para evitar que me baneen.
 			if (guardarEnFicheros) {
 				guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
 				guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
+				guardarEnFicheroYLimpiarLista(guardableGalgoAgregados, primeraEscritura);
 			}
 
 		} else {
@@ -319,6 +324,9 @@ public class GalgosManager implements Serializable {
 					galgo_nombre);
 			guardableHistoricosGalgos.add(historico);
 
+			MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
+			calcularAgregados(historico);
+
 			MY_LOGGER.debug(
 					"Del historico, cogemos la URL de carreras anteriores que queremos descargar (de los ultimos X meses)...");
 			MY_LOGGER
@@ -347,9 +355,76 @@ public class GalgosManager implements Serializable {
 				&& fila.fecha.before(Calendar.getInstance())
 
 				// evitamos descargar carreras que YA TENEMOS
-				&& idCarrerasCampeonatoProcesadas.containsKey(fila.id_carrera + "-" + fila.id_campeonato) == false
+				&& idCarrerasCampeonatoProcesadas.containsKey(fila.id_carrera + "-" + fila.id_campeonato) == false;
+	}
 
-		;
+	/**
+	 * Analiza el historico para calcular los AGREGADOS y GUARDARLOS en una lista
+	 * guardable.
+	 * 
+	 * @param historico
+	 *            Historico de carreras de UN galgo.
+	 */
+	public void calcularAgregados(GbgbGalgoHistorico historico) {
+
+		if (historico != null && historico.carrerasHistorico != null && !historico.carrerasHistorico.isEmpty()) {
+
+			guardableGalgoAgregados.add(
+
+					new GalgoAgregados(
+
+							historico.galgo_nombre, calcularVelocidadRealMediaReciente(historico.carrerasHistorico),
+							calcularVelocidadConGoingMediaReciente(historico.carrerasHistorico)
+
+					));
+
+		}
+	}
+
+	/**
+	 * @param carrerasHistorico
+	 * @return
+	 */
+	public Float calcularVelocidadRealMediaReciente(List<GbgbGalgoHistoricoCarrera> carrerasHistorico) {
+
+		Calendar fechaUmbralAnterior = Calendar.getInstance();
+		fechaUmbralAnterior.setTimeInMillis(fechaUmbralAnterior.getTimeInMillis()
+				- 1000 * 24 * 60 * 60 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
+
+		Float acumuladoReal = 0.0F;
+		Integer numeroFilas = 0;
+
+		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
+			if (fila.fecha.after(fechaUmbralAnterior)) {
+				numeroFilas++;
+				acumuladoReal += fila.velocidadReal;
+			}
+		}
+
+		return acumuladoReal / numeroFilas;
+	}
+
+	/**
+	 * @param carrerasHistorico
+	 * @return
+	 */
+	public Float calcularVelocidadConGoingMediaReciente(List<GbgbGalgoHistoricoCarrera> carrerasHistorico) {
+
+		Calendar fechaUmbralAnterior = Calendar.getInstance();
+		fechaUmbralAnterior.setTimeInMillis(fechaUmbralAnterior.getTimeInMillis()
+				- 1000 * 24 * 60 * 60 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
+
+		Float acumuladoConGoing = 0.0F;
+		Integer numeroFilas = 0;
+
+		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
+			if (fila.fecha.after(fechaUmbralAnterior)) {
+				numeroFilas++;
+				acumuladoConGoing += fila.velocidadConGoing;
+			}
+		}
+
+		return acumuladoConGoing / numeroFilas;
 	}
 
 }

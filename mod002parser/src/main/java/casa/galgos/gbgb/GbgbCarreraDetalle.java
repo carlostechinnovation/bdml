@@ -16,7 +16,7 @@ public class GbgbCarreraDetalle implements Serializable {
 	public Integer premio_otros;
 	public Integer premio_total_carrera;
 
-	public Boolean going_allowance = false;// por defecto=NO
+	public Float going_allowance_segundos = 0.0F;// por defecto=NO
 
 	// FORECAST 2 puestos
 	public String fc_1 = "\\N";
@@ -151,20 +151,25 @@ public class GbgbCarreraDetalle implements Serializable {
 	 */
 	public static Integer calcularEdadGalgoEnDias(Integer nacimiento, Calendar fechaDeLaCarrera) {
 
-		int anio = Double.valueOf(nacimiento / 10000.0D).intValue();
-		int mes = Double.valueOf((nacimiento - anio * 10000) / 100.0D).intValue();
-		int dia = Double.valueOf(nacimiento - anio * 10000 - mes * 100).intValue();
+		Integer out = null;
+		if (nacimiento != null && fechaDeLaCarrera != null) {
 
-		Calendar fechaNacimiento = Calendar.getInstance();
-		fechaNacimiento.clear();
-		fechaNacimiento.set(Calendar.YEAR, anio);
-		fechaNacimiento.set(Calendar.MONTH, mes);
-		fechaNacimiento.set(Calendar.DAY_OF_MONTH, dia);
+			int anio = Double.valueOf(nacimiento / 10000.0D).intValue();
+			int mes = Double.valueOf((nacimiento - anio * 10000) / 100.0D).intValue();
+			int dia = Double.valueOf(nacimiento - anio * 10000 - mes * 100).intValue();
 
-		Long resta = fechaDeLaCarrera.getTimeInMillis() / (1000 * 60 * 60 * 24)
-				- fechaNacimiento.getTimeInMillis() / (1000 * 60 * 60 * 24);
+			Calendar fechaNacimiento = Calendar.getInstance();
+			fechaNacimiento.clear();
+			fechaNacimiento.set(Calendar.YEAR, anio);
+			fechaNacimiento.set(Calendar.MONTH, mes);
+			fechaNacimiento.set(Calendar.DAY_OF_MONTH, dia);
 
-		return resta.intValue();
+			Long resta = fechaDeLaCarrera.getTimeInMillis() / (1000 * 60 * 60 * 24)
+					- fechaNacimiento.getTimeInMillis() / (1000 * 60 * 60 * 24);
+
+			out = resta.intValue();
+		}
+		return out;
 	}
 
 	/**
@@ -197,7 +202,7 @@ public class GbgbCarreraDetalle implements Serializable {
 	 * @return
 	 */
 	public static String generarCamposSqlCreateTableDeDetalle() {
-		String out = "premio_primero INT, premio_segundo INT, premio_otros INT, premio_total_carrera INT, going_allowance varchar(1), "
+		String out = "premio_primero INT, premio_segundo INT, premio_otros INT, premio_total_carrera INT, going_allowance_segundos decimal(3,2), "
 				+ "fc_1 SMALLINT, fc_2 SMALLINT, fc_pounds decimal(10,2), "
 				+ "tc_1 SMALLINT, tc_2 SMALLINT, tc_3 SMALLINT, tc_pounds decimal(10,2)";
 
@@ -246,7 +251,7 @@ public class GbgbCarreraDetalle implements Serializable {
 		out += premio_total_carrera != null ? premio_total_carrera : "\\N";
 		out += SEP;
 
-		out += (going_allowance != null && going_allowance) ? "S" : "N";// Por defecto NO (false)
+		out += going_allowance_segundos != null ? going_allowance_segundos : "0";// Por defecto 0 segundos
 		out += SEP;
 
 		out += fc_1 != null ? fc_1 : "\\N";

@@ -59,4 +59,34 @@ public class GbgbParserGalgoHistoricoTest {
 
 	}
 
+	@Test
+	public void testCalcularVelocidadReal() {
+
+		Integer distancia = 265;
+		Float calculatedTime = Float.valueOf(16.74f);
+		String goingAllowance = "N";
+		Float out = GbgbParserGalgoHistorico.calcularVelocidadReal(distancia, calculatedTime.toString(),
+				goingAllowance);
+		Float esperado = Float.valueOf(distancia / calculatedTime);
+		Assert.assertTrue(out.equals(esperado));
+
+		Float goingAllowance2 = 0.30f;
+		out = GbgbParserGalgoHistorico.calcularVelocidadReal(distancia, calculatedTime.toString(),
+				goingAllowance2.toString());
+		esperado = Float.valueOf(distancia / (calculatedTime - goingAllowance2));
+		Assert.assertTrue(out.equals(esperado));
+	}
+
+	@Test
+	public void testCalcularVelocidadConGoing() {
+
+		Integer distancia = 265;
+		Float calculatedTime = Float.valueOf(16.74f);
+
+		Float out = GbgbParserGalgoHistorico.calcularVelocidadConGoing(distancia, calculatedTime.toString());
+
+		Float esperado = Float.valueOf(distancia / calculatedTime);
+		Assert.assertTrue(out.equals(esperado));
+	}
+
 }

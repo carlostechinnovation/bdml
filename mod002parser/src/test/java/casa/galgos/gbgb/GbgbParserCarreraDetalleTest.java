@@ -53,7 +53,7 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.detalle.premio_otros.equals(30));
 		Assert.assertTrue(out.detalle.premio_total_carrera.equals(193));
 
-		Assert.assertTrue(out.detalle.going_allowance.equals(false));
+		Assert.assertTrue(out.detalle.going_allowance_segundos.equals(0.0F));
 		Assert.assertTrue(out.detalle.fc_1.equals("2"));
 		Assert.assertTrue(out.detalle.fc_2.equals("1"));
 		Assert.assertTrue(out.detalle.fc_pounds.equals("11.75"));
@@ -63,7 +63,7 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.detalle.tc_pounds.equals("23.19"));
 
 		Assert.assertTrue(out.detalle.puesto6
-				.equals("Dunham Tiffany|6|9/2|\\N|17.22|28.4|R J Holloway|Aero Nemesis|Sidaz Dippy|20150601|Wide"));
+				.equals("Dunham Tiffany|6|9/2|\\N|17.22|28.4|R J Holloway|Aero Nemesis|Sidaz Dippy|20150601|Wide|876"));
 
 	}
 
@@ -154,12 +154,18 @@ public class GbgbParserCarreraDetalleTest {
 
 	@Test
 	public void convertirFechaStrAFechaIntTest() {
-
 		Assert.assertTrue(
 				GbgbParserCarreraDetalle.convertirFechaStrAFechaInt("Oct-2015").equals(Integer.valueOf(20151001)));
 		Assert.assertTrue(
 				GbgbParserCarreraDetalle.convertirFechaStrAFechaInt("Jan-2017").equals(Integer.valueOf(20170101)));
+	}
 
+	@Test
+	public void parsearGoingAllowanceTest() {
+		Assert.assertTrue(GbgbParserCarreraDetalle.parsearGoingAllowance("N").equals(Float.valueOf(0.0F)));
+		Assert.assertTrue(GbgbParserCarreraDetalle.parsearGoingAllowance("-20").equals(Float.valueOf(-0.2F)));
+		Assert.assertTrue(GbgbParserCarreraDetalle.parsearGoingAllowance("+20").equals(Float.valueOf(0.2F)));
+		Assert.assertTrue(GbgbParserCarreraDetalle.parsearGoingAllowance("20").equals(Float.valueOf(0.2F)));
 	}
 
 }

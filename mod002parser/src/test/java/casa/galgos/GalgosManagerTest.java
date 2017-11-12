@@ -70,16 +70,26 @@ public class GalgosManagerTest {
 		fechaFutura.set(Calendar.YEAR, 2050);
 
 		GbgbGalgoHistoricoCarrera filaFutura = new GbgbGalgoHistoricoCarrera(null, null, fechaFutura, null, null, null,
-				null, null, null, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outFutura = instancia.isHistoricoInsertable(filaFutura, fechaUmbralAnterior);
 		Assert.assertTrue(outFutura == false);
 
 		Calendar fechaMuyAntigua = Calendar.getInstance();
 		fechaMuyAntigua.set(Calendar.YEAR, 2010);
 		GbgbGalgoHistoricoCarrera filaMuyAntigua = new GbgbGalgoHistoricoCarrera(null, null, fechaMuyAntigua, null,
-				null, null, null, null, null, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outMuyAntigua = instancia.isHistoricoInsertable(filaMuyAntigua, fechaUmbralAnterior);
 		Assert.assertTrue(outMuyAntigua == false);
+	}
+
+	// TODO @Test
+	public void calcularVelocidadRealMediaRecienteTest() {
+
+	}
+
+	// TODO @Test
+	public void calcularVelocidadConGoingMediaRecienteTest() {
+
 	}
 
 }
