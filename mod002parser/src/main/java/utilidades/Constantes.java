@@ -25,8 +25,8 @@ public class Constantes {
 	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 3 * 30; // Solo cogemos las carreras de los
 																					// últimos 6 meses
 
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 500L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 40;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 500;
 
 	public static final String SEPARADOR_CAMPO = "|";
@@ -100,5 +100,114 @@ public class Constantes {
 		return in.replace(SEPARADOR_CAMPO, "").replace(SEPARADOR_FILA, "").replace("Â", "").replace("$nbsp", "")
 				.replace(" ", "").trim();
 	}
+
+	// public static generarDiccionarioRemarks() {
+	//
+	//
+	//
+	// Aw – Away
+	// Awk – Awkard
+	// Ap – April
+	// Au – August
+	// B – Badly
+	// b – Bitch
+	// bd – Brindle
+	// be – Blue
+	// Blk – Black
+	// Bmp – Bumped
+	// Brk – Break
+	// By – Won or lost by
+	// Calc – Calculated
+	// CalcTm – The time of victory on a standard track
+	// ChL – Challenged
+	// Clr – Clear
+	// CmSg – Came Again
+	// Crd – Crowded
+	// cWinTm – The actual time taken to win the race
+	// De – December
+	// DH – Dead Heat
+	// Dis – The race distance
+	// Disp – Disputed
+	// Disq – Disqualified
+	// dk – Dark
+	// DNF – Did not finish.
+	// E – Early
+	// EvCh – Every Chance
+	// F – Favourite
+	// f – Fawn
+	// Fb – February
+	// Fd – Faded
+	// Fght – Fought
+	// Fin – Finished
+	// FlsHt – False Heat
+	// Fr – From
+	// G’ng – Track going
+	// H – Hurdles
+	// Hcp – Handicap
+	// Hd – Head
+	// HndTm – Had Timed
+	// Imp – Impeded
+	// Ir – Irish
+	// J – Joint Favourite
+	// Ja – January
+	// Jn – June
+	// Jy – July
+	// Kilos – Weight of the greyhound
+	// Ld – Led or Lead.
+	// LN – Line
+	// Lm – Lame
+	// Lt – Light
+	// (m) – Middle Runner
+	// Mld – Middle
+	// Mr – March
+	// My – May
+	// Msd – Missed
+	// N – Normal
+	// Nk – Neck
+	// Nr – Near
+	// Nv – November
+	// Oc – October
+	// O/C – Off Colour
+	// Opcd – Outpaced
+	// OR – Open race
+	// P – Pace
+	// Q – Quick
+	// r – Red
+	// Rec – Record
+	// ReRn – Re Run
+	// Rls – Rails
+	// RnIn – Run In
+	// RnOn – Run On
+	// Rst – Rest
+	// S – Stayers (Class)
+	// schL – Schooling
+	// Scr – Scratch
+	// Sgh – Sough
+	// Sh – Short Head
+	// Sp – September
+	// SP – Starting Price
+	// SPI – Splits
+	// Sn – Soon
+	// Ssn – Season
+	// SsnSup – Season Suppressed
+	// S – Slow
+	// Stb stumbled
+	// STm – Split Time
+	// Stt – Start
+	// Styd – Stayed
+	// WinTm – Winning Time
+	// T – Trial
+	// Th’out – Throughout
+	// Tk – Track
+	// Tkd – Ticked
+	// Tm –Time
+	// Tp – Trap
+	// Unatt – Unattched
+	// w – White
+	// (w) – Wide Runner
+	// WLL – Well
+	//
+	//
+	// }
 
 }

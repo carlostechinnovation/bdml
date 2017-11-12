@@ -148,7 +148,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		Float velocidadConGoing = calcularVelocidadConGoing(distancia, calculatedTime);
 
 		// SCORINGS
-		Float scoringRemarks = calcularScoring(remarks);
+		Float scoringRemarks = calcularScoringRemarks(remarks);
 
 		GbgbGalgoHistoricoCarrera filaModelo = new GbgbGalgoHistoricoCarrera(id_carrera, id_campeonato, fecha,
 				distancia, trap, stmHcp, posicion, by, galgo_primero_o_segundo, venue, remarks, winTime, going, sp,
@@ -193,8 +193,10 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 * @param remarks
 	 * @return
 	 */
-	public static Float calcularScoring(String remarks) {
+	public static Float calcularScoringRemarks(String remarks) {
 
+		//TODO rellenar
+		return null;
 	}
 
 }
