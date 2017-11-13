@@ -3,7 +3,7 @@
 #Script principal COORDINADOR de todas las tareas. Lo que no quiera ejecutar, lo comento.
 
 PATH_LOG="/home/carloslinux/Desktop/LOGS/galgos_coordinador.log"
-PATH_SCRIPTS="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/scripts/galgos/"
+PATH_SCRIPTS="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/"
 
 echo -e "GALGOS - Cadena de procesos"
 

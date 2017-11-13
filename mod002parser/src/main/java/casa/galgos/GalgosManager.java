@@ -75,6 +75,8 @@ public class GalgosManager implements Serializable {
 
 		boolean primeraEscritura = true;
 
+		GbgbParserGalgoHistorico gpgh = new GbgbParserGalgoHistorico();
+
 		List<GbgbCarrera> carreras = descargarCarrerasSinFiltrarPorDia(prefijoPathDatosBruto);
 
 		if (carreras != null && !carreras.isEmpty()) {
@@ -101,7 +103,7 @@ public class GalgosManager implements Serializable {
 				descargarYProcesarCarreraYAcumularUrlsHistoricos(Long.valueOf(partes[0]), Long.valueOf(partes[1]),
 						prefijoPathDatosBruto);
 
-				descargarTodosLosHistoricos(prefijoPathDatosBruto);
+				descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
 
 				// lo marco como procesado
 				idCarrerasCampeonatoProcesadas.replace(idCarreraIdcampeonatoAProcesar, true);
@@ -125,17 +127,44 @@ public class GalgosManager implements Serializable {
 					+ guardableCarreras.size() + " historicos_galgos=" + guardableHistoricosGalgos.size());
 
 			// RESTANTES: fuera del bucle while, guardo lo que ya tenga descargado, pero no
-			// descargo nada más para evitar que me baneen.
+			// descargo nada mas para evitar que me baneen.
 			if (guardarEnFicheros) {
 				guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
 				guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
 				guardarEnFicheroYLimpiarLista(guardableGalgoAgregados, primeraEscritura);
 			}
 
+			// Mostrar las claves que no hemos podido traducir
+			mostrarRemarksSinTraducir(gpgh);
+
 		} else {
 			MY_LOGGER.warn("No hay carreras!!");
 		}
 
+	}
+
+	/**
+	 * @return
+	 */
+	public static String mostrarRemarksSinTraducir(GbgbParserGalgoHistorico gpgh) {
+
+		MY_LOGGER.info("Numero de remarks que no hemos podido traducir: " + gpgh.remarksClavesSinTraduccion.size());
+
+		int num = 0;
+		String clavesSinTraducir = "";
+		for (String clave : gpgh.remarksClavesSinTraduccion) {
+			if (num > 0) {
+				clavesSinTraducir += "|";
+			}
+			clavesSinTraducir += clave;
+			num++;
+			if (num > 100) {
+				break;
+			}
+		}
+		MY_LOGGER.info("Claves: " + clavesSinTraducir);
+
+		return clavesSinTraducir;
 	}
 
 	/**
@@ -298,8 +327,10 @@ public class GalgosManager implements Serializable {
 	/**
 	 * @param param3
 	 *            Prefijo de ficheros brutos
+	 * @param gpgh
+	 *            Parser de historicos
 	 */
-	public void descargarTodosLosHistoricos(String param3) {
+	public void descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh) {
 
 		MY_LOGGER.info("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
 		String pathFileGalgoHistorico = "";
@@ -320,8 +351,7 @@ public class GalgosManager implements Serializable {
 			(new GbgbDownloader()).descargarHistoricoGalgo(urlGalgo, pathFileGalgoHistorico, true);
 
 			MY_LOGGER.debug("GUARDABLE - Historico de galgo (EVITANDO DUPLICADOS)");
-			GbgbGalgoHistorico historico = (new GbgbParserGalgoHistorico()).ejecutar(pathFileGalgoHistorico,
-					galgo_nombre);
+			GbgbGalgoHistorico historico = gpgh.ejecutar(pathFileGalgoHistorico, galgo_nombre);
 			guardableHistoricosGalgos.add(historico);
 
 			MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
@@ -387,6 +417,8 @@ public class GalgosManager implements Serializable {
 	 */
 	public Float calcularVelocidadRealMediaReciente(List<GbgbGalgoHistoricoCarrera> carrerasHistorico) {
 
+		Float out = null;
+
 		Calendar fechaUmbralAnterior = Calendar.getInstance();
 		fechaUmbralAnterior.setTimeInMillis(fechaUmbralAnterior.getTimeInMillis()
 				- 1000 * 24 * 60 * 60 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
@@ -395,13 +427,17 @@ public class GalgosManager implements Serializable {
 		Integer numeroFilas = 0;
 
 		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
-			if (fila.fecha.after(fechaUmbralAnterior)) {
+			if (fila.fecha.after(fechaUmbralAnterior) && fila.velocidadReal != null) {
 				numeroFilas++;
 				acumuladoReal += fila.velocidadReal;
 			}
 		}
 
-		return acumuladoReal / numeroFilas;
+		if (acumuladoReal.intValue() > 0) {
+			out = acumuladoReal / numeroFilas;
+		}
+
+		return out;
 	}
 
 	/**
@@ -409,6 +445,8 @@ public class GalgosManager implements Serializable {
 	 * @return
 	 */
 	public Float calcularVelocidadConGoingMediaReciente(List<GbgbGalgoHistoricoCarrera> carrerasHistorico) {
+
+		Float out = null;
 
 		Calendar fechaUmbralAnterior = Calendar.getInstance();
 		fechaUmbralAnterior.setTimeInMillis(fechaUmbralAnterior.getTimeInMillis()
@@ -418,13 +456,17 @@ public class GalgosManager implements Serializable {
 		Integer numeroFilas = 0;
 
 		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
-			if (fila.fecha.after(fechaUmbralAnterior)) {
+			if (fila.fecha.after(fechaUmbralAnterior) && fila.velocidadConGoing != null) {
 				numeroFilas++;
 				acumuladoConGoing += fila.velocidadConGoing;
 			}
 		}
 
-		return acumuladoConGoing / numeroFilas;
+		if (acumuladoConGoing.intValue() > 0) {
+			out = acumuladoConGoing / numeroFilas;
+		}
+
+		return out;
 	}
 
 }

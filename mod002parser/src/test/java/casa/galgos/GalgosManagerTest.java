@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
+import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import junit.framework.Assert;
 
 public class GalgosManagerTest {
@@ -53,7 +54,8 @@ public class GalgosManagerTest {
 	// TODO @Test
 	public void descargarTodosLosHistoricosTest() throws IOException {
 		String param3 = "/galgos_20171021_GBGB_bruto";
-		GalgosManager.getInstancia().descargarTodosLosHistoricos(param3);
+		GbgbParserGalgoHistorico gpgh = new GbgbParserGalgoHistorico();
+		GalgosManager.getInstancia().descargarTodosLosHistoricos(param3, gpgh);
 
 		int x = 0;
 
@@ -90,6 +92,18 @@ public class GalgosManagerTest {
 	// TODO @Test
 	public void calcularVelocidadConGoingMediaRecienteTest() {
 
+	}
+
+	@Test
+	public void mostrarRemarksSinTraducirTest() {
+
+		GbgbParserGalgoHistorico gpgh = new GbgbParserGalgoHistorico();
+
+		gpgh.remarksClavesSinTraduccion.add("clavePruebas");
+
+		String out = GalgosManager.mostrarRemarksSinTraducir(gpgh);
+
+		Assert.assertTrue(out.equals("clavePruebas"));
 	}
 
 }

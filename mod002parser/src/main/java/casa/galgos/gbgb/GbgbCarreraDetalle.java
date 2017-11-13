@@ -218,7 +218,7 @@ public class GbgbCarreraDetalle implements Serializable {
 			out += "p" + i + "_" + "galgo_padre varchar(50), ";
 			out += "p" + i + "_" + "galgo_madre varchar(30), ";
 			out += "p" + i + "_" + "nacimiento varchar(30), ";
-			out += "p" + i + "_" + "comment varchar(20)";
+			out += "p" + i + "_" + "comment varchar(20), ";
 			out += "p" + i + "_" + "edad_en_dias INT";
 		}
 

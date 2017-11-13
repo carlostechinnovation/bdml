@@ -8,8 +8,12 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -19,6 +23,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import utilidades.Constantes;
+import utilidades.GalgosRemark;
 
 /**
  * @author root
@@ -29,6 +34,8 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	static Logger MY_LOGGER = Logger.getLogger(GbgbParserGalgoHistorico.class);
+
+	public static Set<String> remarksClavesSinTraduccion = new HashSet<String>();
 
 	public GbgbParserGalgoHistorico() {
 		super();
@@ -43,7 +50,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public GbgbGalgoHistorico ejecutar(String pathIn, String galgo_nombre) {
 
-		MY_LOGGER.debug("GALGOS-GbgbParserCarrerasDeUnDia: INICIO");
+		MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: INICIO");
 		MY_LOGGER.debug("GALGOS-GbgbDownloader - pathIn=" + pathIn);
 
 		String bruto = "";
@@ -52,14 +59,14 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		try {
 			bruto = GbgbParserGalgoHistorico.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto, galgo_nombre);
-			MY_LOGGER.debug("GALGOS-GbgbParserCarrerasDeUnDia: out=" + out);
+			MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.debug("GALGOS-GbgbParserCarrerasDeUnDia: FIN");
+		MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: FIN");
 		return out;
 	}
 
@@ -168,10 +175,16 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public static Float calcularVelocidadReal(Integer distancia, String calculatedTime, String goingAllowance) {
 
-		Float goingAllowanceFloat = (goingAllowance != null && goingAllowance.equals("N")) ? 0
-				: Float.valueOf(goingAllowance);
+		Float velocidadReal = null;
 
-		Float velocidadReal = distancia / (Float.valueOf(calculatedTime) - goingAllowanceFloat);
+		if (distancia != null && calculatedTime != null && !calculatedTime.isEmpty() && goingAllowance != null
+				&& !goingAllowance.isEmpty()) {
+
+			Float goingAllowanceFloat = (goingAllowance != null && goingAllowance.equals("N")) ? 0
+					: Float.valueOf(goingAllowance);
+
+			velocidadReal = distancia / (Float.valueOf(calculatedTime) - goingAllowanceFloat);
+		}
 		return velocidadReal;
 	}
 
@@ -185,7 +198,13 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public static Float calcularVelocidadConGoing(Integer distancia, String calculatedTime) {
 
-		Float velocidadCalculada = distancia / Float.valueOf(calculatedTime);
+		Float velocidadCalculada = null;
+
+		if (distancia != null && calculatedTime != null && !calculatedTime.isEmpty()) {
+			velocidadCalculada = distancia / Float.valueOf(calculatedTime);
+
+		}
+
 		return velocidadCalculada;
 	}
 
@@ -195,8 +214,40 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public static Float calcularScoringRemarks(String remarks) {
 
-		//TODO rellenar
-		return null;
+		List<String> partes = new ArrayList<String>();
+
+		String[] divididoPorComa = remarks.split(",");
+		String[] divididoPorGuion;
+		for (String cad : divididoPorComa) {
+			divididoPorGuion = cad.split("-");
+			for (String cad2 : divididoPorGuion) {
+				partes.add(cad2);
+			}
+		}
+
+		Float out = 0F;
+		Map<String, GalgosRemark> mapa = Constantes.generarDiccionarioRemarks();
+
+		for (String parte : partes) {
+
+			// Si no lo encuentro a la primera, quito los numeros que tenga
+			String clave = mapa.containsKey(parte) ? parte : parte.replaceAll("[\\d.]", "");
+
+			if (mapa.containsKey(clave)) {
+				out += mapa.get(clave).puntos;
+			} else {
+				// MY_LOGGER.error(
+				// "GALGOS-GbgbParserGalgoHistorico.calcularScoringRemarks ERROR Clave no
+				// encontrada (incluso sin numeros): "
+				// + parte);
+				if (remarksClavesSinTraduccion.size() < 100) {// solo guardo 100
+					remarksClavesSinTraduccion.add(clave);
+				}
+			}
+
+		}
+
+		return out;
 	}
 
 }
