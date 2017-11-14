@@ -5,7 +5,7 @@ import java.io.Serializable;
 import utilidades.Constantes;
 
 /**
- * Clase con los ESTADÍSTICOS AGREGADOS de cada galgo.
+ * Clase con los ESTADISTICOS AGREGADOS de cada galgo.
  *
  */
 public class GalgoAgregados implements Serializable, GalgosGuardable {
@@ -47,7 +47,7 @@ public class GalgoAgregados implements Serializable, GalgosGuardable {
 
 	@Override
 	public String generarPath(String pathDirBase) {
-		return pathDirBase + "tb_galgos_carreras_file";
+		return pathDirBase + "tb_galgos_agregados_file";
 	}
 
 }

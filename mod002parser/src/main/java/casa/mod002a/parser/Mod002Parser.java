@@ -12,6 +12,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import casa.galgos.GalgosManager;
+import casa.galgos.gbgb.GalgoAgregados;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.mod002a.boe.BoeParser;
@@ -178,6 +179,7 @@ public class Mod002Parser implements Serializable {
 
 			out += (new GbgbGalgoHistorico(null, null, null)).generarSqlCreateTable();
 			out += (new GbgbCarrera(null, null, null, null, null, null, null)).generarSqlCreateTable();
+			out += (new GalgoAgregados(null, null, null)).generarSqlCreateTable();
 
 			try {
 
