@@ -20,7 +20,7 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	public String clase = "\\N";
 	public Calendar fechayhora;
 	public Integer distancia;
-	public Short numGalgos;// Hay carreras en las que corren menos de 6 galgos (porque alguno está
+	public Short numGalgos;// Hay carreras en las que corren menos de 6 galgos (porque alguno esta
 							// lesionado...)
 
 	// Datos DETALLE
@@ -82,7 +82,9 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += distancia != null ? distancia : "\\N";
 		out += SEP;
 
-		out += detalle.generarDatosParaExportarSql(fechayhora) + Constantes.SEPARADOR_FILA;
+		out += detalle.generarDatosParaExportarSql(fechayhora);
+
+		out += Constantes.SEPARADOR_FILA;
 		return out;
 	}
 

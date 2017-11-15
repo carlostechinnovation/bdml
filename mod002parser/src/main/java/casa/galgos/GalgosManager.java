@@ -39,7 +39,7 @@ public class GalgosManager implements Serializable {
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // URLs de historicos SIN DUPLICADOS
 	public List<GalgosGuardable> guardableHistoricosGalgos = new ArrayList<GalgosGuardable>();
-	public List<GalgosGuardable> guardableGalgoAgregados = new ArrayList<GalgosGuardable>();
+	public Map<String, GalgosGuardable> guardableGalgoAgregados = new HashMap<String, GalgosGuardable>();
 
 	// --- SINGLETON
 	private static GalgosManager instancia;
@@ -113,7 +113,7 @@ public class GalgosManager implements Serializable {
 
 					guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
-					guardarEnFicheroYLimpiarLista(guardableGalgoAgregados, primeraEscritura);
+					guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
 
 					primeraEscritura = false;
 				}
@@ -131,7 +131,7 @@ public class GalgosManager implements Serializable {
 			if (guardarEnFicheros) {
 				guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
 				guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
-				guardarEnFicheroYLimpiarLista(guardableGalgoAgregados, primeraEscritura);
+				guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
 			}
 
 			// Mostrar las claves que no hemos podido traducir
@@ -212,13 +212,15 @@ public class GalgosManager implements Serializable {
 	 * @param resetearFichero
 	 * @return
 	 */
-	public int guardarEnFicheroYLimpiarLista(List<GalgosGuardable> listaFilas, boolean resetearFichero) {
+	public int guardarEnFicheroYLimpiarLista(Collection<GalgosGuardable> listaFilas, boolean resetearFichero) {
 
 		int numFilasGuardadas = 0;
 
 		if (listaFilas != null && !listaFilas.isEmpty()) {
 
-			String path = listaFilas.get(0).generarPath(Constantes.PATH_DIR_DATOS_LIMPIOS_GALGOS);
+			String path = listaFilas.iterator().hasNext()
+					? listaFilas.iterator().next().generarPath(Constantes.PATH_DIR_DATOS_LIMPIOS_GALGOS)
+					: "";
 
 			MY_LOGGER.info("Guardando FICHEROS FINALES en: " + path);
 
@@ -397,16 +399,16 @@ public class GalgosManager implements Serializable {
 	 */
 	public void calcularAgregados(GbgbGalgoHistorico historico) {
 
-		if (historico != null && historico.carrerasHistorico != null && !historico.carrerasHistorico.isEmpty()) {
+		if (
+		// Que haya carreras en el historico
+		historico != null && historico.carrerasHistorico != null && !historico.carrerasHistorico.isEmpty() &&
+		// no guardar agregados de galgos que ya tengo
+				!guardableGalgoAgregados.containsKey(historico.galgo_nombre)) {
 
-			guardableGalgoAgregados.add(
-
-					new GalgoAgregados(
-
-							historico.galgo_nombre, calcularVelocidadRealMediaReciente(historico.carrerasHistorico),
-							calcularVelocidadConGoingMediaReciente(historico.carrerasHistorico)
-
-					));
+			guardableGalgoAgregados.put(historico.galgo_nombre,
+					new GalgoAgregados(historico.galgo_nombre,
+							calcularVelocidadRealMediaReciente(historico.carrerasHistorico),
+							calcularVelocidadConGoingMediaReciente(historico.carrerasHistorico)));
 
 		}
 	}
