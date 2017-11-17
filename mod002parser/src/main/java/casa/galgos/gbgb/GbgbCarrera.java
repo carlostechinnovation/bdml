@@ -142,6 +142,8 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += distancia != null ? distancia : "\\N";
 		out += SEP;
+		out += numGalgos != null ? numGalgos : "\\N";
+		out += SEP;
 
 		out += premio_primero != null ? premio_primero : "\\N";
 		out += SEP;
@@ -157,7 +159,9 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += fc_2 != null ? fc_2 : "\\N";
 		out += SEP;
-		out += fc_pounds != null ? fc_pounds : "\\N";
+		out += (fc_pounds != null && !"".equals(fc_pounds) && !"\\N".equals(fc_pounds))
+				? Constantes.round2(Float.valueOf(fc_pounds), 2)
+				: "\\N";
 		out += SEP;
 		out += tc_1 != null ? tc_1 : "\\N";
 		out += SEP;
@@ -165,7 +169,9 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += tc_3 != null ? tc_3 : "\\N";
 		out += SEP;
-		out += tc_pounds != null ? tc_pounds : "\\N";
+		out += (tc_pounds != null && !"".equals(tc_pounds) && !"\\N".equals(tc_pounds))
+				? Constantes.round2(Float.valueOf(tc_pounds), 2)
+				: "\\N";
 
 		out += Constantes.SEPARADOR_FILA;
 		return out;

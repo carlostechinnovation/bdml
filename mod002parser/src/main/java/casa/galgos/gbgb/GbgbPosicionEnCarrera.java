@@ -66,7 +66,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 
 		out += "galgo_nombre varchar(30) NOT NULL,";
 		out += "trap SMALLINT,";
-		out += "sp varchar(5),";
+		out += "sp varchar(10),";
 		out += "time_sec decimal(6,2),";
 		out += "time_distance varchar(15),";
 		out += "peso_galgo decimal(4,2),";
@@ -74,7 +74,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		out += "galgo_padre varchar(50),";
 		out += "galgo_madre varchar(30),";
 		out += "nacimiento varchar(30),";
-		out += "comment varchar(20),";
+		out += "comment varchar(30),";
 		out += "edad_en_dias INT";
 
 		out += ");";

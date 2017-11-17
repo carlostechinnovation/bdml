@@ -30,7 +30,7 @@ public class Constantes {
 																					// últimos 6 meses
 
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 100L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 500;
 
 	public static final String SEPARADOR_CAMPO = "|";
