@@ -180,8 +180,9 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		if (distancia != null && calculatedTime != null && !calculatedTime.isEmpty() && goingAllowance != null
 				&& !goingAllowance.isEmpty()) {
 
+			// CENTESIMAS DE SEGUNDO
 			Float goingAllowanceFloat = (goingAllowance != null && goingAllowance.equals("N")) ? 0
-					: Float.valueOf(goingAllowance);
+					: (Float.valueOf(goingAllowance) / 100.0F);
 
 			velocidadReal = distancia / (Float.valueOf(calculatedTime) - goingAllowanceFloat);
 		}
@@ -216,12 +217,22 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 		List<String> partes = new ArrayList<String>();
 
-		String[] divididoPorComa = remarks.split(",");
+		String[] divididoPorComa = remarks.replaceAll("\\t", "").split(",");
 		String[] divididoPorGuion;
+		String[] divididoPorAmper;
+		String[] divididoPorBarra;
 		for (String cad : divididoPorComa) {
-			divididoPorGuion = cad.split("-");
+			divididoPorGuion = cad.trim().split("-");
 			for (String cad2 : divididoPorGuion) {
-				partes.add(cad2);
+				divididoPorAmper = cad2.trim().split("&");
+				for (String cad3 : divididoPorAmper) {
+					divididoPorBarra = cad3.trim().split("/");
+					for (String cad4 : divididoPorBarra) {
+						if (cad4.trim().length() > 0) {
+							partes.add(cad4.trim());
+						}
+					}
+				}
 			}
 		}
 
@@ -240,7 +251,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 				// "GALGOS-GbgbParserGalgoHistorico.calcularScoringRemarks ERROR Clave no
 				// encontrada (incluso sin numeros): "
 				// + parte);
-				if (remarksClavesSinTraduccion.size() < 100) {// solo guardo 100
+				if (remarksClavesSinTraduccion.size() < 300) {// solo guardo un numero limitado
 					remarksClavesSinTraduccion.add(clave);
 				}
 			}

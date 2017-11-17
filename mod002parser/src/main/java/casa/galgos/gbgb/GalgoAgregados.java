@@ -36,11 +36,11 @@ public class GalgoAgregados implements Serializable, GalgosGuardable {
 
 		String out = "";
 
-		out += galgo_nombre;
+		out += (galgo_nombre != null && !"".equals(galgo_nombre)) ? galgo_nombre : "\\N";
 		out += SEP;
-		out += velocidadRealMediaReciente;
+		out += velocidadRealMediaReciente != null ? Constantes.round2(velocidadRealMediaReciente, 4) : "\\N";
 		out += SEP;
-		out += velocidadConGoingMediaReciente;
+		out += velocidadConGoingMediaReciente != null ? Constantes.round2(velocidadConGoingMediaReciente, 4) : "\\N";
 
 		out += Constantes.SEPARADOR_FILA;
 		return out;

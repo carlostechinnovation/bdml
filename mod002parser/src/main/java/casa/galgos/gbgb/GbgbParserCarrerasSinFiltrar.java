@@ -126,8 +126,9 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 						Long id_campeonato = Long
 								.valueOf(filae.childNode(7).childNode(0).attr("href").split("=")[1].trim());
 
-						listaCarreras.add(
-								new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora, distancia, null));
+						listaCarreras.add(new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhora,
+								distancia, null, null, null, null, null, null, null, null, null, null, null, null, null,
+								null, null));
 					}
 				}
 

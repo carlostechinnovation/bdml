@@ -48,23 +48,25 @@ public class GbgbParserCarreraDetalleTest {
 		Assert.assertTrue(out.distancia.equals(265));
 
 		// DETALLE
-		Assert.assertTrue(out.detalle.premio_primero.equals(43));
-		Assert.assertTrue(out.detalle.premio_segundo == null);
-		Assert.assertTrue(out.detalle.premio_otros.equals(30));
-		Assert.assertTrue(out.detalle.premio_total_carrera.equals(193));
+		Assert.assertTrue(out.premio_primero.equals(43));
+		Assert.assertTrue(out.premio_segundo == null);
+		Assert.assertTrue(out.premio_otros.equals(30));
+		Assert.assertTrue(out.premio_total_carrera.equals(193));
 
-		Assert.assertTrue(out.detalle.going_allowance_segundos.equals(0.0F));
-		Assert.assertTrue(out.detalle.fc_1.equals("2"));
-		Assert.assertTrue(out.detalle.fc_2.equals("1"));
-		Assert.assertTrue(out.detalle.fc_pounds.equals("11.75"));
-		Assert.assertTrue(out.detalle.tc_1.equals("2"));
-		Assert.assertTrue(out.detalle.tc_2.equals("1"));
-		Assert.assertTrue(out.detalle.tc_3.equals("3"));
-		Assert.assertTrue(out.detalle.tc_pounds.equals("23.19"));
+		Assert.assertTrue(out.going_allowance_segundos.equals(0.0F));
+		Assert.assertTrue(out.fc_1.equals("2"));
+		Assert.assertTrue(out.fc_2.equals("1"));
+		Assert.assertTrue(out.fc_pounds.equals("11.75"));
+		Assert.assertTrue(out.tc_1.equals("2"));
+		Assert.assertTrue(out.tc_2.equals("1"));
+		Assert.assertTrue(out.tc_3.equals("3"));
+		Assert.assertTrue(out.tc_pounds.equals("23.19"));
 
-		Assert.assertTrue(out.detalle.puesto6
-				.equals("Dunham Tiffany|6|9/2|\\N|17.22|28.4|R J Holloway|Aero Nemesis|Sidaz Dippy|20150601|Wide|876"));
+		GbgbPosicionEnCarrera posicion6 = out.posiciones.get(5);
+		String asdf = posicion6.generarDatosParaExportarSql();
 
+		Assert.assertTrue(posicion6.generarDatosParaExportarSql().equals(
+				"2030316|151752|6|Dunham Tiffany|6|9/2|\\N|17.22|28.4|R J Holloway|Aero Nemesis|Sidaz Dippy|20150601|Wide|876\n"));
 	}
 
 	@Test
@@ -91,7 +93,7 @@ public class GbgbParserCarreraDetalleTest {
 
 		String premiosStr = "premiosStr=1st Â£175, 2nd Â£60, Others Â£50 Race Total Â£435 ";
 
-		GbgbCarreraDetalle out = new GbgbCarreraDetalle();
+		GbgbCarrera out = new GbgbCarrera(true);
 
 		GbgbParserCarreraDetalle.rellenarPremios(premiosStr, out);
 

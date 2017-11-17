@@ -113,7 +113,7 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += SEP;
 		out += (remarks != null && !"".equals(remarks)) ? remarks : "\\N";
 		out += SEP;
-		out += (winTime != null && !"".equals(winTime)) ? winTime : "\\N";
+		out += (winTime != null && !"".equals(winTime)) ? Constantes.round2(Float.valueOf(winTime), 2) : "\\N";
 		out += SEP;
 		out += (going != null && !"".equals(going)) ? going : "\\N";
 		out += SEP;
@@ -121,12 +121,14 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += SEP;
 		out += (clase != null && !"".equals(clase)) ? clase : "\\N";
 		out += SEP;
-		out += (calculatedTime != null && !"".equals(calculatedTime)) ? calculatedTime : "\\N";
+		out += (calculatedTime != null && !"".equals(calculatedTime))
+				? Constantes.round2(Float.valueOf(calculatedTime), 2)
+				: "\\N";
 
 		out += SEP;
-		out += (velocidadReal != null) ? velocidadReal : "\\N";
+		out += velocidadReal != null ? Constantes.round2(velocidadReal, 4) : "\\N";
 		out += SEP;
-		out += (velocidadConGoing != null) ? velocidadConGoing : "\\N";
+		out += velocidadConGoing != null ? Constantes.round2(velocidadConGoing, 4) : "\\N";
 		out += SEP;
 		out += (scoringRemarks != null) ? scoringRemarks : "\\N";
 

@@ -15,6 +15,7 @@ import casa.galgos.GalgosManager;
 import casa.galgos.gbgb.GalgoAgregados;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
+import casa.galgos.gbgb.GbgbPosicionEnCarrera;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -177,8 +178,9 @@ public class Mod002Parser implements Serializable {
 
 			MY_LOGGER.info("Escribiendo sentencias_create_table en: " + param2);
 
-			out += (new GbgbGalgoHistorico(null, null, null)).generarSqlCreateTable();
-			out += (new GbgbCarrera(null, null, null, null, null, null, null)).generarSqlCreateTable();
+			out += (new GbgbGalgoHistorico(true)).generarSqlCreateTable();
+			out += (new GbgbCarrera(true)).generarSqlCreateTable();
+			out += (new GbgbPosicionEnCarrera(true)).generarSqlCreateTable();
 			out += (new GalgoAgregados(null, null, null)).generarSqlCreateTable();
 
 			try {

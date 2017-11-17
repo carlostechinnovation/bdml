@@ -24,6 +24,7 @@ import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
 import casa.galgos.gbgb.GbgbParserCarreraDetalle;
 import casa.galgos.gbgb.GbgbParserCarrerasSinFiltrar;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
+import casa.galgos.gbgb.GbgbPosicionEnCarrera;
 import utilidades.Constantes;
 
 public class GalgosManager implements Serializable {
@@ -37,6 +38,7 @@ public class GalgosManager implements Serializable {
 																									// (boolean)
 	// pendientes
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
+	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
 	public HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // URLs de historicos SIN DUPLICADOS
 	public List<GalgosGuardable> guardableHistoricosGalgos = new ArrayList<GalgosGuardable>();
 	public Map<String, GalgosGuardable> guardableGalgoAgregados = new HashMap<String, GalgosGuardable>();
@@ -100,8 +102,13 @@ public class GalgosManager implements Serializable {
 
 				String[] partes = idCarreraIdcampeonatoAProcesar.split("-");
 
-				descargarYProcesarCarreraYAcumularUrlsHistoricos(Long.valueOf(partes[0]), Long.valueOf(partes[1]),
-						prefijoPathDatosBruto);
+				GbgbCarrera carrera = descargarYProcesarCarreraYAcumularUrlsHistoricos(Long.valueOf(partes[0]),
+						Long.valueOf(partes[1]), prefijoPathDatosBruto);
+
+				MY_LOGGER.debug("GUARDABLE - Anhadiendo " + carrera.posiciones.size() + " posiciones...");
+				for (GbgbPosicionEnCarrera posicion : carrera.posiciones) {
+					guardablePosicionesEnCarreras.add(posicion);
+				}
 
 				descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
 
@@ -112,6 +119,7 @@ public class GalgosManager implements Serializable {
 						.size() >= Constantes.MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO) {
 
 					guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
+					guardarEnFicheroYLimpiarLista(guardablePosicionesEnCarreras, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
 
@@ -123,13 +131,15 @@ public class GalgosManager implements Serializable {
 
 			} while (contarPendientes() >= 1 && guardableCarreras.size() <= Constantes.MAX_NUM_CARRERAS_PROCESADAS);
 
-			MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes=" + contarPendientes() + " carreras_guardadas="
-					+ guardableCarreras.size() + " historicos_galgos=" + guardableHistoricosGalgos.size());
+			MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes (que no las vamos a procesar)="
+					+ contarPendientes() + " carreras_guardadas=" + guardableCarreras.size() + " historicos_galgos="
+					+ guardableHistoricosGalgos.size());
 
 			// RESTANTES: fuera del bucle while, guardo lo que ya tenga descargado, pero no
 			// descargo nada mas para evitar que me baneen.
 			if (guardarEnFicheros) {
 				guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
+				guardarEnFicheroYLimpiarLista(guardablePosicionesEnCarreras, primeraEscritura);
 				guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
 				guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
 			}
@@ -144,23 +154,25 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
+	 * @param gpgh
 	 * @return
 	 */
 	public static String mostrarRemarksSinTraducir(GbgbParserGalgoHistorico gpgh) {
 
-		MY_LOGGER.info("Numero de remarks que no hemos podido traducir: " + gpgh.remarksClavesSinTraduccion.size());
+		List<String> ordenadas = new ArrayList<String>();
+		ordenadas.addAll(gpgh.remarksClavesSinTraduccion);
+		ordenadas.sort(null);// natural ordening de String: alfabetico
+
+		MY_LOGGER.info("Numero de remarks que no hemos podido traducir: " + ordenadas.size());
 
 		int num = 0;
 		String clavesSinTraducir = "";
-		for (String clave : gpgh.remarksClavesSinTraduccion) {
+		for (String clave : ordenadas) {
 			if (num > 0) {
 				clavesSinTraducir += "|";
 			}
 			clavesSinTraducir += clave;
 			num++;
-			if (num > 100) {
-				break;
-			}
 		}
 		MY_LOGGER.info("Claves: " + clavesSinTraducir);
 
@@ -300,7 +312,8 @@ public class GalgosManager implements Serializable {
 	 * @param param3
 	 *            Prefijo de ficheros brutos
 	 */
-	public void descargarYProcesarCarreraYAcumularUrlsHistoricos(Long idCarrera, Long idCampeonato, String param3) {
+	public GbgbCarrera descargarYProcesarCarreraYAcumularUrlsHistoricos(Long idCarrera, Long idCampeonato,
+			String param3) {
 
 		String SUFIJO_CARRERA = "_carrera_";
 		String pathFileCarreraDetalleBruto = "";
@@ -322,7 +335,11 @@ public class GalgosManager implements Serializable {
 		guardableCarreras.add(carrera);
 
 		MY_LOGGER.debug("GUARDABLE - URLs de historicos de galgos (EVITANDO DUPLICADOS)");
-		urlsHistoricoGalgos.addAll(carrera.detalle.urlsGalgosHistorico);
+		for (GbgbPosicionEnCarrera posicion : carrera.posiciones) {
+			urlsHistoricoGalgos.add(posicion.url_galgo_historico);
+		}
+
+		return carrera;
 
 	}
 

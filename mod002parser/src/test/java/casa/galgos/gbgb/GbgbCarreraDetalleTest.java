@@ -36,7 +36,7 @@ public class GbgbCarreraDetalleTest {
 		Long diasEsperados = (fechaDeLaCarrera.getTimeInMillis() - fechaNacimiento.getTimeInMillis())
 				/ (1000 * 60 * 60 * 24);
 
-		Integer out = GbgbCarreraDetalle.calcularEdadGalgoEnDias(nacimiento, fechaDeLaCarrera);
+		Integer out = GbgbPosicionEnCarrera.calcularEdadGalgoEnDias(nacimiento, fechaDeLaCarrera);
 
 		Assert.assertTrue(out.equals(diasEsperados.intValue()));
 

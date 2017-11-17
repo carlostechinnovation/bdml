@@ -19,6 +19,10 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	public List<GbgbGalgoHistoricoCarrera> carrerasHistorico;
 
+	public GbgbGalgoHistorico(boolean todoNulos) {
+		super();
+	}
+
 	public GbgbGalgoHistorico(String galgo_nombre, String entrenador, String padre_madre_nacimiento) {
 		super();
 		this.galgo_nombre = galgo_nombre;

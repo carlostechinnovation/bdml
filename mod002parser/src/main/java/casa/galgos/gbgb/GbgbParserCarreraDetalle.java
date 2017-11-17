@@ -111,20 +111,25 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		Element a = doc.getElementById("CMSContent");
 
-		GbgbCarreraDetalle detalle = new GbgbCarreraDetalle();
+		GbgbCarrera carreraAux = new GbgbCarrera(true);
+		carreraAux.id_carrera = id_carrera;
+		carreraAux.id_campeonato = id_campeonato;
+
 		// --------------------------
 
 		List<Node> infoArriba = a.getElementsByClass("resultsBlockHeader").get(0).childNodes();
-		rellenarPremios(((TextNode) infoArriba.get(11).childNode(0)).text(), detalle);
+		rellenarPremios(((TextNode) infoArriba.get(11).childNode(0)).text(), carreraAux);
 
-		String track = Constantes.limpiarTexto(((TextNode) infoArriba.get(1).childNode(0)).text()).split("&")[0].trim();
-		String clase = Constantes.limpiarTexto(((TextNode) infoArriba.get(7).childNode(0)).text()).trim();
+		carreraAux.track = Constantes.limpiarTexto(((TextNode) infoArriba.get(1).childNode(0)).text()).split("&")[0]
+				.trim();
+		carreraAux.clase = Constantes.limpiarTexto(((TextNode) infoArriba.get(7).childNode(0)).text()).trim();
 
 		String f = Constantes.limpiarTexto(((TextNode) infoArriba.get(3).childNode(0)).text());
 		String h = Constantes.limpiarTexto(((TextNode) infoArriba.get(5).childNode(0)).text()).trim();
-		Calendar fechayhoraDeLaCarrera = Constantes.parsearFechaHora(f, h, true);
+		Calendar fh = Constantes.parsearFechaHora(f, h, true);
+		carreraAux.fechayhora = fh;
 
-		Integer distancia = Integer.valueOf(
+		carreraAux.distancia = Integer.valueOf(
 				Constantes.limpiarTexto(((TextNode) infoArriba.get(9).childNode(0)).text()).split("m")[0].trim());
 
 		// --------------------------
@@ -154,7 +159,11 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		}
 
 		for (Tripleta t : tripletas) {
-			rellenarPosicion(t.linea1, t.linea2, t.linea3, detalle, fechayhoraDeLaCarrera);
+			GbgbPosicionEnCarrera posicion = new GbgbPosicionEnCarrera(true);
+			posicion.id_carrera = id_carrera;
+			posicion.id_campeonato = id_campeonato;
+			rellenarPosicion(t.linea1, t.linea2, t.linea3, posicion, fh);
+			carreraAux.posiciones.add(posicion);
 		}
 
 		// --------------------------
@@ -164,17 +173,29 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		if (infoAbajo.toString().contains("Allowance")) {
 			String goingAllowanceStr = ((TextNode) ((Element) infoAbajo.get(1)).childNode(1)).text().trim();
-			detalle.going_allowance_segundos = parsearGoingAllowance(goingAllowanceStr);
+			carreraAux.going_allowance_segundos = parsearGoingAllowance(goingAllowanceStr);
 		}
 
 		String fc = infoAbajo.toString().contains("Forecast") ? ((TextNode) infoAbajo.get(3).childNode(1)).text()
 				: null;// (2-1) £11.75 |
 		String tc = infoAbajo.toString().contains("Tricast") ? ((TextNode) infoAbajo.get(3).childNode(3)).text() : null;// (2-1-3)
-																														// £23.19
-		detalle.rellenarForecastyTricast(fc, tc);
+		// £23.19
+		carreraAux.rellenarForecastyTricast(fc, tc);
 
-		GbgbCarrera carrera = new GbgbCarrera(id_carrera, id_campeonato, track, clase, fechayhoraDeLaCarrera, distancia,
-				detalle);
+		short numGalgos = 0;
+		for (GbgbPosicionEnCarrera posicion : carreraAux.posiciones) {
+			if (posicion != null && posicion.galgo_nombre != null && !posicion.galgo_nombre.isEmpty()) {
+				numGalgos++;
+			}
+		}
+		carreraAux.numGalgos = Short.valueOf(numGalgos);
+
+		GbgbCarrera carrera = new GbgbCarrera(carreraAux.id_carrera, carreraAux.id_campeonato, carreraAux.track,
+				carreraAux.clase, carreraAux.fechayhora, carreraAux.distancia, carreraAux.numGalgos,
+				carreraAux.premio_primero, carreraAux.premio_segundo, carreraAux.premio_otros,
+				carreraAux.premio_total_carrera, carreraAux.going_allowance_segundos, carreraAux.fc_1, carreraAux.fc_2,
+				carreraAux.fc_pounds, carreraAux.tc_1, carreraAux.tc_2, carreraAux.tc_3, carreraAux.tc_pounds,
+				carreraAux.posiciones, carreraAux.urlsGalgosHistorico);
 
 		return carrera;
 	}
@@ -206,22 +227,22 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 	/**
 	 * @param premiosStr
-	 *            Cadena con este formato: "1st Â£175, 2nd Â£60, Others Â£50
-	 *            Race Total Â£435 "
+	 *            Cadena con este formato: "1st Â£175, 2nd Â£60, Others Â£50 Race
+	 *            Total Â£435 "
 	 * @param out
 	 */
-	public static void rellenarPremios(String premiosStr, GbgbCarreraDetalle out) {
+	public static void rellenarPremios(String premiosStr, GbgbCarrera carrera) {
 
 		MY_LOGGER.debug("rellenarPremios --> premiosStr=" + premiosStr);
 
 		String[] partes = premiosStr.replace("Â", "").split("£");
 
-		out.premio_primero = premiosStr.contains("1st") ? Integer.valueOf(partes[1].split(",")[0].trim()) : null;
-		out.premio_segundo = premiosStr.contains("2nd") ? Integer.valueOf(partes[2].split(",")[0].trim()) : null;
-		out.premio_otros = premiosStr.contains("2nd")
+		carrera.premio_primero = premiosStr.contains("1st") ? Integer.valueOf(partes[1].split(",")[0].trim()) : null;
+		carrera.premio_segundo = premiosStr.contains("2nd") ? Integer.valueOf(partes[2].split(",")[0].trim()) : null;
+		carrera.premio_otros = premiosStr.contains("2nd")
 				? Integer.valueOf(partes[3].split("Race")[0].replace(",", "").trim())
 				: Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
-		out.premio_total_carrera = premiosStr.contains("2nd") ? Integer.valueOf(partes[4].split(" ")[0].trim())
+		carrera.premio_total_carrera = premiosStr.contains("2nd") ? Integer.valueOf(partes[4].split(" ")[0].trim())
 				: Integer.valueOf(partes[3].split(" ")[0].trim());
 	}
 
@@ -234,27 +255,31 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 *            Comentarios
 	 * @param fechayhoraDeLaCarrera
 	 */
-	public static void rellenarPosicion(Element e1, Element e2, Element e3, GbgbCarreraDetalle out,
+	public static void rellenarPosicion(Element e1, Element e2, Element e3, GbgbPosicionEnCarrera out,
 			Calendar fechayhoraDeLaCarrera) {
 
-		Short posicion = Short.valueOf(((TextNode) e1.childNode(1).childNode(0)).text().trim());
-		String galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text().trim();
-		String url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
-		String trap = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
-		String sp = Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text());
-		String time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());
+		out.posicion = Short.valueOf(((TextNode) e1.childNode(1).childNode(0)).text().trim());
+		out.galgo_nombre = ((TextNode) e1.childNode(3).childNode(1).childNode(0)).text().trim();
+
+		String aux = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
+		out.trap = aux != null ? Integer.valueOf(aux) : null;
+
+		out.url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
+
+		out.sp = Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text());
+		out.time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());
 
 		String time_distance = Constantes.limpiarTexto(((TextNode) e1.childNode(11).childNode(0)).text());
-		time_distance = time_distance.contains("(")
+		out.time_distance = time_distance.contains("(")
 				? time_distance.replace("(", "XXXDIVISORXXX").split("XXXDIVISORXXX")[0].trim()
 				: time_distance;
 
 		String season_padre_madre_nacimiento_peso = Constantes
 				.limpiarTexto(((TextNode) e2.childNode(1).childNode(0)).text());
-		String entrenador_nombre = Constantes.limpiarTexto(((TextNode) e2.childNode(3).childNode(2)).text())
+		out.entrenador_nombre = Constantes.limpiarTexto(((TextNode) e2.childNode(3).childNode(2)).text())
 				.replace(")", "").trim();
 
-		String comment = Constantes.limpiarTexto(((TextNode) e3.childNode(1).childNode(1)).text());
+		out.comment = Constantes.limpiarTexto(((TextNode) e3.childNode(1).childNode(1)).text());
 
 		// ----------------------------------
 
@@ -272,22 +297,20 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			padre_madre_nacimiento_peso = partes[1].trim();
 		}
 
-		String galgo_padre = extraerPadre(padre_madre_nacimiento_peso);
-		String galgo_madre = extraerMadre(padre_madre_nacimiento_peso);
-		Integer nacimiento = extraerFechaNacimiento(padre_madre_nacimiento_peso);
+		out.galgo_padre = extraerPadre(padre_madre_nacimiento_peso);
+		out.galgo_madre = extraerMadre(padre_madre_nacimiento_peso);
+		out.nacimiento = extraerFechaNacimiento(padre_madre_nacimiento_peso);
 
 		MY_LOGGER.debug("padre_madre_nacimiento_peso-->" + padre_madre_nacimiento_peso);
 
-		String peso_galgo = padre_madre_nacimiento_peso.contains("eight")
+		aux = padre_madre_nacimiento_peso.contains("eight")
 				? padre_madre_nacimiento_peso.split("Weight")[1].replace(")", "").replace(":", "").trim()
 				: null;
+		out.peso_galgo = aux != null ? Float.valueOf(aux) : null;
 
 		// ----------------
 
-		out.rellenarPuesto(posicion, galgo_nombre, trap != null ? Integer.valueOf(trap) : null, sp, time_sec,
-				time_distance, peso_galgo != null ? Float.valueOf(peso_galgo) : null, entrenador_nombre, galgo_padre,
-				galgo_madre, nacimiento, comment, url_galgo_historico, fechayhoraDeLaCarrera);
-
+		out.fechaDeLaCarrera = fechayhoraDeLaCarrera;
 	}
 
 	/**

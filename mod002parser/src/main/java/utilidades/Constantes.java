@@ -1,5 +1,7 @@
 package utilidades;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,6 +103,16 @@ public class Constantes {
 	public static String limpiarTexto(String in) {
 		return in.replace(SEPARADOR_CAMPO, "").replace(SEPARADOR_FILA, "").replace("Â", "").replace("$nbsp", "")
 				.replace(" ", "").trim();
+	}
+
+	/**
+	 * @param val
+	 * @param decimales
+	 *            Numero de decimales
+	 * @return
+	 */
+	public static Float round2(Float val, int decimales) {
+		return new BigDecimal(val.toString()).setScale(decimales, RoundingMode.HALF_UP).floatValue();
 	}
 
 	/**
