@@ -155,7 +155,9 @@ mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_galgos_da
 read -d '' CONSULTA5 <<- EOF
 CREATE TABLE datos_desa.tb_galgos_dataset_data_i001 AS SELECT
 
-mes,dia,hora,
+mes,
+dia,
+hora,
 distancia,
 num_galgos,
 premio_primero,
@@ -163,10 +165,9 @@ premio_segundo,
 premio_otros,
 premio_total_carrera,
 going_allowance_segundos,
-fc_1,fc_2,fc_pounds,
-tc_1,tc_2,tc_3,tc_pounds,
 
-analizado_vel_real, analizado_vel_going,
+analizado_vel_real, 
+analizado_vel_going,
 
 max_competidores_vel_real,
 min_competidores_vel_real,
@@ -186,7 +187,7 @@ mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM 
 
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_galgos_dataset_target_i001 AS SELECT target FROM datos_desa.tb_galgos_i001_aux4\W;"
 echo -e "Dataset - TARGET: " >&1
-mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_dataset_data_i001 LIMIT 1\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_dataset_target_i001 LIMIT 1\W;" >&1
 
 ######################################################
 echo -e "Dataset - Vemos 8 filas de ejemplo: " >&1

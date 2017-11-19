@@ -28,13 +28,13 @@ ${PATH_SCRIPTS}'galgos_MOD001A.sh'
 #${PATH_SCRIPTS}'galgos_MOD003A.sh'
 
 #Generador de DATASETS
-#${PATH_SCRIPTS}'galgos_MOD003B.sh'
+${PATH_SCRIPTS}'galgos_MOD003B.sh'
 
 #INTELIGENCIA ARTIFICIAL
 #${PATH_SCRIPTS}'galgos_MOD004A.sh'
 
 #INFORMES (resultados)
-#${PATH_SCRIPTS}'galgos_MOD005.sh'
+${PATH_SCRIPTS}'galgos_MOD005.sh'
 
 #Análisis posterior
 #${PATH_SCRIPTS}'galgos_MOD006.sh'

@@ -136,7 +136,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		fecha.set(Calendar.YEAR, 2000 + Integer.valueOf(fechaStr[2]));
 
 		Integer distancia = Integer
-				.valueOf(Constantes.limpiarTexto(((TextNode) fila.childNode(2).childNode(0)).text()));
+				.valueOf(Constantes.limpiarTexto(((TextNode) fila.childNode(2).childNode(0)).text().replace("m", "")));
 		String trap = Constantes.limpiarTexto(((TextNode) fila.childNode(3).childNode(0)).text());
 		String stmHcp = Constantes.limpiarTexto(((TextNode) fila.childNode(4).childNode(0)).text());
 		String posicion = Constantes.limpiarTexto(((TextNode) fila.childNode(5).childNode(0)).text());
