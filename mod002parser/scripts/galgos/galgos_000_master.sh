@@ -32,6 +32,7 @@ ${PATH_SCRIPTS}'galgos_MOD003B.sh'
 
 #INTELIGENCIA ARTIFICIAL
 #${PATH_SCRIPTS}'galgos_MOD004A.sh'
+${PATH_SCRIPTS}'galgos_MOD004B.sh'
 
 #INFORMES (resultados)
 ${PATH_SCRIPTS}'galgos_MOD005.sh'
