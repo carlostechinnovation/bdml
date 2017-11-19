@@ -67,7 +67,7 @@ public class GbgbDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("HTTP GET " + url + " ...");
+			MY_LOGGER.debug("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA
@@ -143,7 +143,7 @@ public class GbgbDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("HTTP GET " + url + " ...");
+			MY_LOGGER.debug("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA
@@ -223,7 +223,7 @@ public class GbgbDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("HTTP GET " + url + " ...");
+			MY_LOGGER.debug("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA

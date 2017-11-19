@@ -1,6 +1,7 @@
 package casa.galgos;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import junit.framework.Assert;
+import utilidades.Constantes;
 
 public class GalgosManagerTest {
 
@@ -62,7 +64,7 @@ public class GalgosManagerTest {
 	}
 
 	@Test
-	public void isHistoricoInsertable() {
+	public void isHistoricoInsertableTest() {
 
 		GalgosManager instancia = GalgosManager.getInstancia();
 		Calendar fechaUmbralAnterior = Calendar.getInstance();
@@ -70,18 +72,48 @@ public class GalgosManagerTest {
 
 		Calendar fechaFutura = Calendar.getInstance();
 		fechaFutura.set(Calendar.YEAR, 2050);
-
-		GbgbGalgoHistoricoCarrera filaFutura = new GbgbGalgoHistoricoCarrera(null, null, fechaFutura, null, null, null,
+		GbgbGalgoHistoricoCarrera filaFutura = new GbgbGalgoHistoricoCarrera(101L, 201L, fechaFutura, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outFutura = instancia.isHistoricoInsertable(filaFutura, fechaUmbralAnterior);
 		Assert.assertTrue(outFutura == false);
 
+		Calendar fechaBien = Calendar.getInstance();
+		fechaBien.set(Calendar.YEAR, 2017);
+		GbgbGalgoHistoricoCarrera filaBien = new GbgbGalgoHistoricoCarrera(102L, 202L, fechaBien, null, null, null, "6",
+				null, null, null, null, null, null, null, null, null, null, null, null);
+		boolean outBien = instancia.isHistoricoInsertable(filaBien, fechaUmbralAnterior);
+		Assert.assertTrue(outBien);
+
 		Calendar fechaMuyAntigua = Calendar.getInstance();
 		fechaMuyAntigua.set(Calendar.YEAR, 2010);
-		GbgbGalgoHistoricoCarrera filaMuyAntigua = new GbgbGalgoHistoricoCarrera(null, null, fechaMuyAntigua, null,
+		GbgbGalgoHistoricoCarrera filaMuyAntigua = new GbgbGalgoHistoricoCarrera(103L, 203L, fechaMuyAntigua, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outMuyAntigua = instancia.isHistoricoInsertable(filaMuyAntigua, fechaUmbralAnterior);
 		Assert.assertTrue(outMuyAntigua == false);
+	}
+
+	@Test
+	public void getFechaUmbralAnteriorTest() {
+
+		Calendar fechaUmbralAnterior = Calendar.getInstance();
+		fechaUmbralAnterior.add(Calendar.DAY_OF_MONTH, -1 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		System.out.println("-->fechaUmbralAnterior = " + sdf.format(fechaUmbralAnterior.getTime()));
+
+		Long a = Calendar.getInstance().getTimeInMillis();
+		Long b = fechaUmbralAnterior.getTimeInMillis();
+		Long diferenciaObtenida = a - b;
+		Long diferenciaEsperada = Long
+				.valueOf(-1000 * 60 * 60 * 24 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
+
+		// Assert.assertTrue(diferenciaObtenida.equals(diferenciaEsperada));
+
+		Calendar out = GalgosManager.getFechaUmbralAnterior();
+
+		// Assert.assertTrue((Calendar.getInstance().getTimeInMillis() -
+		// out.getTimeInMillis()) == (1000 * 60 * 60 * 24
+		// * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES));
+
 	}
 
 	// TODO @Test

@@ -71,10 +71,10 @@ public class GbgbParserGalgoHistoricoTest {
 		Float esperado = Float.valueOf(distancia / calculatedTime);
 		Assert.assertTrue(out.equals(esperado));
 
-		Float goingAllowance2 = 0.30f;
+		Float goingAllowance2 = 30F;
 		out = GbgbParserGalgoHistorico.calcularVelocidadReal(distancia, calculatedTime.toString(),
 				goingAllowance2.toString());
-		esperado = Float.valueOf(distancia / (calculatedTime - goingAllowance2));
+		esperado = Float.valueOf(distancia / (calculatedTime - (goingAllowance2 / 100.0F)));
 		Assert.assertTrue(out.equals(esperado));
 	}
 

@@ -173,16 +173,18 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 * @param goingAllowance
 	 * @return
 	 */
-	public static Float calcularVelocidadReal(Integer distancia, String calculatedTime, String goingAllowance) {
+	public static Float calcularVelocidadReal(Integer distancia, String calculatedTime,
+			String goingAllowanceCentesimasSeg) {
 
 		Float velocidadReal = null;
 
-		if (distancia != null && calculatedTime != null && !calculatedTime.isEmpty() && goingAllowance != null
-				&& !goingAllowance.isEmpty()) {
+		if (distancia != null && calculatedTime != null && !calculatedTime.isEmpty()
+				&& goingAllowanceCentesimasSeg != null && !goingAllowanceCentesimasSeg.isEmpty()) {
 
 			// CENTESIMAS DE SEGUNDO
-			Float goingAllowanceFloat = (goingAllowance != null && goingAllowance.equals("N")) ? 0
-					: (Float.valueOf(goingAllowance) / 100.0F);
+			Float goingAllowanceFloat = (goingAllowanceCentesimasSeg != null && goingAllowanceCentesimasSeg.equals("N"))
+					? 0
+					: (Float.valueOf(goingAllowanceCentesimasSeg) / 100.0F);
 
 			velocidadReal = distancia / (Float.valueOf(calculatedTime) - goingAllowanceFloat);
 		}
