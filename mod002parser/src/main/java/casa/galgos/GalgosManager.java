@@ -58,17 +58,9 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
-	 * @param param2
-	 *            Dia de la descarga
-	 * @param param3
-	 *            Prefijo de ficheros brutos
+	 * @param prefijoPathDatosBruto
 	 * @param guardarEnFicheros
-	 * @throws InterruptedException
-	 */
-	/**
-	 * @param param2
-	 * @param param3
-	 * @param guardarEnFicheros
+	 * @param futuros
 	 * @throws InterruptedException
 	 */
 	public void descargarYparsearCarrerasDeGalgos(String prefijoPathDatosBruto, boolean guardarEnFicheros)
@@ -298,8 +290,8 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
-	 * @param param2
-	 * @param param3
+	 * @param prefijoPathDatosBruto
+	 * @param futuros
 	 * @return
 	 */
 	public List<GbgbCarrera> descargarCarrerasSinFiltrarPorDia(String prefijoPathDatosBruto) {

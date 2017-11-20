@@ -57,7 +57,6 @@ public class GbgbParserGalgoHistoricoTest {
 		Assert.assertTrue(hc.trap.equals("1"));
 		Assert.assertTrue(hc.venue.equals("Central Park"));
 		Assert.assertTrue(hc.winTime.equals("16.70"));
-
 	}
 
 	@Test
@@ -103,7 +102,6 @@ public class GbgbParserGalgoHistoricoTest {
 		Float out2 = gpgh1.calcularScoringRemarks("FinWell,LckEP,CrdRunUp,EPace");
 		Set<String> remarksClavesSinTraduccion2 = gpgh2.remarksClavesSinTraduccion;
 		Assert.assertTrue(remarksClavesSinTraduccion2.size() == 0);
-
 	}
 
 }

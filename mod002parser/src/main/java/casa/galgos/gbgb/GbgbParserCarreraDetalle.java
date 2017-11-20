@@ -239,11 +239,13 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		carrera.premio_primero = premiosStr.contains("1st") ? Integer.valueOf(partes[1].split(",")[0].trim()) : null;
 		carrera.premio_segundo = premiosStr.contains("2nd") ? Integer.valueOf(partes[2].split(",")[0].trim()) : null;
-		carrera.premio_otros = premiosStr.contains("2nd")
-				? Integer.valueOf(partes[3].split("Race")[0].replace(",", "").trim())
-				: Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
-		carrera.premio_total_carrera = premiosStr.contains("2nd") ? Integer.valueOf(partes[4].split(" ")[0].trim())
-				: Integer.valueOf(partes[3].split(" ")[0].trim());
+		if (!premiosStr.contains("3rd")) {
+			carrera.premio_otros = premiosStr.contains("2nd")
+					? Integer.valueOf(partes[3].split("Race")[0].replace(",", "").trim())
+					: Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
+			carrera.premio_total_carrera = premiosStr.contains("2nd") ? Integer.valueOf(partes[4].split(" ")[0].trim())
+					: Integer.valueOf(partes[3].split(" ")[0].trim());
+		}
 	}
 
 	/**

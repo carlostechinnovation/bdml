@@ -7,3 +7,6 @@ echo -e "Modulo 004B - Modelos predictivos (nucleo)"
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_i001.py'
 
 
+
+
+

@@ -32,8 +32,8 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 	}
 
 	@Override
-	public String generarSqlCreateTable() {
-		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_historico ("
+	public String generarSqlCreateTable(String sufijo) {
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_historico" + sufijo + " ("
 				+ "galgo_nombre varchar(30) NOT NULL, entrenador varchar(30), "
 				+ GbgbGalgoHistoricoCarrera.generarCamposSqlCreateTableDeDetalle() + ");";
 	}

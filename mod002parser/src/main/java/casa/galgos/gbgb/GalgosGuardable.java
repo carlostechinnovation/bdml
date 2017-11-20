@@ -2,7 +2,7 @@ package casa.galgos.gbgb;
 
 public interface GalgosGuardable {
 
-	public String generarSqlCreateTable();
+	public String generarSqlCreateTable(String sufijo);
 
 	public String generarDatosParaExportarSql();
 

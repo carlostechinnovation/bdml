@@ -24,9 +24,10 @@ public class GalgoAgregados implements Serializable, GalgosGuardable {
 	}
 
 	@Override
-	public String generarSqlCreateTable() {
+	public String generarSqlCreateTable(String sufijo) {
 
-		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_agregados (" + "galgo_nombre varchar(30) NOT NULL, "
+		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_agregados" + sufijo + " ("
+				+ "galgo_nombre varchar(30) NOT NULL, "
 				+ "velocidad_real_media_reciente decimal(6,4), velocidad_con_going_media_reciente decimal(6,4)" + ");";
 	}
 

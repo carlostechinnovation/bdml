@@ -178,10 +178,10 @@ public class Mod002Parser implements Serializable {
 
 			MY_LOGGER.info("Escribiendo sentencias_create_table en: " + param2);
 
-			out += (new GbgbGalgoHistorico(true)).generarSqlCreateTable();
-			out += (new GbgbCarrera(true)).generarSqlCreateTable();
-			out += (new GbgbPosicionEnCarrera(true)).generarSqlCreateTable();
-			out += (new GalgoAgregados(null, null, null)).generarSqlCreateTable();
+			out += (new GbgbGalgoHistorico(true)).generarSqlCreateTable("");
+			out += (new GbgbCarrera(true)).generarSqlCreateTable("");
+			out += (new GbgbPosicionEnCarrera(true)).generarSqlCreateTable("");
+			out += (new GalgoAgregados(null, null, null)).generarSqlCreateTable("");
 
 			try {
 
@@ -200,6 +200,23 @@ public class Mod002Parser implements Serializable {
 
 			} catch (InterruptedException e) {
 				MY_LOGGER.error("ERROR Excepcion de galgos.");
+				e.printStackTrace();
+			}
+
+		} else if (param1 != null && param1.equals("06") && param2 != null) {
+			// GALGOS - Carreras futuras que queremos predecir
+			MY_LOGGER.info("Escribiendo sentencias_create_table FUTURAS en: " + param2);
+
+			out += (new GbgbCarrera(true)).generarSqlCreateTable("_fut");
+			out += (new GbgbPosicionEnCarrera(true)).generarSqlCreateTable("_fut");
+
+			try {
+
+				// Forma nueva
+				Files.write(Paths.get(param2), out.getBytes());
+
+			} catch (IOException e) {
+				MY_LOGGER.error("Error:" + e.getMessage());
 				e.printStackTrace();
 			}
 

@@ -26,12 +26,11 @@ public class Constantes {
 	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
-	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 4 * 30; // Solo cogemos las carreras de los
-																					// últimos 6 meses
+	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 50;
 
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 1000;
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
-	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 100;
+	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 300;
 
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";

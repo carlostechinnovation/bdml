@@ -58,7 +58,6 @@ mysql -u root --password=datos1986 --execute="$CONSULTA2"
 mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_galgos_i001_aux3;"
 
 read -d '' CONSULTA3 <<- EOF
-
 CREATE TABLE datos_desa.tb_galgos_i001_aux3 AS
 
 SELECT 

@@ -92,8 +92,8 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	}
 
 	@Override
-	public String generarSqlCreateTable() {
-		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_carreras (";
+	public String generarSqlCreateTable(String sufijo) {
+		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_carreras" + sufijo + " (";
 		out += "id_carrera BIGINT NOT NULL PRIMARY KEY,";
 		out += "id_campeonato BIGINT NOT NULL,";
 		out += "track varchar(40),";
