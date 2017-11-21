@@ -5,7 +5,7 @@ echo -e "Modulo 005 - Prediccion"
 PATH_CONTADOR_GALGOS="./contador_galgos"
 
 #Dada una URL de una carrera concreta de BET365, descargar y parsear las carreras de ese dia concreto
-URL="https://www.bet365.es/?rn=80290266329&stf=1#/AC/B4/C101/D20171120/E20557816/F68876618/P11/"
+URL="https://www.bet365.es/?rn=80290266329&stf=1#/AC/B4/C101/D20171121/E20558092/F68913394/P11/"
 
 echo -e "Entradas- features: cada FILA es un GALGO EN UNA CARRERA FUTURA"
 read -d '' CONSULTA_COMPETIDORES <<- EOF
@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS datos_desa.tb_galgos_apuesta;
 CREATE TABLE datos_desa.tb_galgos_apuesta AS 
 SELECT * 
 FROM datos_desa.tb_galgos_i001_aux4 
-WHERE galgo_analizado IN ('Honest John', 'Lowgate Belatrix', 'King Elvis', 'Romeo Mandate', 'King Eden', 'Westmead Turbo')
+WHERE galgo_analizado IN ('Trumpers Milo', 'Ravenswood Jimmy', 'Darelli Dancer', 'Burrow Fly', 'White Flower', 'Puckane Vic')
 LIMIT 10;
 
 

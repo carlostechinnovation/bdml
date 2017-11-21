@@ -32,7 +32,15 @@ public class ConstantesTest {
 
 		String outStr = GbgbCarrera.formatearFechaParaExportar(out);
 		Assert.assertTrue(outStr.equals("2017|11|09|20|52"));
+	}
 
+	@Test
+	public void round2Test() {
+		Assert.assertTrue(Constantes.round2(null, 2) == null);
+		Assert.assertTrue(Constantes.round2(12.3456F, 2).equals(12.35F));
+		Assert.assertTrue(Constantes.round2((12.34F / 0F), 2) == null);
+		Assert.assertTrue(Constantes.round2((0F / 12.34F), 2).equals(0F));
+		Assert.assertTrue(Constantes.round2(0F, 2).equals(0F));
 	}
 
 }

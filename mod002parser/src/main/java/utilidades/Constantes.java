@@ -26,11 +26,11 @@ public class Constantes {
 	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
-	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 50;
+	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 7 * 7;// Ultimas 7 semanas
 
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 1000;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
-	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 300;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 20 * 30;// Unas 20 carreras/dia, 30 dias
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 100L;
+	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";
@@ -111,7 +111,14 @@ public class Constantes {
 	 * @return
 	 */
 	public static Float round2(Float val, int decimales) {
-		return new BigDecimal(val.toString()).setScale(decimales, RoundingMode.HALF_UP).floatValue();
+
+		Float out = null;
+		if (val != null && !val.isInfinite()) {
+			out = new BigDecimal(val.toString()).setScale(decimales, RoundingMode.HALF_UP).floatValue();
+		}
+
+		return out;
+
 	}
 
 	/**

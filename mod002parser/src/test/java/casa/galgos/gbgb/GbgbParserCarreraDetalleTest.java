@@ -26,6 +26,7 @@ public class GbgbParserCarreraDetalleTest {
 
 	@Rule
 	public ResourceFile res = new ResourceFile("/" + "galgos_20171021_GBGB_bruto_carrera_2030316");
+	// public ResourceFile res = new ResourceFile("/" + "2040592.html");
 
 	@Test
 	public void testParsear() throws Exception {
@@ -91,6 +92,8 @@ public class GbgbParserCarreraDetalleTest {
 	public void rellenarPremiosTest() throws Exception {
 
 		String premiosStr = "premiosStr=1st Â£175, 2nd Â£60, Others Â£50 Race Total Â£435 ";
+		// String premiosStr = "premiosStr=1st £500, Others £100 Trainers = £100 Race
+		// Total £1100 ";
 
 		GbgbCarrera out = new GbgbCarrera(true);
 

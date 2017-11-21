@@ -85,7 +85,8 @@ public class GalgosManager implements Serializable {
 
 			do {
 
-				MY_LOGGER.info("Carreras PENDIENTES de procesar (IDs acumulados): " + contarPendientes());
+				MY_LOGGER.info("Carreras PENDIENTES de procesar: " + contarPendientes());
+				MY_LOGGER.info("Carreras YA PROCESADAS: " + contarCarrerasYaProcesadas());
 
 				Map<String, Boolean> pendientes = extraerSoloCarrerasPendientes();
 
@@ -376,45 +377,51 @@ public class GalgosManager implements Serializable {
 
 		for (String urlGalgo : urlsHistoricoGalgos) {
 
-			String galgo_nombre = urlGalgo.split("=")[1];
-			pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
-			MY_LOGGER.debug("URL Historico galgo = " + urlGalgo);
-			MY_LOGGER.debug("Galgo nombre = " + galgo_nombre);
-			MY_LOGGER.debug("Path historico = " + pathFileGalgoHistorico);
+			if (urlGalgo != null && urlGalgo.contains("=")) {
 
-			MY_LOGGER.debug("Descargando historico...");
-			(new GbgbDownloader()).descargarHistoricoGalgo(urlGalgo, pathFileGalgoHistorico, true);
+				String galgo_nombre = urlGalgo.split("=")[1];
+				pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
+				MY_LOGGER.debug("URL Historico galgo = " + urlGalgo);
+				MY_LOGGER.debug("Galgo nombre = " + galgo_nombre);
+				MY_LOGGER.debug("Path historico = " + pathFileGalgoHistorico);
 
-			MY_LOGGER.debug("GUARDABLE - Historico de galgo (EVITANDO DUPLICADOS)");
-			GbgbGalgoHistorico historico = gpgh.ejecutar(pathFileGalgoHistorico, galgo_nombre);
-			guardableHistoricosGalgos.add(historico);
+				MY_LOGGER.debug("Descargando historico...");
+				(new GbgbDownloader()).descargarHistoricoGalgo(urlGalgo, pathFileGalgoHistorico, true);
 
-			MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
-			calcularAgregados(historico);
+				MY_LOGGER.debug("GUARDABLE - Historico de galgo (EVITANDO DUPLICADOS)");
+				GbgbGalgoHistorico historico = gpgh.ejecutar(pathFileGalgoHistorico, galgo_nombre);
+				guardableHistoricosGalgos.add(historico);
 
-			MY_LOGGER.debug(
-					"Del historico, cogemos el ID de carreras anteriores que queremos descargar (de los ultimos X meses)...");
-			MY_LOGGER
-					.debug("Fecha umbral (hace X meses): " + GbgbCarrera.FORMATO.format(fechaUmbralAnterior.getTime()));
+				MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
+				calcularAgregados(historico);
 
-			MY_LOGGER.debug("Con el historico, descubrimos mas carreras para procesarlas luego (el historico tiene "
-					+ historico.carrerasHistorico.size() + " carreras), comprobando que no las tengamos ya...");
-			for (GbgbGalgoHistoricoCarrera fila : historico.carrerasHistorico) {
+				MY_LOGGER.debug(
+						"Del historico, cogemos el ID de carreras anteriores que queremos descargar (de los ultimos X meses)...");
+				MY_LOGGER.debug(
+						"Fecha umbral (hace X meses): " + GbgbCarrera.FORMATO.format(fechaUmbralAnterior.getTime()));
 
-				String clave = fila.id_carrera + "-" + fila.id_campeonato;
+				MY_LOGGER.debug(
+						"Con el historico, descubrimos mas carreras RECIENTES para procesarlas luego (el historico tiene "
+								+ historico.carrerasHistorico.size()
+								+ " carreras), comprobando que no las tengamos ya...");
+				for (GbgbGalgoHistoricoCarrera fila : historico.carrerasHistorico) {
 
-				if (isHistoricoInsertable(fila, fechaUmbralAnterior)) {
-					MY_LOGGER.debug("Carrera descubierta! La apunto para luego: " + clave);
-					idCarrerasCampeonatoProcesadas.put(clave, false);
-					numCarrerasDescubiertas++;
+					String clave = fila.id_carrera + "-" + fila.id_campeonato;
+
+					if (isHistoricoInsertable(fila, fechaUmbralAnterior)) {
+						MY_LOGGER.debug("Carrera RECIENTE descubierta! La apunto para luego: " + clave);
+						idCarrerasCampeonatoProcesadas.put(clave, false);
+						numCarrerasDescubiertas++;
+					}
 				}
-
 			}
 		}
 
 		MY_LOGGER.info("Tras procesar los historicos, hemos descubierto y acumulado " + numCarrerasDescubiertas
 				+ " carreras nuevas");
 
+		MY_LOGGER.info("Limpiando lista de URLs de historicos...\n");
+		urlsHistoricoGalgos.clear();
 	}
 
 	/**
@@ -498,9 +505,7 @@ public class GalgosManager implements Serializable {
 
 		Float out = null;
 
-		Calendar fechaUmbralAnterior = Calendar.getInstance();
-		fechaUmbralAnterior.setTimeInMillis(fechaUmbralAnterior.getTimeInMillis()
-				- 1000 * 24 * 60 * 60 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
+		Calendar fechaUmbralAnterior = getFechaUmbralAnterior();
 
 		Float acumuladoReal = 0.0F;
 		Integer numeroFilas = 0;
@@ -512,7 +517,7 @@ public class GalgosManager implements Serializable {
 			}
 		}
 
-		if (acumuladoReal.intValue() > 0) {
+		if (acumuladoReal.intValue() > 0 && numeroFilas.intValue() > 0) {
 			out = acumuladoReal / numeroFilas;
 		}
 
@@ -527,9 +532,7 @@ public class GalgosManager implements Serializable {
 
 		Float out = null;
 
-		Calendar fechaUmbralAnterior = Calendar.getInstance();
-		fechaUmbralAnterior.setTimeInMillis(fechaUmbralAnterior.getTimeInMillis()
-				- 1000 * 24 * 60 * 60 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
+		Calendar fechaUmbralAnterior = getFechaUmbralAnterior();
 
 		Float acumuladoConGoing = 0.0F;
 		Integer numeroFilas = 0;
@@ -541,7 +544,7 @@ public class GalgosManager implements Serializable {
 			}
 		}
 
-		if (acumuladoConGoing.intValue() > 0) {
+		if (acumuladoConGoing.intValue() > 0 && numeroFilas.intValue() > 0) {
 			out = acumuladoConGoing / numeroFilas;
 		}
 

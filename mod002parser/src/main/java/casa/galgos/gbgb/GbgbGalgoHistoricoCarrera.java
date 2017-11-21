@@ -4,11 +4,15 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.log4j.Logger;
+
 import utilidades.Constantes;
 
 public class GbgbGalgoHistoricoCarrera implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	static Logger MY_LOGGER = Logger.getLogger(GbgbGalgoHistoricoCarrera.class);
 
 	public static final SimpleDateFormat FORMATO = new SimpleDateFormat("yyyyMMddhhmm");
 
