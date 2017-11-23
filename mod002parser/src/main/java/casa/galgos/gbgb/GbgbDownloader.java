@@ -13,8 +13,6 @@ import java.nio.file.Paths;
 
 import org.apache.log4j.Logger;
 
-import utilidades.Constantes;
-
 /**
  *
  */
@@ -32,7 +30,7 @@ public class GbgbDownloader {
 	 * @param borrarSiExiste
 	 *            Borrar fichero destino, si ya existe.
 	 */
-	public void descargarCarreras(String pathOut, Boolean borrarSiExiste) {
+	public void descargarCarreras(String pathOut, Boolean borrarSiExiste, String urlBet365) {
 
 		MY_LOGGER.debug("INICIO");
 		MY_LOGGER.debug("pathOut=" + pathOut);
@@ -49,7 +47,7 @@ public class GbgbDownloader {
 			}
 
 			// Request
-			URL url = new URL(Constantes.GALGOS_GBGB_CARRERAS);
+			URL url = new URL(urlBet365);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(true); // Conexion usada para output

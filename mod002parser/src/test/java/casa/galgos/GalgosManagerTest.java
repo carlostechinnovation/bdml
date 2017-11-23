@@ -18,28 +18,15 @@ public class GalgosManagerTest {
 	public void iniciar() {
 	}
 
-	// TODO @Test
-	public void descargarYparsearCarrerasDeGalgosTest() throws Exception {
-
-		String param3 = "/galgos_20171021_GBGB_bruto";
-
-		GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param3, true);
-
-		Assert.assertTrue(GalgosManager.getInstancia().idCarrerasCampeonatoProcesadas != null);
-
-		// 0 carreras pendientes
-		Assert.assertTrue(GalgosManager.getInstancia().extraerSoloCarrerasPendientes().size() == 0);
-		Assert.assertTrue(GalgosManager.getInstancia().contarPendientes() == 0);
-
-	}
-
 	@Test
-	public void descargarCarrerasSinFiltrarPorDiaTest() throws IOException {
+	public void cargarUrlsHistoricosDeGalgosInicialesTest() {
 
-		String param3 = "/galgos_20171021_GBGB_bruto";
-		GalgosManager.getInstancia().descargarCarrerasSinFiltrarPorDia(param3);
+		String param3 = "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/src/test/resources/galgos_iniciales.txt";
 
-		int x = 0;
+		GalgosManager gm = GalgosManager.getInstancia();
+		gm.cargarUrlsHistoricosDeGalgosIniciales(param3);
+
+		Assert.assertTrue(gm.urlsHistoricoGalgos.size() == 6);
 
 	}
 

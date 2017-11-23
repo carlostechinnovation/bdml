@@ -116,6 +116,10 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		carreraAux.id_campeonato = id_campeonato;
 
 		// --------------------------
+		String contenidoTotal = a.toString();
+		if (!contenidoTotal.contains("resultsBlockHeader")) {
+			return null;
+		}
 
 		List<Node> infoArriba = a.getElementsByClass("resultsBlockHeader").get(0).childNodes();
 
@@ -297,37 +301,51 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 			out.comment = Constantes.limpiarTexto(((TextNode) e3.childNode(1).childNode(1)).text());
 
-			// ----------------------------------
-
-			String[] partes = season_padre_madre_nacimiento_peso.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
-			String season = "";
-			String padre_madre_nacimiento_peso = "";
-			if (partes.length <= 2) {
-				padre_madre_nacimiento_peso = (partes[0].contains("eason")) ? partes[1] : partes[0];
-			} else if (partes.length == 3) {
-
-				MY_LOGGER.debug("partes[0]=" + partes[0]);
-				MY_LOGGER.debug("partes[1]=" + partes[1]);
-
-				season = partes[0].split("eason")[1].trim();
-				padre_madre_nacimiento_peso = partes[1].trim();
-			}
-
-			out.galgo_padre = extraerPadre(padre_madre_nacimiento_peso);
-			out.galgo_madre = extraerMadre(padre_madre_nacimiento_peso);
-			out.nacimiento = extraerFechaNacimiento(padre_madre_nacimiento_peso);
-
-			MY_LOGGER.debug("padre_madre_nacimiento_peso-->" + padre_madre_nacimiento_peso);
-
-			aux = padre_madre_nacimiento_peso.contains("eight")
-					? padre_madre_nacimiento_peso.split("Weight")[1].replace(")", "").replace(":", "").trim()
-					: null;
-			out.peso_galgo = aux != null ? Float.valueOf(aux) : null;
-
-			// ----------------
+			parsearyRellenarSeasonPadreMadrenacimientoPeso(season_padre_madre_nacimiento_peso, out);
 
 			out.fechaDeLaCarrera = fechayhoraDeLaCarrera;
 		}
+	}
+
+	/**
+	 * @param cadena
+	 * @param out
+	 */
+	public static void parsearyRellenarSeasonPadreMadrenacimientoPeso(String cadena, GbgbPosicionEnCarrera out) {
+
+		String[] partes = cadena.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
+		String season = "";
+		String padre_madre_nacimiento_peso = "";
+
+		if (partes.length == 1) {
+
+			padre_madre_nacimiento_peso = partes[0];
+		}
+		if (partes.length == 2) {
+
+			padre_madre_nacimiento_peso = (partes[0].contains("eason")) ? partes[1] : partes[0];
+
+		} else if (partes.length == 3) {
+
+			MY_LOGGER.debug("partes[0]=" + partes[0]);
+			MY_LOGGER.debug("partes[1]=" + partes[1]);
+			MY_LOGGER.debug("partes[2]=" + partes[2]);
+
+			season = partes[0].split("eason")[1].trim();
+			padre_madre_nacimiento_peso = partes[1].trim();
+		}
+
+		out.galgo_padre = extraerPadre(padre_madre_nacimiento_peso);
+		out.galgo_madre = extraerMadre(padre_madre_nacimiento_peso);
+		out.nacimiento = extraerFechaNacimiento(padre_madre_nacimiento_peso);
+
+		MY_LOGGER.debug("padre_madre_nacimiento_peso-->" + padre_madre_nacimiento_peso);
+
+		String aux = padre_madre_nacimiento_peso.contains("eight")
+				? padre_madre_nacimiento_peso.split("Weight")[1].replace(")", "").replace(":", "").trim()
+				: null;
+		out.peso_galgo = aux != null ? Float.valueOf(aux) : null;
+
 	}
 
 	/**

@@ -1,7 +1,9 @@
 package casa.galgos.gbgb;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -26,7 +28,7 @@ public class GbgbParserCarreraDetalleTest {
 
 	@Rule
 	public ResourceFile res = new ResourceFile("/" + "galgos_20171021_GBGB_bruto_carrera_2030316");
-	// public ResourceFile res = new ResourceFile("/" + "2040592.html");
+	// public ResourceFile res = new ResourceFile("/" + "2012801.html");
 
 	@Test
 	public void testParsear() throws Exception {
@@ -86,6 +88,32 @@ public class GbgbParserCarreraDetalleTest {
 
 		String peso_galgo = abcd.split("Weight")[1].replace(")", "").replace(":", "").trim();
 		Assert.assertTrue(peso_galgo.equals("25.0"));
+	}
+
+	@Test
+	public void parsearyRellenarSeasonPadreMadrenacimientoPesoTest() {
+
+		List<String> cadenas = new ArrayList<String>();
+		cadenas.add("(Season: 20.Ap.17) bk b Royal Impact - Droopys Quiff Jun-2014 ( Weight: 25.0 )");
+		cadenas.add("bk b Droopys Cain - Swinley Bottom Feb-2015 ( Weight: 26.7 )");
+		cadenas.add("(Season: Suppressed) bk b Kinloch Brae - Droumeragh Queen Mar-2015 ( Weight: 25.6 )");
+		cadenas.add("(Season: Suppressed) be b Scolari Me Daddy - Tenacious Bonnie Dec-2013 ( Weight: 27.2 )");
+		cadenas.add("wbe d Scolari Me Daddy - Shaneboy Daisy Jul-2015 ( Weight: 33.5 )");
+		cadenas.add("bk d Lenson Bolt - Black Reason Oct-2013 ( Weight: 31.2 )");
+
+		GbgbPosicionEnCarrera out = new GbgbPosicionEnCarrera(true);
+
+		int i = 0;
+
+		for (String cad : cadenas) {
+			i++;
+			System.out.println(i);
+			GbgbParserCarreraDetalle.parsearyRellenarSeasonPadreMadrenacimientoPeso(cad, out);
+			Assert.assertTrue(out.galgo_padre != null && !out.galgo_padre.isEmpty());
+			Assert.assertTrue(out.galgo_madre != null && !out.galgo_madre.isEmpty());
+			Assert.assertTrue(out.nacimiento != null && out.nacimiento.intValue() > 20000101);
+			Assert.assertTrue(out.peso_galgo != null && out.peso_galgo.intValue() > 0);
+		}
 	}
 
 	@Test

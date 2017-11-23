@@ -8,5 +8,5 @@ python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/g
 
 
 
-
+echo -e "Modulo 004B - FIN\n\n\n\n"
 

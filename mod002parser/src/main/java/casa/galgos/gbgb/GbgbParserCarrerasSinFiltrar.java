@@ -18,6 +18,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 
 import utilidades.Constantes;
 
@@ -86,11 +87,16 @@ public class GbgbParserCarrerasSinFiltrar implements Serializable {
 	public static List<GbgbCarrera> parsear(String in) {
 
 		Document doc = Jsoup.parse(in);
-		Element tablaCarreras = doc.getElementById("ctl00_ctl00_mainContent_cmscontent_TrackRaces_lvTrackRaces_ctl00");
+		Elements tablaGalgos = doc.getElementsByClass("rl-RacingCouponParticipantUkDogs");
 
-		List<Node> listaCarrerasPre = tablaCarreras.childNode(4).childNodes();
+		int num = tablaGalgos.size();
 
-		List<GbgbCarrera> listaCarreras = parsearCarreras(listaCarrerasPre);
+		for (Element galgoFila : tablaGalgos) {
+			int x = 0;
+			System.out.println(galgoFila);
+		}
+
+		List<GbgbCarrera> listaCarreras = parsearCarreras(null);
 
 		return listaCarreras;
 	}

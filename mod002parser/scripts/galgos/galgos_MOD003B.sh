@@ -27,6 +27,7 @@ ORDER BY PO1.id_carrera DESC, PO1.galgo_nombre ASC, PO1.posicion ASC
 ;
 EOF
 
+echo -e "$CONSULTA1"
 mysql -u root --password=datos1986 --execute="$CONSULTA1"
 #mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_i001_aux1 LIMIT 1\W;" >&1
 
@@ -51,6 +52,7 @@ ON A1.galgo_competidor=GA2.galgo_nombre
 ;
 EOF
 
+echo -e "$CONSULTA2"
 mysql -u root --password=datos1986 --execute="$CONSULTA2"
 #mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_i001_aux2 LIMIT 1\W;" >&1
 
@@ -94,10 +96,11 @@ ORDER BY agrupado.id_carrera, agrupado.galgo_analizado
 ;
 EOF
 
+echo -e "$CONSULTA3"
 mysql -u root --password=datos1986 --execute="$CONSULTA3"
 #mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_i001_aux3 LIMIT 1\W;" >&1
 
-#################### Tabla que anhade los datos de la CARRERA y el TARGET ###########
+#################### Tabla que anhade los datos de la CARRERA y el TARGET (filtro por mes de frio o calor) ###########
 mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_galgos_i001_aux4;"
 
 read -d '' CONSULTA4 <<- EOF
@@ -108,8 +111,7 @@ A3.*,
 
 CA.track,
 CA.clase,
-CA.mes,
-CA.dia,
+CASE WHEN (CA.mes <=4 OR CA.mes >=10) THEN 1 ELSE 0 END AS mes,
 CA.hora,
 CA.distancia,
 CA.num_galgos,
@@ -128,7 +130,7 @@ CA.tc_pounds,
 
 CASE 
   WHEN PO.posicion IN (1,2) THEN 1
-  WHEN PO.posicion IN (3,4,5,6) THEN 0
+  WHEN PO.posicion >=3 THEN 0
   ELSE NULL
 END as target
 
@@ -140,10 +142,11 @@ ON A3.id_carrera=CA.id_carrera
 LEFT JOIN datos_desa.tb_galgos_posiciones_en_carreras PO
 ON (A3.id_carrera=PO.id_carrera AND A3.galgo_analizado=PO.galgo_nombre)
 
-ORDER BY A3.id_carrera, A3.galgo_analizado
+ORDER BY anio DESC,mes DESC,dia DESC, A3.id_carrera, A3.galgo_analizado
 ;
 EOF
 
+echo -e "$CONSULTA4"
 mysql -u root --password=datos1986 --execute="$CONSULTA4"
 #mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_i001_aux4 LIMIT 1\W;" >&1
 
@@ -155,7 +158,6 @@ read -d '' CONSULTA5 <<- EOF
 CREATE TABLE datos_desa.tb_galgos_dataset_data_i001 AS SELECT
 
 mes,
-dia,
 hora,
 distancia,
 num_galgos,
@@ -180,6 +182,7 @@ std_competidores_vel_going
 FROM datos_desa.tb_galgos_i001_aux4;
 EOF
 
+echo -e "$CONSULTA5"
 mysql -u root --password=datos1986 --execute="$CONSULTA5"
 echo -e "Dataset - DATA: " >&1
 mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_dataset_data_i001 LIMIT 1\W;" >&1
@@ -190,9 +193,12 @@ mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM 
 
 ######################################################
 echo -e "Dataset - Vemos 8 filas de ejemplo: " >&1
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_dataset_data_i001 LIMIT 8\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_dataset_data_i001 LIMIT 8\W;" -N >&1
 
 
 
+
+
+echo -e "Modulo 003B - FIN\n\n\n\n"
 
 

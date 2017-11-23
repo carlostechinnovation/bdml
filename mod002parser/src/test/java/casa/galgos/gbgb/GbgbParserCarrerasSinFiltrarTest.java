@@ -20,7 +20,7 @@ public class GbgbParserCarrerasSinFiltrarTest {
 	}
 
 	@Rule
-	public ResourceFile res = new ResourceFile("/" + "galgos_20171022_GBGB_bruto_carreras_sin_filtrar");
+	public ResourceFile res = new ResourceFile("/" + "carrera_bet365.html");
 
 	@Test
 	public void testParsear() throws Exception {

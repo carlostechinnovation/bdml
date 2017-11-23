@@ -53,9 +53,9 @@ SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 mysql -u root --password=datos1986 --execute="$SENTENCIAS_CREATE_TABLE" >&1
 
 
-#GBGB Descargar+parsear las carreras de ese dia concreto y descargar+parsear los detalles (galgos y sus historicos)
-java -jar ${PATH_JAR} "05" "${PATH_CARPETA}galgos_${TAG_GBGB}_bruto" 
+#Dada una URL de una carrera concreta de BET365, descargar y parsear las carreras de ese dia concreto
 
+java -jar ${PATH_JAR} "05" "${PATH_CARPETA}galgos_${TAG_GBGB}_bruto" "${PATH_SCRIPTS}galgos_iniciales.txt"
 
 
 echo -e "Insertando datos..." >&1

@@ -193,10 +193,11 @@ public class Mod002Parser implements Serializable {
 				e.printStackTrace();
 			}
 
-		} else if (param1 != null && param1.equals("05") && param2 != null) {
+		} else if (param1 != null && param1.equals("05") && param2 != null && !param2.isEmpty() && param3 != null
+				&& !param3.isEmpty()) {
 
 			try {
-				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, true);
+				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, true, param3);
 
 			} catch (InterruptedException e) {
 				MY_LOGGER.error("ERROR Excepcion de galgos.");
