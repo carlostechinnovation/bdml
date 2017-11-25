@@ -286,7 +286,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 			out.url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
 
-			out.sp = Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text());
+			parsearyRellenarSp(Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text()), out);
 			out.time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());
 
 			String time_distance = Constantes.limpiarTexto(((TextNode) e1.childNode(11).childNode(0)).text());
@@ -301,9 +301,29 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 			out.comment = Constantes.limpiarTexto(((TextNode) e3.childNode(1).childNode(1)).text());
 
-			parsearyRellenarSeasonPadreMadrenacimientoPeso(season_padre_madre_nacimiento_peso, out);
+			parsearyRellenarSeasonPadreMadreNacimientoPeso(season_padre_madre_nacimiento_peso, out);
 
 			out.fechaDeLaCarrera = fechayhoraDeLaCarrera;
+		}
+	}
+
+	/**
+	 * @param spStr
+	 * @param out
+	 */
+	public static void parsearyRellenarSp(String spStr, GbgbPosicionEnCarrera out) {
+
+		if (spStr != null && !"".equals(spStr)) {
+			String aux = spStr.replaceAll("[A-Za-z]", "").trim();
+			if (aux.contains("/")) {
+				String[] partes = aux.split("/");
+				Float p1 = Float.valueOf(partes[0]);
+				Float p2 = Float.valueOf(partes[1]);
+				out.sp = Float.valueOf(p1 / p2);
+			} else {
+				out.sp = Float.valueOf(aux);
+			}
+
 		}
 	}
 
@@ -311,7 +331,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 * @param cadena
 	 * @param out
 	 */
-	public static void parsearyRellenarSeasonPadreMadrenacimientoPeso(String cadena, GbgbPosicionEnCarrera out) {
+	public static void parsearyRellenarSeasonPadreMadreNacimientoPeso(String cadena, GbgbPosicionEnCarrera out) {
 
 		String[] partes = cadena.replace(")", "XXXDIVISORXXX").split("XXXDIVISORXXX");
 		String season = "";

@@ -29,7 +29,7 @@ public class Constantes {
 	public static final String GALGOS_GBGB_HISTORICO_GALGO = GALGOS_GBGB + "/RaceCard.aspx?dogName=";
 	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 10 * 7;// Ultimas X semanas
 
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 1000;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 500;
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 

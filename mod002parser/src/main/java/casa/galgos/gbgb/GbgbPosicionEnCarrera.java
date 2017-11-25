@@ -16,7 +16,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 
 	public String galgo_nombre;
 	public Integer trap;
-	public String sp;
+	public Float sp; // dinero apostado por la gente
 	public String time_sec;
 	public String time_distance;
 	public Float peso_galgo;
@@ -33,7 +33,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 	}
 
 	public GbgbPosicionEnCarrera(Long id_carrera, Long id_campeonato, Short posicion, String galgo_nombre, Integer trap,
-			String sp, String time_sec, String time_distance, Float peso_galgo, String entrenador_nombre,
+			Float sp, String time_sec, String time_distance, Float peso_galgo, String entrenador_nombre,
 			String galgo_padre, String galgo_madre, Integer nacimiento, String comment, Calendar fechaDeLaCarrera,
 			String url_galgo_historico) {
 		super();
@@ -66,7 +66,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 
 		out += "galgo_nombre varchar(30) NOT NULL,";
 		out += "trap SMALLINT,";
-		out += "sp varchar(10),";
+		out += "sp decimal(6,2),";
 		out += "time_sec decimal(6,2),";
 		out += "time_distance varchar(15),";
 		out += "peso_galgo decimal(4,2),";
@@ -102,7 +102,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += trap != null ? trap : "\\N";
 		out += SEP;
-		out += (sp != null && !"".equals(sp)) ? sp : "\\N";
+		out += (sp != null) ? sp : "\\N";
 		out += SEP;
 		out += (time_sec != null && !"".equals(time_sec)) ? time_sec : "\\N";
 		out += SEP;

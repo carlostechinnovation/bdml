@@ -68,7 +68,7 @@ public class GbgbParserCarreraDetalleTest {
 		String asdf = posicion6.generarDatosParaExportarSql();
 
 		Assert.assertTrue(posicion6.generarDatosParaExportarSql().equals(
-				"2030316|151752|6|Dunham Tiffany|6|9/2|\\N|17.22|28.4|R J Holloway|Aero Nemesis|Sidaz Dippy|20150601|Wide|876\n"));
+				"2030316|151752|6|Dunham Tiffany|6|4.5|\\N|17.22|28.4|R J Holloway|Aero Nemesis|Sidaz Dippy|20150601|Wide|876\n"));
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class GbgbParserCarreraDetalleTest {
 	}
 
 	@Test
-	public void parsearyRellenarSeasonPadreMadrenacimientoPesoTest() {
+	public void parsearyRellenarSeasonPadreMadreNacimientoPesoTest() {
 
 		List<String> cadenas = new ArrayList<String>();
 		cadenas.add("(Season: 20.Ap.17) bk b Royal Impact - Droopys Quiff Jun-2014 ( Weight: 25.0 )");
@@ -103,17 +103,23 @@ public class GbgbParserCarreraDetalleTest {
 
 		GbgbPosicionEnCarrera out = new GbgbPosicionEnCarrera(true);
 
-		int i = 0;
-
 		for (String cad : cadenas) {
-			i++;
-			System.out.println(i);
-			GbgbParserCarreraDetalle.parsearyRellenarSeasonPadreMadrenacimientoPeso(cad, out);
+			GbgbParserCarreraDetalle.parsearyRellenarSeasonPadreMadreNacimientoPeso(cad, out);
 			Assert.assertTrue(out.galgo_padre != null && !out.galgo_padre.isEmpty());
 			Assert.assertTrue(out.galgo_madre != null && !out.galgo_madre.isEmpty());
 			Assert.assertTrue(out.nacimiento != null && out.nacimiento.intValue() > 20000101);
 			Assert.assertTrue(out.peso_galgo != null && out.peso_galgo.intValue() > 0);
 		}
+	}
+
+	@Test
+	public void parsearyRellenarSpTest() {
+
+		GbgbPosicionEnCarrera out = new GbgbPosicionEnCarrera(true);
+		String in = "12/2C";
+		GbgbParserCarreraDetalle.parsearyRellenarSp(in, out);
+		Assert.assertTrue(out.sp.equals(6.0F));
+
 	}
 
 	@Test
