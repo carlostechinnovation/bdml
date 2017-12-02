@@ -62,7 +62,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 			MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: out=" + out);
 
 		} catch (IOException e) {
-			MY_LOGGER.error("Error:" + e.getMessage());
+			MY_LOGGER.error("Error: " + e.getMessage());
 			e.printStackTrace();
 		}
 

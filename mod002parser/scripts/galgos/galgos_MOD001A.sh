@@ -54,8 +54,8 @@ mysql -u root --password=datos1986 --execute="$SENTENCIAS_CREATE_TABLE" >&1
 
 
 #SPORTIUM: Descarga de todas las carreras de hoy (FUTURAS) en las que PUEDO apostar
-PATH_FILE_GALGOS_INICIALES="${PATH_SCRIPTS}carreras_futuras.html"
-java -jar ${PATH_JAR} "07" "${PATH_CARPETA}galgos_${TAG_GBGB}_bruto_semillas" "${PATH_FILE_GALGOS_INICIALES}"
+PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
+java -jar ${PATH_JAR} "07" "${PATH_CARPETA}semillas" "${PATH_FILE_GALGOS_INICIALES}"
 
 
 #GBGB Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos iniciales y en iteraciones derivadas

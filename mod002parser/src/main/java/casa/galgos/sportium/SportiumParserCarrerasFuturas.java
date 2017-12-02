@@ -44,7 +44,7 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	 */
 	public List<SportiumCarrera> ejecutar(String pathIn) {
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarrerasSinFiltrar: INICIO");
+		MY_LOGGER.info("GALGOS-SportiumParserCarrerasFuturas: INICIO");
 
 		String bruto = "";
 		List<SportiumCarrera> out = null;
@@ -52,14 +52,14 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 		try {
 			bruto = SportiumParserCarrerasFuturas.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto);
-			// MY_LOGGER.info("GALGOS-GbgbParserCarrerasSinFiltrar: out=" + out);
+			// MY_LOGGER.info("GALGOS-SportiumParserCarrerasFuturas: out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("GALGOS-GbgbParserCarrerasSinFiltrar: FIN");
+		MY_LOGGER.info("GALGOS-SportiumParserCarrerasFuturas: FIN");
 		return out;
 	}
 

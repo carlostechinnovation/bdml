@@ -9,7 +9,7 @@ PATH_CONTADOR_GALGOS="./contador_galgos"
 
 filtro_galgos_nombres=""
 
-input="./galgos_iniciales.txt"
+input="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
 while IFS= read -r linea
 do
 echo $linea

@@ -28,9 +28,9 @@ public class SportiumDownloader {
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
-	public void descargarCarrerasSemilla(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
+	public void descargarDeURLsAFicheros(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.debug("URL: " + urlCarrera);
+		MY_LOGGER.info("URL: " + urlCarrera);
 		MY_LOGGER.debug("pathOut=" + pathOut);
 		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
 
@@ -63,7 +63,7 @@ public class SportiumDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.debug("HTTP GET " + url + " ...");
+			MY_LOGGER.info("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA

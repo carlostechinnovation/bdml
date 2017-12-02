@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -29,6 +30,7 @@ import casa.galgos.gbgb.GbgbPosicionEnCarrera;
 import casa.galgos.sportium.SportiumCarrera;
 import casa.galgos.sportium.SportiumDownloader;
 import casa.galgos.sportium.SportiumParserCarrerasFuturas;
+import casa.galgos.sportium.SportiumParserDetalleCarreraFutura;
 import utilidades.Constantes;
 
 public class GalgosManager implements Serializable {
@@ -85,65 +87,117 @@ public class GalgosManager implements Serializable {
 
 		MY_LOGGER.info("Descargando carreras FUTURAS con sus galgos (semillas)...");
 
-		(new SportiumDownloader()).descargarCarrerasSemilla(Constantes.GALGOS_FUTUROS_SPORTIUM, prefijoPathDatosBruto,
+		(new SportiumDownloader()).descargarDeURLsAFicheros(Constantes.GALGOS_FUTUROS_SPORTIUM, prefijoPathDatosBruto,
 				guardarEnFicheros);
 
 		MY_LOGGER.info("Parseando carreras FUTURAS con sus galgos (semillas)...");
-		SportiumParserCarrerasFuturas spcf = new SportiumParserCarrerasFuturas();
-
-		galgosFuturos = spcf.ejecutar(prefijoPathDatosBruto);
+		galgosFuturos = (new SportiumParserCarrerasFuturas()).ejecutar(prefijoPathDatosBruto);
 
 		MY_LOGGER.info("Filas parseadas: " + galgosFuturos.size());
-		
-		
-		
-		
-		descargar las URLS y parsear las WEBs para sacar los nombres de los galgos semilla a un HashSET (no List), para quitar duplicados 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
-		int numFilasGuardadas = 0;
 
 		if (galgosFuturos != null && !galgosFuturos.isEmpty()) {
 
-			String path = fileGalgosIniciales;
+			String tag = "_BRUTOCARRERADET_";
+			int contador = 0;
+			SportiumParserDetalleCarreraFutura spdcf = new SportiumParserDetalleCarreraFutura();
 
-			MY_LOGGER.info("Guardando FICHERO SEMILLA en: " + path);
+			String pathCarreraDetalle = "";
+
+			for (SportiumCarrera carrera : galgosFuturos) {
+				contador++;
+				pathCarreraDetalle = prefijoPathDatosBruto + tag + contador;
+
+				(new SportiumDownloader()).descargarDeURLsAFicheros(carrera.urlDetalle, pathCarreraDetalle,
+						guardarEnFicheros);
+
+				spdcf.ejecutar(pathCarreraDetalle, carrera);
+
+			}
+
+			desnormalizarSemillasYGuardarlasEnFicheros(fileGalgosIniciales);
+
+			MY_LOGGER.info("Carreras FUTURAS con sus galgos (semillas): OK");
+
+		} else {
+			MY_LOGGER.info("Carreras FUTURAS con sus galgos (semillas): ERROR!!!!");
+		}
+
+	}
+
+	/**
+	 * @param fileGalgosIniciales
+	 */
+	public void desnormalizarSemillasYGuardarlasEnFicheros(String fileGalgosIniciales) {
+
+		// *********************************************************************
+		// Desnormalizar, llevando a relaciones carrera-galgo
+		Set<SportiumCarreraGalgo> carreraGalgos = new HashSet<SportiumCarreraGalgo>();
+		for (SportiumCarrera carrera : galgosFuturos) {
+			if (carrera.galgosNombres != null && !carrera.galgosNombres.isEmpty()) {
+				for (String galgoNombre : carrera.galgosNombres) {
+
+					String id = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora + "#" + galgoNombre;
+					carreraGalgos.add(new SportiumCarreraGalgo(id, galgoNombre, carrera));
+				}
+			}
+		}
+
+		// *********************************************************************
+		Set<String> galgosIniciales = new HashSet<String>();
+		for (SportiumCarreraGalgo fila : carreraGalgos) {
+			galgosIniciales.add(fila.galgoNombre);
+		}
+
+		// ******************************************************************
+
+		if (carreraGalgos != null && !carreraGalgos.isEmpty()) {
+
+			String path = fileGalgosIniciales;
+			String pathFull = fileGalgosIniciales + "_full";
+
+			MY_LOGGER.info("Guardando GALGOS SEMILLA en: " + path);
+			MY_LOGGER.info("Guardando CARRERA-GALGO SEMILLA en: " + pathFull);
 
 			try {
 
-				MY_LOGGER.debug("Borrando posible fichero preexistente...");
+				MY_LOGGER.debug("Borrando posibles ficheros preexistentes...");
 				Files.deleteIfExists(Paths.get(path));
+				Files.deleteIfExists(Paths.get(pathFull));
 
 				MY_LOGGER.debug("Escribiendo...");
+
+				// ****************************
 				boolean primero = true;
-				for (SportiumCarrera fila : galgosFuturos) {
+				for (String galgoNombre : galgosIniciales) {
 					if (primero) {
-						Files.write(Paths.get(path), fila.toString().getBytes(), StandardOpenOption.CREATE);
+						Files.write(Paths.get(path), (galgoNombre + "\n").getBytes(), StandardOpenOption.CREATE);
 						primero = false;
 					} else {
-						Files.write(Paths.get(path), fila.toString().getBytes(), StandardOpenOption.APPEND);
+						Files.write(Paths.get(path), (galgoNombre + "\n").getBytes(), StandardOpenOption.APPEND);
 					}
-
 				}
+				MY_LOGGER.info("Galgos iniciales: " + galgosIniciales.size());
 
-				numFilasGuardadas = galgosFuturos.size();
+				// ****************************
+				primero = true;
+				for (SportiumCarreraGalgo fila : carreraGalgos) {
 
-				// ******** LIMPIAR LISTA, porque ya he guardado a fichero **********
+					MY_LOGGER.info("Fila=" + fila.toString());
+
+					if (primero) {
+						Files.write(Paths.get(pathFull), (fila.toString() + "\n").getBytes(),
+								StandardOpenOption.CREATE);
+						primero = false;
+					} else {
+						Files.write(Paths.get(pathFull), (fila.toString() + "\n").getBytes(),
+								StandardOpenOption.APPEND);
+					}
+				}
+				MY_LOGGER.info("Carrera-Galgo iniciales: " + carreraGalgos.size());
+
+				// ******** LIMPIAR LISTAS, porque ya he guardado a fichero **********
 				galgosFuturos.clear();
+				carreraGalgos.clear();
 				MY_LOGGER.debug("Limpiando lista en memoria. Estado de la lista tras limpiar: " + galgosFuturos.size());
 
 			} catch (IOException e) {
@@ -154,10 +208,28 @@ public class GalgosManager implements Serializable {
 		} else {
 			MY_LOGGER.error("Sin datos. No guardamos fichero!!!");
 		}
+	}
 
-		MY_LOGGER.info("Filas escritas en fichero: " + numFilasGuardadas);
+	/**
+	 * AUXILIAR
+	 *
+	 */
+	private class SportiumCarreraGalgo {
+		public String id;// dia#hora#estadio#galgo_nombre
+		public String galgoNombre;
+		public SportiumCarrera modelo;
 
-		MY_LOGGER.info("Carreras FUTURAS con sus galgos (semillas): OK");
+		public SportiumCarreraGalgo(String id, String galgoNombre, SportiumCarrera modelo) {
+			super();
+			this.id = id;
+			this.galgoNombre = galgoNombre;
+			this.modelo = modelo;
+		}
+
+		@Override
+		public String toString() {
+			return id;
+		}
 
 	}
 
@@ -520,7 +592,7 @@ public class GalgosManager implements Serializable {
 
 					MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
 					calcularAgregados(historico);
-					MY_LOGGER.info("Numero de agregados acumulado: " + guardableGalgoAgregados.size());
+					MY_LOGGER.debug("Numero de agregados acumulado: " + guardableGalgoAgregados.size());
 
 					MY_LOGGER.debug(
 							"Del historico, cogemos el ID de carreras anteriores que queremos descargar (de los ultimos X meses)...");
@@ -548,10 +620,9 @@ public class GalgosManager implements Serializable {
 			}
 		}
 
-		MY_LOGGER.info("Tras procesar los historicos, hemos descubierto y acumulado " + numCarrerasDescubiertas
-				+ " carreras nuevas");
+		MY_LOGGER.info("Acumuladas " + numCarrerasDescubiertas + " carreras nuevas");
 
-		MY_LOGGER.info("Limpiando lista de URLs de historicos...\n");
+		MY_LOGGER.debug("Limpiando lista de URLs de historicos...\n");
 		urlsHistoricoGalgos.clear();
 	}
 
