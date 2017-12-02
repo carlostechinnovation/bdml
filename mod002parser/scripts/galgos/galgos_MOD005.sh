@@ -94,7 +94,7 @@ A3.*,
 
 CA.track,
 CA.clase,
-CASE WHEN (CA.mes <=2 OR CA.mes >=12) THEN 1 WHEN ((CA.mes >=3 AND CA.mes <=4) OR (CA.mes >=10 AND CA.mes <=11)) THEN 0.5 ELSE 0 END AS mes,
+CASE WHEN (CA.mes <=3 OR CA.mes >=12) THEN 0 WHEN ((CA.mes >=4 AND CA.mes <=5) OR (CA.mes >=10 AND CA.mes <=11)) THEN 0.5 ELSE 1 END AS mes,
 CA.hora,
 CA.distancia,
 CA.num_galgos,

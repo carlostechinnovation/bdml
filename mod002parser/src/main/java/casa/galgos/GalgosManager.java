@@ -26,6 +26,9 @@ import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
 import casa.galgos.gbgb.GbgbParserCarreraDetalle;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
+import casa.galgos.sportium.SportiumCarrera;
+import casa.galgos.sportium.SportiumDownloader;
+import casa.galgos.sportium.SportiumParserCarrerasFuturas;
 import utilidades.Constantes;
 
 public class GalgosManager implements Serializable {
@@ -34,12 +37,24 @@ public class GalgosManager implements Serializable {
 
 	static Logger MY_LOGGER = Logger.getLogger(GalgosManager.class);
 
+	public static final Integer DISTANCIA_CORTA = 1; // distancia<400m
+	public static final Integer DISTANCIA_LONGITUD_MEDIA = 2;// 400m<=distancia<600m
+	public static final Integer DISTANCIA_LARGA = 3;// distancia>=600m
+
+	public static final Integer TIPO_VEL_REAL = 1;
+	public static final Integer TIPO_VEL_CON_GOING = 2;
+
+	public static final Integer TIPO_ESTADISTICO_MEDIANA = 1;
+	public static final Integer TIPO_ESTADISTICO_MAXIMO = 2;
+
 	public Map<String, Boolean> idCarrerasCampeonatoProcesadas = new HashMap<String, Boolean>(); // ID_carrera-ID_campeonato,
 																									// procesada
 																									// (boolean)
 	public Map<String, Boolean> galgosYaGuardados = new HashMap<String, Boolean>();
 
-	// pendientes
+	// LISTAS con datos DEFINITIVOS para guardar en sistema de ficheros
+	public List<SportiumCarrera> galgosFuturos = new ArrayList<SportiumCarrera>(); // Galgos en los que vamos a apostar
+																					// dinero real
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
 	public HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // URLs de historicos SIN DUPLICADOS
@@ -57,6 +72,93 @@ public class GalgosManager implements Serializable {
 			instancia = new GalgosManager();
 		}
 		return instancia;
+	}
+
+	/**
+	 * @param prefijoPathDatosBruto
+	 * @param guardarEnFicheros
+	 * @param fileGalgosIniciales
+	 * @throws InterruptedException
+	 */
+	public void descargarYParsearSemillas(String prefijoPathDatosBruto, boolean guardarEnFicheros,
+			String fileGalgosIniciales) throws InterruptedException {
+
+		MY_LOGGER.info("Descargando carreras FUTURAS con sus galgos (semillas)...");
+
+		(new SportiumDownloader()).descargarCarrerasSemilla(Constantes.GALGOS_FUTUROS_SPORTIUM, prefijoPathDatosBruto,
+				guardarEnFicheros);
+
+		MY_LOGGER.info("Parseando carreras FUTURAS con sus galgos (semillas)...");
+		SportiumParserCarrerasFuturas spcf = new SportiumParserCarrerasFuturas();
+
+		galgosFuturos = spcf.ejecutar(prefijoPathDatosBruto);
+
+		MY_LOGGER.info("Filas parseadas: " + galgosFuturos.size());
+		
+		
+		
+		
+		descargar las URLS y parsear las WEBs para sacar los nombres de los galgos semilla a un HashSET (no List), para quitar duplicados 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		int numFilasGuardadas = 0;
+
+		if (galgosFuturos != null && !galgosFuturos.isEmpty()) {
+
+			String path = fileGalgosIniciales;
+
+			MY_LOGGER.info("Guardando FICHERO SEMILLA en: " + path);
+
+			try {
+
+				MY_LOGGER.debug("Borrando posible fichero preexistente...");
+				Files.deleteIfExists(Paths.get(path));
+
+				MY_LOGGER.debug("Escribiendo...");
+				boolean primero = true;
+				for (SportiumCarrera fila : galgosFuturos) {
+					if (primero) {
+						Files.write(Paths.get(path), fila.toString().getBytes(), StandardOpenOption.CREATE);
+						primero = false;
+					} else {
+						Files.write(Paths.get(path), fila.toString().getBytes(), StandardOpenOption.APPEND);
+					}
+
+				}
+
+				numFilasGuardadas = galgosFuturos.size();
+
+				// ******** LIMPIAR LISTA, porque ya he guardado a fichero **********
+				galgosFuturos.clear();
+				MY_LOGGER.debug("Limpiando lista en memoria. Estado de la lista tras limpiar: " + galgosFuturos.size());
+
+			} catch (IOException e) {
+				MY_LOGGER.error("Error:" + e.getMessage());
+				e.printStackTrace();
+			}
+
+		} else {
+			MY_LOGGER.error("Sin datos. No guardamos fichero!!!");
+		}
+
+		MY_LOGGER.info("Filas escritas en fichero: " + numFilasGuardadas);
+
+		MY_LOGGER.info("Carreras FUTURAS con sus galgos (semillas): OK");
+
 	}
 
 	/**
@@ -416,7 +518,7 @@ public class GalgosManager implements Serializable {
 					GbgbGalgoHistorico historico = gpgh.ejecutar(pathFileGalgoHistorico, galgo_nombre);
 					guardableHistoricosGalgos.add(historico);
 
-					MY_LOGGER.info("Con el historico, calculamos AGREGADOS estadisticos..");
+					MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
 					calcularAgregados(historico);
 					MY_LOGGER.info("Numero de agregados acumulado: " + guardableGalgoAgregados.size());
 
@@ -519,63 +621,131 @@ public class GalgosManager implements Serializable {
 		// no guardar agregados de galgos que ya tengo
 				!guardableGalgoAgregados.containsKey(historico.galgo_nombre.trim())) {
 
-			guardableGalgoAgregados.put(historico.galgo_nombre.trim(),
-					new GalgoAgregados(historico.galgo_nombre.trim(),
-							calcularVelocidadRealMediaReciente(historico.carrerasHistorico),
-							calcularVelocidadConGoingMediaReciente(historico.carrerasHistorico)));
+			guardableGalgoAgregados.put(historico.galgo_nombre.trim(), new GalgoAgregados(historico.galgo_nombre.trim(),
+
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_CORTA, TIPO_VEL_REAL,
+							TIPO_ESTADISTICO_MEDIANA),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_CORTA, TIPO_VEL_REAL,
+							TIPO_ESTADISTICO_MAXIMO),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_CORTA, TIPO_VEL_CON_GOING,
+							TIPO_ESTADISTICO_MEDIANA),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_CORTA, TIPO_VEL_CON_GOING,
+							TIPO_ESTADISTICO_MAXIMO),
+
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LONGITUD_MEDIA, TIPO_VEL_REAL,
+							TIPO_ESTADISTICO_MEDIANA),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LONGITUD_MEDIA, TIPO_VEL_REAL,
+							TIPO_ESTADISTICO_MAXIMO),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LONGITUD_MEDIA,
+							TIPO_VEL_CON_GOING, TIPO_ESTADISTICO_MEDIANA),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LONGITUD_MEDIA,
+							TIPO_VEL_CON_GOING, TIPO_ESTADISTICO_MAXIMO),
+
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LARGA, TIPO_VEL_REAL,
+							TIPO_ESTADISTICO_MEDIANA),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LARGA, TIPO_VEL_REAL,
+							TIPO_ESTADISTICO_MAXIMO),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LARGA, TIPO_VEL_CON_GOING,
+							TIPO_ESTADISTICO_MEDIANA),
+					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LARGA, TIPO_VEL_CON_GOING,
+							TIPO_ESTADISTICO_MAXIMO)
+
+			));
 
 		}
 	}
 
 	/**
 	 * @param carrerasHistorico
+	 * @param tipoDistancia
+	 * @param tipoVelocidad
+	 * @param tipoEstadistico
 	 * @return
 	 */
-	public Float calcularVelocidadRealMediaReciente(List<GbgbGalgoHistoricoCarrera> carrerasHistorico) {
-
-		Float out = null;
+	public Float calcularVelocidadEstadistico(List<GbgbGalgoHistoricoCarrera> carrerasHistorico, Integer tipoDistancia,
+			Integer tipoVelocidad, Integer tipoEstadistico) {
 
 		Calendar fechaUmbralAnterior = getFechaUmbralAnterior();
 
-		Float acumuladoReal = 0.0F;
-		Integer numeroFilas = 0;
+		List<Float> valores = new ArrayList<Float>();
 
 		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
-			if (fila.fecha.after(fechaUmbralAnterior) && fila.velocidadReal != null) {
-				numeroFilas++;
-				acumuladoReal += fila.velocidadReal;
+
+			// ---------------------------
+			Float velocidad = null;
+			if (tipoVelocidad.equals(TIPO_VEL_REAL)) {
+				velocidad = fila.velocidadReal;
+			} else if (tipoVelocidad.equals(TIPO_VEL_CON_GOING)) {
+				velocidad = fila.velocidadConGoing;
+			}
+
+			// --------------------------
+
+			if (fila.fecha.after(fechaUmbralAnterior) && velocidad != null) {
+
+				if (tipoDistancia != null && fila.distancia != null
+						&& distanciaEstaEnTipoDistanciaAnalizada(fila.distancia, tipoDistancia)) {
+					valores.add(velocidad);
+				}
+
+				// TODO REAPROVECHAR CARRERAS DE UNA DISTANCIA, para deducir su velocidad en
+				// OTRA distancia. Ej: si corrio 800m, deberia calcular cuanto fue su velocidad
+				// en los primeros 250 metros y en los primeros 450m, para aprovechar esa info.
+
 			}
 		}
 
-		if (acumuladoReal.intValue() > 0 && numeroFilas.intValue() > 0) {
-			out = acumuladoReal / numeroFilas;
-		}
+		Float out = null;
 
+		if (!valores.isEmpty()) {
+
+			if (tipoEstadistico.equals(TIPO_ESTADISTICO_MEDIANA)) {
+
+				int indiceMediana = Float.valueOf(valores.size() / 2).intValue();
+
+				if (!valores.isEmpty()) {
+					out = valores.get(indiceMediana);
+				}
+
+			} else if (tipoEstadistico.equals(TIPO_ESTADISTICO_MAXIMO)) {
+				Float max = null;
+				if (!valores.isEmpty()) {
+					for (Float v : valores) {
+						if (max == null || max.floatValue() < v.floatValue()) {
+							max = v;
+						}
+					}
+
+					out = max;
+				}
+
+			}
+
+		}
 		return out;
 	}
 
 	/**
-	 * @param carrerasHistorico
-	 * @return
+	 * @param distancia
+	 * @param tipoDistanciaAnalizada
+	 * @return TRUE Si distancia esta dentro del tipoDistanciaAnalizada
 	 */
-	public Float calcularVelocidadConGoingMediaReciente(List<GbgbGalgoHistoricoCarrera> carrerasHistorico) {
+	public static Boolean distanciaEstaEnTipoDistanciaAnalizada(Integer distancia, Integer tipoDistanciaAnalizada) {
 
-		Float out = null;
+		Boolean out = false;
+		if (distancia != null && tipoDistanciaAnalizada != null) {
 
-		Calendar fechaUmbralAnterior = getFechaUmbralAnterior();
-
-		Float acumuladoConGoing = 0.0F;
-		Integer numeroFilas = 0;
-
-		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
-			if (fila.fecha.after(fechaUmbralAnterior) && fila.velocidadConGoing != null) {
-				numeroFilas++;
-				acumuladoConGoing += fila.velocidadConGoing;
+			if (distancia.intValue() < 400 && tipoDistanciaAnalizada.equals(DISTANCIA_CORTA)) {
+				out = true;
+			} else if (distancia.intValue() >= 400 && distancia.intValue() < 600
+					&& tipoDistanciaAnalizada.equals(DISTANCIA_LONGITUD_MEDIA)) {
+				out = true;
+			} else if (distancia.intValue() > 600 && tipoDistanciaAnalizada.equals(DISTANCIA_LARGA)) {
+				out = true;
 			}
-		}
 
-		if (acumuladoConGoing.intValue() > 0 && numeroFilas.intValue() > 0) {
-			out = acumuladoConGoing / numeroFilas;
+		} else {
+			MY_LOGGER.error("La distancia debe estar en un tipo...");
 		}
 
 		return out;

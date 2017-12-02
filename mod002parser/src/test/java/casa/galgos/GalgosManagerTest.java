@@ -104,12 +104,12 @@ public class GalgosManagerTest {
 	}
 
 	// TODO @Test
-	public void calcularVelocidadRealMediaRecienteTest() {
+	public void calcularVelocidadRealMedianaRecienteTest() {
 
 	}
 
 	// TODO @Test
-	public void calcularVelocidadConGoingMediaRecienteTest() {
+	public void calcularVelocidadConGoingMedianaRecienteTest() {
 
 	}
 

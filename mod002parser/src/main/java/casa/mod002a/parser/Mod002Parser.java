@@ -181,7 +181,8 @@ public class Mod002Parser implements Serializable {
 			out += (new GbgbGalgoHistorico(true)).generarSqlCreateTable("");
 			out += (new GbgbCarrera(true)).generarSqlCreateTable("");
 			out += (new GbgbPosicionEnCarrera(true)).generarSqlCreateTable("");
-			out += (new GalgoAgregados(null, null, null)).generarSqlCreateTable("");
+			out += (new GalgoAgregados(null, null, null, null, null, null, null, null, null, null, null, null, null))
+					.generarSqlCreateTable("");
 
 			try {
 
@@ -218,6 +219,17 @@ public class Mod002Parser implements Serializable {
 
 			} catch (IOException e) {
 				MY_LOGGER.error("Error:" + e.getMessage());
+				e.printStackTrace();
+			}
+
+		} else if (param1 != null && param1.equals("07") && param2 != null && !param2.isEmpty() && param3 != null
+				&& !param3.isEmpty()) {
+
+			try {
+				GalgosManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
+
+			} catch (InterruptedException e) {
+				MY_LOGGER.error("ERROR Excepcion de galgos.");
 				e.printStackTrace();
 			}
 

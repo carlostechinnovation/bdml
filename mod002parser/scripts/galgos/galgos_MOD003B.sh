@@ -19,7 +19,8 @@ PO1.galgo_nombre AS galgo_analizado,
 PO1.posicion AS posicion_analizado,
 PO2.galgo_nombre AS galgo_competidor,
 PO2.posicion AS posicion_competidor,
-PO2.edad_en_dias AS competidor_edad
+PO2.edad_en_dias AS competidor_edad,
+PO2.peso_galgo AS competidor_peso
 
 FROM datos_desa.tb_galgos_posiciones_en_carreras PO1
 
@@ -32,7 +33,7 @@ EOF
 
 echo -e "$CONSULTA1"
 mysql -u root --password=datos1986 --execute="$CONSULTA1"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_i001_aux1 LIMIT 10\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_i001_aux1 LIMIT 10\W;" -N >&1
 
 #################### En cada carrera, ordeno los galgos segun su velocidad_media_con_going_reciente, extrayendo los que deberían quedar segundos
 read -d '' CONSULTA2previa <<- EOF
@@ -43,8 +44,20 @@ SELECT
 
 id_carrera,
 galgo_competidor,
-MAX(velocidad_con_going_media_reciente) AS velocidad_con_going_media_reciente,
-MAX(competidor_edad) AS competidor_edad
+MAX(vel_real_cortas_mediana) AS vel_real_cortas_mediana,
+MAX(vel_real_cortas_max) AS vel_real_cortas_max,
+MAX(vel_going_cortas_mediana) AS vel_going_cortas_mediana,
+MAX(vel_going_cortas_max) AS vel_going_cortas_max,
+MAX(vel_real_longmedias_mediana) AS vel_real_longmedias_mediana,
+MAX(vel_real_longmedias_max) AS vel_real_longmedias_max,
+MAX(vel_going_longmedias_mediana) AS vel_going_longmedias_mediana,
+MAX(vel_going_longmedias_max) AS vel_going_longmedias_max,
+MAX(vel_real_largas_mediana) AS vel_real_largas_mediana,
+MAX(vel_real_largas_max) AS vel_real_largas_max,
+MAX(vel_going_largas_mediana) AS vel_going_largas_mediana,
+MAX(vel_going_largas_max) AS vel_going_largas_max,
+MAX(competidor_edad) AS competidor_edad,
+MAX(competidor_peso) AS competidor_peso
 
 FROM (
 
@@ -52,7 +65,7 @@ FROM (
   A1.id_carrera,
   CASE WHEN (A1.posicion_analizado IN (1,2) AND A1.posicion_competidor=3) THEN true WHEN (A1.posicion_analizado>=3 AND A1.posicion_competidor=2) THEN true ELSE false END AS segundo_segun_posicion,
   A1.galgo_analizado,  A1.posicion_analizado,
-  A1.galgo_competidor,  A1.posicion_competidor,  A1.competidor_edad,
+  A1.galgo_competidor,  A1.posicion_competidor,  A1.competidor_edad, A1.competidor_peso,
   GA2.*
 
   FROM datos_desa.tb_galgos_i001_aux1 A1
@@ -60,12 +73,12 @@ FROM (
   LEFT JOIN datos_desa.tb_galgos_agregados GA2
   ON A1.galgo_competidor=GA2.galgo_nombre
 
-  ORDER BY id_carrera, velocidad_con_going_media_reciente DESC
+  ORDER BY id_carrera, galgo_competidor DESC
 
 ) fuera
 
 GROUP BY id_carrera, galgo_competidor
-ORDER BY id_carrera, velocidad_con_going_media_reciente DESC
+ORDER BY id_carrera, vel_going_longmedias_max DESC
 ;
 
 
@@ -81,24 +94,17 @@ P1.*,
 )  AS rank
 FROM datos_desa.tb_prueba1 P1, 
 (SELECT @curRow := 0, @curCarreraId := '') r
-ORDER BY  id_carrera ASC, velocidad_con_going_media_reciente DESC
+ORDER BY  id_carrera ASC, vel_going_longmedias_max DESC
 ;
 
 
-DROP TABLE datos_desa.tb_prueba3;
-CREATE TABLE datos_desa.tb_prueba3 AS 
-SELECT * FROM datos_desa.tb_prueba2
-WHERE rank=2;
 
 EOF
 
 echo -e "$CONSULTA2previa"
 mysql -u root --password=datos1986 --execute="$CONSULTA2previa"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_prueba1 LIMIT 10\W;" >&1
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_prueba2 LIMIT 10\W;" >&1
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_prueba3 LIMIT 10\W;" >&1
-
-
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_prueba1 LIMIT 10\W;" -N >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_prueba2 LIMIT 10\W;" -N >&1
 
 
 
@@ -112,7 +118,7 @@ SELECT * FROM (
 
 SELECT 
 cruce2.*, 
-P2.rank as segundo_segun_vel_con_going_media_reciente
+P2.rank as segundo_segun_vel_going_longmedias_max
 FROM (
 
  SELECT *
@@ -123,14 +129,36 @@ FROM (
   CASE WHEN (A1.posicion_analizado IN (1,2) AND A1.posicion_competidor=3) THEN true WHEN (A1.posicion_analizado>=3 AND A1.posicion_competidor=2) THEN true ELSE false END AS segundo_segun_posicion,
   
   A1.galgo_analizado,
-  A1.posicion_analizado, 
-  GA1.velocidad_real_media_reciente AS analizado_velocidad_real_media_reciente, GA1.velocidad_con_going_media_reciente AS analizado_velocidad_con_going_media_reciente,
-
+  A1.posicion_analizado,
+  GA1.vel_real_cortas_mediana AS analizado_vel_real_cortas_mediana,
+  GA1.vel_real_cortas_max AS analizado_vel_real_cortas_max,
+  GA1.vel_going_cortas_mediana AS analizado_vel_going_cortas_mediana,
+  GA1.vel_going_cortas_max AS analizado_vel_going_cortas_max,
+  GA1.vel_real_longmedias_mediana AS analizado_vel_real_longmedias_mediana,
+  GA1.vel_real_longmedias_max AS analizado_vel_real_longmedias_max,
+  GA1.vel_going_longmedias_mediana AS analizado_vel_going_longmedias_mediana,
+  GA1.vel_going_longmedias_max AS analizado_vel_going_longmedias_max,
+  GA1.vel_real_largas_mediana AS analizado_vel_real_largas_mediana,
+  GA1.vel_real_largas_max AS analizado_vel_real_largas_max,
+  GA1.vel_going_largas_mediana AS analizado_vel_going_largas_mediana,
+  GA1.vel_going_largas_max AS analizado_vel_going_largas_max,
 
   A1.galgo_competidor,
   A1.posicion_competidor,
   A1.competidor_edad,
-  GA2.velocidad_real_media_reciente AS competidor_velocidad_real_media_reciente, GA2.velocidad_con_going_media_reciente AS competidor_velocidad_con_going_media_reciente
+  A1.competidor_peso,
+  GA2.vel_real_cortas_mediana AS competidor_vel_real_cortas_mediana,
+  GA2.vel_real_cortas_max AS competidor_vel_real_cortas_max,
+  GA2.vel_going_cortas_mediana AS competidor_vel_going_cortas_mediana,
+  GA2.vel_going_cortas_max AS competidor_vel_going_cortas_max,
+  GA2.vel_real_longmedias_mediana AS competidor_vel_real_longmedias_mediana,
+  GA2.vel_real_longmedias_max AS competidor_vel_real_longmedias_max,
+  GA2.vel_going_longmedias_mediana AS competidor_vel_going_longmedias_mediana,
+  GA2.vel_going_longmedias_max AS competidor_vel_going_longmedias_max,
+  GA2.vel_real_largas_mediana AS competidor_vel_real_largas_mediana,
+  GA2.vel_real_largas_max AS competidor_vel_real_largas_max,
+  GA2.vel_going_largas_mediana AS competidor_vel_going_largas_mediana,
+  GA2.vel_going_largas_max AS competidor_vel_going_largas_max
 
   FROM datos_desa.tb_galgos_i001_aux1 A1
 
@@ -151,7 +179,7 @@ ON (cruce2.id_carrera=P2.id_carrera AND cruce2.galgo_competidor=P2.galgo_competi
 ORDER BY cruce2.id_carrera ASC, cruce2.posicion_analizado ASC
 
 ) cruce3
-WHERE cruce3.segundo_segun_vel_con_going_media_reciente=true
+WHERE cruce3.segundo_segun_vel_going_longmedias_max=true
 
 ;
 
@@ -159,7 +187,7 @@ EOF
 
 echo -e "$CONSULTA2"
 mysql -u root --password=datos1986 --execute="$CONSULTA2"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_i001_aux2 LIMIT 10\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_i001_aux2 LIMIT 10\W;" -N >&1
 
 
 
@@ -174,15 +202,28 @@ A3.*,
 
 CA.track,
 CA.clase,
-CASE WHEN (CA.mes <=2 OR CA.mes >=12) THEN 1 WHEN ((CA.mes >=3 AND CA.mes <=4) OR (CA.mes >=10 AND CA.mes <=11)) THEN 0.5 ELSE 0 END AS mes,
-CA.hora,
+CASE WHEN (CA.mes <=7) THEN (-1/6 + CA.mes/6) WHEN (CA.mes >7) THEN (5/12 - 5*(CA.mes)/144) ELSE 0.5 END AS mes,
+(-9/15 +CA.hora/15) AS hora,
+
 CA.distancia,
+
+CASE
+  WHEN (distancia <400) THEN 1
+  WHEN (distancia >= 400 AND distancia <600) THEN 2
+  WHEN (distancia >600) THEN 3
+  ELSE NULL
+END AS cod_d,
+
 CA.num_galgos,
 CA.premio_primero,
 CA.premio_segundo,
 CA.premio_otros,
 CA.premio_total_carrera,
-CA.going_allowance_segundos,
+
+(0.5+CA.going_allowance_segundos/2.8) AS going_allowance_segundos,
+CASE WHEN (CA.going_allowance_segundos <= -0.40) THEN 1 ELSE 0 END AS going_muy_en_contra,
+CASE WHEN (CA.going_allowance_segundos >= 0.40) THEN 1 ELSE 0 END AS going_muy_a_favor,
+
 CA.fc_1,
 CA.fc_2,
 CA.fc_pounds,
@@ -192,7 +233,9 @@ CA.tc_3,
 CA.tc_pounds,
 
 PO.edad_en_dias AS analizado_edad,
-PO.sp,
+PO.peso_galgo AS analizado_peso,
+PO.sp AS analizado_sp,
+PO.trap AS analizado_trap,
 
 CASE 
   WHEN PO.posicion IN (1,2) THEN 1
@@ -214,7 +257,7 @@ EOF
 
 echo -e "$CONSULTA4"
 mysql -u root --password=datos1986 --execute="$CONSULTA4"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_i001_aux4 LIMIT 10\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_i001_aux4 LIMIT 10\W;" -N >&1
 
 
 
@@ -230,18 +273,30 @@ CREATE TABLE datos_desa.tb_galgos_dataset_data_i001 AS
 SELECT
 mes,
 hora,
-num_galgos,
-sp,
-(competidor_edad-analizado_edad) AS diferencia_edades,
-analizado_velocidad_con_going_media_reciente,
-competidor_velocidad_con_going_media_reciente
+num_galgos/12,
+(analizado_trap/num_galgos) AS analizado_trap_normalizado,
+(20 + competidor_peso - analizado_peso)/40 AS diferencia_pesos,
+((5*365) + competidor_edad - analizado_edad)/(10*365) AS diferencia_edades,
+going_muy_en_contra,
+going_muy_a_favor,
+
+CASE WHEN cod_d=1 THEN (analizado_vel_real_cortas_mediana-13)/18 WHEN cod_d=2 THEN (analizado_vel_real_longmedias_mediana-13)/18 WHEN cod_d=3 THEN (analizado_vel_real_largas_mediana-13)/18 ELSE NULL END AS analizado_vel_real_mediana,
+CASE WHEN cod_d=1 THEN (analizado_vel_real_cortas_max-13)/18 WHEN cod_d=2 THEN (analizado_vel_real_longmedias_max-13)/18 WHEN cod_d=3 THEN (analizado_vel_real_largas_max-13)/18 ELSE NULL END AS analizado_vel_real_max,
+CASE WHEN cod_d=1 THEN (analizado_vel_going_cortas_mediana-13)/18 WHEN cod_d=2 THEN (analizado_vel_going_longmedias_mediana-13)/18 WHEN cod_d=3 THEN (analizado_vel_going_largas_mediana-13)/18 ELSE NULL END AS analizado_vel_going_mediana,
+CASE WHEN cod_d=1 THEN (analizado_vel_going_cortas_max-13)/18 WHEN cod_d=2 THEN (analizado_vel_going_longmedias_max-13)/18 WHEN cod_d=3 THEN (analizado_vel_going_largas_max-13)/18 ELSE NULL END AS analizado_vel_going_max,
+
+
+CASE WHEN cod_d=1 THEN (competidor_vel_real_cortas_mediana-13)/18 WHEN cod_d=2 THEN (competidor_vel_real_longmedias_mediana-13)/18 WHEN cod_d=3 THEN (competidor_vel_real_largas_mediana-13)/18 ELSE NULL END AS competidor_vel_real_mediana,
+CASE WHEN cod_d=1 THEN (competidor_vel_real_cortas_max-13)/18 WHEN cod_d=2 THEN (competidor_vel_real_longmedias_max-13)/18 WHEN cod_d=3 THEN (competidor_vel_real_largas_max-13)/18 ELSE NULL END AS competidor_vel_real_max,
+CASE WHEN cod_d=1 THEN (competidor_vel_going_cortas_mediana-13)/18 WHEN cod_d=2 THEN (competidor_vel_going_longmedias_mediana-13)/18 WHEN cod_d=3 THEN (competidor_vel_going_largas_mediana-13)/18 ELSE NULL END AS competidor_vel_going_mediana,
+CASE WHEN cod_d=1 THEN (competidor_vel_going_cortas_max-13)/18 WHEN cod_d=2 THEN (competidor_vel_going_longmedias_max-13)/18 WHEN cod_d=3 THEN (competidor_vel_going_largas_max-13)/18 ELSE NULL END AS competidor_vel_going_max
 
 FROM datos_desa.tb_galgos_i001_aux4;
 
-
-CREATE TABLE datos_desa.tb_galgos_dataset_target_i001 AS SELECT target FROM datos_desa.tb_galgos_i001_aux4\W;
+CREATE TABLE datos_desa.tb_galgos_dataset_target_i001 AS SELECT target FROM datos_desa.tb_galgos_i001_aux4;
 
 EOF
+
 
 echo -e "$CONSULTA5"
 mysql -u root --password=datos1986 --execute="$CONSULTA5"
