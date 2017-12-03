@@ -182,7 +182,7 @@ public class GalgosManager implements Serializable {
 				primero = true;
 				for (SportiumCarreraGalgo fila : carreraGalgos) {
 
-					MY_LOGGER.info("Fila=" + fila.toString());
+					MY_LOGGER.debug("Fila=" + fila.toString());
 
 					if (primero) {
 						Files.write(Paths.get(pathFull), (fila.toString() + "\n").getBytes(),

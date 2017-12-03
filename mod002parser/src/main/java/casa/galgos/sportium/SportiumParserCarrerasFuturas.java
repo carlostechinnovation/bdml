@@ -95,13 +95,26 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 
 		if (tablasDeCarrerasDiarias != null) {
 
+			int contador = 0;
+
 			for (Element diaFila : tablasDeCarrerasDiarias) {
+				contador++;
 				listaCarreras.addAll(parsearTablaDia(diaFila));
+
 			}
 		}
 
 		MY_LOGGER.info("Sportium - Parseadas " + listaCarreras.size() + " carreras FUTURAS");
-		return listaCarreras;
+
+		// LIMITAMOS SALIDA
+		List<SportiumCarrera> out = new ArrayList<SportiumCarrera>();
+		for (SportiumCarrera item : listaCarreras) {
+			out.add(item);
+			if (listaCarreras.size() >= Constantes.MAX_NUM_CARRERAS_SEMILLA) {
+				break;
+			}
+		}
+		return out;
 	}
 
 	/**

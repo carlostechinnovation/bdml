@@ -168,6 +168,9 @@ FROM (
   LEFT JOIN datos_desa.tb_galgos_agregados GA2
   ON A1.galgo_competidor=GA2.galgo_nombre
 
+  WHERE A1.posicion_analizado<=4
+
+
  ) cruce1
  ORDER BY id_carrera, posicion_analizado
 
