@@ -30,7 +30,7 @@ public class SportiumDownloader {
 	 */
 	public void descargarDeURLsAFicheros(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.debug("URL: " + urlCarrera);
+		MY_LOGGER.info("URL: " + urlCarrera);
 		MY_LOGGER.debug("pathOut=" + pathOut);
 		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
 

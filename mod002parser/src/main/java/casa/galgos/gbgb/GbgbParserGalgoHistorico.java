@@ -51,7 +51,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	public GbgbGalgoHistorico ejecutar(String pathIn, String galgo_nombre) {
 
 		MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: INICIO");
-		MY_LOGGER.debug("GALGOS-GbgbDownloader - pathIn=" + pathIn);
+		MY_LOGGER.info("GALGOS-GbgbDownloader - pathIn=" + pathIn);
 
 		String bruto = "";
 		GbgbGalgoHistorico out = null;

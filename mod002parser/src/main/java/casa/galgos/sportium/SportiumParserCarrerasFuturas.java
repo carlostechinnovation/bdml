@@ -108,9 +108,13 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 
 		// LIMITAMOS SALIDA
 		List<SportiumCarrera> out = new ArrayList<SportiumCarrera>();
+		int anhadidas = 0;
 		for (SportiumCarrera item : listaCarreras) {
+
 			out.add(item);
-			if (listaCarreras.size() >= Constantes.MAX_NUM_CARRERAS_SEMILLA) {
+			anhadidas++;
+
+			if (anhadidas >= Constantes.MAX_NUM_CARRERAS_SEMILLA) {
 				break;
 			}
 		}

@@ -28,6 +28,7 @@ import casa.galgos.gbgb.GbgbParserCarreraDetalle;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
 import casa.galgos.sportium.SportiumCarrera;
+import casa.galgos.sportium.SportiumCarreraGalgo;
 import casa.galgos.sportium.SportiumDownloader;
 import casa.galgos.sportium.SportiumParserCarrerasFuturas;
 import casa.galgos.sportium.SportiumParserDetalleCarreraFutura;
@@ -185,12 +186,10 @@ public class GalgosManager implements Serializable {
 					MY_LOGGER.debug("Fila=" + fila.toString());
 
 					if (primero) {
-						Files.write(Paths.get(pathFull), (fila.toString() + "\n").getBytes(),
-								StandardOpenOption.CREATE);
+						Files.write(Paths.get(pathFull), (fila.toString()).getBytes(), StandardOpenOption.CREATE);
 						primero = false;
 					} else {
-						Files.write(Paths.get(pathFull), (fila.toString() + "\n").getBytes(),
-								StandardOpenOption.APPEND);
+						Files.write(Paths.get(pathFull), (fila.toString()).getBytes(), StandardOpenOption.APPEND);
 					}
 				}
 				MY_LOGGER.info("Carrera-Galgo iniciales: " + carreraGalgos.size());
@@ -208,29 +207,6 @@ public class GalgosManager implements Serializable {
 		} else {
 			MY_LOGGER.error("Sin datos. No guardamos fichero!!!");
 		}
-	}
-
-	/**
-	 * AUXILIAR
-	 *
-	 */
-	private class SportiumCarreraGalgo {
-		public String id;// dia#hora#estadio#galgo_nombre
-		public String galgoNombre;
-		public SportiumCarrera modelo;
-
-		public SportiumCarreraGalgo(String id, String galgoNombre, SportiumCarrera modelo) {
-			super();
-			this.id = id;
-			this.galgoNombre = galgoNombre;
-			this.modelo = modelo;
-		}
-
-		@Override
-		public String toString() {
-			return id;
-		}
-
 	}
 
 	/**
@@ -329,6 +305,8 @@ public class GalgosManager implements Serializable {
 	 * @param fileGalgosIniciales
 	 */
 	public void cargarUrlsHistoricosDeGalgosIniciales(String fileGalgosIniciales) {
+
+		MY_LOGGER.info("File de galgos iniciales: " + fileGalgosIniciales);
 
 		String bruto = "";
 
@@ -579,7 +557,7 @@ public class GalgosManager implements Serializable {
 				if (!galgosYaGuardados.containsKey(galgo_nombre)) {
 
 					pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
-					MY_LOGGER.debug("URL Historico galgo = " + urlGalgo);
+					MY_LOGGER.info("URL Historico galgo = " + urlGalgo);
 					MY_LOGGER.debug("Galgo nombre = " + galgo_nombre);
 					MY_LOGGER.debug("Path historico = " + pathFileGalgoHistorico);
 

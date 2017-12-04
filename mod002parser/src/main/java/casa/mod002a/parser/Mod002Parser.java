@@ -16,6 +16,7 @@ import casa.galgos.gbgb.GalgoAgregados;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
+import casa.galgos.sportium.SportiumCarreraGalgo;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -183,6 +184,8 @@ public class Mod002Parser implements Serializable {
 			out += (new GbgbPosicionEnCarrera(true)).generarSqlCreateTable("");
 			out += (new GalgoAgregados(null, null, null, null, null, null, null, null, null, null, null, null, null))
 					.generarSqlCreateTable("");
+
+			out += (new SportiumCarreraGalgo(null, null, null)).generarSqlCreateTable();
 
 			try {
 

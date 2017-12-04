@@ -9,11 +9,13 @@ PATH_CARPETA="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
 PATH_JAR="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
 
+PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
 PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
 PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
 PATH_LIMPIO_HISTORICO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_historico_file"
 PATH_LIMPIO_AGREGADOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_agregados_file"
 
+PATH_LIMPIO_GALGOS_INICIALES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_galgos_iniciales"
 PATH_LIMPIO_CARRERAS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_carreras"
 PATH_LIMPIO_POSICIONES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_posiciones"
 PATH_LIMPIO_HISTORICO_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_historico"
@@ -27,11 +29,13 @@ echo ${TAG_GBGB}'...' 2>&1 1>>${PATH_LOG}
 
 
 echo -e "Borrando ficheros antiguos..." >&1
+rm -f $PATH_FILE_GALGOS_INICIALES
 rm -f $PATH_LIMPIO_CARRERAS
 rm -f $PATH_LIMPIO_POSICIONES
 rm -f $PATH_LIMPIO_HISTORICO
 rm -f $PATH_LIMPIO_AGREGADOS
 
+rm -f $PATH_LIMPIO_GALGOS_INICIALES_WARNINGS
 rm -f $PATH_LIMPIO_CARRERAS_WARNINGS
 rm -f $PATH_LIMPIO_POSICIONES_WARNINGS
 rm -f $PATH_LIMPIO_HISTORICO_WARNINGS
@@ -40,6 +44,7 @@ rm -f $PATH_LIMPIO_AGREGADOS_WARNINGS
 ########## CREATE TABLES #############
 
 echo -e "Borrar tablas:"
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreragalgo;" >&1
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras;" >&1
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras;" >&1
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico;" >&1
@@ -53,9 +58,13 @@ SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 mysql -u root --password=datos1986 --execute="$SENTENCIAS_CREATE_TABLE" >&1
 
 
+
 #SPORTIUM: Descarga de todas las carreras de hoy (FUTURAS) en las que PUEDO apostar
-PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
 java -jar ${PATH_JAR} "07" "${PATH_CARPETA}semillas" "${PATH_FILE_GALGOS_INICIALES}"
+echo -e "Insertando galgos semilla..." >&1
+mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES}_full' INTO TABLE datos_desa.tb_galgos_carreragalgo FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" >$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS
+mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_galgos_carreragalgo LIMIT 1\W;" >&1
+
 
 
 #GBGB Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos iniciales y en iteraciones derivadas

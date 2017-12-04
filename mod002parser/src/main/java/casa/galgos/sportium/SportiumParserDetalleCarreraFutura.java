@@ -121,7 +121,13 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 			if (!esElCero) {
 
 				TextNode galgoNombre = (TextNode) fila.childNode(0).childNode(1).childNode(0).childNode(0).childNode(0);
-				out.add(galgoNombre.text().trim());
+
+				String galgoNombreStr = galgoNombre.text().trim();
+				galgoNombreStr = galgoNombreStr.contains(" N/R") ? galgoNombreStr.replace(" N/R", "").trim()
+						: galgoNombreStr;
+				galgoNombreStr = galgoNombreStr.contains("(") ? galgoNombreStr.split("\\(")[0].trim() : galgoNombreStr;
+
+				out.add(galgoNombreStr);
 			}
 		}
 
