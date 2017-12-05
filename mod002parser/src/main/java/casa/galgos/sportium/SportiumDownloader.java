@@ -30,8 +30,7 @@ public class SportiumDownloader {
 	 */
 	public void descargarDeURLsAFicheros(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("URL: " + urlCarrera);
-		MY_LOGGER.debug("pathOut=" + pathOut);
+		MY_LOGGER.info(pathOut + "-->" + urlCarrera);
 		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
 
 		try {
@@ -88,7 +87,7 @@ public class SportiumDownloader {
 			// Escribir SALIDA
 			MY_LOGGER.debug("Escribiendo a fichero...");
 			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.debug("Path fichero salida: " + pathOut);
+			MY_LOGGER.info("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {

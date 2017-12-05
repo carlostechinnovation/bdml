@@ -67,7 +67,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		out += "galgo_nombre varchar(30) NOT NULL,";
 		out += "trap SMALLINT,";
 		out += "sp decimal(6,2),";
-		out += "time_sec decimal(6,2),";
+		out += "time_sec varchar(10),";
 		out += "time_distance varchar(15),";
 		out += "peso_galgo decimal(4,2),";
 		out += "entrenador_nombre varchar(30),";
@@ -102,7 +102,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += trap != null ? trap : "\\N";
 		out += SEP;
-		out += (sp != null) ? sp : "\\N";
+		out += (sp != null) ? Constantes.round2(sp, 2) : "\\N";
 		out += SEP;
 		out += (time_sec != null && !"".equals(time_sec)) ? time_sec : "\\N";
 		out += SEP;

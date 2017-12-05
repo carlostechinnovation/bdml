@@ -43,15 +43,13 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 	/**
 	 * @param pathIn
-	 *            Path absoluto al fichero HTML de la pagina del BOE almacenado en
-	 *            sistema de ficheros local.
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
 	public GbgbGalgoHistorico ejecutar(String pathIn, String galgo_nombre) {
 
 		MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: INICIO");
-		MY_LOGGER.info("GALGOS-GbgbDownloader - pathIn=" + pathIn);
+		MY_LOGGER.debug("GALGOS-GbgbDownloader - pathIn=" + pathIn);
 
 		String bruto = "";
 		GbgbGalgoHistorico out = null;
@@ -92,27 +90,41 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 */
 	public static GbgbGalgoHistorico parsear(String in, String galgo_nombre) {
 
+		MY_LOGGER.debug("galgo_nombre=" + galgo_nombre);
+
 		Document doc = Jsoup.parse(in);
-		Element tablaContenido = doc.getElementById("ctl00_ctl00_mainContent_cmscontent_DogRaceCard_lvDogRaceCard");
 
-		List<Node> cabecera = doc.getElementById("inner-page-content").childNode(3).childNode(1).childNode(0)
-				.childNode(0).childNodes();
+		GbgbGalgoHistorico out = null;
 
-		String entrenador = ((TextNode) cabecera.get(1).childNode(0)).text().split(":")[1].trim();
-		String padre_madre_nacimiento = ((TextNode) cabecera.get(3).childNode(0)).text().trim();
+		if (doc.toString().contains("Greyhound not found")) {
+			out = new GbgbGalgoHistorico(-1);
 
-		GbgbGalgoHistorico out = new GbgbGalgoHistorico(galgo_nombre, entrenador, padre_madre_nacimiento);
+		} else if (doc.toString().contains("No records to display.")) {
+			out = new GbgbGalgoHistorico(-2);
 
-		List<Node> filas = null;
-		for (Node item : tablaContenido.childNode(0).childNodes()) {
-			if (item.toString().contains("rgRow")) {
-				filas = item.childNodes();
+		} else {
+
+			Element tablaContenido = doc.getElementById("ctl00_ctl00_mainContent_cmscontent_DogRaceCard_lvDogRaceCard");
+
+			List<Node> cabecera = doc.getElementById("inner-page-content").childNode(3).childNode(1).childNode(0)
+					.childNode(0).childNodes();
+
+			String entrenador = ((TextNode) cabecera.get(1).childNode(0)).text().split(":")[1].trim();
+			String padre_madre_nacimiento = ((TextNode) cabecera.get(3).childNode(0)).text().trim();
+
+			out = new GbgbGalgoHistorico(galgo_nombre, entrenador, padre_madre_nacimiento);
+
+			List<Node> filas = null;
+			for (Node item : tablaContenido.childNode(0).childNodes()) {
+				if (item.toString().contains("rgRow")) {
+					filas = item.childNodes();
+				}
 			}
-		}
 
-		for (Node fila : filas) {
-			if (fila instanceof Element) {
-				rellenarFilaEnHistorico(out, (Element) fila);
+			for (Node fila : filas) {
+				if (fila instanceof Element) {
+					rellenarFilaEnHistorico(out, (Element) fila);
+				}
 			}
 		}
 

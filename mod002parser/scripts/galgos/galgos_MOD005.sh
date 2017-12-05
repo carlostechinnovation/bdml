@@ -27,7 +27,7 @@ mysql -u root --password=datos1986 --execute="SET @rank1=0; DROP TABLE IF EXISTS
 id, dia, hora, estadio, galgo_nombre FROM datos_desa.tb_galgos_carreragalgo\W;" >&1
 mysql -u root --password=datos1986 --execute="SET @rank2=0;  DROP TABLE IF EXISTS datos_desa.tb_galgos_target_final; CREATE TABLE datos_desa.tb_galgos_target_final AS SELECT @rank2:=@rank2+1 AS rank, target AS PREDICCION FROM datos_desa.tb_galgos_target_post;" >&1
 
-mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, galgo_nombre, PREDICCION FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) ORDER BY dia DESC, hora DESC, estadio DESC, galgo_nombre DESC;" >${PATH_INFORME_FINAL}
+mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, galgo_nombre, PREDICCION FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) ORDER BY dia DESC, estadio DESC, hora DESC, galgo_nombre DESC;" >${PATH_INFORME_FINAL}
 
 
 echo -e "Resultado guardado en: $PATH_INFORME_FINAL" >&1

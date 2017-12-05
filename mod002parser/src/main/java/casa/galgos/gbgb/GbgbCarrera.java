@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import utilidades.Constantes;
 
@@ -48,8 +46,6 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	// Datos DETALLE
 	public List<GbgbPosicionEnCarrera> posiciones = new ArrayList<GbgbPosicionEnCarrera>();
 
-	public Set<String> urlsGalgosHistorico = new HashSet<String>();
-
 	public GbgbCarrera(boolean todoNulos) {
 		super();
 	}
@@ -57,8 +53,7 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	public GbgbCarrera(Long id_carrera, Long id_campeonato, String track, String clase, Calendar fechayhora,
 			Integer distancia, Short numGalgos, Integer premio_primero, Integer premio_segundo, Integer premio_otros,
 			Integer premio_total_carrera, Float going_allowance_segundos, String fc_1, String fc_2, String fc_pounds,
-			String tc_1, String tc_2, String tc_3, String tc_pounds, List<GbgbPosicionEnCarrera> posiciones,
-			Set<String> urlsGalgosHistorico) {
+			String tc_1, String tc_2, String tc_3, String tc_pounds, List<GbgbPosicionEnCarrera> posiciones) {
 		super();
 		this.id_carrera = id_carrera;
 		this.id_campeonato = id_campeonato;
@@ -81,7 +76,6 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		this.tc_pounds = tc_pounds;
 
 		this.posiciones = posiciones;
-		this.urlsGalgosHistorico = urlsGalgosHistorico;
 	}
 
 	@Override

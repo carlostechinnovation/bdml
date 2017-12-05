@@ -185,37 +185,37 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 
 		String estadio = ((TextNode) filaCarrerasEnEstadio.childNode(0).childNode(0)).text().trim();
 
-		List<Node> filasCarreras = filaCarrerasEnEstadio.childNode(1).childNodes();
-		if (filasCarreras != null && !filasCarreras.isEmpty()) {
+		if (!estadio.contains("(IRL)")) { // SOLO COGEMOS ESTADIOS DE UK (cuyos galgos corren en GBGB), no de IRL
 
-			for (Node item : filasCarreras) {
+			List<Node> filasCarreras = filaCarrerasEnEstadio.childNode(1).childNodes();
+			if (filasCarreras != null && !filasCarreras.isEmpty()) {
 
-				if (item instanceof Element) {
-					Element fila = (Element) item.childNode(0);
-					String contenidoFila = fila.toString();
-					if (contenidoFila.contains("Completa")) {// TARJETA CARRERAS COMPLETA
-						// No hacemos nada
-					} else if (!contenidoFila.contains("RESULT") && contenidoFila.contains(":")) { // hora y minuto de
-																									// una carrera
-																									// (DESCARTO LAS
-																									// TERMINADAS, con
-																									// RESULTADO
-																									// conocido)
+				for (Node item : filasCarreras) {
 
-						String urlDetalle = Constantes.GALGOS_SPORTIUM_PREFIJO + fila.attr("href");
+					if (item instanceof Element) {
+						Element fila = (Element) item.childNode(0);
+						String contenidoFila = fila.toString();
+						if (contenidoFila.contains("Completa")) {// TARJETA CARRERAS COMPLETA
+							// No hacemos nada
+						} else if (!contenidoFila.contains("RESULT") && contenidoFila.contains(":")) {
 
-						String[] trozos = urlDetalle.split("/");
-						String ultimo = trozos[trozos.length - 1];
-						Integer horaInglesa = Integer.valueOf(ultimo.split("-")[0].replace(".", ""));
+							// hora y minuto de una carrera (DESCARTO LAS TERMINADAS, con RESULTADO
+							// conocido)
+							String urlDetalle = Constantes.GALGOS_SPORTIUM_PREFIJO + fila.attr("href");
 
-						SportiumCarrera modelo = new SportiumCarrera(urlDetalle, estadio, dia, horaInglesa,
-								galgosNombres);
-						out.add(modelo);
+							String[] trozos = urlDetalle.split("/");
+							String ultimo = trozos[trozos.length - 1];
+							Integer horaInglesa = Integer.valueOf(ultimo.split("-")[0].replace(".", ""));
+
+							SportiumCarrera modelo = new SportiumCarrera(urlDetalle, estadio, dia, horaInglesa,
+									galgosNombres);
+							out.add(modelo);
+
+						}
 
 					}
 
 				}
-
 			}
 		}
 

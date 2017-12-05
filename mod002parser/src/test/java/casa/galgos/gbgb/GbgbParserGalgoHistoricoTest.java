@@ -24,6 +24,9 @@ public class GbgbParserGalgoHistoricoTest {
 
 	@Rule
 	public ResourceFile res = new ResourceFile("/" + "galgos_20171024_GBGB_bruto_galgohistorico_" + galgo_nombre);
+	// public ResourceFile res = new ResourceFile("/" +
+	// "historico_no_encontrado.html");
+	// public ResourceFile res = new ResourceFile("/" + "historico_sin_filas.html");
 
 	@Test
 	public void testParsear() throws Exception {

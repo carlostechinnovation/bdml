@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class GalgosManager implements Serializable {
 																					// dinero real
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
-	public HashSet<String> urlsHistoricoGalgos = new HashSet<String>(); // URLs de historicos SIN DUPLICADOS
+	public Set<String> urlsHistoricoGalgos = new LinkedHashSet<String>(); // URLs de historicos SIN DUPLICADOS
 	public List<GalgosGuardable> guardableHistoricosGalgos = new ArrayList<GalgosGuardable>();
 	public Map<String, GalgosGuardable> guardableGalgoAgregados = new HashMap<String, GalgosGuardable>();
 
@@ -228,72 +229,84 @@ public class GalgosManager implements Serializable {
 
 		if (urlsHistoricoGalgos != null && !urlsHistoricoGalgos.isEmpty()) {
 
-			descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
+			MY_LOGGER.info("Descargando " + urlsHistoricoGalgos.size() + " historicos...");
+			Boolean inicialesListosParaGuardar = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
 
-			// ------ Procesar las carreras de las que conozco la URL
-			// (embuclandose)-----------------------------------
+			if (inicialesListosParaGuardar) {
 
-			do {
+				// ------ Procesar las carreras de las que conozco la URL
+				// (embuclandose)-----------------------------------
 
-				MY_LOGGER.info("Carreras PENDIENTES de procesar: " + contarPendientes());
-				MY_LOGGER.info("Carreras YA PROCESADAS: " + contarCarrerasYaProcesadas());
+				do {
 
-				Map<String, Boolean> pendientes = extraerSoloCarrerasPendientes();
+					MY_LOGGER.info("Carreras PENDIENTES de procesar: " + contarPendientes());
+					MY_LOGGER.info("Carreras YA PROCESADAS: " + contarCarrerasYaProcesadas());
 
-				String idCarreraIdcampeonatoAProcesar = pendientes.keySet().iterator().next();
+					String idCarreraIdcampeonatoAProcesar = extraerSiguienteCarreraPendiente();
 
-				MY_LOGGER.info("Procesando carrera " + idCarreraIdcampeonatoAProcesar + " ...");
+					MY_LOGGER.info("Procesando carrera " + idCarreraIdcampeonatoAProcesar + " ...");
 
-				String[] partes = idCarreraIdcampeonatoAProcesar.split("-");
+					String[] partes = idCarreraIdcampeonatoAProcesar.split("-");
 
-				GbgbCarrera carrera = descargarYProcesarCarreraYAcumularUrlsHistoricos(Long.valueOf(partes[0]),
-						Long.valueOf(partes[1]), prefijoPathDatosBruto);
+					GbgbCarrera carrera = descargarYProcesarCarreraYAcumularUrlsHistoricos(Long.valueOf(partes[0]),
+							Long.valueOf(partes[1]), prefijoPathDatosBruto);
 
-				if (carrera != null) {
+					if (carrera != null) {
 
-					MY_LOGGER.debug("GUARDABLE - Anhadiendo " + carrera.posiciones.size() + " posiciones...");
-					for (GbgbPosicionEnCarrera posicion : carrera.posiciones) {
-						guardablePosicionesEnCarreras.add(posicion);
+						MY_LOGGER.debug("GUARDABLE - Anhadiendo " + carrera.posiciones.size() + " posiciones...");
+						for (GbgbPosicionEnCarrera posicion : carrera.posiciones) {
+							guardablePosicionesEnCarreras.add(posicion);
+						}
+
+						Boolean descargaCorrecta = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
+
+						if (descargaCorrecta == false) {
+							MY_LOGGER.error(
+									"PROBLEMA Dentro del bucle while, no se han descargado bien los historicos pendientes");
+							break;
+						}
+
 					}
 
-					descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
+					// lo marco como procesado
+					idCarrerasCampeonatoProcesadas.replace(idCarreraIdcampeonatoAProcesar, true);
 
-				}
+					if (guardarEnFicheros && guardableHistoricosGalgos
+							.size() >= Constantes.MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO) {
 
-				// lo marco como procesado
-				idCarrerasCampeonatoProcesadas.replace(idCarreraIdcampeonatoAProcesar, true);
+						guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
+						guardarEnFicheroYLimpiarLista(guardablePosicionesEnCarreras, primeraEscritura);
+						guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
+						guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
 
-				if (guardarEnFicheros && guardableHistoricosGalgos
-						.size() >= Constantes.MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO) {
+						primeraEscritura = false;
+					}
 
+					MY_LOGGER.debug("Esperando " + Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC + " mseg...");
+					Thread.sleep(Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC);
+
+				} while (contarPendientes() >= 1
+						&& contarCarrerasYaProcesadas() <= Constantes.MAX_NUM_CARRERAS_PROCESADAS);
+
+				MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes (que no las vamos a procesar)="
+						+ contarPendientes() + " carreras_guardadas=" + guardableCarreras.size() + " historicos_galgos="
+						+ guardableHistoricosGalgos.size());
+
+				// RESTANTES: fuera del bucle while, guardo lo que ya tenga descargado, pero no
+				// descargo nada mas para evitar que me baneen.
+				if (guardarEnFicheros) {
 					guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardablePosicionesEnCarreras, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
 					guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
-
-					primeraEscritura = false;
 				}
 
-				MY_LOGGER.debug("Esperando " + Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC + " mseg...");
-				Thread.sleep(Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC);
+				// Mostrar las claves que no hemos podido traducir
+				mostrarRemarksSinTraducir(gpgh);
 
-			} while (contarPendientes() >= 1 && contarCarrerasYaProcesadas() <= Constantes.MAX_NUM_CARRERAS_PROCESADAS);
-
-			MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes (que no las vamos a procesar)="
-					+ contarPendientes() + " carreras_guardadas=" + guardableCarreras.size() + " historicos_galgos="
-					+ guardableHistoricosGalgos.size());
-
-			// RESTANTES: fuera del bucle while, guardo lo que ya tenga descargado, pero no
-			// descargo nada mas para evitar que me baneen.
-			if (guardarEnFicheros) {
-				guardarEnFicheroYLimpiarLista(guardableCarreras, primeraEscritura);
-				guardarEnFicheroYLimpiarLista(guardablePosicionesEnCarreras, primeraEscritura);
-				guardarEnFicheroYLimpiarLista(guardableHistoricosGalgos, primeraEscritura);
-				guardarEnFicheroYLimpiarLista(guardableGalgoAgregados.values(), primeraEscritura);
+			} else {
+				MY_LOGGER.error("PROBLEMA al descargar los historicos de los galgos INICIALES!!");
 			}
-
-			// Mostrar las claves que no hemos podido traducir
-			mostrarRemarksSinTraducir(gpgh);
 
 		} else {
 			MY_LOGGER.warn("No hay historicos de galgos INICIALES!!");
@@ -373,7 +386,7 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
-	 * Cuenta las carreras pendientes de ser procesadas
+	 * Cuenta las carreras pendientes de ser procesadas.
 	 * 
 	 * @return
 	 */
@@ -411,25 +424,20 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
-	 * Genera un mapa con SOLO las carreras pendientes.
+	 * Extrae la siguiente carrera a procesar.
 	 * 
-	 * @return
+	 * @return ID de la carrera. NULL en otro caso.
 	 */
-	public Map<String, Boolean> extraerSoloCarrerasPendientes() {
+	public String extraerSiguienteCarreraPendiente() {
 
-		Map<String, Boolean> soloPendientes = new HashMap<String, Boolean>();
-		Boolean aux = null;
-
+		String idCarreraPendienteSiguiente = null;
 		for (String clave : idCarrerasCampeonatoProcesadas.keySet()) {
-			aux = idCarrerasCampeonatoProcesadas.get(clave);
-			if (!aux) {// pendiente
-				soloPendientes.put(clave, aux);
+			if (idCarrerasCampeonatoProcesadas.get(clave) == false) {// pendiente
+				idCarreraPendienteSiguiente = clave;
+				break;
 			}
-
 		}
-
-		return soloPendientes;
-
+		return idCarreraPendienteSiguiente;
 	}
 
 	/**
@@ -533,12 +541,16 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
+	 * Descarga todas las URLs de urlsHistoricoGalgos, las parsea y las guarda en
+	 * guardableHistoricosGalgos (que luego se guardaran en ficheros). Ademas,
+	 * apunta las carreras recientes que aparezcan en ese historico.
+	 * 
 	 * @param param3
 	 *            Prefijo de ficheros brutos
 	 * @param gpgh
 	 *            Parser de historicos
 	 */
-	public void descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh) {
+	public Boolean descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh) {
 
 		MY_LOGGER.info("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
 		String pathFileGalgoHistorico = "";
@@ -547,18 +559,24 @@ public class GalgosManager implements Serializable {
 
 		int numCarrerasDescubiertas = 0;
 
+		int numHistoricosAnalizados = 0;
+
 		for (String urlGalgo : urlsHistoricoGalgos) {
 
 			if (urlGalgo != null && urlGalgo.contains("=")) {
 
 				String galgo_nombre = urlGalgo.split("=")[1];
 
-				// Si no he mirado su historico ya, entonces lo proceso
-				if (!galgosYaGuardados.containsKey(galgo_nombre)) {
+				if (galgosYaGuardados.containsKey(galgo_nombre)) {
+					// Si he mirado su historico ya, entonces no lo proceso
+					numHistoricosAnalizados++;
+
+				} else {
+					// Si no he mirado su historico ya, entonces lo proceso
 
 					pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
-					MY_LOGGER.info("URL Historico galgo = " + urlGalgo);
-					MY_LOGGER.debug("Galgo nombre = " + galgo_nombre);
+					MY_LOGGER.debug("URL Historico galgo = " + urlGalgo);
+					MY_LOGGER.info("Galgo nombre = " + galgo_nombre);
 					MY_LOGGER.debug("Path historico = " + pathFileGalgoHistorico);
 
 					MY_LOGGER.debug("Descargando historico...");
@@ -566,33 +584,46 @@ public class GalgosManager implements Serializable {
 
 					MY_LOGGER.debug("GUARDABLE - Historico de galgo (EVITANDO DUPLICADOS)");
 					GbgbGalgoHistorico historico = gpgh.ejecutar(pathFileGalgoHistorico, galgo_nombre);
-					guardableHistoricosGalgos.add(historico);
 
-					MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
-					calcularAgregados(historico);
-					MY_LOGGER.debug("Numero de agregados acumulado: " + guardableGalgoAgregados.size());
+					if (historico == null) {
+						MY_LOGGER.error(
+								"Fallo al parsear historico de galgo=" + galgo_nombre + " y no sabemos la causa!!!");
+						break;
 
-					MY_LOGGER.debug(
-							"Del historico, cogemos el ID de carreras anteriores que queremos descargar (de los ultimos X meses)...");
-					MY_LOGGER.debug("Fecha umbral (hace X meses): "
-							+ GbgbCarrera.FORMATO.format(fechaUmbralAnterior.getTime()));
+					} else if (historico.error_causa < 0) {
+						MY_LOGGER.warn("Fallo al parsear historico de galgo=" + galgo_nombre + " Causa="
+								+ historico.error_causa);
 
-					MY_LOGGER.debug(
-							"Con el historico, descubrimos mas carreras RECIENTES para procesarlas luego (el historico tiene "
-									+ historico.carrerasHistorico.size()
-									+ " carreras), comprobando que no las tengamos ya...");
-					for (GbgbGalgoHistoricoCarrera fila : historico.carrerasHistorico) {
+					} else {
+						guardableHistoricosGalgos.add(historico);
+						numHistoricosAnalizados++;
 
-						String clave = fila.id_carrera + "-" + fila.id_campeonato;
+						MY_LOGGER.debug("Con el historico, calculamos AGREGADOS estadisticos..");
+						calcularAgregados(historico);
+						MY_LOGGER.debug("Numero de agregados acumulado: " + guardableGalgoAgregados.size());
 
-						if (isHistoricoInsertable(fila, fechaUmbralAnterior)) {
-							MY_LOGGER.debug("Carrera RECIENTE descubierta! La apunto para luego: " + clave);
-							idCarrerasCampeonatoProcesadas.put(clave, false);
-							numCarrerasDescubiertas++;
+						MY_LOGGER.debug(
+								"Del historico, cogemos el ID de carreras anteriores que queremos descargar (de los ultimos X meses)...");
+						MY_LOGGER.debug("Fecha umbral (hace X meses): "
+								+ GbgbCarrera.FORMATO.format(fechaUmbralAnterior.getTime()));
+
+						MY_LOGGER.debug(
+								"Con el historico, descubrimos mas carreras RECIENTES para procesarlas luego (el historico tiene "
+										+ historico.carrerasHistorico.size()
+										+ " carreras), comprobando que no las tengamos ya...");
+						for (GbgbGalgoHistoricoCarrera fila : historico.carrerasHistorico) {
+
+							String clave = fila.id_carrera + "-" + fila.id_campeonato;
+
+							if (isHistoricoInsertable(fila, fechaUmbralAnterior)) {
+								MY_LOGGER.debug("Carrera RECIENTE descubierta! La apunto para luego: " + clave);
+								idCarrerasCampeonatoProcesadas.put(clave, false);
+								numCarrerasDescubiertas++;
+							}
 						}
-					}
 
-					galgosYaGuardados.put(galgo_nombre, true);
+						galgosYaGuardados.put(galgo_nombre, true);
+					}
 
 				}
 			}
@@ -600,8 +631,12 @@ public class GalgosManager implements Serializable {
 
 		MY_LOGGER.info("Acumuladas " + numCarrerasDescubiertas + " carreras nuevas");
 
-		MY_LOGGER.debug("Limpiando lista de URLs de historicos...\n");
+		Boolean out = (urlsHistoricoGalgos.size() == numHistoricosAnalizados);
+
+		MY_LOGGER.debug("Limpiando lista de URLs de historicos (ya los hemos descargado)...\n");
 		urlsHistoricoGalgos.clear();
+
+		return out;
 	}
 
 	/**

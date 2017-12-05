@@ -19,8 +19,22 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	public List<GbgbGalgoHistoricoCarrera> carrerasHistorico;
 
+	// para debug
+	public int error_causa = 0;// -1 (Galgo no encontrado), -2 (galgo encontrado, pero no conocemos carreras
+								// pasadas)
+
 	public GbgbGalgoHistorico(boolean todoNulos) {
 		super();
+	}
+
+	/**
+	 * @param error_causa
+	 *            -1 (Galgo no encontrado), -2 (galgo encontrado, pero no conocemos
+	 *            carreras pasadas)
+	 */
+	public GbgbGalgoHistorico(int error_causa) {
+		super();
+		this.error_causa = error_causa;
 	}
 
 	public GbgbGalgoHistorico(String galgo_nombre, String entrenador, String padre_madre_nacimiento) {

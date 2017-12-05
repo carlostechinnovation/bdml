@@ -1,0 +1,60 @@
+Modulo 004B - Modelos predictivos (nucleo)
+GALGOS - Informe 001
+------------------
+Tipo de modelo: clasificacion
+Objetivo: dado un galgo en una carrera, quiero clasificarle en 2 grupos: 1o2 o 3a6
+Entrada: features de la carrera, features del galgo analizado, features de una galgo agregado (galgos competidores agrupados) y target para train/test.
+Categorias (classes): 1o2 (valor 1) y 3a6 (valor 0)
+------------------
+INICIO
+Conectando a Base de datos para descargar DATOS...
+Numero de filas leidas: 964
+Shape de la matriz X =964x16
+Missing values: cambiamos los NULL por otro valor...
+Shape de la matriz X_conpadding =964x16
+Datasets: train y test...
+Conectando a Base de datos para descargar TARGETs...
+Numero de filas leidas: 964
+Entrada (TEST) ...
+Modelos de CLASIFICACION...
+X_train: (867, 16)
+y_train: (867, 1)
+y_train (reshaped): (867,)
+
+ ------ Algoritmo K-Nearest Neighbors ------ 
+Score: 57.731959
+Matriz de confusión para train es:
+[[ 0.70171674  0.32917706]
+ [ 0.29828326  0.67082294]]
+Matriz de confusión para test es:
+[[ 0.56666667  0.40540541]
+ [ 0.43333333  0.59459459]]
+Precisión: 0.577319587629
+Exactitud: 0.594594594595
+Exhaustividad: 0.458333333333
+AUC (area bajo curva ROC) = 0.58
+
+
+ ------ Algoritmo REGRESION LOGISTICA ------ 
+LogisticRegression score: 49.484536
+REG_LOG Matriz de confusión para train es:
+[[ 0.54705882  0.46524064]
+ [ 0.45294118  0.53475936]]
+REG_LOG Matriz de confusión para test es:
+[[ 0.5         0.53333333]
+ [ 0.5         0.46666667]]
+Precisión: 0.494845360825
+Exactitud: 0.466666666667
+Exhaustividad: 0.145833333333
+AUC (area bajo curva ROC) = 0.49
+
+
+ -------- Guardando modelo GANADOR...  --------
+Gana modelo K-Nearest Neighbors
+FIN
+El sistema predictivo cogera el 10% ultimo de muestras, predecira los targets y los pondra aqui: /home/carloslinux/Desktop/DATOS_LIMPIO/galgos/target_post.txt
+Modulo 004B - FIN
+
+
+
+

@@ -202,7 +202,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 				carreraAux.premio_primero, carreraAux.premio_segundo, carreraAux.premio_otros,
 				carreraAux.premio_total_carrera, carreraAux.going_allowance_segundos, carreraAux.fc_1, carreraAux.fc_2,
 				carreraAux.fc_pounds, carreraAux.tc_1, carreraAux.tc_2, carreraAux.tc_3, carreraAux.tc_pounds,
-				carreraAux.posiciones, carreraAux.urlsGalgosHistorico);
+				carreraAux.posiciones);
 
 		return carrera;
 	}
