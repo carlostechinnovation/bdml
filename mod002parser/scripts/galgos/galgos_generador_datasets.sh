@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo -e "Generador de datasets: INICIO"
-
-
 #filtro_galgos=""
 #filtro_galgos="WHERE PO1.galgo_nombre IN (${filtro_galgos_nombres})"
 filtro_galgos="${1}"
@@ -12,11 +9,15 @@ filtro_galgos="${1}"
 #sufijo="_post"
 sufijo="${2}"
 
+PATH_LOG="/home/carloslinux/Desktop/LOGS/galgos_generador_datasets${sufijo}.log"
+echo -e "Log del generador de datasets: "$PATH_LOG
 
+rm -f $PATH_LOG
+
+echo -e "Generador de datasets: INICIO" 2>&1 1>>$PATH_LOG
 ################################################
 ########### Datasets del galgos_i001 ###########
 ################################################
-
 
 
 #################### TABLA con los IDs de: carrera, galgo analizado, galgo competidor, target
@@ -43,21 +44,23 @@ ${filtro_galgos}
 
 ORDER BY PO1.id_carrera DESC, PO1.posicion ASC, PO2.posicion
 ;
+
+SELECT * FROM datos_desa.tb_galgos_001${sufijo} LIMIT 10;
 EOF
 
-echo -e "$CONSULTA1"
-mysql -u root --password=datos1986 --execute="$CONSULTA1"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_001${sufijo} LIMIT 10\W;" -N >&1
+echo -e "$CONSULTA1" 2>&1 1>>$PATH_LOG
+mysql -u root --password=datos1986 --execute="$CONSULTA1" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
-#################### En cada carrera, ordeno los galgos segun su velocidad_media_con_going_reciente, extrayendo los que deberían quedar segundos
-read -d '' CONSULTA2previa <<- EOF
+#################### En cada carrera, ordeno los galgos segun su velocidad_media_con_going_reciente (SEGUN DISTANCIA DE ESA CARRERA), extrayendo los que deberían quedar segundos
+read -d '' CONSULTA2 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_galgos_002${sufijo};
 
 CREATE TABLE datos_desa.tb_galgos_002${sufijo} AS
 
 SELECT 
 
-id_carrera,
+fuera.id_carrera,
 galgo_competidor,
 MAX(vel_real_cortas_mediana) AS vel_real_cortas_mediana,
 MAX(vel_real_cortas_max) AS vel_real_cortas_max,
@@ -72,13 +75,15 @@ MAX(vel_real_largas_max) AS vel_real_largas_max,
 MAX(vel_going_largas_mediana) AS vel_going_largas_mediana,
 MAX(vel_going_largas_max) AS vel_going_largas_max,
 MAX(competidor_edad) AS competidor_edad,
-MAX(competidor_peso) AS competidor_peso
+MAX(competidor_peso) AS competidor_peso,
+
+CA.distancia
 
 FROM (
 
   SELECT
   A1.id_carrera,
-  CASE WHEN (A1.posicion_analizado IN (1,2) AND A1.posicion_competidor=3) THEN true WHEN (A1.posicion_analizado>=3 AND A1.posicion_competidor=2) THEN true ELSE false END AS segundo_segun_posicion,
+  CASE WHEN (A1.posicion_analizado IN (1,2) AND A1.posicion_competidor=3) THEN true WHEN (A1.posicion_analizado>=3 AND A1.posicion_competidor=2) THEN true ELSE false END AS competidor_es_segundo_segun_posicion,
   A1.galgo_analizado,  A1.posicion_analizado,
   A1.galgo_competidor,  A1.posicion_competidor,  A1.competidor_edad, A1.competidor_peso,
   GA2.*
@@ -92,12 +97,53 @@ FROM (
 
 ) fuera
 
+LEFT JOIN datos_desa.tb_galgos_carreras CA
+ON fuera.id_carrera=CA.id_carrera
+
 GROUP BY id_carrera, galgo_competidor
-ORDER BY id_carrera, vel_going_longmedias_max DESC
 ;
 
 
+SELECT * FROM datos_desa.tb_galgos_002${sufijo} LIMIT 10;
+EOF
+
+echo -e "$CONSULTA2" 2>&1 1>>$PATH_LOG
+mysql -u root --password=datos1986 --execute="$CONSULTA2" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
+
+#################### 
+read -d '' CONSULTA3 <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo};
+
+
+CREATE TABLE datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo} AS 
+SELECT 
+*,
+
+CASE
+  WHEN (distancia <400) THEN vel_going_cortas_max
+  WHEN (distancia >= 400 AND distancia <600) THEN vel_going_longmedias_max
+  WHEN (distancia >600) THEN vel_going_largas_max
+  ELSE NULL
+END AS vel_going_comparar_max
+
+FROM datos_desa.tb_galgos_002${sufijo} OPVMD
+ORDER BY OPVMD.id_carrera, vel_going_comparar_max DESC
+;
+
+
+SELECT * FROM datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo} LIMIT 10;
+EOF
+
+echo -e "$CONSULTA3" 2>&1 1>>$PATH_LOG
+mysql -u root --password=datos1986 --execute="$CONSULTA3" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
+
+
+####################
+read -d '' CONSULTA4 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_galgos_003${sufijo};
+
 CREATE TABLE datos_desa.tb_galgos_003${sufijo} AS 
 SELECT
 P1.*,
@@ -107,33 +153,32 @@ P1.*,
   ELSE @curRow := 1 AND @curCarreraId := id_carrera 
   END
 )  AS rank
-FROM datos_desa.tb_galgos_002${sufijo} P1, 
+FROM datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo} P1, 
 (SELECT @curRow := 0, @curCarreraId := '') r
-ORDER BY  id_carrera ASC, vel_going_longmedias_max DESC
+ORDER BY  id_carrera ASC, vel_going_comparar_max DESC
 ;
 
-
+SELECT * FROM datos_desa.tb_galgos_003${sufijo} LIMIT 10;
 
 EOF
 
-echo -e "$CONSULTA2previa"
-mysql -u root --password=datos1986 --execute="$CONSULTA2previa"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_002${sufijo} LIMIT 10\W;" -N >&1
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_003${sufijo} LIMIT 10\W;" -N >&1
+echo -e "$CONSULTA4"
+mysql -u root --password=datos1986 --execute="$CONSULTA4" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
 
+#################### TABLA que anhade info a cada galgo (analizado y competidor) (todavia en 5 filas). Selecciona los datos agregados del GALGO CON EL QUE REALMENTE COMPITE (segundo o tercero, en velocidad historica PARA LA DISTANCIA DE ESA CARRERA)
+read -d '' CONSULTA5<<- EOF
 
-#################### TABLA que anhade info a cada galgo (analizado y competidor) (todavia en 5 filas). Selecciona los datos agregados del GALGO CON EL QUE REALMENTE COMPITE (segundo o tercero, en velocidad historica)
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_004${sufijo};"
+DROP TABLE IF EXISTS datos_desa.tb_galgos_004${sufijo};
 
-read -d '' CONSULTA2 <<- EOF
 CREATE TABLE datos_desa.tb_galgos_004${sufijo} AS
 
 SELECT * FROM (
 
 SELECT 
 cruce2.*, 
-P2.rank as segundo_segun_vel_going_longmedias_max
+P2.rank as segundo_segun_vel_going_comparar_max
 FROM (
 
  SELECT *
@@ -141,7 +186,7 @@ FROM (
 
   SELECT
   A1.id_carrera,
-  CASE WHEN (A1.posicion_analizado IN (1,2) AND A1.posicion_competidor=3) THEN true WHEN (A1.posicion_analizado>=3 AND A1.posicion_competidor=2) THEN true ELSE false END AS segundo_segun_posicion,
+  CASE WHEN (A1.posicion_analizado IN (1,2) AND A1.posicion_competidor=3) THEN true WHEN (A1.posicion_analizado>=3 AND A1.posicion_competidor=2) THEN true ELSE false END AS competidor_es_segundo_segun_posicion,
   
   A1.galgo_analizado,
   A1.posicion_analizado,
@@ -197,22 +242,24 @@ ON (cruce2.id_carrera=P2.id_carrera AND cruce2.galgo_competidor=P2.galgo_competi
 ORDER BY cruce2.id_carrera ASC, cruce2.posicion_analizado ASC
 
 ) cruce3
-WHERE cruce3.segundo_segun_vel_going_longmedias_max=true
+
+WHERE cruce3.segundo_segun_vel_going_comparar_max=true
 
 ;
 
+SELECT * FROM datos_desa.tb_galgos_004${sufijo} LIMIT 10;
+
 EOF
 
-echo -e "$CONSULTA2"
-mysql -u root --password=datos1986 --execute="$CONSULTA2"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_004${sufijo} LIMIT 10\W;" -N >&1
-
+echo -e "$CONSULTA5" 2>&1 1>>$PATH_LOG
+mysql -u root --password=datos1986 --execute="$CONSULTA5" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
 
 #################### Tabla que anhade los datos de la CARRERA y el TARGET (filtro por mes de frio o calor) ###########
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_005${sufijo};"
+read -d '' CONSULTA6 <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_galgos_005${sufijo};
 
-read -d '' CONSULTA4 <<- EOF
 CREATE TABLE datos_desa.tb_galgos_005${sufijo} AS
 
 SELECT
@@ -274,17 +321,17 @@ ON (A3.id_carrera=PO.id_carrera AND A3.galgo_analizado=PO.galgo_nombre)
 
 ORDER BY anio DESC,mes DESC,dia DESC, A3.id_carrera, A3.posicion_analizado
 ;
+
+SELECT * FROM datos_desa.tb_galgos_005${sufijo} LIMIT 10;
 EOF
 
-echo -e "$CONSULTA4"
-mysql -u root --password=datos1986 --execute="$CONSULTA4"
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_005${sufijo} LIMIT 10\W;" -N >&1
-
+echo -e "$CONSULTA6" 2>&1 1>>$PATH_LOG
+mysql -u root --password=datos1986 --execute="$CONSULTA6" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
 
 #################### DATASET Final (para quitar o poner campos) ##########
-
-read -d '' CONSULTA5 <<- EOF
+read -d '' CONSULTA7 <<- EOF
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_data${sufijo};
 
@@ -315,25 +362,16 @@ CASE WHEN cod_d=1 THEN (competidor_vel_going_cortas_max-13)/18 WHEN cod_d=2 THEN
 
 FROM datos_desa.tb_galgos_005${sufijo};
 
+SELECT * FROM datos_desa.tb_galgos_data${sufijo} LIMIT 10;
+SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_data${sufijo} LIMIT 1;
 EOF
 
 
-echo -e "$CONSULTA5"
-mysql -u root --password=datos1986 --execute="$CONSULTA5"
-echo -e "Dataset - DATA: " >&1
-mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_filas FROM datos_desa.tb_galgos_data${sufijo} LIMIT 1\W;" >&1
+echo -e "$CONSULTA7" 2>&1 1>>$PATH_LOG
+mysql -u root --password=datos1986 --execute="$CONSULTA7" 2>&1 1>>$PATH_LOG
+echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
 
-
-
-######################################################
-echo -e "Dataset - Vemos 8 filas de ejemplo: " >&1
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_galgos_data${sufijo} LIMIT 10\W;" -N >&1
-
-
-
-
-
-echo -e "Generador de datasets: FIN\n\n\n\n"
+echo -e "Generador de datasets: FIN\n\n\n\n" 2>&1 1>>$PATH_LOG
 
 

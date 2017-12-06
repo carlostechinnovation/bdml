@@ -27,9 +27,8 @@ public class GbgbParserCarreraDetalleTest {
 	}
 
 	@Rule
-	// public ResourceFile res = new ResourceFile("/" +
-	// "galgos_20171021_GBGB_bruto_carrera_2030316");
-	public ResourceFile res = new ResourceFile("/" + "2041763.html");
+	public ResourceFile res = new ResourceFile("/" + "galgos_20171021_GBGB_bruto_carrera_2030316");
+	// public ResourceFile res = new ResourceFile("/" + "2041763.html");
 
 	@Test
 	public void testParsear() throws Exception {

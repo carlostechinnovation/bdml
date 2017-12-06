@@ -62,7 +62,7 @@ public class SportiumDownloader {
 			con.setInstanceFollowRedirects(false);
 			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.info("HTTP GET " + url + " ...");
+			MY_LOGGER.debug("HTTP GET " + url + " ...");
 			con = (HttpURLConnection) url.openConnection();
 
 			// CODIGO de RESPUESTA
@@ -87,7 +87,7 @@ public class SportiumDownloader {
 			// Escribir SALIDA
 			MY_LOGGER.debug("Escribiendo a fichero...");
 			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.info("Path fichero salida: " + pathOut);
+			MY_LOGGER.debug("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {

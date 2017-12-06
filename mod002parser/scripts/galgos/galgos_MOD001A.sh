@@ -5,7 +5,7 @@ PATH_SCRIPTS="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser
 
 
 echo -e "Path del log: ${PATH_LOG}">&1
-
+rm -f ${PATH_LOG}
 
 echo -e "Galgos-Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${PATH_LOG}
 

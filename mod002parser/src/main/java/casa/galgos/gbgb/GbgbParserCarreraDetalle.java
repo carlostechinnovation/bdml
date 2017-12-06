@@ -47,8 +47,8 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public GbgbCarrera ejecutar(Long id_carrera, Long id_campeonato, String pathIn) {
 
-		MY_LOGGER.debug("GALGOS-GbgbParserCarreraDetalle: INICIO");
-		MY_LOGGER.debug("GALGOS-GbgbParserCarreraDetalle - pathIn=" + pathIn);
+		MY_LOGGER.info("Parseando id_carrera|id_campeonato=" + id_carrera + "|" + id_campeonato);
+		MY_LOGGER.debug("pathIn=" + pathIn);
 
 		String bruto = "";
 		GbgbCarrera out = null;
@@ -284,7 +284,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			String aux = ((TextNode) e1.childNode(5).childNode(0)).text().trim();
 			out.trap = aux != null ? Integer.valueOf(aux) : null;
 
-			out.url_galgo_historico = Constantes.GALGOS_GBGB + e1.childNode(3).childNode(1).attr("href").trim();
+			out.urlparteB_galgo_historico = e1.childNode(3).childNode(1).attr("href").split("=")[1].trim();
 
 			parsearyRellenarSp(Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text()), out);
 			out.time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());

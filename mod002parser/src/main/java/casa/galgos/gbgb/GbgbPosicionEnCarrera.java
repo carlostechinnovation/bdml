@@ -26,7 +26,8 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 	public Integer nacimiento;
 	public String comment;
 	public Calendar fechaDeLaCarrera;
-	public String url_galgo_historico;
+	public String urlparteB_galgo_historico;// Parte del galgo_nombre (con separador %20), pero sin el prefijo de GBGB,
+											// que ocupa mucho en memoria
 
 	public GbgbPosicionEnCarrera(boolean todoNulos) {
 		super();
@@ -35,7 +36,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 	public GbgbPosicionEnCarrera(Long id_carrera, Long id_campeonato, Short posicion, String galgo_nombre, Integer trap,
 			Float sp, String time_sec, String time_distance, Float peso_galgo, String entrenador_nombre,
 			String galgo_padre, String galgo_madre, Integer nacimiento, String comment, Calendar fechaDeLaCarrera,
-			String url_galgo_historico) {
+			String urlparteB_galgo_historico) {
 		super();
 		this.id_carrera = id_carrera;
 		this.id_campeonato = id_campeonato;
@@ -52,7 +53,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		this.nacimiento = nacimiento;
 		this.comment = comment;
 		this.fechaDeLaCarrera = fechaDeLaCarrera;
-		this.url_galgo_historico = url_galgo_historico;
+		this.urlparteB_galgo_historico = urlparteB_galgo_historico;
 	}
 
 	@Override
