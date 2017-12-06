@@ -580,7 +580,12 @@ public class GalgosManager implements Serializable {
 
 							String clave = fila.id_carrera + "-" + fila.id_campeonato;
 
-							if (isHistoricoInsertable(fila, fechaUmbralAnterior)) {
+							if (isHistoricoInsertable(fila, fechaUmbralAnterior) ||
+
+							// Si he llegado al maximo deseado, no sigo acumulando mas (para ahorrar
+							// memoria)
+									carrerasPendientes.size() >= Constantes.MAX_NUM_CARRERAS_PROCESADAS) {
+
 								MY_LOGGER.debug("Carrera RECIENTE descubierta! La apunto para luego: " + clave);
 								carrerasPendientes.add(clave);
 								numCarrerasDescubiertas++;
