@@ -40,7 +40,11 @@ mysql -u root --password=datos1986 --execute="SET @rank1=0; DROP TABLE IF EXISTS
 id, dia, hora, estadio, galgo_nombre FROM datos_desa.tb_galgos_carreragalgo\W;" >&1
 mysql -u root --password=datos1986 --execute="SET @rank2=0;  DROP TABLE IF EXISTS datos_desa.tb_galgos_target_final; CREATE TABLE datos_desa.tb_galgos_target_final AS SELECT @rank2:=@rank2+1 AS rank, target AS PREDICCION FROM datos_desa.tb_galgos_target_post;" >&1
 
-mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, galgo_nombre, PREDICCION FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) ORDER BY dia DESC, estadio DESC, hora DESC, galgo_nombre DESC;" >${PATH_INFORME_FINAL_AUX2}
+echo -e "Carreras futuras con solo 1 o 2 ganadores predichos:" >>${PATH_INFORME_FINAL_AUX2}
+mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, SUM(PREDICCION) AS num_ganadores FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) WHERE PREDICCION=1 GROUP BY dia,estadio,hora HAVING num_ganadores IN (1,2)  ORDER BY dia DESC, estadio DESC, hora DESC;" >>${PATH_INFORME_FINAL_AUX2}
+
+echo -e "\nDETALLE:\n"
+mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, galgo_nombre, PREDICCION FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) WHERE PREDICCION=1 ORDER BY dia DESC, estadio DESC, hora DESC, galgo_nombre DESC;" >>${PATH_INFORME_FINAL_AUX2}
 
 
 echo -e "Resultado guardado en: $PATH_INFORME_FINAL_AUX2" >&1
