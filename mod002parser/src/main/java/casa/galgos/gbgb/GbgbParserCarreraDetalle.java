@@ -125,7 +125,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 
 		if (infoArriba.get(11).childNodes().size() > 0) {
 
-			rellenarPremios(((TextNode) infoArriba.get(11).childNode(0)).text(), carreraAux);
+			rellenarPremios(((TextNode) infoArriba.get(11).childNode(0)).text(), carreraAux, id_carrera);
 		}
 		carreraAux.track = Constantes.limpiarTexto(((TextNode) infoArriba.get(1).childNode(0)).text()).split("&")[0]
 				.trim();
@@ -238,20 +238,28 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 *            Total Â£435 "
 	 * @param out
 	 */
-	public static void rellenarPremios(String premiosStr, GbgbCarrera carrera) {
+	public static void rellenarPremios(String premiosStr, GbgbCarrera carrera, Long id_carrera) {
 
 		MY_LOGGER.debug("rellenarPremios --> premiosStr=" + premiosStr);
 
-		String[] partes = premiosStr.replace("Â", "").split("£");
+		try {
+			String[] partes = premiosStr.replace("Â", "").split("£");
 
-		carrera.premio_primero = premiosStr.contains("1st") ? Integer.valueOf(partes[1].split(",")[0].trim()) : null;
-		carrera.premio_segundo = premiosStr.contains("2nd") ? Integer.valueOf(partes[2].split(",")[0].trim()) : null;
-		if (!premiosStr.contains("3rd") && !premiosStr.contains("rainers")) {
-			carrera.premio_otros = premiosStr.contains("2nd")
-					? Integer.valueOf(partes[3].split("Race")[0].replace(",", "").trim())
-					: Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
-			carrera.premio_total_carrera = premiosStr.contains("2nd") ? Integer.valueOf(partes[4].split(" ")[0].trim())
-					: Integer.valueOf(partes[3].split(" ")[0].trim());
+			carrera.premio_primero = premiosStr.contains("1st") ? Integer.valueOf(partes[1].split(",")[0].trim())
+					: null;
+			carrera.premio_segundo = premiosStr.contains("2nd") ? Integer.valueOf(partes[2].split(",")[0].trim())
+					: null;
+			if (!premiosStr.contains("3rd") && !premiosStr.contains("rainers")) {
+				carrera.premio_otros = premiosStr.contains("2nd")
+						? Integer.valueOf(partes[3].split("Race")[0].replace(",", "").trim())
+						: Integer.valueOf(partes[2].split("Race")[0].replace(",", "").trim());
+				carrera.premio_total_carrera = premiosStr.contains("2nd")
+						? Integer.valueOf(partes[4].split(" ")[0].trim())
+						: Integer.valueOf(partes[3].split(" ")[0].trim());
+			}
+
+		} catch (Exception e) {
+			MY_LOGGER.error("Problema al parsear premios de carrera=" + id_carrera + " Da igual, seguimos...");
 		}
 	}
 

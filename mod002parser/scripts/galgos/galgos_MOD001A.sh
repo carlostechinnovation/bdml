@@ -15,6 +15,7 @@ PATH_JAR="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/tar
 FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
 
 PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
+PATH_FILE_GALGOS_INICIALES_FULL="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt_full"
 PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
 PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
 PATH_LIMPIO_HISTORICO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_historico_file"
@@ -40,11 +41,11 @@ rm -f $PATH_LIMPIO"*"
 ########## CREATE TABLES #############
 
 echo -e "Borrar tablas:"
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreragalgo;" 2>&1 1>>${PATH_LOG}
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras;" 2>&1 1>>${PATH_LOG}
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras;" 2>&1 1>>${PATH_LOG}
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico;" 2>&1 1>>${PATH_LOG}
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados;" 2>&1 1>>${PATH_LOG}
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreragalgo\W;" 2>&1 1>>${PATH_LOG}
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras\W;" 2>&1 1>>${PATH_LOG}
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras\W;" 2>&1 1>>${PATH_LOG}
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico\W;" 2>&1 1>>${PATH_LOG}
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados\W;" 2>&1 1>>${PATH_LOG}
 sleep 4s
 
 echo -e "Crear tablas SQL"prefijoPathDatosBruto 2>&1 1>>${PATH_LOG}
@@ -58,9 +59,9 @@ mysql -u root --password=datos1986 --execute="$SENTENCIAS_CREATE_TABLE" 2>&1 1>>
 #SPORTIUM: Descarga de todas las carreras de hoy (FUTURAS) en las que PUEDO apostar
 
 java -jar ${PATH_JAR} "07" "${PATH_BRUTO}semillas" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${PATH_LOG}
-echo -e "Insertando galgos semilla..." 2>&1 1>>${PATH_LOG}
-mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES}_full' INTO TABLE datos_desa.tb_galgos_carreragalgo FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" >$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS
-mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_galgos_carreragalgo LIMIT 1\W;" 2>&1 1>>${PATH_LOG}
+echo -e "SPORTIUM Insertando galgos semilla..." 2>&1 1>>${PATH_LOG}
+mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_FULL}' INTO TABLE datos_desa.tb_galgos_carreragalgo FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" >$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS
+mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_galgos_iniciales_SPORTIUM FROM datos_desa.tb_galgos_carreragalgo LIMIT 1\W;" 2>&1 1>>${PATH_LOG}
 
 
 

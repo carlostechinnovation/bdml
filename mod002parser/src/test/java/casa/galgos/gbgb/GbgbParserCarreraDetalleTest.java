@@ -131,7 +131,7 @@ public class GbgbParserCarreraDetalleTest {
 
 		GbgbCarrera out = new GbgbCarrera(true);
 
-		GbgbParserCarreraDetalle.rellenarPremios(premiosStr, out);
+		GbgbParserCarreraDetalle.rellenarPremios(premiosStr, out, 123456L);
 
 		Assert.assertTrue(out.premio_primero.intValue() == 175);
 		Assert.assertTrue(out.premio_segundo.intValue() == 60);
