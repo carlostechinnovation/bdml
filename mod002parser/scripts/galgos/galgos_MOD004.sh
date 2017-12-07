@@ -8,7 +8,7 @@ rm -f $PATH_MODELO_GANADOR
 
 ################# Análisis galgos_001: Modelo predictivo CLASIFICADOR
 
-python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_i001.py' > $PATH_INFORME_MODELO
+python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_i001.py'
 
 
 #echo -e "Guardando datos CSV para analizar casos y subconjuntos a MANO..."

@@ -4,7 +4,7 @@ echo -e "Modulo 005 - Prediccion"
 
 PATH_CONTADOR_GALGOS="./contador_galgos"
 
-PATH_TARGET_POST='/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/target_post.txt'
+PATH_TARGET_POST="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/target_post.txt"
 rm -f $PATH_TARGET_POST
 
 PATH_INFORME_FINAL_AUX1="/home/carloslinux/Desktop/INFORMES/galgos_aux1"
@@ -30,10 +30,10 @@ python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/g
 echo -e "RESULTADO - TARGETs predichos: " >&1
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_target_post;"
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_galgos_target_post (target INT);"
-mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE $PATH_TARGET_POST INTO TABLE datos_desa.tb_galgos_target_post FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;"
+mysql -u root --password=datos1986 --execute="LOAD DATA LOCAL INFILE '$PATH_TARGET_POST' INTO TABLE datos_desa.tb_galgos_target_post FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;"
 sleep 4s
 
-echo -e "Mostrando los galgos con sus targets..."
+echo -e "Mostrando los galgos con sus targets..." >&1
 
 
 mysql -u root --password=datos1986 --execute="SET @rank1=0; DROP TABLE IF EXISTS datos_desa.tb_galgos_data_final; CREATE TABLE datos_desa.tb_galgos_data_final AS SELECT @rank1:=@rank1+1 AS rank, 
@@ -41,10 +41,10 @@ id, dia, hora, estadio, galgo_nombre FROM datos_desa.tb_galgos_carreragalgo\W;" 
 mysql -u root --password=datos1986 --execute="SET @rank2=0;  DROP TABLE IF EXISTS datos_desa.tb_galgos_target_final; CREATE TABLE datos_desa.tb_galgos_target_final AS SELECT @rank2:=@rank2+1 AS rank, target AS PREDICCION FROM datos_desa.tb_galgos_target_post;" >&1
 
 echo -e "Carreras futuras con solo 1 o 2 ganadores predichos:" >>${PATH_INFORME_FINAL_AUX2}
-mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, SUM(PREDICCION) AS num_ganadores FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) WHERE PREDICCION=1 GROUP BY dia,estadio,hora HAVING num_ganadores IN (1,2)  ORDER BY dia DESC, estadio DESC, hora DESC;" >>${PATH_INFORME_FINAL_AUX2}
+mysql -u root --password=datos1986 -t --execute="SELECT SUM(num_ganadores) as carreras_distintas_con_prediccion_1yo2 FROM (SELECT SUM(PREDICCION) AS num_ganadores FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) WHERE PREDICCION=1 GROUP BY dia,estadio,hora HAVING num_ganadores IN (1,2) ) dentro;" >>${PATH_INFORME_FINAL_AUX2}
 
 echo -e "\nDETALLE:\n"
-mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, galgo_nombre, PREDICCION FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) WHERE PREDICCION=1 ORDER BY dia DESC, estadio DESC, hora DESC, galgo_nombre DESC;" >>${PATH_INFORME_FINAL_AUX2}
+mysql -u root --password=datos1986 -t --execute="SELECT dia, hora, estadio, galgo_nombre, PREDICCION FROM datos_desa.tb_galgos_data_final A LEFT JOIN datos_desa.tb_galgos_target_final B ON (A.rank=B.rank) WHERE PREDICCION=1 ORDER BY dia DESC, hora DESC, estadio DESC, galgo_nombre DESC;" >>${PATH_INFORME_FINAL_AUX2}
 
 
 echo -e "Resultado guardado en: $PATH_INFORME_FINAL_AUX2" >&1
@@ -60,7 +60,7 @@ cat $PATH_INFORME_FINAL_AUX1 >>$PATH_INFORME_FINAL
 echo -e "\n\n" >>$PATH_INFORME_FINAL
 cat $PATH_INFORME_FINAL_AUX2 >>$PATH_INFORME_FINAL
 
-cat "$PATH_INFORME_FINAL" | mail -s "GALGOS - Prediccion carreras futuras Sportium" carlosandresgarcia1986@gmail.com,fcacereslau@hotmail.com,luisandresgarcia@gmail.com
+#cat "$PATH_INFORME_FINAL" | mail -s "GALGOS - Prediccion carreras futuras Sportium" carlosandresgarcia1986@gmail.com,fcacereslau@hotmail.com,luisandresgarcia@gmail.com
 
 echo -e "FIN"
 

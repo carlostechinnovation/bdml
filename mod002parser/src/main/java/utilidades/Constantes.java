@@ -25,7 +25,7 @@ public class Constantes {
 
 	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 50;
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 3500;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 0L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 
 	// -------------- BOLSA --------
