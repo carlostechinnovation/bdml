@@ -35,8 +35,8 @@ echo -e ${TAG_GBGB}'...' 2>&1 1>>${PATH_LOG}
 
 
 echo -e "Borrando ficheros antiguos..." 2>&1 1>>${PATH_LOG}
-rm -f $PATH_BRUTO"*"
-rm -f $PATH_LIMPIO"*"
+rm -f "$PATH_BRUTO*"
+rm -f "$PATH_LIMPIO*"
 
 ########## CREATE TABLES #############
 

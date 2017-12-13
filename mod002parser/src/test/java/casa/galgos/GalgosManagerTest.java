@@ -2,7 +2,10 @@ package casa.galgos;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,10 +47,42 @@ public class GalgosManagerTest {
 	public void descargarTodosLosHistoricosTest() throws IOException {
 		String param3 = "/galgos_20171021_GBGB_bruto";
 		GbgbParserGalgoHistorico gpgh = new GbgbParserGalgoHistorico();
-		GalgosManager.getInstancia().descargarTodosLosHistoricos(param3, gpgh);
+		Integer prof = 1;
+		GalgosManager.getInstancia().descargarTodosLosHistoricos(param3, gpgh, prof);
 
 		int x = 0;
 
+	}
+
+	@Test
+	public void minimoTest() {
+		List<Integer> lista = new ArrayList<Integer>();
+		lista.add(1);
+		lista.add(2);
+		lista.add(3);
+		Assert.assertTrue(Collections.min(lista).equals(1));
+	}
+
+	@Test
+	public void extraerSiguienteCarreraPendienteTest() {
+
+		GalgosManager gm = GalgosManager.getInstancia();
+
+		rellenarCarrerasPendientes(gm, 1);
+		rellenarCarrerasPendientes(gm, 2);
+
+		Assert.assertTrue(gm.extraerSiguienteCarreraPendiente().equals("11"));
+
+	}
+
+	private void rellenarCarrerasPendientes(GalgosManager gm, Integer prof) {
+
+		List<String> cp = new ArrayList<String>();
+		cp.add(String.valueOf(prof) + "1");
+		cp.add(String.valueOf(prof) + "2");
+		cp.add(String.valueOf(prof) + "3");
+		ProfundidadCarreras p = new ProfundidadCarreras(prof, cp);
+		gm.profCarrerasPendientes.add(p);
 	}
 
 	@Test

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -51,9 +52,11 @@ public class GalgosManager implements Serializable {
 	public static final Integer TIPO_ESTADISTICO_MEDIANA = 1;
 	public static final Integer TIPO_ESTADISTICO_MAXIMO = 2;
 
+	public static final Integer PROFUNDIDAD_DEFAULT = 1;
+
 	public List<String> carrerasProcesadasIncluidasFallidas = new ArrayList<String>();// ID_carrera-ID_campeonato
-	public List<String> carrerasPendientes = new ArrayList<String>(); // ID_carrera-ID_campeonato
-	public Map<String, Boolean> galgosYaGuardados = new HashMap<String, Boolean>();
+	public List<ProfundidadCarreras> profCarrerasPendientes = new ArrayList<ProfundidadCarreras>();
+	public List<String> galgosYaAnalizados = new ArrayList<String>();
 
 	// LISTAS con datos DEFINITIVOS para guardar en sistema de ficheros
 	public List<SportiumCarrera> galgosFuturos = new ArrayList<SportiumCarrera>(); // Galgos en los que vamos a apostar
@@ -218,7 +221,9 @@ public class GalgosManager implements Serializable {
 	public void descargarYparsearCarrerasDeGalgos(String prefijoPathDatosBruto, boolean guardarEnFicheros,
 			String fileGalgosIniciales) throws InterruptedException {
 
-		MY_LOGGER.info("MAX_NUM_CARRERAS_PROCESADAS = " + Constantes.MAX_NUM_CARRERAS_PROCESADAS);
+		MY_LOGGER.info("descargarYparsearCarrerasDeGalgos:  MAX_NUM_CARRERAS_PROCESADAS = "
+				+ Constantes.MAX_NUM_CARRERAS_PROCESADAS + "  MAX_PROFUNDIDAD_PROCESADA="
+				+ Constantes.MAX_PROFUNDIDAD_PROCESADA);
 
 		boolean primeraEscritura = true;
 
@@ -228,29 +233,33 @@ public class GalgosManager implements Serializable {
 
 		if (urlsHistoricoGalgos != null && !urlsHistoricoGalgos.isEmpty()) {
 
-			MY_LOGGER.info("Descargando " + urlsHistoricoGalgos.size() + " historicos...");
-			Boolean inicialesListosParaGuardar = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
+			MY_LOGGER.info(
+					"descargarYparsearCarrerasDeGalgos - Descargando " + urlsHistoricoGalgos.size() + " historicos...");
+			Boolean inicialesListosParaGuardar = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh,
+					PROFUNDIDAD_DEFAULT);
 
 			if (inicialesListosParaGuardar == false) {
 				MY_LOGGER.warn("PROBLEMA al descargar los historicos de los galgos INICIALES!!");
 			}
 
-			// ------ Procesar las carreras de las que conozco la URL
-			// (embuclandose)-----------------------------------
+			MY_LOGGER.info(
+					"descargarYparsearCarrerasDeGalgos - Procesando las carreras de las que conozco la URL (embuclandose)...");
 
 			do {
 
-				MY_LOGGER.info("Carreras PROCESADAS / PENDIENTES = " + carrerasProcesadasIncluidasFallidas.size() + "/"
-						+ carrerasPendientes.size());
+				MY_LOGGER.info("descargarYparsearCarrerasDeGalgos - Carreras PROCESADAS / PENDIENTES = "
+						+ carrerasProcesadasIncluidasFallidas.size() + "/" + contarCarrerasPendientes());
 
 				String idCarreraIdcampeonatoAProcesar = extraerSiguienteCarreraPendiente();
+				int profundidadCarreraAProcesar = extraerProfundidadMinimaConCarrerasPendientes();
 
 				if (idCarreraIdcampeonatoAProcesar == null) {
 					MY_LOGGER.warn("Siguiente carrera pendiente es NULL.");
 
 				} else {
 
-					MY_LOGGER.info("Procesando carrera " + idCarreraIdcampeonatoAProcesar + " ...");
+					MY_LOGGER.info("descargarYparsearCarrerasDeGalgos -  Procesando carrera="
+							+ idCarreraIdcampeonatoAProcesar + " profundidad=" + profundidadCarreraAProcesar + " ...");
 
 					String[] partes = idCarreraIdcampeonatoAProcesar.split("-");
 
@@ -267,7 +276,8 @@ public class GalgosManager implements Serializable {
 							guardablePosicionesEnCarreras.add(posicion);
 						}
 
-						Boolean descargaCorrecta = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh);
+						Boolean descargaCorrecta = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh,
+								profundidadCarreraAProcesar + 1);
 
 						if (descargaCorrecta == false) {
 							MY_LOGGER.warn(
@@ -276,9 +286,17 @@ public class GalgosManager implements Serializable {
 
 					}
 
-					// lo marco como procesado
+					// ---------------------
+					MY_LOGGER.debug("Carrera procesada OK. Quitando carrera de PENDIENTES y metiéndola en procesadas: "
+							+ idCarreraIdcampeonatoAProcesar + " con profundidad=" + profundidadCarreraAProcesar);
 					carrerasProcesadasIncluidasFallidas.add(idCarreraIdcampeonatoAProcesar);
-					carrerasPendientes.remove(idCarreraIdcampeonatoAProcesar);
+
+					for (ProfundidadCarreras pcp : profCarrerasPendientes) {
+						if (pcp.profundidad.equals(profundidadCarreraAProcesar)) {
+							pcp.carrerasPendientes.remove(idCarreraIdcampeonatoAProcesar);
+						}
+					}
+					// ---------------------
 
 					if (guardarEnFicheros && guardableHistoricosGalgos
 							.size() >= Constantes.MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO) {
@@ -294,11 +312,16 @@ public class GalgosManager implements Serializable {
 					MY_LOGGER.debug("Esperando " + Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC + " mseg...");
 					Thread.sleep(Constantes.ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC);
 				}
-			} while (carrerasPendientes.size() >= 1
-					&& carrerasProcesadasIncluidasFallidas.size() <= Constantes.MAX_NUM_CARRERAS_PROCESADAS);
+
+				MY_LOGGER.debug("CONTROL_BUCLE: pendientes=" + contarCarrerasPendientes());
+				MY_LOGGER.debug(
+						"CONTROL_BUCLE: procesadas (incluidas fallidas)=" + carrerasProcesadasIncluidasFallidas.size()
+								+ " (limite=" + Constantes.MAX_NUM_CARRERAS_PROCESADAS + ")");
+
+			} while (condicionBucle());
 
 			MY_LOGGER.info("El BUCLE ha TERMINADO: carreras_pendientes (que no las vamos a procesar)="
-					+ carrerasPendientes.size() + " carreras_guardadas=" + guardableCarreras.size()
+					+ contarCarrerasPendientes() + " carreras_guardadas=" + guardableCarreras.size()
 					+ " historicos_galgos=" + guardableHistoricosGalgos.size());
 
 			// RESTANTES: fuera del bucle while, guardo lo que ya tenga descargado, pero no
@@ -320,11 +343,38 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
+	 * @return
+	 */
+	public boolean condicionBucle() {
+
+		boolean quedanPendientes = contarCarrerasPendientes() >= 1;
+		boolean debajoUmbralCarrerasProcesadasMax = carrerasProcesadasIncluidasFallidas
+				.size() < Constantes.MAX_NUM_CARRERAS_PROCESADAS;
+		boolean debajoUmbralProfundidadMax = extraerProfundidadMinimaConCarrerasPendientes() <= Constantes.MAX_PROFUNDIDAD_PROCESADA;
+
+		boolean out = quedanPendientes && (debajoUmbralCarrerasProcesadasMax || debajoUmbralProfundidadMax);
+
+		return out;
+
+	}
+
+	/**
+	 * @return
+	 */
+	public int contarCarrerasPendientes() {
+		int contador = 0;
+		for (ProfundidadCarreras pc : profCarrerasPendientes) {
+			contador += pc.carrerasPendientes.size();
+		}
+		return contador;
+	}
+
+	/**
 	 * @param fileGalgosIniciales
 	 */
 	public void cargarUrlsHistoricosDeGalgosIniciales(String fileGalgosIniciales) {
 
-		MY_LOGGER.info("File de galgos iniciales: " + fileGalgosIniciales);
+		MY_LOGGER.info("cargarUrlsHistoricosDeGalgosIniciales - File de galgos iniciales: " + fileGalgosIniciales);
 
 		String bruto = "";
 
@@ -397,10 +447,48 @@ public class GalgosManager implements Serializable {
 	 */
 	public String extraerSiguienteCarreraPendiente() {
 		String idCarreraPendienteSiguiente = null;
-		if (!carrerasPendientes.isEmpty()) {
-			idCarreraPendienteSiguiente = carrerasPendientes.iterator().next();
+		if (profCarrerasPendientes != null && !profCarrerasPendientes.isEmpty()) {
+			Integer profundidadMinima = extraerProfundidadMinimaConCarrerasPendientes();
+
+			for (ProfundidadCarreras pc : profCarrerasPendientes) {
+
+				if (pc.profundidad.equals(profundidadMinima)) {
+					idCarreraPendienteSiguiente = pc.carrerasPendientes.iterator().next();
+				}
+			}
+
 		}
+
+		MY_LOGGER.debug("extraerSiguienteCarreraPendiente: " + idCarreraPendienteSiguiente);
+
 		return idCarreraPendienteSiguiente;
+	}
+
+	/**
+	 * @return De las carreras pendientes,devuelve que lLa minima profundidad.
+	 */
+	public Integer extraerProfundidadMinimaConCarrerasPendientes() {
+
+		Integer out = PROFUNDIDAD_DEFAULT; // default
+
+		if (profCarrerasPendientes != null) {
+			List<Integer> profundidades = new ArrayList<Integer>();
+
+			for (ProfundidadCarreras pc : profCarrerasPendientes) {
+				if (pc.carrerasPendientes != null && !pc.carrerasPendientes.isEmpty()) {
+					profundidades.add(pc.profundidad);
+				}
+			}
+
+			if (profundidades != null && !profundidades.isEmpty()) {
+				for (Integer item : profundidades) {
+					out = Collections.min(profundidades); // MINIMA
+				}
+			}
+
+		}
+
+		return out;
 	}
 
 	/**
@@ -453,10 +541,9 @@ public class GalgosManager implements Serializable {
 			}
 
 		} else {
-			MY_LOGGER.error("Sin datos. No guardamos fichero!!!");
+			MY_LOGGER.error("Sin datos en la lista. No guardamos nada en el fichero (append)!!!");
 		}
-
-		MY_LOGGER.info("Filas escritas en fichero: " + numFilasGuardadas);
+		MY_LOGGER.info("Filas escritas en fichero (append): " + numFilasGuardadas);
 
 		return numFilasGuardadas;
 	}
@@ -513,9 +600,13 @@ public class GalgosManager implements Serializable {
 	 * @param gpgh
 	 *            Parser de historicos
 	 */
-	public Boolean descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh) {
+	public Boolean descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh,
+			Integer profundidadParaNuevasCarreras) {
 
-		MY_LOGGER.info("Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size() + " URLs)...");
+		MY_LOGGER.info("descargarTodosLosHistoricos - Descargando HISTORICOS (tenemos " + urlsHistoricoGalgos.size()
+				+ " URLs). Las carreras descubiertas las pondremos con profundidad=" + profundidadParaNuevasCarreras
+				+ " ...");
+
 		String pathFileGalgoHistorico = "";
 
 		Calendar fechaUmbralAnterior = getFechaUmbralAnterior();
@@ -533,12 +624,14 @@ public class GalgosManager implements Serializable {
 
 				String galgo_nombre = urlGalgoFull.split("=")[1];
 
-				if (galgosYaGuardados.containsKey(galgo_nombre)) {
-					// Si he mirado su historico ya, entonces no lo proceso
+				if (galgosYaAnalizados.contains(galgo_nombre)) {
+					MY_LOGGER.debug("Historico ya analizado. No lo procesamos.");
 					numHistoricosAnalizados++;
 
 				} else {
-					// Si no he mirado su historico ya, entonces lo proceso
+					// Si no he mirado su historico ya, entonces lo proceso y lo marco como ya
+					// analizado
+					galgosYaAnalizados.add(galgo_nombre);
 
 					pathFileGalgoHistorico = param3 + "_galgohistorico_" + galgo_nombre;
 					MY_LOGGER.debug("Galgo nombre = " + galgo_nombre);
@@ -560,6 +653,7 @@ public class GalgosManager implements Serializable {
 								+ historico.error_causa);
 
 					} else {
+						MY_LOGGER.debug("Historico analizado: " + galgo_nombre);
 						guardableHistoricosGalgos.add(historico);
 						numHistoricosAnalizados++;
 
@@ -584,30 +678,79 @@ public class GalgosManager implements Serializable {
 
 							// Si he llegado al maximo deseado, no sigo acumulando mas (para ahorrar
 							// memoria)
-									carrerasPendientes.size() >= Constantes.MAX_NUM_CARRERAS_PROCESADAS) {
+									contarCarrerasPendientes() >= Constantes.MAX_NUM_CARRERAS_PROCESADAS) {
 
-								MY_LOGGER.debug("Carrera RECIENTE descubierta! La apunto para luego: " + clave);
-								carrerasPendientes.add(clave);
-								numCarrerasDescubiertas++;
+								if (anhadirCarreraAPendientes(profundidadParaNuevasCarreras, clave)) {
+									MY_LOGGER.debug(
+											"descargarTodosLosHistoricos - Carrera RECIENTE descubierta! Apuntada como pendiente (no estaba en pendientes ni en ya-procesadas): "
+													+ clave);
+									numCarrerasDescubiertas++;
+								}
 							}
 						}
 
-						galgosYaGuardados.put(galgo_nombre, true);
 					}
 
 				}
-			}
-		}
 
-		MY_LOGGER.info("Procesado intermedio: procesadas=" + numHistoricosAnalizados + " (de "
-				+ urlsHistoricoGalgos.size() + " procesables), descubiertas=" + numCarrerasDescubiertas);
+			} else {
+				MY_LOGGER.error("Historico con URL inesperada: " + urlGalgoFull);
+			}
+
+		} // FIN de FOR
+
+		MY_LOGGER.info("descargarTodosLosHistoricos - Historicos procesados (galgos)=" + numHistoricosAnalizados
+				+ " (de " + urlsHistoricoGalgos.size()
+				+ " URLs procesables). Carreras DESCUBIERTAS en historicos (sin repetidas ni conocidas)="
+				+ numCarrerasDescubiertas);
 
 		Boolean out = (urlsHistoricoGalgos.size() == numHistoricosAnalizados);
 
-		MY_LOGGER.debug("Limpiando lista de URLs de historicos (ya los hemos descargado)...\n");
+		MY_LOGGER.debug(
+				"descargarTodosLosHistoricos- Limpiando lista de URLs de historicos (ya los hemos descargado)...\n");
 		urlsHistoricoGalgos.clear();
 
+		MY_LOGGER.debug("Descargando HISTORICOS: FIN");
+
 		return out;
+	}
+
+	/**
+	 * Añade una carrera la la lista de pendientes. Comprueba que no esté yá como
+	 * pendiente y que no haya sido procesada ya.
+	 * 
+	 * @return True si la he anhadido a pendientes. False en otro caso.
+	 */
+	public boolean anhadirCarreraAPendientes(Integer profundidad, String idCarrera) {
+
+		boolean anhadidaOk = false;
+
+		boolean tieneEstaProfundidadYa = false;
+		for (ProfundidadCarreras pcp : profCarrerasPendientes) {
+			if (pcp.profundidad.equals(profundidad)) {
+				tieneEstaProfundidadYa = true;
+			}
+		}
+
+		if (tieneEstaProfundidadYa) {
+			for (ProfundidadCarreras pcp : profCarrerasPendientes) {
+				if (pcp.profundidad.equals(profundidad)) {
+					pcp.carrerasPendientes.add(idCarrera);
+					anhadidaOk = true;
+					break;
+				}
+			}
+
+		} else {
+			// No tiene esta profundidad todavia. Por tanto, va a ser la primera carrera
+			// pendiente que meto a esta profundidad.
+			ProfundidadCarreras pc = new ProfundidadCarreras(profundidad, new ArrayList<String>());
+			pc.carrerasPendientes.add(idCarrera);
+			profCarrerasPendientes.add(pc);
+			anhadidaOk = true;
+		}
+
+		return anhadidaOk;
 	}
 
 	/**
@@ -636,23 +779,36 @@ public class GalgosManager implements Serializable {
 		String clave = fila.id_carrera + "-" + fila.id_campeonato;
 		Calendar hoy = Calendar.getInstance();
 
-		// --------------------
-		// SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		// MY_LOGGER.debug("fila.fecha=" + sdf.format(fila.fecha.getTime()));
-		// MY_LOGGER.debug("fechaUmbralAnterior=" +
-		// sdf.format(fechaUmbralAnterior.getTime()));
-		// ------------------------
+		// Comprueba si ya está en pendientes (en cualquier profundidad)
+		boolean estaEnPendientes = false;
+		if (profCarrerasPendientes != null) {
+			for (ProfundidadCarreras pcp : profCarrerasPendientes) {
+				for (String ic : pcp.carrerasPendientes) {
+					if (clave.equals(ic)) {
+						estaEnPendientes = true;
+						break;
+					}
+				}
+			}
+		}
 
+		// Comprueba si ya ha sido procesada
+		boolean yaHaSidoProcesada = false;
+		if (carrerasProcesadasIncluidasFallidas != null && carrerasProcesadasIncluidasFallidas.contains(clave)) {
+			yaHaSidoProcesada = true;
+		}
+
+		// -----------------------
 		if (fila.fecha != null && fila.fecha.before(fechaUmbralAnterior)) {
 			MY_LOGGER.debug("Carrera descubierta, pero con FECHA ANTERIOR AL UMBRAL");
 
 		} else if (fila.fecha != null && fila.fecha.after(hoy)) {
 			MY_LOGGER.debug("Carrera descubierta, pero con FECHA FUTURA (despues a hoy)");
 
-		} else if (carrerasProcesadasIncluidasFallidas.contains(clave)) {
+		} else if (yaHaSidoProcesada) {
 			MY_LOGGER.debug("Carrera descubierta, pero YA la hemos PROCESADO");
 
-		} else if (carrerasPendientes.contains(clave)) {
+		} else if (estaEnPendientes) {
 			MY_LOGGER.debug("Carrera descubierta, pero YA la tenemos PENDIENTE");
 
 		} else if (fila != null && fila.posicion != null && !"".equals(fila.posicion)) {
@@ -660,6 +816,7 @@ public class GalgosManager implements Serializable {
 			MY_LOGGER.debug("Carrera descubierta y la METEMOS");
 			out = true;
 		}
+
 		return out;
 	}
 

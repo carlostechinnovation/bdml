@@ -47,7 +47,7 @@ public class GbgbParserCarreraDetalle implements Serializable {
 	 */
 	public GbgbCarrera ejecutar(Long id_carrera, Long id_campeonato, String pathIn) {
 
-		MY_LOGGER.info("Parseando id_carrera|id_campeonato=" + id_carrera + "|" + id_campeonato);
+		MY_LOGGER.debug("Parseando id_carrera|id_campeonato=" + id_carrera + "|" + id_campeonato);
 		MY_LOGGER.debug("pathIn=" + pathIn);
 
 		String bruto = "";

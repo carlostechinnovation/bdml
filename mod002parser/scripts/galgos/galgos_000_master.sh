@@ -40,10 +40,10 @@ echo -e $(date +"%T")" INFORMES (resultados)" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD005.sh'
 
 echo -e $(date +"%T")" Análisis posterior" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD006.sh'
+${PATH_SCRIPTS}'galgos_MOD006.sh'
 
 echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD006.sh'
+#${PATH_SCRIPTS}'galgos_MOD007.sh'
 
 
 

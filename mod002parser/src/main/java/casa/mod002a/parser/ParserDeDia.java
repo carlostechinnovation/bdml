@@ -22,7 +22,7 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 	 */
 	public void ejecutar(String TAG_DIA) {
 
-		MY_LOGGER.info("Parser: INICIO");
+		MY_LOGGER.debug("Parser: INICIO");
 
 		String bruto = "";
 		String out = "";
@@ -31,11 +31,11 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 			String pathEntrada = Constantes.PATH_DIR_DATOS_BRUTOS_BOLSA + getPathEntrada(TAG_DIA);
 			bruto = readFile(pathEntrada, Charset.forName("ISO-8859-1"));
 			out = parsear(TAG_DIA, bruto);
-			// MY_LOGGER.info("ParserDeDia: out=" + out);
+			// MY_LOGGER.debug("ParserDeDia: out=" + out);
 
 			String pathSalida = Constantes.PATH_DIR_DATOS_LIMPIOS_BOLSA + getPathEntrada(TAG_DIA) + Constantes.OUT;
 
-			MY_LOGGER.info("Escribiendo hacia " + pathSalida + " ...");
+			MY_LOGGER.debug("Escribiendo hacia " + pathSalida + " ...");
 			Files.write(Paths.get(pathSalida), out.getBytes(), StandardOpenOption.CREATE);
 
 		} catch (IOException e) {
@@ -43,7 +43,7 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.info("Parser: FIN");
+		MY_LOGGER.debug("Parser: FIN");
 
 	}
 
@@ -57,7 +57,7 @@ public abstract class ParserDeDia implements ParserDeDiaAPI {
 	 */
 	public String readFile(String path, Charset encoding) throws IOException {
 
-		MY_LOGGER.info("Leyendo " + path + " ...");
+		MY_LOGGER.debug("Leyendo " + path + " ...");
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}
