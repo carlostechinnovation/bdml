@@ -26,7 +26,7 @@ mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_gal
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_002_pre WHERE id_carrera=$idcarrera_organizada LIMIT 100\W;" > "${FOLDER_006}pre_002a.csv"
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_002_ordenadoporvelmediadistancia_pre WHERE id_carrera=$idcarrera_organizada LIMIT 100\W;" > "${FOLDER_006}pre_002b.csv"
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_003_pre WHERE id_carrera=$idcarrera_organizada LIMIT 1000\W;" > "${FOLDER_006}pre_003.csv"
-mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_004_pre WHERE id_carrera=$idcarrera_organizada LIMIT 1000\W;" > "${FOLDER_006}pre_004.csv"
+mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_004_pre WHERE id_carrera=$idcarrera_organizada ORDER BY posicion_analizado ASC LIMIT 1000\W;" > "${FOLDER_006}pre_004.csv"
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_005_pre WHERE id_carrera=$idcarrera_organizada LIMIT 1000\W;" > "${FOLDER_006}pre_005.csv"
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_data_pre LIMIT 0\W;" > "${FOLDER_006}pre_FEATURES_IN.csv"
 mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_target_pre LIMIT 0\W;" > "${FOLDER_006}pre_TARGET_IN.csv"

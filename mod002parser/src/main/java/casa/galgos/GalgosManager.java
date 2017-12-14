@@ -250,8 +250,8 @@ public class GalgosManager implements Serializable {
 				MY_LOGGER.info("descargarYparsearCarrerasDeGalgos - Carreras PROCESADAS / PENDIENTES = "
 						+ carrerasProcesadasIncluidasFallidas.size() + "/" + contarCarrerasPendientes());
 
-				String idCarreraIdcampeonatoAProcesar = extraerSiguienteCarreraPendiente();
 				int profundidadCarreraAProcesar = extraerProfundidadMinimaConCarrerasPendientes();
+				String idCarreraIdcampeonatoAProcesar = extraerSiguienteCarreraPendiente();
 
 				if (idCarreraIdcampeonatoAProcesar == null) {
 					MY_LOGGER.warn("Siguiente carrera pendiente es NULL.");
@@ -352,7 +352,14 @@ public class GalgosManager implements Serializable {
 				.size() < Constantes.MAX_NUM_CARRERAS_PROCESADAS;
 		boolean debajoUmbralProfundidadMax = extraerProfundidadMinimaConCarrerasPendientes() <= Constantes.MAX_PROFUNDIDAD_PROCESADA;
 
-		boolean out = quedanPendientes && (debajoUmbralCarrerasProcesadasMax || debajoUmbralProfundidadMax);
+		boolean out = quedanPendientes && debajoUmbralCarrerasProcesadasMax && debajoUmbralProfundidadMax;
+
+		MY_LOGGER.info("BUCLE-Condiciones: procesadas=" + extraerProfundidadMinimaConCarrerasPendientes());
+		MY_LOGGER.info("BUCLE-Condiciones: profundidad_minima_con_pendientes="
+				+ extraerProfundidadMinimaConCarrerasPendientes());
+
+		MY_LOGGER.info("BUCLE-Condiciones = " + quedanPendientes + " && " + debajoUmbralCarrerasProcesadasMax + " && "
+				+ debajoUmbralProfundidadMax + " = " + out);
 
 		return out;
 

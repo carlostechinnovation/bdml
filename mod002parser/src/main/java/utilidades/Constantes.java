@@ -25,7 +25,7 @@ public class Constantes {
 
 	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 25; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS.
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 5000;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 0L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 

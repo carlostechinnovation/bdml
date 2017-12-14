@@ -27,7 +27,7 @@ echo -e $(date +"%T")" Limpieza inteligente (scaling, normalizacion...) que nece
 #${PATH_SCRIPTS}'galgos_MOD002B.sh'
 
 echo -e $(date +"%T")" Analisis de datos: ESTADISTICA BASICA" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD003A.sh'
+${PATH_SCRIPTS}'galgos_MOD003A.sh'
 
 echo -e $(date +"%T")" Generador de DATASETS" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003B.sh'
