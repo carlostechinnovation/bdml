@@ -162,7 +162,7 @@ SELECT * FROM datos_desa.tb_galgos_003${sufijo} LIMIT 10;
 
 EOF
 
-echo -e "$CONSULTA4"
+echo -e "$CONSULTA4" 2>&1 1>>$PATH_LOG
 mysql -u root --password=datos1986 --execute="$CONSULTA4" 2>&1 1>>$PATH_LOG
 echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
@@ -372,6 +372,6 @@ mysql -u root --password=datos1986 --execute="$CONSULTA7" 2>&1 1>>$PATH_LOG
 echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
 
-echo -e "Generador de datasets: FIN\n\n\n\n" 2>&1 1>>$PATH_LOG
+echo -e "Generador de datasets: FIN\n\n" 2>&1 1>>$PATH_LOG
 
 
