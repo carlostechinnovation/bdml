@@ -10,10 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -35,7 +34,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 	static Logger MY_LOGGER = Logger.getLogger(GbgbParserGalgoHistorico.class);
 
-	public static Set<String> remarksClavesSinTraduccion = new HashSet<String>();
+	public static Map<String, Integer> remarksClavesSinTraduccion = new HashMap<String, Integer>();
 
 	public GbgbParserGalgoHistorico() {
 		super();
@@ -56,14 +55,14 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		try {
 			bruto = GbgbParserGalgoHistorico.readFile(pathIn, Charset.forName("ISO-8859-1"));
 			out = parsear(bruto, galgo_nombre);
-			MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: out=" + out);
+			MY_LOGGER.debug("out=" + out);
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error: " + e.getMessage());
 			e.printStackTrace();
 		}
 
-		MY_LOGGER.debug("GALGOS-GbgbParserGalgoHistorico: FIN");
+		MY_LOGGER.debug("FIN");
 		return out;
 	}
 
@@ -114,7 +113,13 @@ public class GbgbParserGalgoHistorico implements Serializable {
 			out = new GbgbGalgoHistorico(galgo_nombre, entrenador, padre_madre_nacimiento);
 
 			List<Node> filas = null;
-			for (Node item : tablaContenido.childNode(0).childNodes()) {
+
+			boolean esel0 = tablaContenido.childNode(0).toString().contains("rgRow");
+			boolean esel1 = tablaContenido.childNode(1).toString().contains("rgRow");
+			Node conContenidos = tablaContenido.childNode(0).toString().contains("rgRow") ? tablaContenido.childNode(0)
+					: tablaContenido.childNode(1);
+
+			for (Node item : conContenidos.childNodes()) {
 				if (item.toString().contains("rgRow")) {
 					filas = item.childNodes();
 				}
@@ -122,7 +127,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 
 			for (Node fila : filas) {
 				if (fila instanceof Element) {
-					rellenarFilaEnHistorico(out, (Element) fila);
+					rellenarFilaEnHistorico(out, (Element) fila, galgo_nombre);
 				}
 			}
 		}
@@ -134,17 +139,13 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	 * @param modelo
 	 * @param fila
 	 */
-	public static void rellenarFilaEnHistorico(GbgbGalgoHistorico modelo, Element fila) {
+	public static void rellenarFilaEnHistorico(GbgbGalgoHistorico modelo, Element fila, String galgo_nombre) {
 
 		Long id_carrera = Long.valueOf(((Element) fila.childNode(15).childNode(0)).attr("href").split("=")[1]);
 		Long id_campeonato = Long.valueOf(((Element) fila.childNode(16).childNode(0)).attr("href").split("=")[1]);
 
 		String[] fechaStr = ((TextNode) fila.childNode(1).childNode(0)).text().split("/");
-		Calendar fecha = Calendar.getInstance();
-		fecha.clear();
-		fecha.set(Calendar.DAY_OF_MONTH, Integer.valueOf(fechaStr[0]));
-		fecha.set(Calendar.MONTH, Integer.valueOf(fechaStr[1]));
-		fecha.set(Calendar.YEAR, 2000 + Integer.valueOf(fechaStr[2]));
+		Calendar fecha = Constantes.parsearFecha(fechaStr, true);
 
 		Integer distancia = Integer
 				.valueOf(Constantes.limpiarTexto(((TextNode) fila.childNode(2).childNode(0)).text().replace("m", "")));
@@ -157,7 +158,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		String remarks = Constantes.limpiarTexto(((TextNode) fila.childNode(9).childNode(0)).text());
 		String winTime = Constantes.limpiarTexto(((TextNode) fila.childNode(10).childNode(0)).text());
 		String going = Constantes.limpiarTexto(((TextNode) fila.childNode(11).childNode(0)).text());
-		String sp = Constantes.limpiarTexto(((TextNode) fila.childNode(12).childNode(0)).text());
+		String spStr = Constantes.limpiarTexto(((TextNode) fila.childNode(12).childNode(0)).text());
 		String clase = Constantes.limpiarTexto(((TextNode) fila.childNode(13).childNode(0)).text());
 		String calculatedTime = Constantes.limpiarTexto(((TextNode) fila.childNode(14).childNode(0)).text());
 
@@ -168,10 +169,31 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		// SCORINGS
 		Float scoringRemarks = calcularScoringRemarks(remarks);
 
+		// APUESTAS (SP-Starting Price, ODDs)
+		Float sp = null;
+		if (spStr != null && !spStr.isEmpty()) {
+			if (spStr.contains("/")) {
+				String[] spPartes = spStr.split("/");
+				sp = Float.valueOf(spPartes[0]) / Float.valueOf(spPartes[1]);
+			} else {
+				sp = Float.valueOf(spStr);
+			}
+		}
+
 		GbgbGalgoHistoricoCarrera filaModelo = new GbgbGalgoHistoricoCarrera(id_carrera, id_campeonato, fecha,
 				distancia, trap, stmHcp, posicion, by, galgo_primero_o_segundo, venue, remarks, winTime, going, sp,
 				clase, calculatedTime, velocidadReal, velocidadConGoing, scoringRemarks);
-		modelo.carrerasHistorico.add(filaModelo);
+
+		if (posicion == null || posicion.isEmpty()) {
+			MY_LOGGER.warn("Historico de galgo='" + galgo_nombre + "' con posicion nula o vacia. No cogemos esa fila.");
+		} else if ("0".equals(posicion)) {
+			MY_LOGGER.warn("Historico de galgo='" + galgo_nombre + "' con posicion=0. No cogemos esa fila.");
+		} else if (Integer.valueOf(posicion).intValue() >= 7) {
+			MY_LOGGER.warn(
+					"Historico de galgo='" + galgo_nombre + "' con posicion=" + posicion + ". No cogemos esa fila.");
+		} else {
+			modelo.carrerasHistorico.add(filaModelo);
+		}
 
 	}
 
@@ -250,7 +272,9 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		}
 
 		Float out = 0F;
-		Map<String, GalgosRemark> mapa = Constantes.generarDiccionarioRemarks();
+		// TODO descomentar cuando conozca bien los remarks
+		// Map<String, GalgosRemark> mapa = Constantes.generarDiccionarioRemarks();
+		Map<String, GalgosRemark> mapa = new HashMap<String, GalgosRemark>();
 
 		for (String parte : partes) {
 
@@ -260,13 +284,19 @@ public class GbgbParserGalgoHistorico implements Serializable {
 			if (mapa.containsKey(clave)) {
 				out += mapa.get(clave).puntos;
 			} else {
-				// MY_LOGGER.error(
-				// "GALGOS-GbgbParserGalgoHistorico.calcularScoringRemarks ERROR Clave no
-				// encontrada (incluso sin numeros): "
-				// + parte);
-				if (remarksClavesSinTraduccion.size() < 300) {// solo guardo un numero limitado
-					remarksClavesSinTraduccion.add(clave);
+
+				if (remarksClavesSinTraduccion.keySet().size() < Constantes.MAX_NUM_REMARKS_MEMORIZADAS) {// solo guardo
+																											// un numero
+																											// limitado
+
+					if (remarksClavesSinTraduccion.containsKey(clave)) {
+						remarksClavesSinTraduccion.replace(clave, remarksClavesSinTraduccion.get(clave) + 1);
+					} else {
+						remarksClavesSinTraduccion.put(clave, 1);
+					}
+
 				}
+
 			}
 
 		}

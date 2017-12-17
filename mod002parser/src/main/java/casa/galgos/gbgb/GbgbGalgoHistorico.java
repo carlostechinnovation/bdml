@@ -72,4 +72,9 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 		return pathDirBase + "tb_galgos_historico_file";
 	}
 
+	@Override
+	public String toString() {
+		return "GbgbGalgoHistorico [...]";
+	}
+
 }

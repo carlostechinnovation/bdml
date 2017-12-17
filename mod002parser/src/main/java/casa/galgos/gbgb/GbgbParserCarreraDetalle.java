@@ -372,7 +372,9 @@ public class GbgbParserCarreraDetalle implements Serializable {
 		String aux = padre_madre_nacimiento_peso.contains("eight")
 				? padre_madre_nacimiento_peso.split("Weight")[1].replace(")", "").replace(":", "").trim()
 				: null;
-		out.peso_galgo = aux != null ? Float.valueOf(aux) : null;
+		Float pesoParseado = aux != null ? Float.valueOf(aux) : null;
+		out.peso_galgo = (pesoParseado != null && pesoParseado.intValue() >= Constantes.MIN_PESO_GALGO) ? pesoParseado
+				: null;
 
 	}
 

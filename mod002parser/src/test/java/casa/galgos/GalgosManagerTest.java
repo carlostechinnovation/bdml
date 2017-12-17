@@ -153,11 +153,12 @@ public class GalgosManagerTest {
 
 		GbgbParserGalgoHistorico gpgh = new GbgbParserGalgoHistorico();
 
-		gpgh.remarksClavesSinTraduccion.add("clavePruebas");
+		gpgh.remarksClavesSinTraduccion.put("claveA", 3);
+		gpgh.remarksClavesSinTraduccion.put("claveB", 7);
 
 		String out = GalgosManager.mostrarRemarksSinTraducir(gpgh);
 
-		Assert.assertTrue(out.equals("clavePruebas"));
+		Assert.assertTrue(out.equals("3|claveA\\n7|claveB\\n"));
 	}
 
 }

@@ -3,7 +3,14 @@ package utilidades;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Constantes {
@@ -23,11 +30,13 @@ public class Constantes {
 	public static final String GALGOS_SPORTIUM_PREFIJO = "https://sport-mobile.sportium.es";
 	public static final String GALGOS_FUTUROS_SPORTIUM = GALGOS_SPORTIUM_PREFIJO + "/es/s/GREY/Galgos";
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 25; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS.
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 2; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS.
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 0L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 30;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
+	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
+	public static final Integer MIN_PESO_GALGO = 15;// kg
 
 	// -------------- BOLSA --------
 	public static final String PATH_DIR_DATOS_BRUTOS_BOLSA = "/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/";
@@ -84,22 +93,28 @@ public class Constantes {
 	public static Calendar parsearFechaHora(String fechaStr, String horaStr, boolean anioIncompleto) {
 
 		Integer dia = Integer.valueOf(fechaStr.trim().substring(0, 2));
-		Integer mes = Integer.valueOf(fechaStr.trim().substring(3, 5));
+		Integer mes = Integer.valueOf(fechaStr.trim().substring(3, 5)) - 1;
 		Integer anio = anioIncompleto ? (2000 + Integer.valueOf(fechaStr.trim().substring(6, 8)))
 				: Integer.valueOf(fechaStr.trim().substring(6, 10));
 
 		Integer hora = Integer.valueOf(horaStr.trim().substring(0, 2));
 		Integer minuto = Integer.valueOf(horaStr.trim().substring(3, 5));
 
-		Calendar fechayhora = Calendar.getInstance();
-		fechayhora.clear();
-		fechayhora.set(Calendar.YEAR, anio);
-		fechayhora.set(Calendar.MONTH, mes);
-		fechayhora.set(Calendar.DAY_OF_MONTH, dia);
-		fechayhora.set(Calendar.HOUR_OF_DAY, hora);
-		fechayhora.set(Calendar.MINUTE, minuto);
+		return new GregorianCalendar(anio, mes, dia, hora, minuto, 0);
+	}
 
-		return fechayhora;
+	/**
+	 * @param fechaStr
+	 * @param anioIncompleto
+	 * @return
+	 */
+	public static Calendar parsearFecha(String[] fechaStr, boolean anioIncompleto) {
+
+		Integer anio = anioIncompleto ? (2000 + Integer.valueOf(fechaStr[2])) : Integer.valueOf(fechaStr[2]);
+		Integer mes = Integer.valueOf(fechaStr[1]) - 1;
+		Integer dia = Integer.valueOf(fechaStr[0]);
+
+		return new GregorianCalendar(anio, mes, dia, 10, 0, 0);
 	}
 
 	/**
@@ -125,7 +140,36 @@ public class Constantes {
 		}
 
 		return out;
+	}
 
+	/**
+	 * Ordena un mapa por VALORES.
+	 * 
+	 * Link:
+	 * https://beginnersbook.com/2013/12/how-to-sort-hashmap-in-java-by-keys-and-values/
+	 * 
+	 * @param map
+	 * @return
+	 */
+	public static Map sortByValues(Map map) {
+
+		List list = new LinkedList(map.entrySet());
+		// Defined Custom Comparator here
+		Collections.sort(list, new Comparator() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				return ((Comparable) ((Map.Entry) (o1)).getValue()).compareTo(((Map.Entry) (o2)).getValue());
+			}
+		});
+
+		// Here I am copying the sorted list in HashMap
+		// using LinkedHashMap to preserve the insertion order
+		HashMap sortedHashMap = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			sortedHashMap.put(entry.getKey(), entry.getValue());
+		}
+		return sortedHashMap;
 	}
 
 	/**

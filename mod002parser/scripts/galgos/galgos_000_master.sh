@@ -15,7 +15,7 @@ echo -e $(date +"%T")" GALGOS - Cadena de procesos" >>$PATH_LOG
 echo -e "Ruta script="${PATH_SCRIPTS}
 
 echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD001A.sh'
+${PATH_SCRIPTS}'galgos_MOD001A.sh'
 
 echo -e $(date +"%T")" Planificador de DESCARGA DIARIA (comandos CRON solo para descargas de datos)" >>$PATH_LOG
 #.${PATH_SCRIPTS}'galgos_MOD001B.sh'
@@ -31,6 +31,9 @@ ${PATH_SCRIPTS}'galgos_MOD003A.sh'
 
 echo -e $(date +"%T")" Generador de DATASETS" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003B.sh'
+
+echo -e $(date +"%T")" Sistema predictivo simple PGA (funcion con pesos, para cada galgo)" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh'
 
 echo -e $(date +"%T")" INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD004_nucleo.sh'

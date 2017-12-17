@@ -208,7 +208,7 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 
 		out += in.get(Calendar.YEAR) + Constantes.SEPARADOR_CAMPO;
 
-		int mes = in.get(Calendar.MONTH);
+		int mes = in.get(Calendar.MONTH) + 1;
 		out += ((mes >= 10) ? mes : ("0" + mes)) + Constantes.SEPARADOR_CAMPO;
 
 		int dia = in.get(Calendar.DAY_OF_MONTH);

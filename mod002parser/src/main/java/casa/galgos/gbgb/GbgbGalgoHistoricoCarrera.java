@@ -34,7 +34,7 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 	public String remarks = "\\N"; // Equivale a comment (para ese galgo y esa carrera)
 	public String winTime = "\\N"; // Tiempo que hizo el galgo que gano la carrera
 	public String going = "\\N";
-	public String sp = "\\N";
+	public Float sp;// Starting Price (APUESTAS, odds)
 	public String clase = "\\N";// Tipo de carrera
 	public String calculatedTime = "\\N";// Tiempo de este galgo en la carrera (no del que gano)
 
@@ -48,7 +48,7 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 
 	public GbgbGalgoHistoricoCarrera(Long id_carrera, Long id_campeonato, Calendar fecha, Integer distancia,
 			String trap, String stmHcp, String posicion, String by, String galgo_primero_o_segundo, String venue,
-			String remarks, String winTime, String going, String sp, String clase, String calculatedTime,
+			String remarks, String winTime, String going, Float sp, String clase, String calculatedTime,
 			Float velocidadReal, Float velocidadConGoing, Float scoringRemarks) {
 		super();
 		this.id_carrera = id_carrera;
@@ -82,7 +82,7 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += "distancia SMALLINT, trap varchar(1), stmhcp varchar(10), ";
 		out += "posicion varchar(1), by_dato varchar(15), galgo_primero_o_segundo varchar(30), ";
 		out += "venue varchar(20), remarks varchar(30), win_time decimal(6,2), ";
-		out += "going varchar(5), sp varchar(5), clase varchar(5), calculated_time decimal(6,2), ";
+		out += "going varchar(5), sp decimal(8,4), clase varchar(5), calculated_time decimal(6,2), ";
 		out += "velocidad_real decimal(6,4), velocidad_con_going decimal(6,4)," + "scoring_remarks decimal(4,2)";
 
 		return out;
@@ -121,7 +121,7 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += SEP;
 		out += (going != null && !"".equals(going)) ? going : "\\N";
 		out += SEP;
-		out += (sp != null && !"".equals(sp)) ? sp : "\\N";
+		out += sp != null ? Constantes.round2(sp, 4) : "\\N";
 		out += SEP;
 		out += (clase != null && !"".equals(clase)) ? clase : "\\N";
 		out += SEP;

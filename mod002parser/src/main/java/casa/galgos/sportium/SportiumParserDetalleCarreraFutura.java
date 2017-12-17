@@ -127,7 +127,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 						: galgoNombreStr;
 				galgoNombreStr = galgoNombreStr.contains("(") ? galgoNombreStr.split("\\(")[0].trim() : galgoNombreStr;
 
-				out.add(galgoNombreStr);
+				out.add(galgoNombreStr);// ordenados segun el TRAP
 			}
 		}
 

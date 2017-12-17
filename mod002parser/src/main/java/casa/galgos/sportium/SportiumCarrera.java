@@ -17,7 +17,7 @@ public class SportiumCarrera implements Serializable {
 	public String estadio;
 	public Long dia;// yyyyMMddhhmm
 	public Integer hora;// hhmm
-	public List<String> galgosNombres = new ArrayList<String>();
+	public List<String> galgosNombres = new ArrayList<String>();// ordenados segun el trap
 
 	public SportiumCarrera(String urlDetalle, String estadio, Long dia, Integer hora, List<String> galgosNombres) {
 		super();

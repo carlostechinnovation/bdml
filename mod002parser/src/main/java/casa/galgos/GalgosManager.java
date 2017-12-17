@@ -138,10 +138,14 @@ public class GalgosManager implements Serializable {
 		Set<SportiumCarreraGalgo> carreraGalgos = new HashSet<SportiumCarreraGalgo>();
 		for (SportiumCarrera carrera : galgosFuturos) {
 			if (carrera.galgosNombres != null && !carrera.galgosNombres.isEmpty()) {
+
+				int trap = 1;// La lista de galgosNombres esta ordenada segun el TRAP
+
 				for (String galgoNombre : carrera.galgosNombres) {
 
 					String id = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora + "#" + galgoNombre;
-					carreraGalgos.add(new SportiumCarreraGalgo(id, galgoNombre, carrera));
+					carreraGalgos.add(new SportiumCarreraGalgo(id, galgoNombre, trap, carrera));
+					trap++;
 				}
 			}
 		}
@@ -427,22 +431,19 @@ public class GalgosManager implements Serializable {
 	 */
 	public static String mostrarRemarksSinTraducir(GbgbParserGalgoHistorico gpgh) {
 
-		List<String> ordenadas = new ArrayList<String>();
-		ordenadas.addAll(gpgh.remarksClavesSinTraduccion);
-		ordenadas.sort(null);// natural ordening de String: alfabetico
+		Map<String, Integer> ordenadoPorClave = Constantes.sortByValues(gpgh.remarksClavesSinTraduccion);
 
-		MY_LOGGER.info("Numero de remarks que no hemos podido traducir: " + ordenadas.size());
+		MY_LOGGER.info("Numero de remarks que no hemos podido traducir y asignarles puntuacion: "
+				+ ordenadoPorClave.keySet().size());
 
-		int num = 0;
 		String clavesSinTraducir = "";
-		for (String clave : ordenadas) {
-			if (num > 0) {
-				clavesSinTraducir += "|";
+		for (String clave : ordenadoPorClave.keySet()) {
+
+			if (ordenadoPorClave.get(clave).intValue() > 50) {// Que haya aparecido mucho
+				clavesSinTraducir += ordenadoPorClave.get(clave) + "|" + clave + "\n";
 			}
-			clavesSinTraducir += clave;
-			num++;
 		}
-		MY_LOGGER.info("Claves: " + clavesSinTraducir);
+		MY_LOGGER.info("Claves: \n" + clavesSinTraducir);
 
 		return clavesSinTraducir;
 	}
@@ -843,7 +844,7 @@ public class GalgosManager implements Serializable {
 		// no guardar agregados de galgos que ya tengo
 				!guardableGalgoAgregados.containsKey(historico.galgo_nombre.trim())) {
 
-			guardableGalgoAgregados.put(historico.galgo_nombre.trim(), new GalgoAgregados(historico.galgo_nombre.trim(),
+			GalgoAgregados ga = new GalgoAgregados(historico.galgo_nombre.trim(),
 
 					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_CORTA, TIPO_VEL_REAL,
 							TIPO_ESTADISTICO_MEDIANA),
@@ -872,7 +873,9 @@ public class GalgosManager implements Serializable {
 					calcularVelocidadEstadistico(historico.carrerasHistorico, DISTANCIA_LARGA, TIPO_VEL_CON_GOING,
 							TIPO_ESTADISTICO_MAXIMO)
 
-			));
+			);
+
+			guardableGalgoAgregados.put(historico.galgo_nombre.trim(), ga);
 
 		}
 	}

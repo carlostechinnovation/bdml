@@ -52,7 +52,7 @@ echo -e "$CONSULTA1" 2>&1 1>>$PATH_LOG
 mysql -u root --password=datos1986 --execute="$CONSULTA1" 2>&1 1>>$PATH_LOG
 echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
-#################### En cada carrera, ordeno los galgos segun su velocidad_media_con_going_reciente (SEGUN DISTANCIA DE ESA CARRERA), extrayendo los que deberían quedar segundos --> Debo analizar este criterio en el modulo MOD003A, para ordenar por el criterio (compuesto) que más afecte al target.
+#################### 
 read -d '' CONSULTA2 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_galgos_002${sufijo};
 
@@ -111,14 +111,21 @@ echo -e "$CONSULTA2" 2>&1 1>>$PATH_LOG
 mysql -u root --password=datos1986 --execute="$CONSULTA2" 2>&1 1>>$PATH_LOG
 echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
-#################### 
+#################### En cada carrera, ordeno los galgos segun su velocidad_media_con_going_reciente (SEGUN DISTANCIA DE ESA CARRERA), extrayendo los que deberían quedar segundos --> Debo analizar este criterio en el modulo MOD003A, para ordenar por el criterio (compuesto) que más afecte al target.
 read -d '' CONSULTA3 <<- EOF
-DROP TABLE IF EXISTS datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo};
+DROP TABLE IF EXISTS datos_desa.tb_galgos_002_ordenadoporcriteriocompuesto${sufijo};
 
 
-CREATE TABLE datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo} AS 
+CREATE TABLE datos_desa.tb_galgos_002_ordenadoporcriteriocompuesto${sufijo} AS 
 SELECT 
 *,
+
+CASE
+  WHEN (distancia <400) THEN 1
+  WHEN (distancia >= 400 AND distancia <600) THEN 2
+  WHEN (distancia >600) THEN 3
+  ELSE NULL
+END AS distancia_tipo,
 
 CASE
   WHEN (distancia <400) THEN vel_going_cortas_max
@@ -132,7 +139,7 @@ ORDER BY OPVMD.id_carrera, vel_going_comparar_max DESC
 ;
 
 
-SELECT * FROM datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo} LIMIT 10;
+SELECT * FROM datos_desa.tb_galgos_002_ordenadoporcriteriocompuesto${sufijo} LIMIT 10;
 EOF
 
 echo -e "$CONSULTA3" 2>&1 1>>$PATH_LOG
@@ -153,7 +160,7 @@ P1.*,
   ELSE @curRow := 1 AND @curCarreraId := id_carrera 
   END
 )  AS rank
-FROM datos_desa.tb_galgos_002_ordenadoporvelmediadistancia${sufijo} P1, 
+FROM datos_desa.tb_galgos_002_ordenadoporcriteriocompuesto${sufijo} P1, 
 (SELECT @curRow := 0, @curCarreraId := '') r
 ORDER BY  id_carrera ASC, vel_going_comparar_max DESC
 ;

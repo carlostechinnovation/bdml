@@ -1,7 +1,7 @@
 package casa.galgos.gbgb;
 
 import java.util.Calendar;
-import java.util.Set;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,6 +27,7 @@ public class GbgbParserGalgoHistoricoTest {
 	// public ResourceFile res = new ResourceFile("/" +
 	// "historico_no_encontrado.html");
 	// public ResourceFile res = new ResourceFile("/" + "historico_sin_filas.html");
+	// public ResourceFile res = new ResourceFile("/" + "Adamant_Reagan.html");
 
 	@Test
 	public void testParsear() throws Exception {
@@ -47,7 +48,7 @@ public class GbgbParserGalgoHistoricoTest {
 		Assert.assertTrue(hc.clase.equals("D3"));
 		Assert.assertTrue(hc.distancia.equals(265));
 		Assert.assertTrue(hc.fecha.get(Calendar.YEAR) == 2017);
-		Assert.assertTrue(hc.fecha.get(Calendar.MONTH) == 10);
+		Assert.assertTrue(hc.fecha.get(Calendar.MONTH) == (10 - 1));
 		Assert.assertTrue(hc.fecha.get(Calendar.DAY_OF_MONTH) == 22);
 		Assert.assertTrue(hc.galgo_primero_o_segundo.equals("Carrigeen Mastro"));
 		Assert.assertTrue(hc.going.equals("N"));
@@ -55,7 +56,7 @@ public class GbgbParserGalgoHistoricoTest {
 		Assert.assertTrue(hc.id_carrera.equals(2030316L));
 		Assert.assertTrue(hc.posicion.equals("2"));
 		Assert.assertTrue(hc.remarks.equals("EP,Ld1-RnIn"));
-		Assert.assertTrue(hc.sp.equals("6/4"));
+		Assert.assertTrue(hc.sp.equals(6F / 4F));
 		// TODO Assert.assertTrue(hc.stmHcp.equals(" "));
 		Assert.assertTrue(hc.trap.equals("1"));
 		Assert.assertTrue(hc.venue.equals("Central Park"));
@@ -98,13 +99,13 @@ public class GbgbParserGalgoHistoricoTest {
 		GbgbParserGalgoHistorico gpgh1 = new GbgbParserGalgoHistorico();
 		Float out1 = gpgh1.calcularScoringRemarks("EP,Ld1-RnIn");
 		Assert.assertTrue(out1.equals(0.0F));
-		Set<String> remarksClavesSinTraduccion1 = gpgh1.remarksClavesSinTraduccion;
-		Assert.assertTrue(remarksClavesSinTraduccion1.size() == 0);
+		Map<String, Integer> remarksClavesSinTraduccion1 = gpgh1.remarksClavesSinTraduccion;
+		Assert.assertTrue(remarksClavesSinTraduccion1.keySet().size() == 0);
 
 		GbgbParserGalgoHistorico gpgh2 = new GbgbParserGalgoHistorico();
 		Float out2 = gpgh1.calcularScoringRemarks("FinWell,LckEP,CrdRunUp,EPace");
-		Set<String> remarksClavesSinTraduccion2 = gpgh2.remarksClavesSinTraduccion;
-		Assert.assertTrue(remarksClavesSinTraduccion2.size() == 0);
+		Map<String, Integer> remarksClavesSinTraduccion2 = gpgh2.remarksClavesSinTraduccion;
+		Assert.assertTrue(remarksClavesSinTraduccion2.keySet().size() == 0);
 	}
 
 }

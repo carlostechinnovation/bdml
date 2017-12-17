@@ -185,7 +185,7 @@ public class Mod002Parser implements Serializable {
 			out += (new GalgoAgregados(null, null, null, null, null, null, null, null, null, null, null, null, null))
 					.generarSqlCreateTable("");
 
-			out += (new SportiumCarreraGalgo(null, null, null)).generarSqlCreateTable();
+			out += (new SportiumCarreraGalgo(null, null, null, null)).generarSqlCreateTable();
 
 			try {
 

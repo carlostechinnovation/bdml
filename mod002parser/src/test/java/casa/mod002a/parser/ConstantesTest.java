@@ -1,5 +1,6 @@
 package casa.mod002a.parser;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import org.junit.Before;
@@ -22,16 +23,33 @@ public class ConstantesTest {
 	@Test
 	public void parsearFechaHoraTest() throws Exception {
 
-		Calendar out = Constantes.parsearFechaHora("09/11/17", "20:52", true);
-
-		Assert.assertTrue(out.get(Calendar.YEAR) == 2017);
-		Assert.assertTrue(out.get(Calendar.MONTH) == 11);
-		Assert.assertTrue(out.get(Calendar.DAY_OF_MONTH) == 9);
-		Assert.assertTrue(out.get(Calendar.HOUR_OF_DAY) == 20);
-		Assert.assertTrue(out.get(Calendar.MINUTE) == 52);
-
+		Calendar out = Constantes.parsearFechaHora("09/12/17", "20:52", true);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String fechaDebug = sdf.format(out.getTime());
+		Assert.assertEquals("20171209", fechaDebug);
 		String outStr = GbgbCarrera.formatearFechaParaExportar(out);
-		Assert.assertTrue(outStr.equals("2017|11|09|20|52"));
+		Assert.assertTrue(outStr.equals("2017|12|09|20|52"));
+
+		Calendar out2 = Constantes.parsearFechaHora("07/01/19", "20:52", true);
+		String fechaDebug2 = sdf.format(out2.getTime());
+		Assert.assertEquals("20190107", fechaDebug2);
+		String outStr2 = GbgbCarrera.formatearFechaParaExportar(out2);
+		Assert.assertTrue(outStr2.equals("2019|01|07|20|52"));
+	}
+
+	@Test
+	public void parsearFechaTest() throws Exception {
+
+		String[] fechaArray = { "09", "12", "17" };
+		Calendar out = Constantes.parsearFecha(fechaArray, true);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String fechaDebug = sdf.format(out.getTime());
+		Assert.assertEquals("20171209", fechaDebug);
+
+		String[] fechaArray2 = { "05", "01", "19" };
+		Calendar out2 = Constantes.parsearFecha(fechaArray2, true);
+		String fechaDebug2 = sdf.format(out2.getTime());
+		Assert.assertEquals("20190105", fechaDebug2);
 	}
 
 	@Test

@@ -14,6 +14,7 @@ rm -f $PATH_MODELO_GANADOR
 
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_gagst.py' > "${FOLDER_INFORMES}galgos_MOD004_gagst.out"
 
+cat "${FOLDER_INFORMES}galgos_MOD004_gagst.out" | grep 'GAGST-Gana modelo'  >&1
 
 
 echo -e "Modulo 004B - FIN\n\n"
