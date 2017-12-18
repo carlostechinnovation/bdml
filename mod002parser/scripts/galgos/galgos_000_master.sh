@@ -29,11 +29,11 @@ echo -e $(date +"%T")" Limpieza inteligente (scaling, normalizacion...) que nece
 echo -e $(date +"%T")" Analisis de datos: ESTADISTICA BASICA" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003A.sh'
 
-echo -e $(date +"%T")" Generador de DATASETS" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD003B.sh'
-
 echo -e $(date +"%T")" Sistema predictivo simple PGA (funcion con pesos, para cada galgo)" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003C.sh'
+
+echo -e $(date +"%T")" Generador de DATASETS" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003B.sh'
 
 echo -e $(date +"%T")" INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD004_nucleo.sh'

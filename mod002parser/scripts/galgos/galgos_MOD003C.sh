@@ -115,6 +115,7 @@ SELECT * FROM datos_desa.tb_pga_x6c LIMIT 30;
 SELECT count(*) as num_x6c FROM datos_desa.tb_pga_x6c LIMIT 10;
 EOF
 echo -e "$CONSULTA_X6C" 2>&1 >&1
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6C" >&1
 
 read -d '' CONSULTA_X6D <<- EOF
 DROP TABLE datos_desa.tb_pga_x6d;
@@ -136,7 +137,7 @@ SELECT * FROM datos_desa.tb_pga_x6d LIMIT 30;
 SELECT count(*) as num_x6d FROM datos_desa.tb_pga_x6d LIMIT 10;
 EOF
 echo -e "$CONSULTA_X6D" 2>&1 >&1
-
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6D" >&1
 
 
 #X7: peso del galgo
@@ -147,7 +148,7 @@ mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x7a FROM da
 
 
 mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x7b\W;" >&1
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x7b AS SELECT distancia_centenas, AVG(peso_galgo) AS peso_medio, COUNT(*) FROM datos_desa.tb_pga_x7a GROUP BY distancia_centenas ORDER BY distancia_centenas ASC;\W;" >&1
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x7b AS SELECT distancia_centenas, AVG(peso_galgo) AS peso_medio, COUNT(*) FROM datos_desa.tb_pga_x7a GROUP BY distancia_centenas ORDER BY distancia_centenas ASC\W;" >&1
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x7b LIMIT 10\W;" >&1
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x7b FROM datos_desa.tb_pga_x7b LIMIT 10\W;" >&1
 
@@ -170,6 +171,7 @@ SELECT * FROM datos_desa.tb_pga_x7c LIMIT 10;
 SELECT count(*) as num_x7c FROM datos_desa.tb_pga_x7c LIMIT 10;
 EOF
 echo -e "$CONSULTA_X7C" 2>&1 >&1
+mysql -u root --password=datos1986 --execute="$CONSULTA_X7C" >&1
 
 
 #X8: estadio con mucho going
@@ -177,10 +179,10 @@ read -d '' CONSULTA_X8A <<- EOF
 DROP TABLE datos_desa.tb_pga_x8a;
 
 CREATE TABLE datos_desa.tb_pga_x8a AS 
-SELECT id_carrera, venue, going_std, going_avg
+SELECT id_carrera, venue, venue_going_std, venue_going_avg
 FROM datos_desa.tb_galgos_historico GH 
 LEFT JOIN ( 
-  SELECT track, STD(going_abs) AS going_std, AVG(going_abs) AS going_avg 
+  SELECT track, STD(going_abs) AS venue_going_std, AVG(going_abs) AS venue_going_avg 
   FROM (select track, ABS(going_allowance_segundos) AS going_abs FROM datos_desa.tb_galgos_carreras) dentro 
   GROUP BY dentro.track
 ) fuera
@@ -190,6 +192,19 @@ SELECT * FROM datos_desa.tb_pga_x8a LIMIT 10;
 SELECT count(*) as num_x8a FROM datos_desa.tb_pga_x8a LIMIT 10;
 EOF
 echo -e "$CONSULTA_X8A" 2>&1 >&1
+mysql -u root --password=datos1986 --execute="$CONSULTA_X8A" >&1
+
+
+#X9: Calidad del ENTRENADOR
+mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x9a\W;" >&1
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x9a AS SELECT entrenador, AVG(posicion) AS posicion_avg, STD(posicion) AS posicion_std FROM datos_desa.tb_galgos_historico GROUP BY entrenador\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x9a LIMIT 10\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x9a FROM datos_desa.tb_pga_x9a LIMIT 10\W;" >&1
+
+mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x9b\W;" >&1
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x9b AS SELECT entrenador, (6-posicion_avg)/5 AS entrenador_posicion_norm FROM datos_desa.tb_pga_x9a\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x9b LIMIT 10\W;" >&1
+mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x9b FROM datos_desa.tb_pga_x9b LIMIT 10\W;" >&1
 
 
 
@@ -198,30 +213,68 @@ echo -e "$CONSULTA_X8A" 2>&1 >&1
 #####################################################################################
 
 
-############## PESOS ########
-w1=1.0;
-w2=1.0;
-w3=1.0;
-w4=0.0;
-w5=0.0;
-w6=1.0;
-w7=1.0;
 
-echo -e "PESOS: ${w1}|${w2}|${w3}|${w4}|${w5}|${w6}|${w7}" >&1
+
 
 ###############################################################
 #Tabla FINAL con las variables de CADA galgo: usando pesos --> f(x1,x2...)=w1*x1 + w2*x2 + w3*x3+...
-###############################################################3
+###############################################################
 
-#mysql -u root --password=datos1986 --execute="\W;" >&1
-#mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_final AS SELECT DISTINCT galgo_nombre from tb_galgos_posiciones_en_carreras\W;" >&1
-#mysql -u root --password=datos1986 --execute="\W;" >&1
+read -d '' CONSULTA_FINAL <<- EOF
+DROP TABLE datos_desa.tb_pga_final;
+
+CREATE TABLE datos_desa.tb_pga_final AS 
+SELECT 
+GH.*,
+X1B.vgcortasm_norm, X1B.vgmediasm_norm, X1B.vglargasm_norm,
+X2B.experiencia,
+X3C.trap_factor,
+X6D.experiencia_en_clase, X6D.experiencia_cualitativo, X6D.posicion_media_en_clase_por_experiencia,
+X7C.distancia_centenas, X7C.dif_peso,
+X8A.venue_going_std, X8A.venue_going_avg,
+X9B.entrenador_posicion_norm
+
+FROM datos_desa.tb_galgos_historico GH
+
+LEFT JOIN datos_desa.tb_pga_x1b X1B ON (GH.galgo_nombre=X1B.galgo_nombre)
+LEFT JOIN datos_desa.tb_pga_x2b X2B ON (GH.galgo_nombre=X2B.galgo_nombre)
+LEFT JOIN datos_desa.tb_pga_x3c X3C ON (GH.id_carrera=X3C.id_carrera AND GH.trap=X3C.trap)
+LEFT JOIN datos_desa.tb_pga_x4 X4 ON (GH.id_carrera=X4.id_carrera AND GH.galgo_nombre=X4.galgo_nombre)
+LEFT JOIN datos_desa.tb_pga_x5 X5 ON (GH.id_carrera=X5.id_carrera AND GH.galgo_nombre=X5.galgo_nombre)
+LEFT JOIN datos_desa.tb_pga_x6d X6D ON (GH.id_carrera=X6D.id_carrera AND GH.galgo_nombre=X6D.galgo_nombre)
+LEFT JOIN datos_desa.tb_pga_x7c X7C ON (GH.id_carrera=X7C.id_carrera AND GH.galgo_nombre=X7C.galgo_nombre)
+LEFT JOIN datos_desa.tb_pga_x8a X8A ON (GH.venue=X8A.venue)
+LEFT JOIN datos_desa.tb_pga_x9b X9B ON (GH.entrenador=X9B.entrenador)
+;
+
+SELECT * FROM datos_desa.tb_pga_final LIMIT 10;
+
+SELECT count(*) as num_final FROM datos_desa.tb_pga_final LIMIT 10;
+EOF
+echo -e "$CONSULTA_FINAL" 2>&1 >&1
+mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >&1
 
 
+###############################################################
+########## SCORE
+# Ejecuta sobre el 100% de los datos (no habíamos usado train+test, sino medias/medianas, etc.)
+# Objetivo: cuánto porcentaje acertamos si usamos este sistema sencillo (ajustando los pesos óptimos)
+# Iterar con los PESOS para maximizar el score --> Mejor hacerlo en Python con una Regresión logística o lineal...
+###############################################################
 
-########## SCORE sobre el 100% de los datos (no habíamos usado train+test, sino medias/medianas, etc.) ######
-######## Objetivo: cuánto porcentaje acertamos si usamos este sistema (ajustando los pesos óptimos)
-#Iterar con los pesos para maximizar el score --> Mejor hacerlo en Python con una Regresión logística o lineal...
+## PESOS: todos deben sumar 1.0 #####
+w1=1.0;
+w2=0.0;
+w3=0.0;
+w4=0.0;
+w5=0.0;
+w6=0.0;
+w7=0.0;
+w8=0.0;
+w9=0.0;
+
+echo -e "PESOS: ${w1}|${w2}|${w3}|${w4}|${w5}|${w6}|${w7}|${w8}|${w9}" >&1
+
 
 
 
