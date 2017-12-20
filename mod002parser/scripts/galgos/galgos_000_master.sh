@@ -30,7 +30,7 @@ echo -e $(date +"%T")" Analisis de datos: ESTADISTICA BASICA" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003A.sh'
 
 echo -e $(date +"%T")" Sistema predictivo simple PGA (funcion con pesos, para cada galgo)" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD003C.sh'
+${PATH_SCRIPTS}'galgos_MOD003PGA.sh'
 
 echo -e $(date +"%T")" Generador de DATASETS" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003B.sh'
@@ -41,6 +41,7 @@ ${PATH_SCRIPTS}'galgos_MOD004.sh'
 
 echo -e $(date +"%T")" INFORMES (resultados)" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD005.sh'
+${PATH_SCRIPTS}'galgos_MOD005_PGA.sh'
 
 echo -e $(date +"%T")" Análisis posterior" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD006.sh'
