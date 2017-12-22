@@ -538,26 +538,26 @@ rm -f "$PATH_WARNINGS_PGA"
 
 
 echo -e "\n---- Variables de CADA galgo: X1, X2..." >&1
-#calcularVariableX1
-#calcularVariableX2
-#calcularVariableX3
-#calcularVariableX4
-#calcularVariableX5
-#calcularVariableX6
-#calcularVariableX7
-#calcularVariableX8
-#calcularVariableX9
+calcularVariableX1
+calcularVariableX2
+calcularVariableX3
+calcularVariableX4
+calcularVariableX5
+calcularVariableX6
+calcularVariableX7
+calcularVariableX8
+calcularVariableX9
 
 echo -e "\n---- Tabla FINAL con las variables de CADA galgo: usando pesos --> f(x1,x2...)=w1*x1 + w2*x2 + w3*x3+..." >&1
-#calcularFinalX1
-#calcularFinalX2
-#calcularFinalX3
-#calcularFinalX4
-#calcularFinalX5
-#calcularFinalX6
-#calcularFinalX7
-#calcularFinalX8
-#calcularFinalX9
+calcularFinalX1
+calcularFinalX2
+calcularFinalX3
+calcularFinalX4
+calcularFinalX5
+calcularFinalX6
+calcularFinalX7
+calcularFinalX8
+calcularFinalX9
 
 
 #PLAN B (si MySQL se atasca): MEDIANTE FICHERO DE SENTENCIAS SQL 

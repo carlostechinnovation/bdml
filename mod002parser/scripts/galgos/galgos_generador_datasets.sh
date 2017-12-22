@@ -111,7 +111,7 @@ echo -e "$CONSULTA2" 2>&1 1>>$PATH_LOG
 mysql -u root --password=datos1986 --execute="$CONSULTA2" 2>&1 1>>$PATH_LOG
 echo -e "\n----------------------------------------------------\n" 2>&1 1>>$PATH_LOG
 
-#################### En cada carrera, ordeno los galgos segun su velocidad_media_con_going_reciente (SEGUN DISTANCIA DE ESA CARRERA), extrayendo los que deberían quedar segundos --> Debo analizar este criterio en el modulo MOD003A, para ordenar por el criterio (compuesto) que más afecte al target.
+#################### En cada carrera, ordeno los galgos segun su PUNTOS-PGA (SEGUN DISTANCIA DE ESA CARRERA), extrayendo los que deberían quedar segundos.
 read -d '' CONSULTA3 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_galgos_002_ordenadoporcriteriocompuesto${sufijo};
 
