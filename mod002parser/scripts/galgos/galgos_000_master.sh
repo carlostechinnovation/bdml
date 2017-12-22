@@ -10,6 +10,8 @@ rm -f "/home/carloslinux/Desktop/LOGS/log4j-application.log"
 rm -f $PATH_LOG
 
 
+#sudo service mysql start
+
 
 echo -e $(date +"%T")" GALGOS - Cadena de procesos" >>$PATH_LOG
 echo -e "Ruta script="${PATH_SCRIPTS}
@@ -50,5 +52,7 @@ echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD007.sh'
 
 
+
+#sudo service mysql stop
 
 

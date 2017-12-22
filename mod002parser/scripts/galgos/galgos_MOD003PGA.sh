@@ -4,13 +4,13 @@ function calcularVariableX1 ()
 {
 ##########################################################################################
 echo -e "\n---- X1: [(carrera, galgo) -> velocidad_max_going]" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x1a\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x1a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x1a AS SELECT 1 AS distancia_tipo, MIN(vel_going_cortas_max) AS valor_min, MAX(vel_going_cortas_max) AS valor_max FROM datos_desa.tb_galgos_agregados UNION SELECT 2 AS distancia_tipo, MIN(vel_going_longmedias_max) AS valor_min, MAX(vel_going_longmedias_max) AS valor_max FROM datos_desa.tb_galgos_agregados UNION SELECT 3 AS distancia_tipo, MIN(vel_going_largas_max) AS valor_min, MAX(vel_going_largas_max) AS valor_max FROM datos_desa.tb_galgos_agregados\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x1a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x1a FROM datos_desa.tb_pga_x1a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
 read -d '' CONSULTA_X1 <<- EOF
-DROP TABLE datos_desa.tb_pga_x1b;
+DROP TABLE IF EXISTS datos_desa.tb_pga_x1b;
 
 CREATE TABLE datos_desa.tb_pga_x1b AS SELECT galgo_nombre, 
 
@@ -35,17 +35,17 @@ function calcularVariableX2 ()
 {
 ##########################################################################################
 echo -e "\n---- X2: [Galgo ->experiencia]" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x2a\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x2a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x2a AS SELECT MIN(contador) AS experiencia_min, MAX(contador) AS experiencia_max FROM (SELECT galgo_nombre, count(*) as contador FROM datos_desa.tb_galgos_historico GROUP BY galgo_nombre) dentro \W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x2a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x2a FROM datos_desa.tb_pga_x2a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x2b\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x2b\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x2b AS SELECT galgo_nombre, count(*) / (select experiencia_max FROM datos_desa.tb_pga_x2a) AS experiencia FROM datos_desa.tb_galgos_historico GROUP BY galgo_nombre\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x2b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x2b FROM datos_desa.tb_pga_x2b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x2c\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x2c\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x2c AS SELECT GH.galgo_nombre, B.experiencia FROM datos_desa.tb_galgos_historico GH LEFT JOIN datos_desa.tb_pga_x2b B ON (GH.galgo_nombre=B.galgo_nombre) \W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x2c LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x2c FROM datos_desa.tb_pga_x2c LIMIT 10\W;" >>$PATH_WARNINGS_PGA
@@ -55,29 +55,23 @@ function calcularVariableX3 ()
 {
 ##########################################################################################
 echo -e "\n---- X3: [(carrera, galgo) -> Trap]" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x3a\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x3a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x3a AS SELECT dentro.trap, SUM(dentro.contador) AS trap_suma FROM (select trap,posicion,count(*) as contador FROM datos_desa.tb_galgos_historico GROUP BY trap,posicion ORDER BY trap ASC, posicion ASC) dentro WHERE posicion IN (1,2) GROUP BY dentro.trap LIMIT 100\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x3a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x3a FROM datos_desa.tb_pga_x3a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x3b\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x3b\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x3b AS SELECT trap, trap_suma / (SELECT max(trap_suma) FROM datos_desa.tb_pga_x3a) AS trap_factor FROM datos_desa.tb_pga_x3a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x3b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x3b FROM datos_desa.tb_pga_x3b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
-sleep 2s
-
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x3c\W;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x3c AS SELECT id_carrera, galgo_nombre, GH.trap, trap_factor FROM datos_desa.tb_galgos_historico GH LEFT JOIN datos_desa.tb_pga_x3b B ON GH.trap=B.trap\W;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x3c ORDER BY id_carrera ASC, trap ASC LIMIT 10\W;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x3c FROM datos_desa.tb_pga_x3c LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 }
 
 function calcularVariableX4 ()
 {
 ##########################################################################################
 echo -e "\n---- X4: apuestas (starting price, odds)" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x4\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x4\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x4 AS SELECT id_carrera, galgo_nombre, sp FROM datos_desa.tb_galgos_historico GH\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x4 LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x4 FROM datos_desa.tb_pga_x4 LIMIT 10\W;" >>$PATH_WARNINGS_PGA
@@ -87,7 +81,7 @@ function calcularVariableX5 ()
 {
 ##########################################################################################
 echo -e "\n---- X5: clase (grade)" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x5\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x5\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x5 AS SELECT id_carrera, galgo_nombre, clase FROM datos_desa.tb_galgos_historico GH\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x5 LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x5 FROM datos_desa.tb_pga_x5 LIMIT 10\W;" >>$PATH_WARNINGS_PGA
@@ -97,18 +91,18 @@ function calcularVariableX6 ()
 {
 ##########################################################################################
 echo -e "\n---- X6: POSICION media por experiencia en una clase" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x6a\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x6a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x6a AS SELECT galgo_nombre, clase, COUNT(posicion) AS experiencia_en_clase, AVG(posicion) AS posicion_media_en_clase FROM datos_desa.tb_galgos_historico GROUP BY galgo_nombre,clase\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x6a LIMIT 5\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x6a FROM datos_desa.tb_pga_x6a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x6b\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x6b\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x6b AS SELECT clase, CASE WHEN experiencia_en_clase>=13 THEN 'alta' WHEN (experiencia_en_clase>=5 AND experiencia_en_clase<13) THEN 'media' ELSE 'baja' END AS experiencia_cualitativo, AVG(posicion_media_en_clase) AS posicion_media_en_clase_por_experiencia FROM datos_desa.tb_pga_x6a GROUP BY clase, experiencia_cualitativo ORDER BY clase ASC, experiencia_cualitativo ASC\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x6b LIMIT 30\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x6b FROM datos_desa.tb_pga_x6b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
 read -d '' CONSULTA_X6C <<- EOF
-DROP TABLE datos_desa.tb_pga_x6c;
+DROP TABLE IF EXISTS datos_desa.tb_pga_x6c;
 
 CREATE TABLE datos_desa.tb_pga_x6c AS 
 SELECT galgo_nombre, clase, id_carrera, experiencia_en_clase, 
@@ -135,7 +129,7 @@ EOF
 mysql -u root --password=datos1986 --execute="$CONSULTA_X6C" >>$PATH_WARNINGS_PGA
 
 read -d '' CONSULTA_X6D <<- EOF
-DROP TABLE datos_desa.tb_pga_x6d;
+DROP TABLE IF EXISTS datos_desa.tb_pga_x6d;
 
 CREATE TABLE datos_desa.tb_pga_x6d AS 
 SELECT anio, mes, dia, cruce1.id_carrera, cruce1.galgo_nombre, cruce1.clase,  cruce1.experiencia_en_clase, cruce1.experiencia_cualitativo,
@@ -161,19 +155,19 @@ function calcularVariableX7 ()
 {
 ##########################################################################################
 echo -e "\n---- X7: peso del galgo" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x7a\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x7a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x7a AS select PO.id_carrera, PO.posicion, PO.peso_galgo, GH.distancia, (GH.distancia/100 - GH.distancia%100/100) AS distancia_centenas FROM datos_desa.tb_galgos_posiciones_en_carreras PO LEFT JOIN (select id_carrera, MAX(distancia) AS distancia FROM datos_desa.tb_galgos_historico GROUP BY id_carrera) GH ON PO.id_carrera=GH.id_carrera WHERE PO.posicion IN (1,2) ORDER BY PO.id_carrera ASC, PO.posicion ASC\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x7a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x7a FROM datos_desa.tb_pga_x7a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x7b\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x7b\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x7b AS SELECT distancia_centenas, AVG(peso_galgo) AS peso_medio, COUNT(*) FROM datos_desa.tb_pga_x7a GROUP BY distancia_centenas ORDER BY distancia_centenas ASC\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x7b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x7b FROM datos_desa.tb_pga_x7b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
 read -d '' CONSULTA_X7C <<- EOF
-DROP TABLE datos_desa.tb_pga_x7c;
+DROP TABLE IF EXISTS datos_desa.tb_pga_x7c;
 
 CREATE TABLE datos_desa.tb_pga_x7c AS 
 SELECT galgo_nombre, id_carrera, dentro.distancia_centenas, dentro.distancia, ABS(dentro.peso_galgo - X7B.peso_medio) AS dif_peso  
@@ -199,18 +193,13 @@ function calcularVariableX8 ()
 ##########################################################################################
 echo -e "\n---- X8: estadio con mucho going" >&1
 read -d '' CONSULTA_X8A <<- EOF
-DROP TABLE datos_desa.tb_pga_x8a;
+DROP TABLE IF EXISTS datos_desa.tb_pga_x8a;
 
 CREATE TABLE datos_desa.tb_pga_x8a AS 
-SELECT id_carrera, venue, venue_going_std, venue_going_avg
-FROM datos_desa.tb_galgos_historico GH 
-LEFT JOIN ( 
-  SELECT track, STD(going_abs) AS venue_going_std, AVG(going_abs) AS venue_going_avg 
-  FROM (select track, ABS(going_allowance_segundos) AS going_abs FROM datos_desa.tb_galgos_carreras) dentro 
-  GROUP BY dentro.track
-) fuera
-ON GH.venue=fuera.track;
-
+SELECT track, STD(going_abs) AS venue_going_std, AVG(going_abs) AS venue_going_avg 
+FROM (select track, ABS(going_allowance_segundos) AS going_abs FROM datos_desa.tb_galgos_carreras) dentro 
+GROUP BY dentro.track
+;
 SELECT * FROM datos_desa.tb_pga_x8a LIMIT 10;
 SELECT count(*) as num_x8a FROM datos_desa.tb_pga_x8a LIMIT 10;
 EOF
@@ -222,20 +211,15 @@ function calcularVariableX9 ()
 {
 ##########################################################################################
 echo -e "\n---- X9: Calidad del ENTRENADOR" >&1
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x9a\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x9a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x9a AS SELECT entrenador, AVG(posicion) AS posicion_avg, STD(posicion) AS posicion_std FROM datos_desa.tb_galgos_historico GROUP BY entrenador\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x9a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x9a FROM datos_desa.tb_pga_x9a LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x9b\W;" >>$PATH_WARNINGS_PGA
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_pga_x9b\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x9b AS SELECT entrenador, (6-posicion_avg)/5 AS entrenador_posicion_norm FROM datos_desa.tb_pga_x9a\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x9b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x9b FROM datos_desa.tb_pga_x9b LIMIT 10\W;" >>$PATH_WARNINGS_PGA
-
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_x9c\W;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_x9c AS SELECT GH.entrenador, entrenador_posicion_norm FROM datos_desa.tb_galgos_historico GH LEFT JOIN datos_desa.tb_pga_x9b X9B ON (GH.entrenador=X9B.entrenador)\W;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_pga_x9c LIMIT 10\W;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x9c FROM datos_desa.tb_pga_x9c LIMIT 10\W;" >>$PATH_WARNINGS_PGA
 }
 
 ############################################
@@ -244,15 +228,21 @@ mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x9c FROM da
 function calcularFinalX1 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_01;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_01;
+
 
 CREATE TABLE datos_desa.tb_pga_final_01 AS 
-SELECT ACUM.galgo_nombre, ACUM.id_carrera, ACUM.trap, ACUM.venue, ACUM.entrenador, X1B.vgcortasm_norm, X1B.vgmediasm_norm, X1B.vglargasm_norm FROM datos_desa.tb_galgos_historico ACUM
+SELECT ACUM.galgo_nombre, ACUM.id_carrera, ACUM.trap, ACUM.venue, ACUM.entrenador, ACUM.posicion,
+ACUM.distancia,
+CASE WHEN ACUM.distancia<400 THEN 1 WHEN (ACUM.distancia>=400 AND ACUM.distancia<600) THEN 2 WHEN (ACUM.distancia>=600) THEN 3 ELSE NULL END AS distancia_tipo,
+X1B.vgcortasm_norm, X1B.vgmediasm_norm, X1B.vglargasm_norm 
+FROM datos_desa.tb_galgos_historico ACUM
 LEFT JOIN datos_desa.tb_pga_x1b X1B ON (ACUM.galgo_nombre=X1B.galgo_nombre);
+
 
 SELECT * FROM datos_desa.tb_pga_final_01 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_01 LIMIT 10;
+SELECT count(*) as num_final_01 FROM datos_desa.tb_pga_final_01 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -262,15 +252,16 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX2 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_02;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_02;
 
 CREATE TABLE datos_desa.tb_pga_final_02 AS 
-SELECT ACUM.*, X2B.experiencia FROM datos_desa.tb_pga_final_01 ACUM
+SELECT ACUM.*, X2B.experiencia 
+FROM datos_desa.tb_pga_final_01 ACUM
 LEFT JOIN datos_desa.tb_pga_x2b X2B ON (ACUM.galgo_nombre=X2B.galgo_nombre);
 
 SELECT * FROM datos_desa.tb_pga_final_02 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_02 LIMIT 10;
+SELECT count(*) as num_final_02 FROM datos_desa.tb_pga_final_02 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -280,15 +271,15 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX3 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_03;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_03;
 
 CREATE TABLE datos_desa.tb_pga_final_03 AS 
-SELECT ACUM.*, X3C.trap_factor FROM datos_desa.tb_pga_final_02 ACUM
-LEFT JOIN datos_desa.tb_pga_x3c X3C ON (ACUM.id_carrera=X3C.id_carrera AND ACUM.galgo_nombre=X3C.galgo_nombre);
+SELECT ACUM.*, X3B.trap_factor FROM datos_desa.tb_pga_final_02 ACUM
+LEFT JOIN datos_desa.tb_pga_x3b X3B ON (ACUM.trap=X3B.trap);
 
 SELECT * FROM datos_desa.tb_pga_final_03 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_03 LIMIT 10;
+SELECT count(*) as num_final_03 FROM datos_desa.tb_pga_final_03 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -298,15 +289,14 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX4 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_04;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_04;
 
 CREATE TABLE datos_desa.tb_pga_final_04 AS 
-SELECT ACUM.*, 0 AS x4_temp FROM datos_desa.tb_pga_final_03 ACUM
-LEFT JOIN datos_desa.tb_pga_x4 X4 ON (ACUM.id_carrera=X4.id_carrera AND ACUM.galgo_nombre=X4.galgo_nombre);
+SELECT ACUM.*, 0 AS x4_temp FROM datos_desa.tb_pga_final_03 ACUM;
 
 SELECT * FROM datos_desa.tb_pga_final_04 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_04 LIMIT 10;
+SELECT count(*) as num_final_04 FROM datos_desa.tb_pga_final_04 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -316,15 +306,14 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX5 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_05;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_05;
 
 CREATE TABLE datos_desa.tb_pga_final_05 AS 
-SELECT ACUM.*, 0 AS x5_temp FROM datos_desa.tb_pga_final_04 ACUM
-LEFT JOIN datos_desa.XXX XX ON (ACUM.galgo_nombre=X1B.galgo_nombre);
+SELECT ACUM.*, 0 AS x5_temp FROM datos_desa.tb_pga_final_04 ACUM;
 
 SELECT * FROM datos_desa.tb_pga_final_05 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_05 LIMIT 10;
+SELECT count(*) as num_final_05 FROM datos_desa.tb_pga_final_05 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -334,15 +323,15 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX6 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_06;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_06;
 
 CREATE TABLE datos_desa.tb_pga_final_06 AS 
-SELECT ACUM.*, 0 AS x5_temp FROM datos_desa.tb_pga_final_05 ACUM
-LEFT JOIN datos_desa.tb_pga_x5 X5 ON (ACUM.id_carrera=X5.id_carrera AND ACUM.galgo_nombre=X5.galgo_nombre);
+SELECT ACUM.*, X6D.experiencia_en_clase, X6D.experiencia_cualitativo, X6D.posicion_media_en_clase_por_experiencia FROM datos_desa.tb_pga_final_05 ACUM
+LEFT JOIN datos_desa.tb_pga_x6d X6D ON (ACUM.id_carrera=X6D.id_carrera AND ACUM.galgo_nombre=X6D.galgo_nombre);
 
 SELECT * FROM datos_desa.tb_pga_final_06 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_06 LIMIT 10;
+SELECT count(*) as num_final_06 FROM datos_desa.tb_pga_final_06 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -352,15 +341,15 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX7 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_07;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_07;
 
 CREATE TABLE datos_desa.tb_pga_final_07 AS 
-SELECT ACUM.*, X6D.experiencia_en_clase, X6D.experiencia_cualitativo, X6D.posicion_media_en_clase_por_experiencia FROM datos_desa.tb_pga_final_06 ACUM
-LEFT JOIN datos_desa.tb_pga_x6d X6D ON (ACUM.id_carrera=X6D.id_carrera AND ACUM.galgo_nombre=X6D.galgo_nombre);
+SELECT ACUM.*, X7C.distancia_centenas, X7C.dif_peso FROM datos_desa.tb_pga_final_06 ACUM
+LEFT JOIN datos_desa.tb_pga_x7c X7C ON (ACUM.id_carrera=X7C.id_carrera AND ACUM.galgo_nombre=X7C.galgo_nombre);
 
 SELECT * FROM datos_desa.tb_pga_final_07 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_07 LIMIT 10;
+SELECT count(*) as num_final_07 FROM datos_desa.tb_pga_final_07 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -370,15 +359,15 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX8 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_08;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_08;
 
 CREATE TABLE datos_desa.tb_pga_final_08 AS 
-SELECT ACUM.*, X7C.distancia_centenas, X7C.dif_peso FROM datos_desa.tb_pga_final_07 ACUM
-LEFT JOIN datos_desa.tb_pga_x7c X7C ON (ACUM.id_carrera=X7C.id_carrera AND ACUM.galgo_nombre=X7C.galgo_nombre);
+SELECT ACUM.*, X8A.venue_going_std, X8A.venue_going_avg FROM datos_desa.tb_pga_final_07 ACUM
+LEFT JOIN datos_desa.tb_pga_x8a X8A ON (ACUM.venue=X8A.track);
 
 SELECT * FROM datos_desa.tb_pga_final_08 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_08 LIMIT 10;
+SELECT count(*) as num_final_08 FROM datos_desa.tb_pga_final_08 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
@@ -388,37 +377,20 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_
 function calcularFinalX9 () 
 {
 read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_09;
+DROP TABLE IF EXISTS datos_desa.tb_pga_final_09;
 
 CREATE TABLE datos_desa.tb_pga_final_09 AS 
-SELECT ACUM.*, X8A.venue_going_std, X8A.venue_going_avg FROM datos_desa.tb_pga_final_08 ACUM
-LEFT JOIN datos_desa.tb_pga_x8a X8A ON (ACUM.venue=X8A.venue);
+SELECT ACUM.*, X9B.entrenador_posicion_norm FROM datos_desa.tb_pga_final_08 ACUM
+LEFT JOIN datos_desa.tb_pga_x9b X9B ON (ACUM.entrenador=X9B.entrenador);
 
 SELECT * FROM datos_desa.tb_pga_final_09 LIMIT 10;
 
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_09 LIMIT 10;
+SELECT count(*) as num_final_09 FROM datos_desa.tb_pga_final_09 LIMIT 10;
 EOF
 echo -e "$CONSULTA_FINAL" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
 }
 
-################
-function calcularFinalX10 () 
-{
-read -d '' CONSULTA_FINAL <<- EOF
-DROP TABLE datos_desa.tb_pga_final_10;
-
-CREATE TABLE datos_desa.tb_pga_final_10 AS 
-SELECT ACUM.*, X9C.entrenador_posicion_norm FROM datos_desa.tb_pga_final_09 ACUM
-LEFT JOIN datos_desa.tb_pga_x9c X9C ON (ACUM.entrenador=X9C.entrenador);
-
-SELECT * FROM datos_desa.tb_pga_final_10 LIMIT 10;
-
-SELECT count(*) as num_final FROM datos_desa.tb_pga_final_10 LIMIT 10;
-EOF
-echo -e "$CONSULTA_FINAL" 2>&1 >&1
-mysql -u root --password=datos1986 --execute="$CONSULTA_FINAL" >>$PATH_WARNINGS_PGA
-}
 
 #####################################################################################
 
@@ -426,42 +398,123 @@ function predecirPasado ()
 {
 echo -e "\n---- PREDICCION: sobre el pasado (->Saco score) " >&1
 
-## PESOS: todos deben sumar 1.0 #####
-w1=1.0;
-w2=0.0;
-w3=0.0;
-w4=0.0;
-w5=0.0;
-w6=0.0;
-w7=0.0;
-w8=0.0;
-w9=0.0;
 
-echo -e "PESOS: ${w1}|${w2}|${w3}|${w4}|${w5}|${w6}|${w7}|${w8}|${w9}" >&1
+read -d '' CONSULTA_PESOS <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_pga_prediccion_pre;
 
-mysql -u root --password=datos1986 --execute="DROP TABLE datos_desa.tb_pga_prediccion_pre;" >>$PATH_WARNINGS_PGA
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_pga_prediccion_pre AS SELECT PGA_FINAL.*, FROM datos_desa.tb_pga_final_10 PGA_FINAL " >>$PATH_WARNINGS_PGA
+CREATE TABLE datos_desa.tb_pga_prediccion_pre AS 
+SELECT 
+galgo_nombre,
+id_carrera,
+trap,
+venue,
+entrenador,
+vgcortasm_norm,
+vgmediasm_norm,
+vglargasm_norm,
+experiencia,
+trap_factor,
+x4_temp, 
+x5_temp,
+experiencia_en_clase,
+experiencia_cualitativo,
+posicion_media_en_clase_por_experiencia,
+(6-posicion_media_en_clase_por_experiencia)/5 AS posicion_media_en_clase_por_experiencia_norm,
+distancia,
+distancia_centenas,
+CASE WHEN distancia<400 THEN 1 WHEN (distancia>=400 AND distancia<600) THEN 2 WHEN (distancia>=600) THEN 3 ELSE NULL END AS distancia_tipo,
+dif_peso,
+venue_going_std,
+venue_going_avg,
+entrenador_posicion_norm,
+
+${w1} AS w1, ${w2} AS w2, ${w3} AS w3, ${w4} AS w4, ${w5} AS w5, ${w6} AS w6, ${w7} AS w7, ${w8} AS w8, ${w9} AS w9,
+
+'PENDIENTE' as puntos_prediccion,
+posicion AS posicion_real
+
+FROM datos_desa.tb_pga_final_09 PGA_FINAL;
+
+SELECT * FROM datos_desa.tb_pga_prediccion_pre LIMIT 10;
+
+SELECT count(*) as num_filas_con_pesos FROM datos_desa.tb_pga_prediccion_pre LIMIT 10;
+EOF
+echo -e "$CONSULTA_PESOS" 2>&1 >&1
+mysql -u root --password=datos1986 --execute="$CONSULTA_PESOS" >>$PATH_WARNINGS_PGA
 
 
-###############################################################
+###
 echo -e "\n---- SCORE " >&1
 # Ejecuta sobre el 100% de los datos (no habíamos usado train+test, sino medias/medianas, etc.)
 # Objetivo: cuánto porcentaje acertamos si usamos este sistema sencillo (ajustando los pesos óptimos)
 # Iterar con los PESOS para maximizar el score --> Mejor hacerlo en Python con una Regresión logística o lineal...
-###############################################################
+
+
+#Comparar prediccion (puntos) con la posicion real que sucedio. Meterlo en la tabla tb.
+
 read -d '' CONSULTA_SCORE <<- EOF
-DROP TABLE datos_desa.tb_pga_score;
+DROP TABLE IF EXISTS datos_desa.tb_pga_score_a_pre;
 
-CREATE TABLE datos_desa.tb_pga_score AS 
-SELECT ${w1} AS w1, ${w2} AS w2, ${w3} AS w3, ${w4} AS w4, ${w5} AS w5, ${w6} AS w6, ${w7} AS w7, ${w8} AS w8, ${w9} AS w9, ${w10} AS w10
-FROM datos_desa.tb_pga_final_10 LIMIT 10;
+CREATE TABLE datos_desa.tb_pga_score_a_pre AS 
+SELECT galgo_nombre, id_carrera, trap, venue, entrenador, 
+posicion_real,
+CASE WHEN posicion_real<=2 THEN 1 ELSE 0 END AS posicion_1o2_real,
+CASE WHEN distancia_tipo=1 THEN (w1*vgcortasm_norm) WHEN distancia_tipo=2 THEN (w1*vgmediasm_norm) WHEN distancia_tipo=3 THEN (w1*vglargasm_norm) ELSE NULL END AS w1x1,
+w2*experiencia AS w2x2,
+w3*trap_factor AS w3x3,
+w4*x4_temp AS w4x4,
+w5*x5_temp AS w5x5,
+w6*posicion_media_en_clase_por_experiencia_norm AS w6x6,
+w7*dif_peso AS w7x7,
+w8*venue_going_avg AS w8x8,
+w9*entrenador_posicion_norm AS w9x9
+FROM datos_desa.tb_pga_prediccion_pre
 
-SELECT * FROM datos_desa.tb_pga_score LIMIT 10;
+WHERE posicion_real<=4
+;
 
-SELECT count(*) as num_score FROM datos_desa.tb_pga_score LIMIT 10;
+SELECT * FROM datos_desa.tb_pga_score_a_pre LIMIT 10;
+SELECT count(*) FROM datos_desa.tb_pga_score_a_pre LIMIT 1;
+
+
+DROP TABLE IF EXISTS datos_desa.tb_pga_score_b_pre;
+
+CREATE TABLE datos_desa.tb_pga_score_b_pre AS 
+SELECT galgo_nombre, id_carrera, trap, venue, entrenador,
+posicion_real,
+posicion_1o2_real,
+IFNULL(w1x1,0) + IFNULL(w2x2,0) + IFNULL(w3x3,0) + IFNULL(w4x4,0) + IFNULL(w5x5,0) + IFNULL(w6x6,0) + IFNULL(w7x7,0) + IFNULL(w8x8,0) + IFNULL(w9x9,0) AS puntos_prediccion
+FROM datos_desa.tb_pga_score_a_pre;
+
+SELECT * FROM datos_desa.tb_pga_score_b_pre LIMIT 10;
+SELECT count(*) FROM datos_desa.tb_pga_score_b_pre LIMIT 1;
+
+
+DROP TABLE IF EXISTS datos_desa.tb_pga_score_FEATURES_pre;
+CREATE TABLE datos_desa.tb_pga_score_FEATURES_pre AS SELECT w1x1, w2x2, w3x3, w4x4, w5x5, w6x6, w7x7, w8x8, w9x9 FROM datos_desa.tb_pga_score_a_pre;
+SELECT * FROM datos_desa.tb_pga_score_FEATURES_pre LIMIT 10;
+SELECT count(*) FROM datos_desa.tb_pga_score_FEATURES_pre LIMIT 1;
+
+DROP TABLE IF EXISTS datos_desa.tb_pga_score_TARGET_pre;
+CREATE TABLE datos_desa.tb_pga_score_TARGET_pre AS SELECT posicion_1o2_real FROM datos_desa.tb_pga_score_a_pre;
+SELECT * FROM datos_desa.tb_pga_score_TARGET_pre LIMIT 10;
+SELECT count(*) FROM datos_desa.tb_pga_score_TARGET_pre LIMIT 1;
+
 EOF
 echo -e "$CONSULTA_SCORE" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_SCORE" >>$PATH_WARNINGS_PGA
+
+
+
+##
+echo -e "Modelo predictivo CLASIFICADOR..." 2>&1 >&1
+INFORME_PGA="/home/carloslinux/Desktop/INFORMES/galgos_MOD004_pga.out"
+echo -e "Informe del modelo predictivo: ${INFORME_PGA}" 2>&1 >&1
+PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_pga_MEJOR_MODELO.pkl'
+rm -f $PATH_MODELO_GANADOR
+python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_pga.py' > "${INFORME_PGA}"
+cat "${INFORME_PGA}" | grep 'PGA-Gana modelo'  >&1
+
 
 }
 
@@ -471,11 +524,30 @@ echo -e "Modulo 003PGA (Dada una carrera, Predictor simple por Pesos del Galgo A
 
 PATH_WARNINGS_PGA="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_mod003pga.txt"
 
-echo -e "ENTRADAS: HISTORICO (y otras auxiliares: agregados...)" >&1
+echo -e "Tablas de ENTRADA: HISTORICO (y otras auxiliares: agregados...)" >&1
+
 echo -e "SALIDA: SCORE (calculado sobre 100% filas del historico), habiendo optimizado los pesos" >&1
-echo -e "WARNINGS: $PATH_WARNINGS_PGA" >&1
+echo -e "\nWARNINGS: $PATH_WARNINGS_PGA" >&1
 
 rm -f "$PATH_WARNINGS_PGA"
+
+
+
+## PESOS: todos deben sumar 1.0 #####
+w1=${1};
+w2=${2};
+w3=${3};
+w4=${4};
+w5=${5};
+w6=${6};
+w7=${7};
+w8=${8};
+w9=${9};
+
+OUTPUT_PESOS="${w1}|${w2}|${w3}|${w4}|${w5}|${w6}|${w7}|${w8}|${w9}"
+
+echo -e "PESOS (entrada): ${OUTPUT_PESOS}" >&1
+
 
 
 echo -e "\n---- Variables de CADA galgo: X1, X2..." >&1
@@ -490,21 +562,27 @@ echo -e "\n---- Variables de CADA galgo: X1, X2..." >&1
 #calcularVariableX9
 
 echo -e "\n---- Tabla FINAL con las variables de CADA galgo: usando pesos --> f(x1,x2...)=w1*x1 + w2*x2 + w3*x3+..." >&1
-calcularFinalX1
-calcularFinalX2
-calcularFinalX3
+#calcularFinalX1
+#calcularFinalX2
+#calcularFinalX3
 #calcularFinalX4
 #calcularFinalX5
 #calcularFinalX6
 #calcularFinalX7
 #calcularFinalX8
 #calcularFinalX9
-#calcularFinalX10
+
+
+#PLAN B (si MySQL se atasca): MEDIANTE FICHERO DE SENTENCIAS SQL 
+#mysql -u root --password=datos1986 --show-warnings datos_desa < "./galgos_MOD003PGA_queries.txt.tmp" > "./galgos_MOD003PGA_queries_output"
+
+
+
 
 echo -e "\n---- Ejecutando el predictor para predecir el pasado y poder sacar el SCORE (porque conocemos el resultado real)..." >&1
-#predecirPasado
+predecirPasado
 
-echo -e "Modulo 003C - FIN\n\n" >&1
+echo -e "Modulo 003PGA - FIN\n\n" >&1
 
 
 
