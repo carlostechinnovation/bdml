@@ -344,7 +344,7 @@ read -d '' CONSULTA_FINAL <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_pga_final_07;
 
 CREATE TABLE datos_desa.tb_pga_final_07 AS 
-SELECT ACUM.*, X7C.distancia_centenas, X7C.dif_peso FROM datos_desa.tb_pga_final_06 ACUM
+SELECT ACUM.*, X7C.distancia_centenas, X7C.dif_peso/15 FROM datos_desa.tb_pga_final_06 ACUM
 LEFT JOIN datos_desa.tb_pga_x7c X7C ON (ACUM.id_carrera=X7C.id_carrera AND ACUM.galgo_nombre=X7C.galgo_nombre);
 
 SELECT * FROM datos_desa.tb_pga_final_07 LIMIT 10;
@@ -428,8 +428,6 @@ venue_going_std,
 venue_going_avg,
 entrenador_posicion_norm,
 
-${w1} AS w1, ${w2} AS w2, ${w3} AS w3, ${w4} AS w4, ${w5} AS w5, ${w6} AS w6, ${w7} AS w7, ${w8} AS w8, ${w9} AS w9,
-
 'PENDIENTE' as puntos_prediccion,
 posicion AS posicion_real
 
@@ -459,15 +457,15 @@ CREATE TABLE datos_desa.tb_pga_score_a_pre AS
 SELECT galgo_nombre, id_carrera, trap, venue, entrenador, 
 posicion_real,
 CASE WHEN posicion_real<=2 THEN 1 ELSE 0 END AS posicion_1o2_real,
-CASE WHEN distancia_tipo=1 THEN (w1*vgcortasm_norm) WHEN distancia_tipo=2 THEN (w1*vgmediasm_norm) WHEN distancia_tipo=3 THEN (w1*vglargasm_norm) ELSE NULL END AS w1x1,
-w2*experiencia AS w2x2,
-w3*trap_factor AS w3x3,
-w4*x4_temp AS w4x4,
-w5*x5_temp AS w5x5,
-w6*posicion_media_en_clase_por_experiencia_norm AS w6x6,
-w7*dif_peso AS w7x7,
-w8*venue_going_avg AS w8x8,
-w9*entrenador_posicion_norm AS w9x9
+CASE WHEN distancia_tipo=1 THEN (vgcortasm_norm) WHEN distancia_tipo=2 THEN (vgmediasm_norm) WHEN distancia_tipo=3 THEN (vglargasm_norm) ELSE NULL END AS x1,
+experiencia AS x2,
+trap_factor AS x3,
+x4_temp AS x4,
+x5_temp AS x5,
+posicion_media_en_clase_por_experiencia_norm AS x6,
+dif_peso AS x7,
+venue_going_avg AS x8,
+entrenador_posicion_norm AS x9
 FROM datos_desa.tb_pga_prediccion_pre
 
 WHERE posicion_real<=4
@@ -480,10 +478,16 @@ SELECT count(*) FROM datos_desa.tb_pga_score_a_pre LIMIT 1;
 DROP TABLE IF EXISTS datos_desa.tb_pga_score_b_pre;
 
 CREATE TABLE datos_desa.tb_pga_score_b_pre AS 
-SELECT galgo_nombre, id_carrera, trap, venue, entrenador,
-posicion_real,
-posicion_1o2_real,
-IFNULL(w1x1,0) + IFNULL(w2x2,0) + IFNULL(w3x3,0) + IFNULL(w4x4,0) + IFNULL(w5x5,0) + IFNULL(w6x6,0) + IFNULL(w7x7,0) + IFNULL(w8x8,0) + IFNULL(w9x9,0) AS puntos_prediccion
+SELECT 
+MIN(x1) AS x1_min, MAX(x1) AS x1_max,
+MIN(x2) AS x2_min, MAX(x2) AS x2_max,
+MIN(x3) AS x3_min, MAX(x3) AS x3_max,
+MIN(x4) AS x4_min, MAX(x4) AS x4_max,
+MIN(x5) AS x5_min, MAX(x5) AS x5_max,
+MIN(x6) AS x6_min, MAX(x6) AS x6_max,
+MIN(x7) AS x7_min, MAX(x7) AS x7_max,
+MIN(x8) AS x8_min, MAX(x8) AS x8_max,
+MIN(x9) AS x9_min, MAX(x9) AS x9_max
 FROM datos_desa.tb_pga_score_a_pre;
 
 SELECT * FROM datos_desa.tb_pga_score_b_pre LIMIT 10;
@@ -491,7 +495,8 @@ SELECT count(*) FROM datos_desa.tb_pga_score_b_pre LIMIT 1;
 
 
 DROP TABLE IF EXISTS datos_desa.tb_pga_score_FEATURES_pre;
-CREATE TABLE datos_desa.tb_pga_score_FEATURES_pre AS SELECT w1x1, w2x2, w3x3, w4x4, w5x5, w6x6, w7x7, w8x8, w9x9 FROM datos_desa.tb_pga_score_a_pre;
+CREATE TABLE datos_desa.tb_pga_score_FEATURES_pre AS SELECT x1, x2, x3, x4, x5, x6, x7/15, x8, x9 
+FROM datos_desa.tb_pga_score_a_pre;
 SELECT * FROM datos_desa.tb_pga_score_FEATURES_pre LIMIT 10;
 SELECT count(*) FROM datos_desa.tb_pga_score_FEATURES_pre LIMIT 1;
 
@@ -532,24 +537,6 @@ echo -e "\nWARNINGS: $PATH_WARNINGS_PGA" >&1
 rm -f "$PATH_WARNINGS_PGA"
 
 
-
-## PESOS: todos deben sumar 1.0 #####
-w1=${1};
-w2=${2};
-w3=${3};
-w4=${4};
-w5=${5};
-w6=${6};
-w7=${7};
-w8=${8};
-w9=${9};
-
-OUTPUT_PESOS="${w1}|${w2}|${w3}|${w4}|${w5}|${w6}|${w7}|${w8}|${w9}"
-
-echo -e "PESOS (entrada): ${OUTPUT_PESOS}" >&1
-
-
-
 echo -e "\n---- Variables de CADA galgo: X1, X2..." >&1
 #calcularVariableX1
 #calcularVariableX2
@@ -575,8 +562,6 @@ echo -e "\n---- Tabla FINAL con las variables de CADA galgo: usando pesos --> f(
 
 #PLAN B (si MySQL se atasca): MEDIANTE FICHERO DE SENTENCIAS SQL 
 #mysql -u root --password=datos1986 --show-warnings datos_desa < "./galgos_MOD003PGA_queries.txt.tmp" > "./galgos_MOD003PGA_queries_output"
-
-
 
 
 echo -e "\n---- Ejecutando el predictor para predecir el pasado y poder sacar el SCORE (porque conocemos el resultado real)..." >&1
