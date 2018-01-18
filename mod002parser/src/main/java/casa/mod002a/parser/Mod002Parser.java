@@ -175,7 +175,7 @@ public class Mod002Parser implements Serializable {
 			(new DM14Parser()).ejecutar(param2);
 			(new DM15Parser()).ejecutar(param2);
 
-		} else if (param1 != null && param1.equals("04") && param2 != null) {
+		} else if (param1 != null && param1.equals("GALGOS_01") && param2 != null) {
 
 			MY_LOGGER.info("Escribiendo sentencias_create_table en: " + param2);
 
@@ -197,7 +197,18 @@ public class Mod002Parser implements Serializable {
 				e.printStackTrace();
 			}
 
-		} else if (param1 != null && param1.equals("05") && param2 != null && !param2.isEmpty() && param3 != null
+		} else if (param1 != null && param1.equals("GALGOS_02") && param2 != null && !param2.isEmpty() && param3 != null
+				&& !param3.isEmpty()) {
+
+			try {
+				GalgosManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
+
+			} catch (InterruptedException e) {
+				MY_LOGGER.error("ERROR Excepcion de galgos.");
+				e.printStackTrace();
+			}
+
+		} else if (param1 != null && param1.equals("GALGOS_03") && param2 != null && !param2.isEmpty() && param3 != null
 				&& !param3.isEmpty()) {
 
 			try {
@@ -222,17 +233,6 @@ public class Mod002Parser implements Serializable {
 
 			} catch (IOException e) {
 				MY_LOGGER.error("Error:" + e.getMessage());
-				e.printStackTrace();
-			}
-
-		} else if (param1 != null && param1.equals("07") && param2 != null && !param2.isEmpty() && param3 != null
-				&& !param3.isEmpty()) {
-
-			try {
-				GalgosManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
-
-			} catch (InterruptedException e) {
-				MY_LOGGER.error("ERROR Excepcion de galgos.");
 				e.printStackTrace();
 			}
 

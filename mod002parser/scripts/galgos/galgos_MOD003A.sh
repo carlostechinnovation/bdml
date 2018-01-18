@@ -1,12 +1,15 @@
 #!/bin/bash
 
-echo -e "Modulo 003A - Estadistica basica de las features" >&1
+source "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-
-
-DOC_ANALISIS_PREVIO="/home/carloslinux/Desktop/INFORMES/analisis_previo.txt"
+#Borrar log
 rm -f "${DOC_ANALISIS_PREVIO}"
 
+echo -e "Modulo 003A - Estadística básica de las features de ENTRADA..." 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
+echo -e "Informe: ${DOC_ANALISIS_PREVIO}" 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
+
+#Limpiar informe
+rm -f "${DOC_ANALISIS_PREVIO}"
 
 echo -e "----- Analisis de REMARKS-----" >> "${DOC_ANALISIS_PREVIO}"
 echo -e "RanOn:" >> "${DOC_ANALISIS_PREVIO}"
@@ -19,6 +22,6 @@ mysql -u root --password=datos1986 -t --execute="select posicion, count(*) as co
 
 
 
-echo -e "Modulo 003A - FIN" >&1
+echo -e "Modulo 003A - FIN" 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
 
 

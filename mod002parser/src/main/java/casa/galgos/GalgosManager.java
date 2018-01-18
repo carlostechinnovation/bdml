@@ -630,10 +630,10 @@ public class GalgosManager implements Serializable {
 
 			if (urlGalgoFull != null && urlGalgoFull.contains("=")) {
 
-				String galgo_nombre = urlGalgoFull.split("=")[1];
+				String galgo_nombre = (urlGalgoFull.split("=")[1]).replaceAll("%20", " ");
 
 				if (galgosYaAnalizados.contains(galgo_nombre)) {
-					MY_LOGGER.debug("Historico ya analizado. No lo procesamos.");
+					MY_LOGGER.debug("Historico (galgo_nombre) ya analizado. No lo procesamos.");
 					numHistoricosAnalizados++;
 
 				} else {

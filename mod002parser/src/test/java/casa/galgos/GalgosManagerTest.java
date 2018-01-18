@@ -161,4 +161,14 @@ public class GalgosManagerTest {
 		Assert.assertTrue(out.equals("3|claveA\\n7|claveB\\n"));
 	}
 
+	@Test
+	public void escapeEspaciosUrlTest() {
+
+		String cadena1 = "hola carlos";
+		String cadena2 = "hola%20carlos";
+
+		Assert.assertEquals(cadena1, cadena2.replaceAll("%20", " "));
+
+	}
+
 }

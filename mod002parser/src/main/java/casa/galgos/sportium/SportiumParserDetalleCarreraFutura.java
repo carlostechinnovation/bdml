@@ -123,11 +123,16 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 				TextNode galgoNombre = (TextNode) fila.childNode(0).childNode(1).childNode(0).childNode(0).childNode(0);
 
 				String galgoNombreStr = galgoNombre.text().trim();
-				galgoNombreStr = galgoNombreStr.contains(" N/R") ? galgoNombreStr.replace(" N/R", "").trim()
-						: galgoNombreStr;
-				galgoNombreStr = galgoNombreStr.contains("(") ? galgoNombreStr.split("\\(")[0].trim() : galgoNombreStr;
 
-				out.add(galgoNombreStr);// ordenados segun el TRAP
+				if (galgoNombreStr.contains(" N/R")) {
+					// Galgo no presentado (no corre por el motivo que sea)
+
+				} else {
+					galgoNombreStr = galgoNombreStr.contains("(") ? galgoNombreStr.split("\\(")[0].trim()
+							: galgoNombreStr;
+
+					out.add(galgoNombreStr);// ordenados segun el TRAP
+				}
 			}
 		}
 

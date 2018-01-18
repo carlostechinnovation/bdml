@@ -30,9 +30,10 @@ public class Constantes {
 	public static final String GALGOS_SPORTIUM_PREFIJO = "https://sport-mobile.sportium.es";
 	public static final String GALGOS_FUTUROS_SPORTIUM = GALGOS_SPORTIUM_PREFIJO + "/es/s/GREY/Galgos";
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 2; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS.
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 50; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+																// derivadas)
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 30;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 5;
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;

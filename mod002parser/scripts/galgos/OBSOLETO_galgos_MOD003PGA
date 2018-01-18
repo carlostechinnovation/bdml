@@ -1,0 +1,42 @@
+#!/bin/bash
+
+source "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/funciones.sh"
+
+
+
+
+
+########## MAIN #########################
+echo -e "Modulo 003PGA (Dada una carrera, Predictor simple por Pesos del Galgo Analizado)" >&1
+
+#filtro_galgos=""
+#filtro_galgos="WHERE PO1.galgo_nombre IN (${filtro_galgos_nombres})"
+filtro_galgos="${1}"
+
+#sufijo="_pre"
+#sufijo="_post"
+sufijo="${2}"
+
+PATH_WARNINGS_PGA="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_mod003pga.txt"
+
+echo -e "Tablas de ENTRADA: HISTORICO (y otras auxiliares: agregados...)" >&1
+
+echo -e "SALIDA: SCORE (calculado sobre 100% filas del historico), habiendo optimizado los pesos" >&1
+echo -e "\nWARNINGS: $PATH_WARNINGS_PGA" >&1
+
+rm -f "$PATH_WARNINGS_PGA"
+
+
+
+
+#PLAN B (si MySQL se atasca): MEDIANTE FICHERO DE SENTENCIAS SQL 
+#mysql -u root --password=datos1986 --show-warnings datos_desa < "./galgos_MOD003PGA_queries.txt.tmp" > "./galgos_MOD003PGA_queries_output"
+
+
+echo -e "\n---- Ejecutando el predictor para predecir el pasado y poder sacar el SCORE (porque conocemos el resultado real)..." >&1
+predecirPasado
+
+echo -e "Modulo 003PGA - FIN\n\n" >&1
+
+
+

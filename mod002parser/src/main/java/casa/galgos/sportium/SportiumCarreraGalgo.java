@@ -32,7 +32,7 @@ public class SportiumCarreraGalgo {
 
 	public String generarSqlCreateTable() {
 
-		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_carreragalgo" + " (";
+		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas" + " (";
 
 		out += "id varchar(100) NOT NULL  PRIMARY KEY, ";
 		out += "dia BIGINT NOT NULL, ";
