@@ -139,6 +139,8 @@ SELECT * FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d LIMIT 5;
 SELECT count(*) as num_filas_d FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d LIMIT 5;
 EOF
 
+#prueba
+
 #echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES" >>$LOG_CE
 
