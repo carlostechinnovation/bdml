@@ -18,7 +18,7 @@ cat "${FOLDER_INFORMES}galgos_MOD004_gagst.out" | grep 'GAGST-Gana modelo' >>$PA
 
 #########################
 echo -e "Entradas- features: cada FILA es un GALGO EN UNA CARRERA FUTURA" >&1
-"/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/galgos_generador_datasets.sh" "WHERE PO1.galgo_nombre IN (SELECT MAX(galgo_nombre) AS galgo_nombre FROM datos_desa.tb_carrerasgalgos_semillasfuturas GROUP BY galgo_nombre)" "_gagst_post"
+"/root/git/bdml/mod002parser/scripts/galgos/galgos_generador_datasets.sh" "WHERE PO1.galgo_nombre IN (SELECT MAX(galgo_nombre) AS galgo_nombre FROM datos_desa.tb_carrerasgalgos_semillasfuturas GROUP BY galgo_nombre)" "_gagst_post"
 
 
 echo -e "MACHINE LEARNING - GAGST - Prediciendo los targets..."

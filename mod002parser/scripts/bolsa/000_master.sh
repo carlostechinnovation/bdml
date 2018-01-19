@@ -3,7 +3,7 @@
 #Script principal COORDINADOR de todas las tareas. Lo que no quiera ejecutar, lo comento.
 
 PATH_LOG="/home/carloslinux/Desktop/LOGS/coordinador.log"
-PATH_SCRIPTS="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/bolsa/"
+PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/bolsa/"
 
 ############# ID de ejecucion = fecha_hora BOE #####################3
 PATH_JAR="/home/carloslinux/Desktop/GIT_REPO_BDML/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"

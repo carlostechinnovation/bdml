@@ -14,13 +14,13 @@ echo "Borramos todos los ficheros brutos que tuvieramos de ese anio=${anio}..."
 rm -f "/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/YF_${anio}_*"
 
 
-empresas="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/bolsa/empresas_yahoo_finance.in"
+empresas="/root/git/bdml/mod002parser/scripts/bolsa/empresas_yahoo_finance.in"
 
 
 while read -r line
 do
     empresa="$line"
-    node /home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/bolsa/MOD001A_yahoo_finance.js ${empresa} ${anio}
+    node /root/git/bdml/mod002parser/scripts/bolsa/MOD001A_yahoo_finance.js ${empresa} ${anio}
 done < "$empresas"
 
 

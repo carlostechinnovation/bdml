@@ -1,13 +1,13 @@
 #!/bin/bash
 
-source "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 TAG_GBGB="GBGB"
-PATH_SCRIPTS="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/"
+PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
 
 PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
 PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
-PATH_JAR="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
 
 PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
@@ -137,9 +137,118 @@ ON (INICIAL.DHE=C.DHE)
 
 SELECT * FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d LIMIT 5;
 SELECT count(*) as num_filas_d FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d LIMIT 5;
-EOF
 
-#prueba
+
+
+
+set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d);
+set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d);
+
+DELETE FROM datos_desa.tb_galgos_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+
+INSERT INTO datos_desa.tb_galgos_carreras
+SELECT 
+MAX(id_carrera_artificial) AS id_carrera, 
+0 AS id_campeonato, 
+MAX(estadio) AS track, 
+NULL AS clase, 
+CONVERT(SUBSTRING( CAST(MAX(dia) AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
+CONVERT(SUBSTRING( CAST(MAX(dia) AS CHAR(8)), 5,2), UNSIGNED INTEGER) AS mes, 
+CONVERT(SUBSTRING( CAST(MAX(dia) AS CHAR(8)), 7,2), UNSIGNED INTEGER) AS dia, 
+CONVERT(SUBSTRING( CAST(MAX(hora) AS CHAR(4)), 1,2), UNSIGNED INTEGER)  AS hora, 
+CONVERT(SUBSTRING( CAST(MAX(hora) AS CHAR(4)), 3,2), UNSIGNED INTEGER)  AS minuto, 
+NULL AS distancia, 
+count(*)  AS num_galgos,
+NULL AS premio_primero, NULL AS premio_segundo, NULL AS premio_otros, NULL AS premio_total_carrera, NULL AS going_allowance_segundos, 
+NULL AS fc_1, NULL AS fc_2, NULL AS fc_pounds, 
+NULL AS tc_1, NULL AS tc_2, NULL AS tc_3, NULL AS tc_pounds
+FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d A
+GROUP BY DHE;
+
+SELECT count(*) FROM datos_desa.tb_galgos_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+SELECT * FROM datos_desa.tb_galgos_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
+ORDER BY id_carrera ASC LIMIT 10;
+
+
+
+DELETE FROM datos_desa.tb_galgos_posiciones_en_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+
+INSERT INTO datos_desa.tb_galgos_posiciones_en_carreras
+SELECT 
+id_carrera_artificial AS id_carrera,
+0 AS id_campeonato,
+NULL AS posicion,
+galgo_nombre AS galgo_nombre,
+trap AS trap,
+NULL AS sp,
+NULL AS time_sec,
+NULL AS time_distance,
+NULL AS peso_galgo,
+NULL AS entrenador_nombre,
+NULL AS galgo_padre,
+NULL AS galgo_madre,
+NULL AS nacimiento,
+NULL AS comment,
+NULL AS edad_en_dias
+FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d;
+
+
+SELECT count(*) FROM datos_desa.tb_galgos_posiciones_en_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
+ORDER BY id_carrera ASC LIMIT 10;
+
+
+
+DELETE FROM datos_desa.tb_galgos_historico 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+
+INSERT INTO datos_desa.tb_galgos_historico
+SELECT 
+galgo_nombre,
+NULL AS entrenador,
+id_carrera_artificial AS id_carrera,
+0 AS id_campeonato,
+CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
+CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 5,2), UNSIGNED INTEGER) AS mes, 
+CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 7,2), UNSIGNED INTEGER) AS dia, 
+NULL AS distancia,
+trap AS trap,
+NULL AS stmhcp,
+NULL AS posicion,
+NULL AS by_dato,
+NULL AS galgo_primero_o_segundo,
+estadio AS venue,
+NULL AS remarks,
+NULL AS win_time,
+NULL AS going,
+NULL AS sp,
+NULL AS clase,
+NULL AS calculated_time,
+NULL AS velocidad_real,
+NULL AS velocidad_con_going,
+NULL AS scoring_remarks
+FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d;
+
+
+SELECT count(*) FROM datos_desa.tb_galgos_historico 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+SELECT * FROM datos_desa.tb_galgos_historico 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
+ORDER BY id_carrera ASC LIMIT 10;
+
+EOF
 
 #echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES" 2>&1 >&1
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES" >>$LOG_CE

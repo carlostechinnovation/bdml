@@ -6,8 +6,8 @@ echo -e "Modulo 002A - Parsear datos"
 
 PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
 PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/"
-PATH_JAR="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
-PATH_WARNINGS="/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/bolsa/warnings_2a_yf"
+PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_WARNINGS="/root/git/bdml/mod002parser/scripts/bolsa/warnings_2a_yf"
 
 TAG_YF="YF"
 

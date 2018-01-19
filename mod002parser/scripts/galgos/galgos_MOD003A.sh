@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #Borrar log
 rm -f "${DOC_ANALISIS_PREVIO}"

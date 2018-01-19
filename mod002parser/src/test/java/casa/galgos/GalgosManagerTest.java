@@ -24,7 +24,7 @@ public class GalgosManagerTest {
 	@Test
 	public void cargarUrlsHistoricosDeGalgosInicialesTest() {
 
-		String param3 = "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/src/test/resources/galgos_iniciales.txt";
+		String param3 = "/root/git/bdml/mod002parser/src/test/resources/galgos_iniciales.txt";
 
 		GalgosManager gm = GalgosManager.getInstancia();
 		gm.cargarUrlsHistoricosDeGalgosIniciales(param3);

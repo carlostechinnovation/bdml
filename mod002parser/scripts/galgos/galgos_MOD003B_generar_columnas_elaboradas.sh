@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/home/carloslinux/Desktop/CODIGOS/workspace_java/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 echo -e "Los galgos SEMILLAS deberian tener el SP (STARTING PRICE) si lo conocemos en el instante de la descarga" 2>&1 1>>${LOG_CE}
 
@@ -609,7 +609,25 @@ read -d '' CONSULTA_ELAB1 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carreras;
 
 CREATE TABLE datos_desa.tb_elaborada_carreras AS 
-SELECT ;
+SELECT 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
 
 SELECT * FROM datos_desa.tb_elaborada_carreras LIMIT 5;
 SELECT count(*) as num_elab_carreras FROM datos_desa.tb_elaborada_carreras LIMIT 5;
