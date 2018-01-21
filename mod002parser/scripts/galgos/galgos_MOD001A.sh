@@ -255,6 +255,224 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIA
 
 
 ##########################################
+echo -e "NORMALIZACION NUMERICA - Normalizamos los campos NUMERICOS (que tenga sentido) de las tablas brutas iniciales (para que las tablas derivadas ya trabajen con datos normalizados)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+read -d '' CONSULTA_NORMALIZACIONES <<- EOF
+
+set @min_hora=(select MIN(hora) FROM datos_desa.tb_galgos_carreras);
+set @max_hora=(select MAX(hora) FROM datos_desa.tb_galgos_carreras);
+set @min_distancia=(select MIN(distancia) FROM datos_desa.tb_galgos_carreras);
+set @max_distancia=(select MAX(distancia) FROM datos_desa.tb_galgos_carreras);
+set @min_num_galgos=(select MIN(num_galgos) FROM datos_desa.tb_galgos_carreras);
+set @max_num_galgos=(select MAX(num_galgos) FROM datos_desa.tb_galgos_carreras);
+set @min_premio_primero=(select MIN(premio_primero) FROM datos_desa.tb_galgos_carreras);
+set @max_premio_primero=(select MAX(premio_primero) FROM datos_desa.tb_galgos_carreras);
+set @min_premio_segundo=(select MIN(premio_segundo) FROM datos_desa.tb_galgos_carreras);
+set @max_premio_segundo=(select MAX(premio_segundo) FROM datos_desa.tb_galgos_carreras);
+set @min_premio_otros=(select MIN(premio_otros) FROM datos_desa.tb_galgos_carreras);
+set @max_premio_otros=(select MAX(premio_otros) FROM datos_desa.tb_galgos_carreras);
+set @min_premio_total_carrera=(select MIN(premio_total_carrera) FROM datos_desa.tb_galgos_carreras);
+set @max_premio_total_carrera=(select MAX(premio_total_carrera) FROM datos_desa.tb_galgos_carreras);
+set @min_going_allowance_segundos=(select MIN(going_allowance_segundos) FROM datos_desa.tb_galgos_carreras);
+set @max_going_allowance_segundos=(select MAX(going_allowance_segundos) FROM datos_desa.tb_galgos_carreras);
+set @min_fc_1=(select MIN(fc_1) FROM datos_desa.tb_galgos_carreras);
+set @max_fc_1=(select MAX(fc_1) FROM datos_desa.tb_galgos_carreras);
+set @min_fc_2=(select MIN(fc_2) FROM datos_desa.tb_galgos_carreras);
+set @max_fc_2=(select MAX(fc_2) FROM datos_desa.tb_galgos_carreras);
+set @min_fc_pounds=(select MIN(fc_pounds) FROM datos_desa.tb_galgos_carreras);
+set @max_fc_pounds=(select MAX(fc_pounds) FROM datos_desa.tb_galgos_carreras);
+set @min_tc_1=(select MIN(tc_1) FROM datos_desa.tb_galgos_carreras);
+set @max_tc_1=(select MAX(tc_1) FROM datos_desa.tb_galgos_carreras);
+set @min_tc_2=(select MIN(tc_2) FROM datos_desa.tb_galgos_carreras);
+set @max_tc_2=(select MAX(tc_2) FROM datos_desa.tb_galgos_carreras);
+set @min_tc_3=(select MIN(tc_3) FROM datos_desa.tb_galgos_carreras);
+set @max_tc_3=(select MAX(tc_3) FROM datos_desa.tb_galgos_carreras);
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_norm;
+
+CREATE TABLE datos_desa.tb_galgos_carreras_norm AS 
+SELECT 
+id_carrera,
+id_campeonato,
+track,
+clase,
+anio,
+mes, CASE WHEN (mes <=7) THEN (-1/6 + mes/6) WHEN (mes >7) THEN (5/12 - 5*mes/144) ELSE 0.5 END AS mes_norm,
+dia,
+hora, (hora - @min_hora)/(@max_hora - @min_hora) AS hora_norm,
+minuto,
+distancia, (distancia - @min_distancia)/(@max_distancia - @min_distancia) AS distancia_norm,
+num_galgos, (num_galgos - @min_num_galgos)/(@max_num_galgos - @min_num_galgos) AS num_galgos_norm,
+premio_primero, (premio_primero - @min_premio_primero)/(@max_premio_primero - @min_premio_primero) AS premio_primero_norm,
+premio_segundo, (premio_segundo - @min_premio_segundo)/(@max_premio_segundo - @min_premio_segundo) AS premio_segundo_norm,
+premio_otros, (premio_otros - @min_premio_otros)/(@max_premio_otros - @min_premio_otros) AS premio_otros_norm,
+premio_total_carrera, (premio_total_carrera - @min_premio_total_carrera)/(@max_premio_total_carrera - @min_premio_total_carrera) AS premio_total_carrera_norm,
+going_allowance_segundos, (going_allowance_segundos - @min_going_allowance_segundos)/(@max_going_allowance_segundos - @min_going_allowance_segundos) AS going_allowance_segundos_norm,
+fc_1, (fc_1 - @min_fc_1)/(@max_fc_1 - @min_fc_1) AS fc_1_norm,
+fc_2, (fc_2 - @min_fc_2)/(@max_fc_2 - @min_fc_2) AS fc_2_norm,
+fc_pounds, (fc_pounds - @min_fc_pounds)/(@max_fc_pounds - @min_fc_pounds) AS fc_pounds_norm,
+tc_1, (tc_1 - @min_tc_1)/(@max_tc_1 - @min_tc_1) AS tc_1_norm,
+tc_2, (tc_2 - @min_tc_2)/(@max_tc_2 - @min_tc_2) AS tc_2_norm,
+tc_3, (tc_3 - @min_tc_3)/(@max_tc_3 - @min_tc_3) AS tc_3_norm,
+tc_pounds, (tc_pounds - @min_tc_pounds)/(@max_tc_pounds - @min_tc_pounds) AS tc_pounds_norm
+FROM datos_desa.tb_galgos_carreras;
+
+SELECT * FROM datos_desa.tb_galgos_carreras_norm LIMIT 5;
+SELECT count(*) as num_carreras_norm FROM datos_desa.tb_galgos_carreras_norm LIMIT 5;
+
+
+
+
+set @min_posicion=(select MIN(posicion) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_posicion=(select MAX(posicion) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_trap=(select MIN(trap) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_trap=(select MAX(trap) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_sp=(select MIN(sp) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_sp=(select MAX(sp) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_time_sec=(select MIN(time_sec) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_time_sec=(select MAX(time_sec) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_time_distance=(select MIN(time_distance) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_time_distance=(select MAX(time_distance) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_peso_galgo=(select MIN(peso_galgo) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_peso_galgo=(select MAX(peso_galgo) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_nacimiento=(select MIN(nacimiento) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_nacimiento=(select MAX(nacimiento) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @min_edad_en_dias=(select MIN(edad_en_dias) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+set @max_edad_en_dias=(select MAX(edad_en_dias) FROM datos_desa.tb_galgos_posiciones_en_carreras);
+
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_norm;
+
+CREATE TABLE datos_desa.tb_galgos_posiciones_en_carreras_norm AS 
+SELECT 
+id_carrera,
+id_campeonato,
+posicion, (posicion - @min_posicion)/(@max_posicion - @min_posicion) AS posicion_norm,
+galgo_nombre,
+trap, (trap - @min_trap)/(@max_trap - @min_trap) AS trap_norm,
+sp, (sp - @min_sp)/(@max_sp - @min_sp) AS sp_norm,
+time_sec, (time_sec - @min_time_sec)/(@max_time_sec - @min_time_sec) AS time_sec_norm,
+time_distance, (time_distance - @min_time_distance)/(@max_time_distance - @min_time_distance) AS time_distance_norm,
+peso_galgo, (peso_galgo - @min_peso_galgo)/(@max_peso_galgo - @min_peso_galgo) AS peso_galgo_norm,
+entrenador_nombre,
+galgo_padre,
+galgo_madre,
+nacimiento, (nacimiento - @min_nacimiento)/(@max_nacimiento - @min_nacimiento) AS nacimiento_norm,
+comment,
+edad_en_dias, (edad_en_dias - @min_edad_en_dias)/(@max_edad_en_dias - @min_edad_en_dias) AS edad_en_dias_norm
+
+FROM datos_desa.tb_galgos_posiciones_en_carreras;
+
+SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras_norm LIMIT 5;
+SELECT count(*) as num_posiciones_en_carreras_norm FROM datos_desa.tb_galgos_posiciones_en_carreras_norm LIMIT 5;
+
+
+set @min_distancia=(select MIN(distancia) FROM datos_desa.tb_galgos_historico);
+set @max_distancia=(select MAX(distancia) FROM datos_desa.tb_galgos_historico);
+set @min_trap=(select MIN(trap) FROM datos_desa.tb_galgos_historico);
+set @max_trap=(select MAX(trap) FROM datos_desa.tb_galgos_historico);
+set @min_stmhcp=(select MIN(stmhcp) FROM datos_desa.tb_galgos_historico);
+set @max_stmhcp=(select MAX(stmhcp) FROM datos_desa.tb_galgos_historico);
+set @min_posicion=(select MIN(posicion) FROM datos_desa.tb_galgos_historico);
+set @max_posicion=(select MAX(posicion) FROM datos_desa.tb_galgos_historico);
+set @min_win_time=(select MIN(win_time) FROM datos_desa.tb_galgos_historico);
+set @max_win_time=(select MAX(win_time) FROM datos_desa.tb_galgos_historico);
+set @min_sp=(select MIN(sp) FROM datos_desa.tb_galgos_historico);
+set @max_sp=(select MAX(sp) FROM datos_desa.tb_galgos_historico);
+set @min_calculated_time=(select MIN(calculated_time) FROM datos_desa.tb_galgos_historico);
+set @max_calculated_time=(select MAX(calculated_time) FROM datos_desa.tb_galgos_historico);
+set @min_velocidad_real=(select MIN(velocidad_real) FROM datos_desa.tb_galgos_historico);
+set @max_velocidad_real=(select MAX(velocidad_real) FROM datos_desa.tb_galgos_historico);
+set @min_velocidad_con_going=(select MIN(velocidad_con_going) FROM datos_desa.tb_galgos_historico);
+set @max_velocidad_con_going=(select MAX(velocidad_con_going) FROM datos_desa.tb_galgos_historico);
+
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_norm;
+
+CREATE TABLE datos_desa.tb_galgos_historico_norm AS 
+SELECT 
+galgo_nombre, entrenador, id_carrera, id_campeonato, anio,
+mes, CASE WHEN (mes <=7) THEN (-1/6 + mes/6) WHEN (mes >7) THEN (5/12 - 5*mes/144) ELSE 0.5 END AS mes_norm,
+dia,
+distancia, (distancia - @min_distancia)/(@max_distancia - @min_distancia) AS distancia_norm,
+trap, (trap - @min_trap)/(@max_trap - @min_trap) AS trap_norm,
+stmhcp, (stmhcp - @min_stmhcp)/(@max_stmhcp - @min_stmhcp) AS stmhcp_norm,
+posicion, (posicion - @min_posicion)/(@max_posicion - @min_posicion) AS posicion_norm,
+by_dato,
+galgo_primero_o_segundo,
+venue,
+remarks,
+win_time, (win_time - @min_win_time)/(@max_win_time - @min_win_time) AS win_time_norm,
+going,
+sp, (sp - @min_sp)/(@max_sp - @min_sp) AS sp_norm,
+clase,
+calculated_time, (calculated_time - @min_calculated_time)/(@max_calculated_time - @min_calculated_time) AS calculated_time_norm,
+velocidad_real, (velocidad_real - @min_velocidad_real)/(@max_velocidad_real - @min_velocidad_real) AS velocidad_real_norm,
+velocidad_con_going, (velocidad_con_going - @min_velocidad_con_going)/(@max_velocidad_con_going - @min_velocidad_con_going) AS velocidad_con_going_norm,
+scoring_remarks
+
+FROM datos_desa.tb_galgos_historico;
+
+SELECT * FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
+SELECT count(*) as num_XX_norm FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
+
+
+set @min_vel_real_cortas_mediana=(select MIN(vel_real_cortas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_real_cortas_mediana=(select MAX(vel_real_cortas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_real_cortas_max=(select MIN(vel_real_cortas_max) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_real_cortas_max=(select MAX(vel_real_cortas_max) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_going_cortas_mediana=(select MIN(vel_going_cortas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_going_cortas_mediana=(select MAX(vel_going_cortas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_going_cortas_max=(select MIN(vel_going_cortas_max) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_going_cortas_max=(select MAX(vel_going_cortas_max) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_real_longmedias_mediana=(select MIN(vel_real_longmedias_mediana) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_real_longmedias_mediana=(select MAX(vel_real_longmedias_mediana) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_real_longmedias_max=(select MIN(vel_real_longmedias_max) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_real_longmedias_max=(select MAX(vel_real_longmedias_max) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_going_longmedias_mediana=(select MIN(vel_going_longmedias_mediana) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_going_longmedias_mediana=(select MAX(vel_going_longmedias_mediana) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_going_longmedias_max=(select MIN(vel_going_longmedias_max) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_going_longmedias_max=(select MAX(vel_going_longmedias_max) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_real_largas_mediana=(select MIN(vel_real_largas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_real_largas_mediana=(select MAX(vel_real_largas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_real_largas_max=(select MIN(vel_real_largas_max) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_real_largas_max=(select MAX(vel_real_largas_max) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_going_largas_mediana=(select MIN(vel_going_largas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_going_largas_mediana=(select MAX(vel_going_largas_mediana) FROM datos_desa.tb_galgos_agregados);
+set @min_vel_going_largas_max=(select MIN(vel_going_largas_max) FROM datos_desa.tb_galgos_agregados);
+set @max_vel_going_largas_max=(select MAX(vel_going_largas_max) FROM datos_desa.tb_galgos_agregados);
+
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_norm;
+
+CREATE TABLE datos_desa.tb_galgos_agregados_norm AS 
+SELECT 
+galgo_nombre,
+vel_real_cortas_mediana, (vel_real_cortas_mediana - @min_vel_real_cortas_mediana)/(@max_vel_real_cortas_mediana - @min_vel_real_cortas_mediana) AS vel_real_cortas_mediana_norm,
+vel_real_cortas_max, (vel_real_cortas_max - @min_vel_real_cortas_max)/(@max_vel_real_cortas_max - @min_vel_real_cortas_max) AS vel_real_cortas_max_norm,
+vel_going_cortas_mediana, (vel_going_cortas_mediana - @min_vel_going_cortas_mediana)/(@max_vel_going_cortas_mediana - @min_vel_going_cortas_mediana) AS vel_going_cortas_mediana_norm,
+vel_going_cortas_max, (vel_going_cortas_max - @min_vel_going_cortas_max)/(@max_vel_going_cortas_max - @min_vel_going_cortas_max) AS vel_going_cortas_max_norm,
+vel_real_longmedias_mediana, (vel_real_longmedias_mediana - @min_vel_real_longmedias_mediana)/(@max_vel_real_longmedias_mediana - @min_vel_real_longmedias_mediana) AS vel_real_longmedias_mediana_norm,
+vel_real_longmedias_max, (vel_real_longmedias_max - @min_vel_real_longmedias_max)/(@max_vel_real_longmedias_max - @min_vel_real_longmedias_max) AS vel_real_longmedias_max_norm,
+vel_going_longmedias_mediana, (vel_going_longmedias_mediana - @min_vel_going_longmedias_mediana)/(@max_vel_going_longmedias_mediana - @min_vel_going_longmedias_mediana) AS vel_going_longmedias_mediana_norm,
+vel_going_longmedias_max, (vel_going_longmedias_max - @min_vel_going_longmedias_max)/(@max_vel_going_longmedias_max - @min_vel_going_longmedias_max) AS vel_going_longmedias_max_norm,
+vel_real_largas_mediana, (vel_real_largas_mediana - @min_vel_real_largas_mediana)/(@max_vel_real_largas_mediana - @min_vel_real_largas_mediana) AS vel_real_largas_mediana_norm,
+vel_real_largas_max, (vel_real_largas_max - @min_vel_real_largas_max)/(@max_vel_real_largas_max - @min_vel_real_largas_max) AS vel_real_largas_max_norm,
+vel_going_largas_mediana, (vel_going_largas_mediana - @min_vel_going_largas_mediana)/(@max_vel_going_largas_mediana - @min_vel_going_largas_mediana) AS vel_going_largas_mediana_norm,
+vel_going_largas_max, (vel_going_largas_max - @min_vel_going_largas_max)/(@max_vel_going_largas_max - @min_vel_going_largas_max) AS vel_going_largas_max_norm
+
+FROM datos_desa.tb_galgos_agregados;
+
+SELECT * FROM datos_desa.tb_galgos_agregados_norm LIMIT 5;
+SELECT count(*) as num_galgos_agregados_norm FROM datos_desa.tb_galgos_agregados_norm LIMIT 5;
+
+EOF
+
+#echo -e "$CONSULTA_NORMALIZACIONES" 2>&1 >&1
+mysql -u root --password=datos1986 --execute="$CONSULTA_NORMALIZACIONES" >>$LOG_CE
+
+
+##########################################
 
 echo "Galgos-Modulo 001A - FIN" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 

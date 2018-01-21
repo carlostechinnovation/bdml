@@ -295,7 +295,11 @@ public class GbgbParserCarreraDetalle implements Serializable {
 			out.urlparteB_galgo_historico = e1.childNode(3).childNode(1).attr("href").split("=")[1].trim();
 
 			parsearyRellenarSp(Constantes.limpiarTexto(((TextNode) e1.childNode(7).childNode(0)).text()), out);
-			out.time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());
+
+			// TIME_SEC debe ser numerico (float), pero no texto. Es decir, debería contener
+			// el punto separador de decimales
+			String time_sec = Constantes.limpiarTexto(((TextNode) e1.childNode(9).childNode(0)).text());
+			out.time_sec = (time_sec.contains(".")) ? time_sec : null;
 
 			String time_distance = Constantes.limpiarTexto(((TextNode) e1.childNode(11).childNode(0)).text());
 			out.time_distance = time_distance.contains("(")
