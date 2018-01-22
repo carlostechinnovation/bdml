@@ -358,12 +358,14 @@ public class GalgosManager implements Serializable {
 
 		boolean out = quedanPendientes && debajoUmbralCarrerasProcesadasMax && debajoUmbralProfundidadMax;
 
-		MY_LOGGER.info("BUCLE-Condiciones: procesadas=" + extraerProfundidadMinimaConCarrerasPendientes());
-		MY_LOGGER.info("BUCLE-Condiciones: profundidad_minima_con_pendientes="
-				+ extraerProfundidadMinimaConCarrerasPendientes());
+		MY_LOGGER.info(
+				"BUCLE-Condiciones: Ya se han procesado las carreras de profundidad 1, 2... (desde los galgos semillas) y ahora la profundidad mínima de las carreras PENDIENTES es ="
+						+ extraerProfundidadMinimaConCarrerasPendientes());
 
-		MY_LOGGER.info("BUCLE-Condiciones = " + quedanPendientes + " && " + debajoUmbralCarrerasProcesadasMax + " && "
-				+ debajoUmbralProfundidadMax + " = " + out);
+		MY_LOGGER.info("BUCLE-Condiciones --> quedanPendientes =" + quedanPendientes);
+		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralCarrerasProcesadasMax =" + debajoUmbralCarrerasProcesadasMax);
+		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralProfundidadMax =" + debajoUmbralProfundidadMax + " = " + out);
+		MY_LOGGER.info("BUCLE-Condiciones --> TOTAL (para ver si seguimos procesando mas carreras) = " + out);
 
 		return out;
 
@@ -473,7 +475,7 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
-	 * @return De las carreras pendientes,devuelve que lLa minima profundidad.
+	 * @return De las carreras pendientes,devuelve que la minima profundidad.
 	 */
 	public Integer extraerProfundidadMinimaConCarrerasPendientes() {
 

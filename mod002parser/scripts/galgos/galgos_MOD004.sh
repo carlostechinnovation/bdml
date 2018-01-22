@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "Modulo 004B - Modelos predictivos (nucleo)"
+echo -e $(date +"%T")"Modulo 004B - Modelos predictivos (nucleo)"
 
 FOLDER_INFORMES="/home/carloslinux/Desktop/INFORMES/"
 
@@ -17,6 +17,6 @@ python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/g
 cat "${FOLDER_INFORMES}galgos_MOD004_gagst.out" | grep 'GAGST-Gana modelo'  >&1
 
 
-echo -e "Modulo 004B - FIN\n\n"
+echo -e $(date +"%T")"Modulo 004B - FIN\n\n"
 
 

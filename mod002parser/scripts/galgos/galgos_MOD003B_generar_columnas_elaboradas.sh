@@ -2,7 +2,7 @@
 
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-echo -e "Los galgos SEMILLAS deberian tener el SP (STARTING PRICE) si lo conocemos en el instante de la descarga" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Los galgos SEMILLAS deberian tener el SP (STARTING PRICE) si lo conocemos en el instante de la descarga" 2>&1 1>>${LOG_CE}
 
 
 ##########################################################################################
@@ -10,10 +10,8 @@ function calcularVariableX1 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X1: [(galgo) -> velocidad_max_going]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
-
-
+echo -e "\n"$(date +"%T")" ---- X1: [(galgo) -> velocidad_max_going]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X1 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x1a;
@@ -30,7 +28,8 @@ SELECT count(*) as num_x1a FROM datos_desa.tb_ce_${sufijo}_x1a LIMIT 5;
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x1b;
 
-CREATE TABLE datos_desa.tb_ce_${sufijo}_x1b AS SELECT galgo_nombre, 
+CREATE TABLE datos_desa.tb_ce_${sufijo}_x1b AS 
+SELECT galgo_nombre, 
 
 (vel_going_cortas_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=1) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=1) AS vgcortas_max_norm, 
 
@@ -40,12 +39,12 @@ CREATE TABLE datos_desa.tb_ce_${sufijo}_x1b AS SELECT galgo_nombre,
 
 FROM datos_desa.tb_galgos_agregados_norm;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x1b ADD INDEX tb_ce_${sufijo}_x1b_idx(galgo_nombre);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x1b LIMIT 5;
-
 SELECT count(*) as num_x1b FROM datos_desa.tb_ce_${sufijo}_x1b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X1" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X1" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X1" >>$LOG_CE
 }
 
@@ -54,8 +53,8 @@ function calcularVariableX2 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X2: [(carrera, galgo) ->experiencia]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X2: [(carrera, galgo) ->experiencia]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X2 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x2a;
@@ -75,7 +74,6 @@ FROM datos_desa.tb_galgos_historico_norm GH,
 ORDER BY galgo_nombre ASC, anio ASC, mes ASC, dia ASC;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x2a LIMIT 5;
-
 SELECT count(*) as num_x2a FROM datos_desa.tb_ce_${sufijo}_x2a LIMIT 5;
 
 
@@ -90,12 +88,12 @@ SELECT id_carrera, galgo_nombre, anio, mes, dia,
 (experiencia - @min_experiencia)/(@max_experiencia - @min_experiencia) AS experiencia
 FROM datos_desa.tb_ce_${sufijo}_x2a;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x2b ADD INDEX tb_ce_${sufijo}_x2b_idx(id_carrera, galgo_nombre);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x2b LIMIT 5;
-
 SELECT count(*) as num_x2b FROM datos_desa.tb_ce_${sufijo}_x2b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X2" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X2" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X2" >>$LOG_CE
 
 }
@@ -105,8 +103,8 @@ function calcularVariableX3 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X3: [(carrera, galgo) -> (TRAP, trap_factor)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X3: [(carrera, galgo) -> (TRAP, trap_factor)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X3 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x3a;
@@ -118,7 +116,6 @@ WHERE posicion IN (1,2)
 GROUP BY dentro.trap;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x3a LIMIT 5;
-
 SELECT count(*) as num_x3a FROM datos_desa.tb_ce_${sufijo}_x3a LIMIT 5;
 
 
@@ -133,12 +130,12 @@ SELECT trap,
 (trap_suma - @min_trap_puntos)/(@max_trap_puntos - @min_trap_puntos) AS trap_factor
 FROM datos_desa.tb_ce_${sufijo}_x3a;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x3b ADD INDEX tb_ce_${sufijo}_x3b_idx(trap);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x3b LIMIT 5;
-
 SELECT count(*) as num_x3b FROM datos_desa.tb_ce_${sufijo}_x3b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X3" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X3" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X3" >>$LOG_CE
 
 }
@@ -148,11 +145,12 @@ function calcularVariableX4 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X4: [(carrera, galgo) -> (starting price)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X4: [(carrera, galgo) -> (starting price)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x4;" >>$LOG_CE
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_ce_${sufijo}_x4 AS SELECT id_carrera, galgo_nombre, sp FROM datos_desa.tb_galgos_historico_norm  GH;" >>$LOG_CE
+mysql -u root --password=datos1986 --execute="ALTER TABLE datos_desa.tb_ce_${sufijo}_x4 ADD INDEX tb_ce_${sufijo}_x4_idx(id_carrera, galgo_nombre);" >>$LOG_CE
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;" >>$LOG_CE
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x4 FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;" >>$LOG_CE
 }
@@ -162,11 +160,12 @@ function calcularVariableX5 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X5: [(carrera, galgo) -> (clase)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X5: [(carrera, galgo) -> (clase)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x5;" >>$LOG_CE
 mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_ce_${sufijo}_x5 AS SELECT id_carrera, galgo_nombre, clase FROM datos_desa.tb_galgos_historico_norm  GH;" >>$LOG_CE
+mysql -u root --password=datos1986 --execute="ALTER TABLE datos_desa.tb_ce_${sufijo}_x5 ADD INDEX tb_ce_${sufijo}_x5_idx(id_carrera, galgo_nombre);" >>$LOG_CE
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_ce_${sufijo}_x5 LIMIT 5;" >>$LOG_CE
 mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x5 FROM datos_desa.tb_ce_${sufijo}_x5 LIMIT 5;" >>$LOG_CE
 }
@@ -176,12 +175,12 @@ function calcularVariableX6 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X6 - POSICION media por experiencia en una clase. Un perro que corre en una carrera tiene X experiencia corriendo en esa clase. Asignamos la posición media que le correspondería tener a ese perro por tener esa experiencia X en esa clase. Agrupamos por rangos de experiencia (baja, media, alta) en función de unos umbrales calculados empiricamente." 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X6 - POSICION media por experiencia en una clase. Un perro que corre en una carrera tiene X experiencia corriendo en esa clase. Asignamos la posición media que le correspondería tener a ese perro por tener esa experiencia X en esa clase. Agrupamos por rangos de experiencia (baja, media, alta) en función de unos umbrales calculados empiricamente." 2>&1 1>>${LOG_CE}
 
-echo -e "X6: [(carrera, galgo, clase) -> (posicion_media según su experiencia en esa clase)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"X6: [(carrera, galgo, clase) -> (posicion_media según su experiencia en esa clase)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
-read -d '' CONSULTA_X6 <<- EOF
+read -d '' CONSULTA_X6A <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6a;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6a AS 
@@ -199,8 +198,12 @@ SELECT count(*) as num_x6a FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
 
 set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6a);
 set @max_experiencia_en_clase=(select MAX(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6a);
+EOF
 
+#echo -e $(date +"%T")"$CONSULTA_X6A" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6A" >>$LOG_CE
 
+read -d '' CONSULTA_X6B <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6b AS 
@@ -216,8 +219,12 @@ ORDER BY clase ASC, experiencia_cualitativo ASC;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 5;
 SELECT count(*) as num_x6b FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 5;
+EOF
 
+#echo -e $(date +"%T")"$CONSULTA_X6B" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6B" >>$LOG_CE
 
+read -d '' CONSULTA_X6C <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6c AS
@@ -235,8 +242,12 @@ GROUP BY galgo_nombre, clase, id_carrera;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
 SELECT count(*) as num_x6c FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
+EOF
 
+#echo -e $(date +"%T")"$CONSULTA_X6C" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6C" >>$LOG_CE
 
+read -d '' CONSULTA_X6D <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6d;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6d AS 
@@ -248,22 +259,16 @@ GROUP BY galgo_nombre, clase, id_carrera;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6d LIMIT 5;
 SELECT count(*) as num_x6d FROM datos_desa.tb_ce_${sufijo}_x6d LIMIT 5;
+EOF
 
+#echo -e $(date +"%T")"$CONSULTA_X6D" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6D" >>$LOG_CE
 
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e;
+read -d '' CONSULTA_X6E <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e_aux1;
 
-CREATE TABLE datos_desa.tb_ce_${sufijo}_x6e AS 
-SELECT  cruce1.clase, 
- 
-cruce1.experiencia_cualitativo,
-(X6A.experiencia_en_clase - @min_experiencia_en_clase)/(@max_experiencia_en_clase - @min_experiencia_en_clase) AS experiencia_en_clase, 
-X6B.posicion_media_en_clase_por_experiencia,
-
-anio, mes, dia, 
-cruce1.id_carrera, cruce1.galgo_nombre
-
-FROM(
-  SELECT GH.anio, GH.mes, GH.dia, GH.id_carrera, GH.galgo_nombre, GH.clase,  
+CREATE TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 AS 
+SELECT GH.anio, GH.mes, GH.dia, GH.id_carrera, GH.galgo_nombre, GH.clase,  
   experiencia_en_clase,
   CASE WHEN experiencia_en_clase>=13 THEN 'alta' 
      WHEN (experiencia_en_clase>=5 AND experiencia_en_clase<13) THEN 'media'
@@ -272,17 +277,37 @@ FROM(
 
   FROM datos_desa.tb_galgos_historico_norm GH 
   LEFT JOIN datos_desa.tb_ce_${sufijo}_x6d X6D ON (GH.id_carrera=X6D.id_carrera AND GH.galgo_nombre=X6D.galgo_nombre)
-) cruce1
+;
+
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx1(galgo_nombre, clase);
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx2(clase, experiencia_cualitativo);
+
+
+DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e;
+
+CREATE TABLE datos_desa.tb_ce_${sufijo}_x6e AS 
+SELECT
+cruce1.id_carrera,
+cruce1.galgo_nombre,
+cruce1.clase,
+cruce1.experiencia_cualitativo,
+(X6A.experiencia_en_clase - @min_experiencia_en_clase)/(@max_experiencia_en_clase - @min_experiencia_en_clase) AS experiencia_en_clase, 
+X6B.posicion_media_en_clase_por_experiencia,
+anio, mes, dia
+
+FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 cruce1
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x6a X6A ON (cruce1.galgo_nombre=X6A.galgo_nombre AND cruce1.clase=X6A.clase)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x6b X6B ON (cruce1.clase=X6B.clase AND cruce1.experiencia_cualitativo=X6B.experiencia_cualitativo)
 ;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e ADD INDEX tb_ce_${sufijo}_x6e_idx(id_carrera, galgo_nombre, clase);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6e LIMIT 5;
 SELECT count(*) as num_x6e FROM datos_desa.tb_ce_${sufijo}_x6e LIMIT 5;
 EOF
 
-echo -e "$CONSULTA_X6" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X6" >>$LOG_CE
+#echo -e $(date +"%T")"$CONSULTA_X6E" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_X6E" >>$LOG_CE
+
 }
 
 ##########################################################################################
@@ -290,10 +315,10 @@ function calcularVariableX7 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X7: peso del galgo en relacion al peso medio de los galgos que corren en esa distancia (centenas de metros). Toma valores NULL cuando no hemos descargado las filas de la tabla de posiciones en carrera (que es la que tiene el peso de cada galgo)." 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X7: peso del galgo en relacion al peso medio de los galgos que corren en esa distancia (centenas de metros). Toma valores NULL cuando no hemos descargado las filas de la tabla de posiciones en carrera (que es la que tiene el peso de cada galgo)." 2>&1 1>>${LOG_CE}
 
-echo -e "X7: [(carrera, galgo) -> (diferencia respecto al peso medio en esa distancia_centenas)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"X7: [(carrera, galgo) -> (diferencia respecto al peso medio en esa distancia_centenas)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X7C <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7a;
@@ -347,11 +372,12 @@ SELECT id_carrera, galgo_nombre, distancia_centenas, distancia,
 (dif_peso - @min_dif_peso)/(@max_dif_peso - @min_dif_peso) AS dif_peso
 FROM datos_desa.tb_ce_${sufijo}_x7c;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x7d ADD INDEX tb_ce_${sufijo}_x7d_idx(id_carrera, galgo_nombre);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x7d LIMIT 5;
 SELECT count(*) as num_x7d FROM datos_desa.tb_ce_${sufijo}_x7d LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X7C" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X7C" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X7C" >>$LOG_CE
 }
 
@@ -360,8 +386,8 @@ function calcularVariableX8 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X8: [carrera -> (going_avg, going_std)]. \nIndica si el estadio tiene mucha correccion (going allowance), normalmente debido al viento, lluvia, etc." 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X8: [carrera -> (going_avg, going_std)]. \nIndica si el estadio tiene mucha correccion (going allowance), normalmente debido al viento, lluvia, etc." 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X8 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x8a;
@@ -379,6 +405,7 @@ set @max_vgs=(select MAX(venue_going_std) FROM datos_desa.tb_ce_${sufijo}_x8a);
 set @min_vga=(select MIN(venue_going_avg) FROM datos_desa.tb_ce_${sufijo}_x8a);
 set @max_vga=(select MAX(venue_going_avg) FROM datos_desa.tb_ce_${sufijo}_x8a);
 
+
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x8b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x8b AS 
@@ -387,11 +414,13 @@ SELECT track,
 (venue_going_avg - @min_vga)/(@max_vga - @min_vga) AS venue_going_avg
  FROM datos_desa.tb_ce_${sufijo}_x8a
 ;
+
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x8b ADD INDEX tb_ce_${sufijo}_x8b_idx(track);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x8b LIMIT 5;
 SELECT count(*) as num_x8a FROM datos_desa.tb_ce_${sufijo}_x8b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X8" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X8" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X8" >>$LOG_CE
 }
 
@@ -400,8 +429,8 @@ function calcularVariableX9 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X9: [entrenador -> puntos]. Calidad del ENTRENADOR" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X9: [entrenador -> puntos]. Calidad del ENTRENADOR" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X9 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x9a;
@@ -420,11 +449,12 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x9b;
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x9b AS 
 SELECT entrenador, (6-posicion_avg)/5 AS entrenador_posicion_norm FROM datos_desa.tb_ce_${sufijo}_x9a;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x9b ADD INDEX tb_ce_${sufijo}_x9b_idx(entrenador);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x9b LIMIT 5;
 SELECT count(*) as num_x9b FROM datos_desa.tb_ce_${sufijo}_x9b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X9" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X9" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X9" >>$LOG_CE
 }
 
@@ -433,8 +463,8 @@ function calcularVariableX10 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X10: [(carrera, galgo) -> (edad_en_dias)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X10: [(carrera, galgo) -> (edad_en_dias)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X10 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x10a;
@@ -457,11 +487,12 @@ SELECT id_carrera, galgo_nombre,
 (edad_en_dias - @min_eed)/(@max_eed - @min_eed) AS eed_norm
 FROM datos_desa.tb_ce_${sufijo}_x10a;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x10b ADD INDEX tb_ce_${sufijo}_x10b_idx(id_carrera, galgo_nombre);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x10b LIMIT 5;
 SELECT count(*) as num_x10b FROM datos_desa.tb_ce_${sufijo}_x10b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X10" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X10" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X10" >>$LOG_CE
 }
 
@@ -470,8 +501,8 @@ function calcularVariableX11 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X11: [(galgo) -> (agregados normalizados del galgo)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X11: [(galgo) -> (agregados normalizados del galgo)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
 #vel_real_cortas_mediana | vel_real_cortas_max | vel_going_cortas_mediana | vel_going_cortas_max | 
 #vel_real_longmedias_mediana | vel_real_longmedias_max | vel_going_longmedias_mediana | vel_going_longmedias_max | 
@@ -540,11 +571,12 @@ vel_going_largas_max,
 
 FROM datos_desa.tb_galgos_agregados_norm;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x11 ADD INDEX tb_ce_${sufijo}_x11_idx(galgo_nombre);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x11 LIMIT 5;
 SELECT count(*) as num_x11 FROM datos_desa.tb_ce_${sufijo}_x11 LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X11" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X11" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X11" >>$LOG_CE
 }
 
@@ -553,12 +585,12 @@ function calcularVariableX12 ()
 {
 filtro_galgos="${1}"
 sufijo="${2}"
-echo -e "\n---- X12: [ carrera -> (propiedades normalizadas de la carrera)]" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- X12: [ carrera -> (propiedades normalizadas de la carrera)]" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
-echo -e "PENDIENTE Leer el track (pista) y sacar las caracteristicas de su ubicacion fisica (norte, sur, cerca del mar, altitud, numero de espectadores presenciales, tamaño de la pista...)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"PENDIENTE Leer el track (pista) y sacar las caracteristicas de su ubicacion fisica (norte, sur, cerca del mar, altitud, numero de espectadores presenciales, tamaño de la pista...)" 2>&1 1>>${LOG_CE}
 
-echo -e "PENDIENTE Leer la clase (tipo de competición) y crear categorias (boolean): tipo A, OR, S... --> SELECT DISTINCT clase FROM datos_desa.tb_galgos_carreras LIMIT 100;" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"PENDIENTE Leer la clase (tipo de competición) y crear categorias (boolean): tipo A, OR, S... --> SELECT DISTINCT clase FROM datos_desa.tb_galgos_carreras LIMIT 100;" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_X12 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x12a;
@@ -630,11 +662,12 @@ mes AS mes_norm,
 (tc_pounds - @min_tc_pounds)/(@max_tc_pounds - @min_tc_pounds) AS X_norm
 FROM datos_desa.tb_ce_${sufijo}_x12a;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x12b ADD INDEX tb_ce_${sufijo}_x12b_idx(id_carrera);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x12b LIMIT 5;
 SELECT count(*) as num_x12b FROM datos_desa.tb_ce_${sufijo}_x12b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X12" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_X12" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X12" >>$LOG_CE
 }
 
@@ -642,30 +675,30 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_X12" >>$LOG_CE
 ################ TABLAS de INDICES ####################################################################################
 function generarTablasIndices ()
 {
-echo -e "\n\n---- TABLAS DE INDICES -------- " 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" \n---- TABLAS DE INDICES -------- " 2>&1 1>>${LOG_CE}
 
-echo -e "Tablas ORIGINALES:" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_galgos_carreras_norm --> id_carrera" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_galgos_posiciones_en_carreras_norm --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_galgos_historico_norm --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_galgos_agregados_norm --> galgo_nombre" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Tablas ORIGINALES:" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_galgos_carreras_norm --> id_carrera" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_galgos_posiciones_en_carreras_norm --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_galgos_historico_norm --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_galgos_agregados_norm --> galgo_nombre" 2>&1 1>>${LOG_CE}
 
-echo -e "Tablas de columnas ELABORADAS (provienen de usar las originales, así que tienen las mismas claves):" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x1b --> galgo_nombre" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x2b --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x3b --> trap (se usa con carrera+galgo)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.datos_desa.tb_ce_${sufijo}_x4 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x5 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x6e --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x7d --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x8b --> track (se usa con carrera)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x9b --> entrenador (se usa con galgo)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x10b --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x11 --> galgo_nombre" 2>&1 1>>${LOG_CE}
-echo -e "datos_desa.tb_ce_${sufijo}_x12b --> id_carrera" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Tablas de columnas ELABORADAS (provienen de usar las originales, así que tienen las mismas claves):" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x1b --> galgo_nombre" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x2b --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x3b --> trap (se usa con carrera+galgo)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.datos_desa.tb_ce_${sufijo}_x4 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x5 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x6e --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x7d --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x8b --> track (se usa con carrera)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x9b --> entrenador (se usa con galgo)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x10b --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x11 --> galgo_nombre" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"datos_desa.tb_ce_${sufijo}_x12b --> id_carrera" 2>&1 1>>${LOG_CE}
 
 
-echo -e "\n-------- 3 Tablas auxiliares con todas las claves extraidas y haciendo DISTINCT (serás las tablas MAESTRAS de índices)-------" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" -------- 3 Tablas auxiliares con todas las claves extraidas y haciendo DISTINCT (serás las tablas MAESTRAS de índices)-------" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_IDS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ids_carreras_${sufijo};
@@ -679,6 +712,7 @@ FROM (
   SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_historico_norm
 ) dentro
 ;
+ALTER TABLE datos_desa.tb_ids_carreras_${sufijo} ADD INDEX tb_ids_carreras_${sufijo}_idx(id_carrera);
 SELECT count(*) as num_ids_carreras FROM datos_desa.tb_ids_carreras_${sufijo} LIMIT 5;
 SELECT * FROM datos_desa.tb_ids_carreras_${sufijo} LIMIT 5;
 
@@ -693,6 +727,7 @@ FROM (
   UNION DISTINCT
   SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_agregados_norm
 ) dentro;
+ALTER TABLE datos_desa.tb_ids_galgos_${sufijo} ADD INDEX tb_ids_galgos_${sufijo}_idx(galgo_nombre);
 SELECT count(*) AS num_ids_galgos FROM datos_desa.tb_ids_galgos_${sufijo} LIMIT 5;
 SELECT * FROM datos_desa.tb_ids_galgos_${sufijo} LIMIT 5;
 
@@ -710,15 +745,16 @@ FROM (
     SELECT CONCAT(id_carrera,'|',galgo_nombre) as cg FROM datos_desa.tb_galgos_historico_norm
   ) dentro
 ) fuera;
+ALTER TABLE datos_desa.tb_ids_carrerasgalgos_${sufijo} ADD INDEX tb_ids_carrerasgalgos_${sufijo}_idx(id_carrera,galgo_nombre);
 SELECT count(*) as num_ids_cg FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} LIMIT 5;
 SELECT * FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
 
 
-echo -e "\nComprobacion: las 3 tablas de IDs no deben tener duplicados" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" Comprobacion: las 3 tablas de IDs no deben tener duplicados" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT id_carrera, count(*) as num_ids_carreras FROM datos_desa.tb_ids_carreras_${sufijo} GROUP BY id_carrera HAVING num_ids_carreras>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_ids_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
@@ -735,7 +771,7 @@ mysql -u root --password=datos1986 --execute="SELECT cg, count(*) as num_ids_cg 
 function generarTablasElaboradas ()
 {
 
-echo -e "\n\n---- TABLA ELABORADA 1: [ carrera -> columnas ]" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" \n---- TABLA ELABORADA 1: [ carrera -> columnas ]" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_ELAB1 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carreras_${sufijo};
@@ -747,7 +783,7 @@ D.venue_going_std, D.venue_going_avg
 FROM (
   SELECT 
   A.id_carrera,
-  B.id_campeonato, B.track, B.clase, B.mes, B.dia, B.hora, B.distancia, B.num_galgos, B.premio_primero, B.premio_segundo, B.premio_otros, B.premio_total_carrera, B.going_allowance_segundos, B.fc_1, B.fc_2, B.fc_pounds, B.tc_1, B.tc_2, B.tc_3, B.tc_pounds,
+  B.id_campeonato, B.track, B.clase, B.mes_norm, B.hora_norm, B.distancia, B.premio_primero, B.premio_segundo, B.premio_otros, B.premio_total_carrera, B.going_allowance_segundos, B.fc_1, B.fc_2, B.fc_pounds, B.tc_1, B.tc_2, B.tc_3, B.tc_pounds,
   C.mes_norm, C.hora_norm, C.num_galgos_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.going_allowance_segundos_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.X_norm 
   FROM datos_desa.tb_ids_carreras_${sufijo} A
   LEFT JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
@@ -757,15 +793,16 @@ FROM (
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x8b D ON (dentro.track=D.track)
 ;
 
+ALTER TABLE datos_desa.tb_elaborada_carreras_${sufijo} ADD INDEX tb_elaborada_carreras_${sufijo}_idx(id_carrera);
 SELECT * FROM datos_desa.tb_elaborada_carreras_${sufijo} ORDER BY id_carrera LIMIT 5;
 SELECT count(*) as num_elab_carreras FROM datos_desa.tb_elaborada_carreras_${sufijo} LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_ELAB1" >>$LOG_CE
+#echo -e $(date +"%T")"$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB1" >>$LOG_CE
 
 
-echo -e "\n\n---- TABLA ELABORADA 2: [ galgo -> columnas ]" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" \n---- TABLA ELABORADA 2: [ galgo -> columnas ]" 2>&1 1>>${LOG_CE}
 read -d '' CONSULTA_ELAB2 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_galgos_${sufijo};
 
@@ -784,53 +821,30 @@ LEFT JOIN datos_desa.tb_ce_${sufijo}_x1b C ON (A.galgo_nombre=C.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x11 D ON (A.galgo_nombre=D.galgo_nombre)
 ;
 
+ALTER TABLE datos_desa.tb_elaborada_galgos_${sufijo} ADD INDEX tb_elaborada_galgos_${sufijo}_idx(galgo_nombre);
 SELECT * FROM datos_desa.tb_elaborada_galgos_${sufijo} ORDER BY galgo_nombre LIMIT 5;
 SELECT count(*) as num_elab_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo} LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_ELAB2" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_ELAB2" >>$LOG_CE
+#echo -e $(date +"%T")"$CONSULTA_ELAB2" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB2" >>$LOG_CE
 
 
-echo -e "\n\n---- TABLA ELABORADA 3: [ carrera+galgo -> columnas ]" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" \n---- TABLA ELABORADA 3: [ carrera+galgo -> columnas ]" 2>&1 1>>${LOG_CE}
 read -d '' CONSULTA_ELAB3 <<- EOF
-DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo};
+DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1;
 
-CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} AS 
-
-SELECT
-dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec, dentro.time_distance, dentro.peso_galgo, dentro.galgo_padre, dentro.galgo_madre, dentro.nacimiento, dentro.comment, dentro.edad_en_dias, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real, dentro.velocidad_con_going, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
-
-E.trap_factor,
-
-H.experiencia_cualitativo, H.experiencia_en_clase, H.posicion_media_en_clase_por_experiencia,
-I.distancia_centenas, I.dif_peso,
-J.entrenador_posicion_norm,
-K.eed_norm,
-
-IFNULL(dentro.trap, E.trap) AS trap,
-IFNULL(dentro.anio, H.anio) AS anio,
-IFNULL(dentro.mes, H.mes) AS mes,
-IFNULL(dentro.dia, H.dia) AS dia,
-IFNULL(dentro.sp,F.sp) AS sp,
-IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
-IFNULL(dentro.distancia, I.distancia) AS distancia,
-IFNULL(dentro.entrenador, J.entrenador) AS entrenador
-
-FROM (
-  SELECT 
+CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 AS
+SELECT 
   A.*,
-
   B.time_sec, B.time_distance, B.peso_galgo, B.galgo_padre, B.galgo_madre, B.nacimiento, B.comment, B.edad_en_dias,
-
   C.distancia,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real, C.velocidad_con_going, C.scoring_remarks,
-
   D.experiencia,
-
   IFNULL(B.posicion,C.posicion) AS posicion,
   IFNULL(B.sp, C.sp) AS sp,
   IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
   IFNULL(B.trap, C.trap) AS trap,
+  IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
   IFNULL(C.anio, D.anio) AS anio,
   IFNULL(C.mes, D.mes) AS mes,
   IFNULL(C.dia, D.dia) AS dia,
@@ -840,8 +854,30 @@ FROM (
   LEFT JOIN datos_desa.tb_galgos_posiciones_en_carreras_norm B ON (A.id_carrera=B.id_carrera AND A.galgo_nombre=B.galgo_nombre)
   LEFT JOIN datos_desa.tb_galgos_historico_norm C ON (A.id_carrera=C.id_carrera AND A.galgo_nombre=C.galgo_nombre)
   LEFT JOIN datos_desa.tb_ce_${sufijo}_x2b D ON (A.id_carrera=D.id_carrera AND A.galgo_nombre=D.galgo_nombre)
-) dentro
+;
 
+ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 ADD INDEX tb_elaborada_carrerasgalgos_${sufijo}_aux1_idx(id_carrera, galgo_nombre);
+
+
+DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo};
+
+CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} AS 
+SELECT
+dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec, dentro.time_distance, dentro.peso_galgo, dentro.galgo_padre, dentro.galgo_madre, dentro.nacimiento, dentro.comment, dentro.edad_en_dias, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real, dentro.velocidad_con_going, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
+E.trap_factor,
+H.experiencia_cualitativo, H.experiencia_en_clase, H.posicion_media_en_clase_por_experiencia,
+I.distancia_centenas, I.dif_peso,
+J.entrenador_posicion_norm,
+K.eed_norm,
+dentro.trap_norm,
+E.trap_factor AS trap_factor,
+IFNULL(dentro.mes, H.mes) AS mes,
+IFNULL(dentro.sp,F.sp) AS sp,
+IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
+IFNULL(dentro.distancia, I.distancia) AS distancia,
+IFNULL(dentro.entrenador, J.entrenador) AS entrenador
+
+FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 dentro
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x3b E ON (dentro.trap=E.trap)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x4 F ON (dentro.id_carrera=F.id_carrera AND dentro.galgo_nombre=F.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x5 G ON (dentro.id_carrera=G.id_carrera AND dentro.galgo_nombre=G.galgo_nombre)
@@ -851,15 +887,16 @@ LEFT JOIN datos_desa.tb_ce_${sufijo}_x9b J ON (dentro.entrenador=J.entrenador)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x10b K ON (dentro.id_carrera=K.id_carrera AND dentro.galgo_nombre=K.galgo_nombre)
 ;
 
+ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} ADD INDEX tb_elaborada_carrerasgalgos_${sufijo}_idx(id_carrera,galgo_nombre);
 SELECT * FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} ORDER BY cg LIMIT 5;
 SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} LIMIT 5;
 EOF
 
-echo -e "$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_ELAB3" >>$LOG_CE
+#echo -e $(date +"%T")"$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
 
 
-echo -e "\nComprobacion: las 3 tablas de columnas ELABORADAS no deben tener duplicados (por clave)" 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" Comprobacion: las 3 tablas de columnas ELABORADAS no deben tener duplicados (por clave)" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT id_carrera, count(*) as num_ids_carreras FROM datos_desa.tb_elaborada_carreras_${sufijo} GROUP BY id_carrera HAVING num_ids_carreras>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
@@ -885,30 +922,30 @@ sufijo="${2}"
 #### Limpiar LOG ###
 rm -f $LOG_CE
 
-echo -e "Generador de COLUMNAS ELABORADAS: INICIO" 2>&1 1>>${LOG_CE}
-echo -e "Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Generador de COLUMNAS ELABORADAS: INICIO" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
-echo -e "\n---- Variables: X1, X2..." 2>&1 1>>${LOG_CE}
-#calcularVariableX1 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX2 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX3 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX4 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX5 "${filtro_galgos}" "${sufijo}"
+echo -e "\n"$(date +"%T")" ---- Variables: X1, X2..." 2>&1 1>>${LOG_CE}
+calcularVariableX1 "${filtro_galgos}" "${sufijo}"
+calcularVariableX2 "${filtro_galgos}" "${sufijo}"
+calcularVariableX3 "${filtro_galgos}" "${sufijo}"
+calcularVariableX4 "${filtro_galgos}" "${sufijo}"
+calcularVariableX5 "${filtro_galgos}" "${sufijo}"
 calcularVariableX6 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX7 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX8 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX9 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX10 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX11 "${filtro_galgos}" "${sufijo}"
-#calcularVariableX12 "${filtro_galgos}" "${sufijo}"
+calcularVariableX7 "${filtro_galgos}" "${sufijo}"
+calcularVariableX8 "${filtro_galgos}" "${sufijo}"
+calcularVariableX9 "${filtro_galgos}" "${sufijo}"
+calcularVariableX10 "${filtro_galgos}" "${sufijo}"
+calcularVariableX11 "${filtro_galgos}" "${sufijo}"
+calcularVariableX12 "${filtro_galgos}" "${sufijo}"
 
-echo -e "\n---- Tablas MAESTRAS de INDICES..." 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- Tablas MAESTRAS de INDICES..." 2>&1 1>>${LOG_CE}
 generarTablasIndices
 
-echo -e "\n---- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear datasets)..." 2>&1 1>>${LOG_CE}
+echo -e "\n"$(date +"%T")" ---- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear datasets)..." 2>&1 1>>${LOG_CE}
 generarTablasElaboradas
 
-echo -e "Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
+echo -e $(date +"%T")"Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
 
 
 

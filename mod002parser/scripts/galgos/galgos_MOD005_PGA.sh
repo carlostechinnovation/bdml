@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo -e "Modulo 005 - Prediccion PGA"
+echo -e $(date +"%T")"Modulo 005 - Prediccion PGA"
 
 
-echo -e "ENTRADAS: carreras a predecir SPORTIUM (info carrera + galgo_nombre)" >&1
-echo -e "SALIDA: tabla de predicciones (galgo_nombre + target-puntos)" >&1
+echo -e $(date +"%T")"ENTRADAS: carreras a predecir SPORTIUM (info carrera + galgo_nombre)" >&1
+echo -e $(date +"%T")"SALIDA: tabla de predicciones (galgo_nombre + target-puntos)" >&1
 
 
 
@@ -17,7 +17,7 @@ mysql -u root --password=datos1986 --execute="SELECT COUNT(*) as num_galgos_inic
 
 
 
-echo -e "FIN"
+echo -e $(date +"%T")"FIN"
 
 
 
