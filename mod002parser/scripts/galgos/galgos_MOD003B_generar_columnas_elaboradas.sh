@@ -783,8 +783,12 @@ D.venue_going_std, D.venue_going_avg
 FROM (
   SELECT 
   A.id_carrera,
-  B.id_campeonato, B.track, B.clase, B.mes_norm, B.hora_norm, B.distancia, B.premio_primero, B.premio_segundo, B.premio_otros, B.premio_total_carrera, B.going_allowance_segundos, B.fc_1, B.fc_2, B.fc_pounds, B.tc_1, B.tc_2, B.tc_3, B.tc_pounds,
-  C.mes_norm, C.hora_norm, C.num_galgos_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.going_allowance_segundos_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.X_norm 
+  B.id_campeonato, B.track, B.clase, B.distancia, B.premio_primero, B.premio_segundo, B.premio_otros, B.premio_total_carrera, B.going_allowance_segundos, B.fc_1, B.fc_2, B.fc_pounds, B.tc_1, B.tc_2, B.tc_3, B.tc_pounds,
+  C.num_galgos_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.going_allowance_segundos_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.X_norm,
+
+  IFNULL(B.mes_norm, C.mes_norm) AS mes_norm,
+  IFNULL(B.hora_norm, C.hora_norm) AS hora_norm
+
   FROM datos_desa.tb_ids_carreras_${sufijo} A
   LEFT JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
   LEFT JOIN datos_desa.tb_ce_${sufijo}_x12b C ON (A.id_carrera=C.id_carrera)
@@ -870,7 +874,6 @@ I.distancia_centenas, I.dif_peso,
 J.entrenador_posicion_norm,
 K.eed_norm,
 dentro.trap_norm,
-E.trap_factor AS trap_factor,
 IFNULL(dentro.mes, H.mes) AS mes,
 IFNULL(dentro.sp,F.sp) AS sp,
 IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
