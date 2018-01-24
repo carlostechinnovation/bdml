@@ -148,11 +148,19 @@ sufijo="${2}"
 echo -e "\n"$(date +"%T")" ---- X4: [(carrera, galgo) -> (starting price)]" 2>&1 1>>${LOG_CE}
 echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}
 
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x4;" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_ce_${sufijo}_x4 AS SELECT id_carrera, galgo_nombre, sp FROM datos_desa.tb_galgos_historico_norm  GH;" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="ALTER TABLE datos_desa.tb_ce_${sufijo}_x4 ADD INDEX tb_ce_${sufijo}_x4_idx(id_carrera, galgo_nombre);" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x4 FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;" >>$LOG_CE
+read -d '' CONSULTA_X4 <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x4;
+CREATE TABLE datos_desa.tb_ce_${sufijo}_x4 AS 
+SELECT id_carrera, galgo_nombre, sp_norm 
+FROM datos_desa.tb_galgos_historico_norm  GH;
+
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x4 ADD INDEX tb_ce_${sufijo}_x4_idx(id_carrera, galgo_nombre);
+SELECT * FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;
+SELECT count(*) as num_x4 FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;
+EOF
+
+#echo -e $(date +"%T")"$CONSULTA_X4" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_X4" >>$LOG_CE
 }
 
 ##########################################################################################
@@ -194,14 +202,11 @@ GROUP BY galgo_nombre,clase;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
 SELECT count(*) as num_x6a FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
-
-
-set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6a);
-set @max_experiencia_en_clase=(select MAX(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6a);
 EOF
 
 #echo -e $(date +"%T")"$CONSULTA_X6A" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X6A" >>$LOG_CE
+
 
 read -d '' CONSULTA_X6B <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6b;
@@ -219,69 +224,62 @@ ORDER BY clase ASC, experiencia_cualitativo ASC;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 5;
 SELECT count(*) as num_x6b FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 5;
+
+set @min_posicion_media_en_clase_por_experiencia=(select MIN(posicion_media_en_clase_por_experiencia) FROM datos_desa.tb_ce_${sufijo}_x6b);
+set @max_posicion_media_en_clase_por_experiencia=(select MAX(posicion_media_en_clase_por_experiencia) FROM datos_desa.tb_ce_${sufijo}_x6b);
 EOF
 
 #echo -e $(date +"%T")"$CONSULTA_X6B" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X6B" >>$LOG_CE
 
+
 read -d '' CONSULTA_X6C <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6c AS
-SELECT galgo_nombre, clase, id_carrera, count(*) AS experiencia_en_clase 
+SELECT galgo_nombre, id_carrera, count(*) AS experiencia_en_clase 
   FROM (
-    SELECT galgo_nombre,clase, amd, amd2, id_carrera  
+    SELECT galgo_nombre, clase, amd, amd2, id_carrera  
     FROM (
       SELECT GH.galgo_nombre, GH.id_carrera, GH.anio*10000+GH.mes*100+GH.dia AS amd, GH2.anio*10000+GH2.mes*100+GH2.dia AS amd2, GH.clase AS clase
       FROM datos_desa.tb_galgos_historico_norm GH 
-      LEFT JOIN datos_desa.tb_galgos_historico_norm GH2 ON (GH.id_carrera=GH2.id_carrera AND GH.galgo_nombre=GH2.galgo_nombre AND GH.clase=GH2.clase)
+      LEFT JOIN datos_desa.tb_galgos_historico_norm GH2 ON (GH.galgo_nombre=GH2.galgo_nombre AND GH.clase=GH2.clase)
     ) dentro
     WHERE dentro.amd >= dentro.amd2
   ) fuera
-GROUP BY galgo_nombre, clase, id_carrera;
+GROUP BY galgo_nombre, id_carrera;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
 SELECT count(*) as num_x6c FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
+
 EOF
 
 #echo -e $(date +"%T")"$CONSULTA_X6C" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X6C" >>$LOG_CE
 
-read -d '' CONSULTA_X6D <<- EOF
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6d;
-
-CREATE TABLE datos_desa.tb_ce_${sufijo}_x6d AS 
-SELECT clase, 
-MAX(experiencia_en_clase) AS experiencia_en_clase,
-galgo_nombre,id_carrera
-FROM datos_desa.tb_ce_${sufijo}_x6c
-GROUP BY galgo_nombre, clase, id_carrera;
-
-SELECT * FROM datos_desa.tb_ce_${sufijo}_x6d LIMIT 5;
-SELECT count(*) as num_x6d FROM datos_desa.tb_ce_${sufijo}_x6d LIMIT 5;
-EOF
-
-#echo -e $(date +"%T")"$CONSULTA_X6D" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X6D" >>$LOG_CE
 
 read -d '' CONSULTA_X6E <<- EOF
+
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e_aux1;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 AS 
 SELECT GH.anio, GH.mes, GH.dia, GH.id_carrera, GH.galgo_nombre, GH.clase,  
-  experiencia_en_clase,
-  CASE WHEN experiencia_en_clase>=13 THEN 'alta' 
-     WHEN (experiencia_en_clase>=5 AND experiencia_en_clase<13) THEN 'media'
+  X6C.experiencia_en_clase,
+  CASE WHEN (X6C.experiencia_en_clase>=13) THEN 'alta' 
+     WHEN (X6C.experiencia_en_clase>=5 AND X6C.experiencia_en_clase<13) THEN 'media'
      ELSE 'baja' 
   END AS experiencia_cualitativo
 
   FROM datos_desa.tb_galgos_historico_norm GH 
-  LEFT JOIN datos_desa.tb_ce_${sufijo}_x6d X6D ON (GH.id_carrera=X6D.id_carrera AND GH.galgo_nombre=X6D.galgo_nombre)
+  LEFT JOIN datos_desa.tb_ce_${sufijo}_x6c X6C ON (GH.id_carrera=X6C.id_carrera AND GH.galgo_nombre=X6C.galgo_nombre)
 ;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx1(galgo_nombre, clase);
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx2(clase, experiencia_cualitativo);
 
+
+set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6c);
+set @max_experiencia_en_clase=(select MAX(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6c);
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e;
 
@@ -290,13 +288,12 @@ SELECT
 cruce1.id_carrera,
 cruce1.galgo_nombre,
 cruce1.clase,
+(cruce1.experiencia_en_clase - @min_experiencia_en_clase)/(@max_experiencia_en_clase - @min_experiencia_en_clase) AS experiencia_en_clase,
 cruce1.experiencia_cualitativo,
-(X6A.experiencia_en_clase - @min_experiencia_en_clase)/(@max_experiencia_en_clase - @min_experiencia_en_clase) AS experiencia_en_clase, 
-X6B.posicion_media_en_clase_por_experiencia,
+(X6B.posicion_media_en_clase_por_experiencia - @min_posicion_media_en_clase_por_experiencia)/(@max_posicion_media_en_clase_por_experiencia - @min_posicion_media_en_clase_por_experiencia) AS posicion_media_en_clase_por_experiencia,  
 anio, mes, dia
 
 FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 cruce1
-LEFT JOIN datos_desa.tb_ce_${sufijo}_x6a X6A ON (cruce1.galgo_nombre=X6A.galgo_nombre AND cruce1.clase=X6A.clase)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x6b X6B ON (cruce1.clase=X6B.clase AND cruce1.experiencia_cualitativo=X6B.experiencia_cualitativo)
 ;
 
@@ -659,7 +656,7 @@ mes AS mes_norm,
 (tc_1 - @min_tc_1)/(@max_tc_1 - @min_tc_1) AS tc_1_norm,
 (tc_2 - @min_tc_2)/(@max_tc_2 - @min_tc_2) AS tc_2_norm,
 (tc_3 - @min_tc_3)/(@max_tc_3 - @min_tc_3) AS tc_3_norm,
-(tc_pounds - @min_tc_pounds)/(@max_tc_pounds - @min_tc_pounds) AS X_norm
+(tc_pounds - @min_tc_pounds)/(@max_tc_pounds - @min_tc_pounds) AS tc_pounds_norm
 FROM datos_desa.tb_ce_${sufijo}_x12a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x12b ADD INDEX tb_ce_${sufijo}_x12b_idx(id_carrera);
@@ -783,11 +780,23 @@ D.venue_going_std, D.venue_going_avg
 FROM (
   SELECT 
   A.id_carrera,
-  B.id_campeonato, B.track, B.clase, B.distancia, B.premio_primero, B.premio_segundo, B.premio_otros, B.premio_total_carrera, B.going_allowance_segundos, B.fc_1, B.fc_2, B.fc_pounds, B.tc_1, B.tc_2, B.tc_3, B.tc_pounds,
-  C.num_galgos_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.going_allowance_segundos_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.X_norm,
+  B.id_campeonato, B.track, B.clase, B.distancia_norm,
+  C.num_galgos_norm,
 
   IFNULL(B.mes_norm, C.mes_norm) AS mes_norm,
-  IFNULL(B.hora_norm, C.hora_norm) AS hora_norm
+  IFNULL(B.hora_norm, C.hora_norm) AS hora_norm,
+  IFNULL(B.premio_primero_norm, C.premio_primero_norm) AS premio_primero_norm,
+  IFNULL(B.premio_segundo_norm, C.premio_segundo_norm) AS premio_segundo_norm,
+  IFNULL(B.premio_otros_norm, C.premio_otros_norm) AS premio_otros_norm,
+  IFNULL(B.premio_total_carrera_norm, C.premio_total_carrera_norm) AS premio_total_carrera_norm,
+  IFNULL(B.going_allowance_segundos_norm, C.going_allowance_segundos_norm) AS going_allowance_segundos_norm,
+  IFNULL(B.fc_1_norm, C.fc_1_norm) AS fc_1_norm,
+  IFNULL(B.fc_2_norm, C.fc_2_norm) AS fc_2_norm,
+  IFNULL(B.fc_pounds_norm, C.fc_pounds_norm) AS fc_pounds_norm,
+  IFNULL(B.tc_1_norm, C.tc_1_norm) AS tc_1_norm,
+  IFNULL(B.tc_2_norm, C.tc_2_norm) AS tc_2_norm,
+  IFNULL(B.tc_3_norm, C.tc_3_norm) AS tc_3_norm,
+  IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS tc_pounds_norm
 
   FROM datos_desa.tb_ids_carreras_${sufijo} A
   LEFT JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
@@ -841,11 +850,11 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1;
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 AS
 SELECT 
   A.*,
-  B.time_sec, B.time_distance, B.peso_galgo, B.galgo_padre, B.galgo_madre, B.nacimiento, B.comment, B.edad_en_dias,
+  B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
   C.distancia,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real, C.velocidad_con_going, C.scoring_remarks,
   D.experiencia,
   IFNULL(B.posicion,C.posicion) AS posicion,
-  IFNULL(B.sp, C.sp) AS sp,
+  IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
   IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
   IFNULL(B.trap, C.trap) AS trap,
   IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
@@ -867,7 +876,7 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo};
 
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} AS 
 SELECT
-dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec, dentro.time_distance, dentro.peso_galgo, dentro.galgo_padre, dentro.galgo_madre, dentro.nacimiento, dentro.comment, dentro.edad_en_dias, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real, dentro.velocidad_con_going, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
+dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec_norm, dentro.time_distance_norm, dentro.peso_galgo_norm, dentro.galgo_padre, dentro.galgo_madre, dentro.comment, dentro.edad_en_dias_norm, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real, dentro.velocidad_con_going, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
 E.trap_factor,
 H.experiencia_cualitativo, H.experiencia_en_clase, H.posicion_media_en_clase_por_experiencia,
 I.distancia_centenas, I.dif_peso,
@@ -875,7 +884,7 @@ J.entrenador_posicion_norm,
 K.eed_norm,
 dentro.trap_norm,
 IFNULL(dentro.mes, H.mes) AS mes,
-IFNULL(dentro.sp,F.sp) AS sp,
+IFNULL(dentro.sp_norm,F.sp_norm) AS sp_norm,
 IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
 IFNULL(dentro.distancia, I.distancia) AS distancia,
 IFNULL(dentro.entrenador, J.entrenador) AS entrenador
@@ -922,8 +931,6 @@ filtro_galgos="${1}"
 #sufijo="post"
 sufijo="${2}"
 
-#### Limpiar LOG ###
-rm -f $LOG_CE
 
 echo -e $(date +"%T")"Generador de COLUMNAS ELABORADAS: INICIO" 2>&1 1>>${LOG_CE}
 echo -e $(date +"%T")"Parametros: -->${1}-->${2}" 2>&1 1>>${LOG_CE}

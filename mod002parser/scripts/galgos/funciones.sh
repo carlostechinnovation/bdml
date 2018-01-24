@@ -3,7 +3,6 @@
 LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_001A_descarga_bruto.log"
 DOC_ANALISIS_PREVIO="/home/carloslinux/Desktop/INFORMES/analisis_previo.txt"
 LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_003A_stats_bruto.log"
-LOG_CE_y_DS="/home/carloslinux/Desktop/LOGS/galgos_003B_ce_y_ds.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_003B_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_003B_datasets.log"
 

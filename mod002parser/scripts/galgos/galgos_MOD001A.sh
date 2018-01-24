@@ -357,7 +357,7 @@ peso_galgo, (peso_galgo - @min_peso_galgo)/(@max_peso_galgo - @min_peso_galgo) A
 entrenador_nombre,
 galgo_padre,
 galgo_madre,
-nacimiento, (nacimiento - @min_nacimiento)/(@max_nacimiento - @min_nacimiento) AS nacimiento_norm,
+nacimiento,
 comment,
 edad_en_dias, (edad_en_dias - @min_edad_en_dias)/(@max_edad_en_dias - @min_edad_en_dias) AS edad_en_dias_norm
 
