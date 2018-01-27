@@ -50,6 +50,11 @@ EOF
 #echo -e $(date +"%T")"$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 
+
+echo -e "*** TABLAS FILTRADAS ***" 2>&1 1>>${LOG_DS}
+echo -e "datos_desa.tb_filtrada_carreras_${sufijo}" 2>&1 1>>${LOG_DS}
+echo -e "datos_desa.tb_filtrada_galgos_${sufijo}" 2>&1 1>>${LOG_DS}
+echo -e "datos_desa.tb_filtrada_carrerasgalgos_${sufijo}" 2>&1 1>>${LOG_DS}
 }
 
 
@@ -57,7 +62,7 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 ################################################ MAIN ###########################################################################################
 
 if [ "$#" -ne 4 ]; then
-    echo "Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}
 fi
 
 #filtro_carreras=""
@@ -75,12 +80,12 @@ filtro_cg="${3}"
 sufijo="${4}"
 
 
-echo -e $(date +"%T")"Generador de Tablas FILTRADAS (ya elaboradas): INICIO" 2>&1 1>>${LOG_DS}
-echo -e $(date +"%T")"Parametros: -->${1}-->${2}-->${3}-->${4}" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Generador de Tablas FILTRADAS (ya elaboradas): INICIO" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Parametros: -->${1}-->${2}-->${3}-->${4}" 2>&1 1>>${LOG_DS}
 
 generarTablasFiltradas "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "$sufijo"
 
-echo -e $(date +"%T")"Generador de FILTRADAS: FIN\n\n" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Generador de FILTRADAS: FIN\n\n" 2>&1 1>>${LOG_DS}
 
 
 

@@ -5,6 +5,7 @@ DOC_ANALISIS_PREVIO="/home/carloslinux/Desktop/INFORMES/analisis_previo.txt"
 LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_003A_stats_bruto.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_003B_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_003B_datasets.log"
+LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_004.log"
 
 
 function consultar(){

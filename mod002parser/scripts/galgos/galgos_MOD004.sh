@@ -1,22 +1,28 @@
 #!/bin/bash
 
-echo -e $(date +"%T")"Modulo 004B - Modelos predictivos (nucleo)"
+source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-FOLDER_INFORMES="/home/carloslinux/Desktop/INFORMES/"
+#### Limpiar LOG ###
+rm -f $LOG_ML
 
+echo -e $(date +"%T")" Modulo 004B - Modelos predictivos (nucleo)" 2>&1 1>>${LOG_DS}
 
+INFORME="/home/carloslinux/Desktop/INFORMES/galgos_MOD004.out"
 
-PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_gagst_MEJOR_MODELO.pkl'
+echo -e $(date +"%T")" Informe --> ${INFORME}"  2>&1 1>>${LOG_DS}
+
+PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
 rm -f $PATH_MODELO_GANADOR
 
 
-################# Análisis galgos_001: Modelo predictivo CLASIFICADOR
+########### Modelo predictivo REGRESION ###########3
+TAG="SUBGRUPO_X"
 
-python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_gagst.py' > "${FOLDER_INFORMES}galgos_MOD004_gagst.out"
+python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" > "${INFORME}"
 
-cat "${FOLDER_INFORMES}galgos_MOD004_gagst.out" | grep 'GAGST-Gana modelo'  >&1
+cat "${INFORME}" | grep 'GAGST-Gana modelo'  >&1
 
 
-echo -e $(date +"%T")"Modulo 004B - FIN\n\n"
+echo -e $(date +"%T")"Modulo 004B - FIN\n\n" 2>&1 1>>${LOG_DS}
 
 

@@ -40,7 +40,7 @@ ${PATH_SCRIPTS}'galgos_MOD003B.sh'
 
 echo -e $(date +"%T")" INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD004_nucleo.sh'
-#${PATH_SCRIPTS}'galgos_MOD004.sh'
+${PATH_SCRIPTS}'galgos_MOD004.sh'
 
 echo -e $(date +"%T")" INFORMES (resultados)" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD005.sh'
