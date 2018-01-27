@@ -361,11 +361,14 @@ SELECT count(*) as num_x7c FROM datos_desa.tb_ce_${sufijo}_x7c LIMIT 5;
 
 set @min_dif_peso=(select MIN(dif_peso) FROM datos_desa.tb_ce_${sufijo}_x7c);
 set @max_dif_peso=(select MAX(dif_peso) FROM datos_desa.tb_ce_${sufijo}_x7c);
+set @min_distancia=(select MIN(distancia) FROM datos_desa.tb_ce_${sufijo}_x7c);
+set @max_distancia=(select MAX(distancia) FROM datos_desa.tb_ce_${sufijo}_x7c);
 
 DROP TABLE datos_desa.tb_ce_${sufijo}_x7d;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x7d AS 
-SELECT id_carrera, galgo_nombre, distancia_centenas, distancia,
+SELECT id_carrera, galgo_nombre, distancia_centenas, 
+(distancia - @min_distancia)/(@max_distancia - @min_distancia) AS distancia_norm,
 (dif_peso - @min_dif_peso)/(@max_dif_peso - @min_dif_peso) AS dif_peso
 FROM datos_desa.tb_ce_${sufijo}_x7c;
 
@@ -851,7 +854,7 @@ CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 AS
 SELECT 
   A.*,
   B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
-  C.distancia,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real, C.velocidad_con_going, C.scoring_remarks,
+  C.distancia_norm,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real_norm, C.velocidad_con_going_norm, C.scoring_remarks,
   D.experiencia,
   IFNULL(B.posicion,C.posicion) AS posicion,
   IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
@@ -876,7 +879,7 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo};
 
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} AS 
 SELECT
-dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec_norm, dentro.time_distance_norm, dentro.peso_galgo_norm, dentro.galgo_padre, dentro.galgo_madre, dentro.comment, dentro.edad_en_dias_norm, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real, dentro.velocidad_con_going, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
+dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec_norm, dentro.time_distance_norm, dentro.peso_galgo_norm, dentro.galgo_padre, dentro.galgo_madre, dentro.comment, dentro.edad_en_dias_norm, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real_norm, dentro.velocidad_con_going_norm, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
 E.trap_factor,
 H.experiencia_cualitativo, H.experiencia_en_clase, H.posicion_media_en_clase_por_experiencia,
 I.distancia_centenas, I.dif_peso,
@@ -886,7 +889,7 @@ dentro.trap_norm,
 IFNULL(dentro.mes, H.mes) AS mes,
 IFNULL(dentro.sp_norm,F.sp_norm) AS sp_norm,
 IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
-IFNULL(dentro.distancia, I.distancia) AS distancia,
+IFNULL(dentro.distancia_norm, I.distancia_norm) AS distancia_norm,
 IFNULL(dentro.entrenador, J.entrenador) AS entrenador
 
 FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 dentro

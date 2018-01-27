@@ -20,7 +20,7 @@ TAG="SUBGRUPO_X"
 
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" > "${INFORME}"
 
-cat "${INFORME}" | grep 'GAGST-Gana modelo'  >&1
+cat "${INFORME}" | grep 'Gana modelo'  >&1
 
 
 echo -e $(date +"%T")"Modulo 004B - FIN\n\n" 2>&1 1>>${LOG_DS}

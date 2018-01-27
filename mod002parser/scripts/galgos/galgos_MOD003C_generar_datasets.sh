@@ -16,7 +16,11 @@ read -d '' CONSULTA_CON_IDs <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_dataset_con_ids_${TAG};
 
 CREATE TABLE datos_desa.tb_dataset_con_ids_${TAG} AS 
-SELECT 
+
+SELECT *
+FROM (
+
+  SELECT 
 
 A.id_carrera, A.galgo_nombre, 
 CASE WHEN (A.id_carrera<100000) THEN true ELSE false END AS futuro,
@@ -27,11 +31,14 @@ B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, B.vel_real_cortas
 
 C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.tc_pounds_norm, C.venue_going_std, C.venue_going_avg,
 
-velocidad_con_going AS TARGET
+velocidad_con_going_norm AS TARGET
 
-FROM datos_desa.tb_filtrada_carrerasgalgos_${TAG} A
-LEFT JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre=B.galgo_nombre)
-LEFT JOIN datos_desa.tb_filtrada_carreras_${TAG} C ON (A.id_carrera=C.id_carrera)
+  FROM datos_desa.tb_filtrada_carrerasgalgos_${TAG} A
+  LEFT JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre=B.galgo_nombre)
+  LEFT JOIN datos_desa.tb_filtrada_carreras_${TAG} C ON (A.id_carrera=C.id_carrera)
+) dentro
+
+WHERE (futuro=true OR (futuro=false AND dentro.TARGET IS NOT NULL))
 ;
 
 ALTER TABLE datos_desa.tb_dataset_con_ids_${TAG} ADD INDEX tb_dscids_idx(id_carrera);
@@ -88,7 +95,7 @@ DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_train_${TAG};
 
 CREATE TABLE datos_desa.tb_dataset_ids_pasado_train_${TAG} AS 
 SELECT rowid,id_carrera 
-FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_SUBGRUPO_X A, (SELECT @rowid:=0) as t_numfila ) dentro 
+FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_${TAG} A, (SELECT @rowid:=0) as t_numfila ) dentro 
 WHERE rowid >= 1 AND rowid <= ${numero_pasados_train}
 ORDER BY rowid;
 
@@ -99,7 +106,7 @@ DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_test_${TAG};
 
 CREATE TABLE datos_desa.tb_dataset_ids_pasado_test_${TAG} AS 
 SELECT rowid,id_carrera 
-FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_SUBGRUPO_X A, (SELECT @rowid:=0) as t_numfila ) dentro 
+FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_${TAG} A, (SELECT @rowid:=0) as t_numfila ) dentro 
 WHERE rowid > ${numero_pasados_train} AND rowid <= (${numero_pasados_train}+${numero_pasados_test})
 ORDER BY rowid;
 
@@ -110,7 +117,7 @@ DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_validation_${TAG};
 
 CREATE TABLE datos_desa.tb_dataset_ids_pasado_validation_${TAG} AS 
 SELECT rowid,id_carrera 
-FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_SUBGRUPO_X A, (SELECT @rowid:=0) as t_numfila ) dentro 
+FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_${TAG} A, (SELECT @rowid:=0) as t_numfila ) dentro 
 WHERE rowid > (${numero_pasados_train}+${numero_pasados_test})
 ORDER BY rowid;
 
@@ -160,7 +167,7 @@ CREATE TABLE datos_desa.tb_ds_pasado_train_features_${TAG} AS
 SELECT ${FEATURES_COMUNES} 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
 INNER JOIN datos_desa.tb_dataset_ids_pasado_train_${TAG} B 
-ON (A.id_carrera=B.id_carrera);
+ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_train_features FROM datos_desa.tb_ds_pasado_train_features_${TAG} LIMIT 1;
 
@@ -171,7 +178,7 @@ CREATE TABLE datos_desa.tb_ds_pasado_train_targets_${TAG} AS
 SELECT TARGET 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
 INNER JOIN datos_desa.tb_dataset_ids_pasado_train_${TAG} B 
-ON (A.id_carrera=B.id_carrera);
+ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_train_targets FROM datos_desa.tb_ds_pasado_train_targets_${TAG} LIMIT 1;
 EOF
@@ -191,7 +198,7 @@ CREATE TABLE datos_desa.tb_ds_pasado_test_features_${TAG} AS
 SELECT ${FEATURES_COMUNES} 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
 INNER JOIN datos_desa.tb_dataset_ids_pasado_test_${TAG} B 
-ON (A.id_carrera=B.id_carrera);
+ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_test_features FROM datos_desa.tb_ds_pasado_test_features_${TAG} LIMIT 1;
 
@@ -202,7 +209,7 @@ CREATE TABLE datos_desa.tb_ds_pasado_test_targets_${TAG} AS
 SELECT TARGET 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
 INNER JOIN datos_desa.tb_dataset_ids_pasado_test_${TAG} B 
-ON (A.id_carrera=B.id_carrera);
+ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_test_targets FROM datos_desa.tb_ds_pasado_test_targets_${TAG} LIMIT 1;
 EOF
@@ -222,7 +229,7 @@ CREATE TABLE datos_desa.tb_ds_pasado_validation_features_${TAG} AS
 SELECT ${FEATURES_COMUNES} 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
 INNER JOIN datos_desa.tb_dataset_ids_pasado_validation_${TAG} B 
-ON (A.id_carrera=B.id_carrera);
+ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_validation_features FROM datos_desa.tb_ds_pasado_validation_features_${TAG} LIMIT 1;
 
