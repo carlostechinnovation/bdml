@@ -59,12 +59,14 @@ echo -e "PASADO y FUTURO (con boolean e IDs) --> datos_desa.tb_dataset_con_ids_$
 #################################
 read -d '' CONSULTA_IDS_PASADOS_Y_FUTUROS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasados_${TAG};
-CREATE TABLE datos_desa.tb_dataset_ids_pasados_${TAG} AS ( SELECT id_carrera FROM datos_desa.tb_dataset_con_ids_${TAG} WHERE futuro=false AND TARGET IS NOT NULL ORDER BY rand() );
+CREATE TABLE datos_desa.tb_dataset_ids_pasados_${TAG} AS 
+SELECT DISTINCT id_carrera FROM ( SELECT id_carrera FROM datos_desa.tb_dataset_con_ids_${TAG} WHERE futuro=false AND TARGET IS NOT NULL ORDER BY rand() ) dentro;
 ALTER TABLE datos_desa.tb_dataset_ids_pasados_${TAG} ADD INDEX tb_dscids_p_idx(id_carrera);
 SELECT count(*) as num_ids_pasados FROM datos_desa.tb_dataset_ids_pasados_${TAG} LIMIT 1;
 
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_futuros_${TAG};
-CREATE TABLE datos_desa.tb_dataset_ids_futuros_${TAG} AS ( SELECT id_carrera FROM datos_desa.tb_dataset_con_ids_${TAG} WHERE futuro=true ORDER BY rand() );
+CREATE TABLE datos_desa.tb_dataset_ids_futuros_${TAG} AS 
+SELECT DISTINCT id_carrera FROM ( SELECT id_carrera FROM datos_desa.tb_dataset_con_ids_${TAG} WHERE futuro=true ORDER BY rand() ) dentro;
 ALTER TABLE datos_desa.tb_dataset_ids_futuros_${TAG} ADD INDEX tb_dscids_f_idx(id_carrera);
 SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;
 EOF
@@ -166,7 +168,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_train_features_${TAG};
 CREATE TABLE datos_desa.tb_ds_pasado_train_features_${TAG} AS 
 SELECT ${FEATURES_COMUNES} 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_pasado_train_${TAG} B 
+RIGHT JOIN datos_desa.tb_dataset_ids_pasado_train_${TAG} B 
 ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_train_features FROM datos_desa.tb_ds_pasado_train_features_${TAG} LIMIT 1;
@@ -177,13 +179,13 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_train_targets_${TAG};
 CREATE TABLE datos_desa.tb_ds_pasado_train_targets_${TAG} AS 
 SELECT TARGET 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_pasado_train_${TAG} B 
+RIGHT JOIN datos_desa.tb_dataset_ids_pasado_train_${TAG} B 
 ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_train_targets FROM datos_desa.tb_ds_pasado_train_targets_${TAG} LIMIT 1;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_DS_TRAIN" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_DS_TRAIN" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TRAIN" >>$LOG_DS
 
 echo -e "PASADO-TRAIN --> datos_desa.tb_ds_pasado_train_features_${TAG}   datos_desa.tb_ds_pasado_train_targets_${TAG}" 2>&1 1>>${LOG_DS}
@@ -197,7 +199,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_test_features_${TAG};
 CREATE TABLE datos_desa.tb_ds_pasado_test_features_${TAG} AS 
 SELECT ${FEATURES_COMUNES} 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_pasado_test_${TAG} B 
+RIGHT JOIN datos_desa.tb_dataset_ids_pasado_test_${TAG} B 
 ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_test_features FROM datos_desa.tb_ds_pasado_test_features_${TAG} LIMIT 1;
@@ -208,13 +210,13 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_test_targets_${TAG};
 CREATE TABLE datos_desa.tb_ds_pasado_test_targets_${TAG} AS 
 SELECT TARGET 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_pasado_test_${TAG} B 
+RIGHT JOIN datos_desa.tb_dataset_ids_pasado_test_${TAG} B 
 ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 
 SELECT count(*) as num_pasado_test_targets FROM datos_desa.tb_ds_pasado_test_targets_${TAG} LIMIT 1;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_DS_TEST" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_DS_TEST" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TEST" >>$LOG_DS
 
 echo -e "PASADO-TEST --> datos_desa.tb_ds_pasado_test_features_${TAG}   datos_desa.tb_ds_pasado_test_targets_${TAG}" 2>&1 1>>${LOG_DS}
@@ -223,13 +225,20 @@ echo -e "PASADO-TEST --> datos_desa.tb_ds_pasado_test_features_${TAG}   datos_de
 echo -e $(date +"%T")" PASADO-VALIDATION..." 2>&1 1>>${LOG_DS}
 
 read -d '' CONSULTA_DS_VALIDATION <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG};
+
+CREATE TABLE datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG} AS 
+SELECT A.*
+FROM datos_desa.tb_dataset_con_ids_${TAG} A
+RIGHT JOIN datos_desa.tb_dataset_ids_pasado_validation_${TAG} B 
+ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
+
+
 DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_features_${TAG};
 
 CREATE TABLE datos_desa.tb_ds_pasado_validation_features_${TAG} AS 
 SELECT ${FEATURES_COMUNES} 
-FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_pasado_validation_${TAG} B 
-ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
+FROM datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG};
 
 SELECT count(*) as num_pasado_validation_features FROM datos_desa.tb_ds_pasado_validation_features_${TAG} LIMIT 1;
 
@@ -238,14 +247,12 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_targets_${TAG};
 
 CREATE TABLE datos_desa.tb_ds_pasado_validation_targets_${TAG} AS 
 SELECT TARGET 
-FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_pasado_validation_${TAG} B 
-ON (A.id_carrera=B.id_carrera);
+FROM datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG};
 
 SELECT count(*) as num_pasado_validation_targets FROM datos_desa.tb_ds_pasado_validation_targets_${TAG} LIMIT 1;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_DS_VALIDATION" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_DS_VALIDATION" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_VALIDATION" >>$LOG_DS
 
 echo -e "PASADO-VALIDATION --> datos_desa.tb_ds_pasado_validation_features_${TAG}   datos_desa.tb_ds_pasado_validation_targets_${TAG}" 2>&1 1>>${LOG_DS}
@@ -259,13 +266,13 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_futuro_features_${TAG};
 CREATE TABLE datos_desa.tb_ds_futuro_features_${TAG} AS 
 SELECT ${FEATURES_COMUNES} 
 FROM datos_desa.tb_dataset_con_ids_${TAG} A
-INNER JOIN datos_desa.tb_dataset_ids_futuros_${TAG} B
+RIGHT JOIN datos_desa.tb_dataset_ids_futuros_${TAG} B
 ON (A.id_carrera=B.id_carrera);
 
 SELECT count(*) as num_futuro_features FROM datos_desa.tb_ds_futuro_features_${TAG} LIMIT 1;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_FUTURO_FEATURES" >>$LOG_DS
 
 echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}" 2>&1 1>>${LOG_DS}

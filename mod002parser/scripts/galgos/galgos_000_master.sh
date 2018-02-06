@@ -37,6 +37,7 @@ echo -e $(date +"%T")" OBSOLETO Sistema predictivo simple PGA (funcion con pesos
 
 echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS y DATASETS" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003B.sh'
+${PATH_SCRIPTS}'galgos_MOD003C.sh'
 
 echo -e $(date +"%T")" INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD004_nucleo.sh'

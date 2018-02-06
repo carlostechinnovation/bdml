@@ -779,27 +779,28 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carreras_${sufijo};
 CREATE TABLE datos_desa.tb_elaborada_carreras_${sufijo} AS 
 SELECT 
 dentro.*, 
-D.venue_going_std, D.venue_going_avg
+CAST( D.venue_going_std AS DECIMAL(8,6) ) AS venue_going_std,
+CAST( D.venue_going_avg AS DECIMAL(8,6) ) AS venue_going_avg
 FROM (
   SELECT 
   A.id_carrera,
-  B.id_campeonato, B.track, B.clase, B.distancia_norm,
-  C.num_galgos_norm,
+  B.id_campeonato, B.track, B.clase, CAST(B.distancia_norm AS DECIMAL(8,6)) AS distancia_norm,
+  CAST(C.num_galgos_norm AS DECIMAL(8,6)) AS num_galgos_norm,
 
-  IFNULL(B.mes_norm, C.mes_norm) AS mes_norm,
-  IFNULL(B.hora_norm, C.hora_norm) AS hora_norm,
-  IFNULL(B.premio_primero_norm, C.premio_primero_norm) AS premio_primero_norm,
-  IFNULL(B.premio_segundo_norm, C.premio_segundo_norm) AS premio_segundo_norm,
-  IFNULL(B.premio_otros_norm, C.premio_otros_norm) AS premio_otros_norm,
-  IFNULL(B.premio_total_carrera_norm, C.premio_total_carrera_norm) AS premio_total_carrera_norm,
-  IFNULL(B.going_allowance_segundos_norm, C.going_allowance_segundos_norm) AS going_allowance_segundos_norm,
-  IFNULL(B.fc_1_norm, C.fc_1_norm) AS fc_1_norm,
-  IFNULL(B.fc_2_norm, C.fc_2_norm) AS fc_2_norm,
-  IFNULL(B.fc_pounds_norm, C.fc_pounds_norm) AS fc_pounds_norm,
-  IFNULL(B.tc_1_norm, C.tc_1_norm) AS tc_1_norm,
-  IFNULL(B.tc_2_norm, C.tc_2_norm) AS tc_2_norm,
-  IFNULL(B.tc_3_norm, C.tc_3_norm) AS tc_3_norm,
-  IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS tc_pounds_norm
+  CAST( IFNULL(B.mes_norm, C.mes_norm) AS DECIMAL(8,6) ) AS mes_norm,
+  CAST( IFNULL(B.hora_norm, C.hora_norm) AS DECIMAL(8,6) ) AS hora_norm,
+  CAST( IFNULL(B.premio_primero_norm, C.premio_primero_norm) AS DECIMAL(8,6) ) AS premio_primero_norm,
+  CAST( IFNULL(B.premio_segundo_norm, C.premio_segundo_norm) AS DECIMAL(8,6) ) AS premio_segundo_norm,
+  CAST( IFNULL(B.premio_otros_norm, C.premio_otros_norm) AS DECIMAL(8,6) ) AS premio_otros_norm,
+  CAST( IFNULL(B.premio_total_carrera_norm, C.premio_total_carrera_norm) AS DECIMAL(8,6) ) AS premio_total_carrera_norm,
+  CAST( IFNULL(B.going_allowance_segundos_norm, C.going_allowance_segundos_norm) AS DECIMAL(8,6) ) AS going_allowance_segundos_norm,
+  CAST( IFNULL(B.fc_1_norm, C.fc_1_norm) AS DECIMAL(8,6) ) AS fc_1_norm,
+  CAST( IFNULL(B.fc_2_norm, C.fc_2_norm) AS DECIMAL(8,6) ) AS fc_2_norm,
+  CAST( IFNULL(B.fc_pounds_norm, C.fc_pounds_norm) AS DECIMAL(8,6) ) AS fc_pounds_norm,
+  CAST( IFNULL(B.tc_1_norm, C.tc_1_norm) AS DECIMAL(8,6) ) AS tc_1_norm,
+  CAST( IFNULL(B.tc_2_norm, C.tc_2_norm) AS DECIMAL(8,6) ) AS tc_2_norm,
+  CAST( IFNULL(B.tc_3_norm, C.tc_3_norm) AS DECIMAL(8,6) ) AS tc_3_norm,
+  CAST( IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS DECIMAL(8,6) ) AS tc_pounds_norm
 
   FROM datos_desa.tb_ids_carreras_${sufijo} A
   LEFT JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
@@ -826,9 +827,22 @@ CREATE TABLE datos_desa.tb_elaborada_galgos_${sufijo} AS
 SELECT 
 A.*,
 
-C.vgcortas_max_norm, C.vgmedias_max_norm, C.vglargas_max_norm,
+CAST( C.vgcortas_max_norm AS DECIMAL(8,6) ) AS vgcortas_max_norm, 
+CAST( C.vgmedias_max_norm AS DECIMAL(8,6) ) AS vgmedias_max_norm, 
+CAST( C.vglargas_max_norm AS DECIMAL(8,6) ) AS vglargas_max_norm,
 
-D.vel_real_cortas_mediana_norm, D.vel_real_cortas_max_norm, D.vel_going_cortas_mediana_norm, D.vel_going_cortas_max_norm, D.vel_real_longmedias_mediana_norm, D.vel_real_longmedias_max_norm, D.vel_going_longmedias_mediana_norm, D.vel_going_longmedias_max_norm, D.vel_real_largas_mediana_norm, D.vel_real_largas_max_norm, D.vel_going_largas_mediana_norm, D.vel_going_largas_max_norm
+CAST( D.vel_real_cortas_mediana_norm AS DECIMAL(8,6) ) AS 	vel_real_cortas_mediana_norm, 
+CAST( D.vel_real_cortas_max_norm AS DECIMAL(8,6) ) AS 		vel_real_cortas_max_norm, 
+CAST( D.vel_going_cortas_mediana_norm AS DECIMAL(8,6) ) AS 	vel_going_cortas_mediana_norm, 
+CAST( D.vel_going_cortas_max_norm AS DECIMAL(8,6) ) AS 		vel_going_cortas_max_norm, 
+CAST( D.vel_real_longmedias_mediana_norm AS DECIMAL(8,6) ) AS 	vel_real_longmedias_mediana_norm, 
+CAST( D.vel_real_longmedias_max_norm AS DECIMAL(8,6) ) AS 	vel_real_longmedias_max_norm, 
+CAST( D.vel_going_longmedias_mediana_norm AS DECIMAL(8,6) ) AS 	vel_going_longmedias_mediana_norm, 
+CAST( D.vel_going_longmedias_max_norm AS DECIMAL(8,6) ) AS 	vel_going_longmedias_max_norm, 
+CAST( D.vel_real_largas_mediana_norm AS DECIMAL(8,6) ) AS 	vel_real_largas_mediana_norm, 
+CAST( D.vel_real_largas_max_norm AS DECIMAL(8,6) ) AS 		vel_real_largas_max_norm, 
+CAST( D.vel_going_largas_mediana_norm AS DECIMAL(8,6) ) AS 	vel_going_largas_mediana_norm, 
+CAST( D.vel_going_largas_max_norm AS DECIMAL(8,6) ) AS 		vel_going_largas_max_norm
 
 FROM datos_desa.tb_ids_galgos_${sufijo} A
 
@@ -879,15 +893,41 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo};
 
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} AS 
 SELECT
-dentro.cg, dentro.id_carrera, dentro.galgo_nombre, dentro.time_sec_norm, dentro.time_distance_norm, dentro.peso_galgo_norm, dentro.galgo_padre, dentro.galgo_madre, dentro.comment, dentro.edad_en_dias_norm, dentro.stmhcp, dentro.by_dato, dentro.galgo_primero_o_segundo, dentro.venue, dentro.remarks, dentro.win_time, dentro.going, dentro.calculated_time, dentro.velocidad_real_norm, dentro.velocidad_con_going_norm, dentro.scoring_remarks, dentro.experiencia, dentro.posicion, dentro.id_campeonato,
-E.trap_factor,
-H.experiencia_cualitativo, H.experiencia_en_clase, H.posicion_media_en_clase_por_experiencia,
-I.distancia_centenas, I.dif_peso,
-J.entrenador_posicion_norm,
+dentro.cg, 
+dentro.id_carrera, 
+dentro.galgo_nombre, 
+CAST( dentro.time_sec_norm AS DECIMAL(8,6) ) AS time_sec_norm, 
+CAST( dentro.time_distance_norm AS DECIMAL(8,6) ) AS time_distance_norm, 
+CAST( dentro.peso_galgo_norm AS DECIMAL(8,6) ) AS peso_galgo_norm, 
+dentro.galgo_padre, 
+dentro.galgo_madre, 
+dentro.comment, 
+CAST( dentro.edad_en_dias_norm AS DECIMAL(8,6) ) AS edad_en_dias_norm, 
+dentro.stmhcp, 
+dentro.by_dato, 
+dentro.galgo_primero_o_segundo, 
+dentro.venue, 
+dentro.remarks, 
+dentro.win_time, 
+dentro.going, 
+dentro.calculated_time, 
+CAST( dentro.velocidad_real_norm AS DECIMAL(8,6) ) AS velocidad_real_norm, 
+CAST( dentro.velocidad_con_going_norm AS DECIMAL(8,6) ) AS velocidad_con_going_norm, 
+dentro.scoring_remarks, 
+CAST( dentro.experiencia AS DECIMAL(8,6) ) AS experiencia, 
+dentro.posicion, 
+dentro.id_campeonato,
+CAST( E.trap_factor AS DECIMAL(8,6) ) AS trap_factor,
+H.experiencia_cualitativo, 
+H.experiencia_en_clase, 
+H.posicion_media_en_clase_por_experiencia,
+I.distancia_centenas, 
+CAST( I.dif_peso AS DECIMAL(8,6) ) AS dif_peso,
+CAST( J.entrenador_posicion_norm AS DECIMAL(8,6) ) AS entrenador_posicion_norm,
 K.eed_norm,
 dentro.trap_norm,
 IFNULL(dentro.mes, H.mes) AS mes,
-IFNULL(dentro.sp_norm,F.sp_norm) AS sp_norm,
+CAST( IFNULL(dentro.sp_norm,F.sp_norm) AS DECIMAL(8,6) ) AS sp_norm,
 IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
 IFNULL(dentro.distancia_norm, I.distancia_norm) AS distancia_norm,
 IFNULL(dentro.entrenador, J.entrenador) AS entrenador

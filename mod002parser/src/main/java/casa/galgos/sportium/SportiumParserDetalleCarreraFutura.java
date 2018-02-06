@@ -49,7 +49,14 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		try {
 			bruto = SportiumParserDetalleCarreraFutura.readFile(pathIn, Charset.forName("ISO-8859-1"));
-			carreraIn.galgosNombres = parsear(bruto);
+
+			List<SportiumGalgoFuturoEnCarreraAux> galgosExtraidos = parsear(bruto);
+
+			if (galgosExtraidos != null) {
+				for (SportiumGalgoFuturoEnCarreraAux item : galgosExtraidos) {
+					carreraIn.galgosNombres.add(item.galgoNombre);
+				}
+			}
 
 		} catch (IOException e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
@@ -81,16 +88,16 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 	 * @param in
 	 * @return
 	 */
-	public static List<String> parsear(String in) {
+	public static List<SportiumGalgoFuturoEnCarreraAux> parsear(String in) {
 
 		Document doc = Jsoup.parse(in);
-		Elements tablaDeGalgos = doc.getElementsByClass("mkt racecard");
+		Elements tablaDeGalgos = doc.getElementsByClass("racecard");
 
-		List<String> galgoNombres = new ArrayList<String>();
+		List<SportiumGalgoFuturoEnCarreraAux> galgos = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
 		if (tablaDeGalgos.size() > 0 && tablaDeGalgos.get(0).childNodes().size() > 3) {
 
-			List<Node> items = tablaDeGalgos.get(0).childNodes();
+			List<Node> items = tablaDeGalgos.get(0).childNode(3).childNodes();
 			List<Element> itemsSeleccionados = new ArrayList<Element>();
 			for (Node item : items) {
 				if (item instanceof Element) {
@@ -98,41 +105,87 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 				}
 			}
 
-			galgoNombres = parsearTablaDeGalgos(itemsSeleccionados);
+			galgos = parsearTablaDeGalgos(itemsSeleccionados);
 
 		}
 
-		MY_LOGGER.info("Sportium - Numero de galgos extraidos de la carrera futura: " + galgoNombres.size());
-		return galgoNombres;
+		MY_LOGGER.info("Sportium - Numero de galgos extraidos de la carrera futura: " + galgos.size());
+		return galgos;
 	}
 
 	/**
 	 * @param tablaDeGalgos
 	 * @return
 	 */
-	public static List<String> parsearTablaDeGalgos(List<Element> itemsSeleccionados) {
+	public static List<SportiumGalgoFuturoEnCarreraAux> parsearTablaDeGalgos(List<Element> itemsSeleccionados) {
 
-		List<String> out = new ArrayList<String>();
+		List<SportiumGalgoFuturoEnCarreraAux> out = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
 		for (Element fila : itemsSeleccionados) {
 
-			boolean esElCero = fila.childNode(0).toString().contains("\"number\"></td>");
+			boolean esElCero = fila.childNode(0).toString().contains("value=\"00\"");
 
 			if (!esElCero) {
 
-				TextNode galgoNombre = (TextNode) fila.childNode(0).childNode(1).childNode(0).childNode(0).childNode(0);
+				List<Element> galgoElements = new ArrayList<Element>();
+				for (Node nodo : fila.childNodes()) {
+					if (nodo instanceof Element) {
+						galgoElements.add((Element) nodo);
+					}
 
-				String galgoNombreStr = galgoNombre.text().trim();
-
-				if (galgoNombreStr.contains(" N/R")) {
-					// Galgo no presentado (no corre por el motivo que sea)
-
-				} else {
-					galgoNombreStr = galgoNombreStr.contains("(") ? galgoNombreStr.split("\\(")[0].trim()
-							: galgoNombreStr;
-
-					out.add(galgoNombreStr);// ordenados segun el TRAP
 				}
+
+				if (galgoElements != null && !galgoElements.isEmpty()) {
+
+					// TRAP
+					TextNode tn_trap = (TextNode) galgoElements.get(0).childNode(0);
+					String trapStr = tn_trap.text().trim();
+					Integer trap = (trapStr != null && !trapStr.isEmpty()) ? Integer.valueOf(trapStr) : null;
+
+					if (trap != null && trap > 0) {
+
+						// NOMBRE
+						TextNode galgoNombre = (TextNode) galgoElements.get(1).childNode(1).childNode(1).childNode(0);
+
+						// PRICE HISTORY --> Vacio
+
+						// SP
+						Float sp = null;
+						Element e_sp = (Element) galgoElements.get(3).childNode(1).childNode(1);
+						if (e_sp != null && e_sp.childNodes() != null) {
+							for (Node nodo : e_sp.childNodes()) {
+								if (nodo instanceof Element) {
+									Element elem = (Element) nodo;
+									if (elem.toString().contains("price dec")) {
+										String spStr = ((TextNode) elem.childNode(0)).text();
+
+										if (spStr != null && spStr.contains(".")) {
+											sp = Float.valueOf(spStr);
+										}
+
+									}
+								}
+							}
+						}
+
+						// ------------
+
+						String galgoNombreStr = galgoNombre.text().trim();
+
+						if (galgoNombreStr.contains(" N/R")) {
+							// Galgo no presentado (no corre por el motivo que sea)
+
+						} else {
+							galgoNombreStr = galgoNombreStr.contains("(") ? galgoNombreStr.split("\\(")[0].trim()
+									: galgoNombreStr;
+
+							out.add(new SportiumGalgoFuturoEnCarreraAux(trap, galgoNombreStr, sp));
+						}
+
+					}
+
+				}
+
 			}
 		}
 
