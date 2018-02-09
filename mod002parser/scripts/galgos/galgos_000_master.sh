@@ -37,7 +37,7 @@ sufijo="SUBGRUPO_X"
 ${PATH_SCRIPTS}'galgos_MOD003C.sh' "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "${sufijo}"
 
 echo -e $(date +"%T")" INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD004.sh'
+${PATH_SCRIPTS}'galgos_MOD004.sh' "${sufijo}"
 #### Fin de bucle ###
 
 
