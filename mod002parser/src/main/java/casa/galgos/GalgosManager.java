@@ -632,9 +632,16 @@ public class GalgosManager implements Serializable {
 
 			if (urlGalgoFull != null && urlGalgoFull.contains("=")) {
 
-				String galgo_nombre = (urlGalgoFull.split("=")[1]).replaceAll("%20", " ");
+				String[] partesDeUrl = urlGalgoFull.split("=");
 
-				if (galgosYaAnalizados.contains(galgo_nombre)) {
+				String galgo_nombre = partesDeUrl.length == 2 ? (urlGalgoFull.split("=")[1]).replaceAll("%20", " ")
+						: null;
+
+				if (galgo_nombre == null) {
+					MY_LOGGER.error("descargarTodosLosHistoricos - urlGalgoFull no tiene ID en la URL -> urlGalgoFull=|"
+							+ urlGalgoFull + "|");
+
+				} else if (galgosYaAnalizados.contains(galgo_nombre)) {
 					MY_LOGGER.debug("Historico (galgo_nombre) ya analizado. No lo procesamos.");
 					numHistoricosAnalizados++;
 

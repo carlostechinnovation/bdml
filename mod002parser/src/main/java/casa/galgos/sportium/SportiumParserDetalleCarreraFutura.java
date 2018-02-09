@@ -125,7 +125,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		List<SportiumGalgoFuturoEnCarreraAux> out = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
-		MY_LOGGER.info("Sportium - parsearTablaDeGalgos-itemsSeleccionados =  " + itemsSeleccionados.size());
+		MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-itemsSeleccionados =  " + itemsSeleccionados.size());
 
 		for (Element fila : itemsSeleccionados) {
 
@@ -141,7 +141,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 				}
 
-				MY_LOGGER.info("Sportium - parsearTablaDeGalgos-galgoElements =  " + galgoElements.size());
+				MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-galgoElements =  " + galgoElements.size());
 
 				if (galgoElements != null && !galgoElements.isEmpty()) {
 
@@ -151,7 +151,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 					Integer trap = (trapPasadoStr != null && !trapPasadoStr.isEmpty())
 							? Integer.valueOf(String.valueOf(trapPasadoStr.charAt(0)))
 							: null;
-					MY_LOGGER.info("Sportium - parsearTablaDeGalgos-trap =  " + trap);
+					MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-trap =  " + trap);
 
 					// NOMBRE
 					String galgoNombreStr = "";
@@ -178,11 +178,11 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 							}
 						}
 					}
-					MY_LOGGER.info("Sportium - parsearTablaDeGalgos-galgoNombreStr =  " + galgoNombreStr);
+					MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-galgoNombreStr =  " + galgoNombreStr);
 
 					// PRICE HISTORY --> Vacio
 					boolean contieneDatosHistoricos = galgoElements.toString().contains("price-history");
-					MY_LOGGER.info(
+					MY_LOGGER.debug(
 							"Sportium - parsearTablaDeGalgos-contieneDatosHistoricos =  " + contieneDatosHistoricos);
 
 					// SP
@@ -200,7 +200,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 										if (e.toString().contains("price dec") && e.toString().contains(".")) {
 
-											MY_LOGGER.info(
+											MY_LOGGER.debug(
 													"Sportium - parsearTablaDeGalgos- price_dec --> " + e.toString());
 
 											String spStr = "";
@@ -210,7 +210,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 													sp = Float.valueOf(spStr);
 												}
 											} else {
-												MY_LOGGER.info("Sportium - parsearTablaDeGalgos- price_dec OTRO --> "
+												MY_LOGGER.debug("Sportium - parsearTablaDeGalgos- price_dec OTRO --> "
 														+ e.getClass());
 
 												for (Node e2 : e.childNodes()) {
@@ -221,7 +221,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 															if (e3.toString().contains("price dec")
 																	&& e3.toString().contains(".")) {
 
-																MY_LOGGER.info(
+																MY_LOGGER.debug(
 																		"Sportium - parsearTablaDeGalgos- price_dec OTRO --> "
 																				+ e3.getClass());
 																spStr = ((TextNode) e3).text().trim();
