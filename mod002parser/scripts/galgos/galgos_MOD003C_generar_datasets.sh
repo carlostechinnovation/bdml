@@ -22,8 +22,7 @@ FROM (
 
   SELECT 
 
-A.id_carrera, A.galgo_nombre, 
-CASE WHEN (A.id_carrera<100000) THEN true ELSE false END AS futuro,
+A.id_carrera, A.galgo_nombre, A.futuro,
 
 A.peso_galgo_norm, A.edad_en_dias_norm, A.scoring_remarks, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.eed_norm, A.trap_norm, A.sp_norm,
 
@@ -82,16 +81,22 @@ numero_ids_pasados=$( cat ${FILE_TEMP})
 numero_pasados_test=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_validation=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_train=$(echo "$numero_ids_pasados-$numero_pasados_test-$numero_pasados_validation" | bc)
-echo -e "Pasados [TRAIN | TEST |VALIDATION] = "${numero_pasados_train}" | "${numero_pasados_test}" | "${numero_pasados_validation} >>$LOG_DS
+echo -e "Pasados = "${numero_ids_pasados}" ==> [TRAIN | TEST | *VALIDATION] = "${numero_pasados_train}" | "${numero_pasados_test}" | *"${numero_pasados_validation} >>$LOG_DS
+echo -e "* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE." >>$LOG_DS
 
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_ids_futuros=$( cat ${FILE_TEMP})
-echo -e "Futuros = ${numero_ids_futuros}" >>$LOG_DS
+echo -e "\nFuturos = ${numero_ids_futuros}" >>$LOG_DS
 
 
 ######################################################################
 #3º Crear estas 4 listas de IDs: PASADO-TRAIN, PASADO-TEST, PASADO-VALIDATION, FUTURA (ya creada).
 ######################################################################
+echo -e "\nATENCION: El dataset pasado-VALIDATION me servira para calcular el SCORE. Por ello, en ese dataset solo cojo aquellas en las que conozca SUFICIENTES galgos que corrieron por carrera. NO cogere carreras en las que solo conozca POCOS galgos de los que corrieron, SINO siempre un numero suficiente!!" >>$LOG_DS
+
+num_suficiente_galgos_conocidos=4
+echo -e "Numero de galgos SUFICIENTE para considerar que la carrera es usable para SCORE ==>" ${num_suficiente_galgos_conocidos}"\n" >>$LOG_DS
+
 read -d '' CONSULTA_4_LISTAS_IDS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_train_${TAG};
 
@@ -100,8 +105,6 @@ SELECT rowid,id_carrera
 FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_${TAG} A, (SELECT @rowid:=0) as t_numfila ) dentro 
 WHERE rowid >= 1 AND rowid <= ${numero_pasados_train}
 ORDER BY rowid;
-
-SELECT count(*) as num_ids_pasados_train FROM datos_desa.tb_dataset_ids_pasado_train_${TAG} LIMIT 1;
 
 
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_test_${TAG};
@@ -112,8 +115,6 @@ FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset
 WHERE rowid > ${numero_pasados_train} AND rowid <= (${numero_pasados_train}+${numero_pasados_test})
 ORDER BY rowid;
 
-SELECT count(*) as num_ids_pasados_test FROM datos_desa.tb_dataset_ids_pasado_test_${TAG} LIMIT 1;
-
 
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_validation_${TAG};
 
@@ -121,12 +122,10 @@ CREATE TABLE datos_desa.tb_dataset_ids_pasado_validation_${TAG} AS
 SELECT rowid,id_carrera 
 FROM ( SELECT @rowid:=@rowid+1 as rowid, A.id_carrera FROM datos_desa.tb_dataset_ids_pasados_${TAG} A, (SELECT @rowid:=0) as t_numfila ) dentro 
 WHERE rowid > (${numero_pasados_train}+${numero_pasados_test})
+AND id_carrera IN (  SELECT id_carrera FROM datos_desa.tb_dataset_con_ids_${TAG} GROUP BY id_carrera HAVING count(*) >= ${num_suficiente_galgos_conocidos} )
 ORDER BY rowid;
 
-SELECT count(*) as num_ids_pasados_validation FROM datos_desa.tb_dataset_ids_pasado_validation_${TAG} LIMIT 1;
-
-
-SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 5;
+SELECT count(*) AS num_carreras_validation_CONOCIDAS_COMPLETAS FROM datos_desa.tb_dataset_ids_pasado_validation_${TAG} LIMIT 1;
 EOF
 
 #echo -e $(date +"%T")"$CONSULTA_4_LISTAS_IDS" 2>&1 1>>${LOG_DS}
@@ -136,7 +135,6 @@ echo -e "PASADO_IDs -> TRAIN = datos_desa.tb_dataset_ids_pasado_train_${TAG}" 2>
 echo -e "PASADO_IDs -> TEST = datos_desa.tb_dataset_ids_pasado_test_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "PASADO_IDs -> VALIDATION = datos_desa.tb_dataset_ids_pasado_validation_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "FUTURO_IDs -> datos_desa.tb_dataset_ids_futuros_${TAG}" 2>&1 1>>${LOG_DS}
-
 
 
 ######################################################################
@@ -152,13 +150,13 @@ EOF
 
 
 #####################################################################################
-#5º Crear estas 7 tablas sin IDs (pero haciendo INNER JOIN con los IDs) y con solo las columnas deseadas: 
+#5º Crear estas 7 tablas sin IDs (pero haciendo JOIN con los IDs) y con solo las columnas deseadas: 
 #PASADO-TRAIN-FEATURES, PASADO-TRAIN-TARGET
 #PASADO-TEST-FEATURES, PASADO-TEST-TARGET
 #PASADO-VALIDATION-FEATURES, PASADO-VALIDATION-TARGET
 #FUTURO-FEATURES
 #####################################################################################
-echo -e "\n\n ATENCION!!! Por cada id_carrera, tenemos unos 6 galgos, que serán 6 filas en las tablas de features y targets!!" 2>&1 1>>${LOG_DS}
+echo -e "\n\n ATENCION!!! Por cada id_carrera (CADA fila de tb_dataset_ids), deberiamos tenemos unos 6 galgos, que serán 6 filas en las tablas FINALES de features y targets!! (aunque hay muchas carreras incompletas, que nos serviran para entrenar el modelo, pero no para calcular el SCORE)" 2>&1 1>>${LOG_DS}
 #####################################################################################
 echo -e $(date +"%T")" PASADO-TRAIN..." 2>&1 1>>${LOG_DS}
 
@@ -185,7 +183,7 @@ ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 SELECT count(*) as num_pasado_train_targets FROM datos_desa.tb_ds_pasado_train_targets_${TAG} LIMIT 1;
 EOF
 
-echo -e $(date +"%T")"$CONSULTA_DS_TRAIN" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_DS_TRAIN" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TRAIN" >>$LOG_DS
 
 echo -e "PASADO-TRAIN --> datos_desa.tb_ds_pasado_train_features_${TAG}   datos_desa.tb_ds_pasado_train_targets_${TAG}" 2>&1 1>>${LOG_DS}
@@ -216,7 +214,7 @@ ON (A.id_carrera=B.id_carrera AND A.TARGET IS NOT NULL);
 SELECT count(*) as num_pasado_test_targets FROM datos_desa.tb_ds_pasado_test_targets_${TAG} LIMIT 1;
 EOF
 
-echo -e $(date +"%T")"$CONSULTA_DS_TEST" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_DS_TEST" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TEST" >>$LOG_DS
 
 echo -e "PASADO-TEST --> datos_desa.tb_ds_pasado_test_features_${TAG}   datos_desa.tb_ds_pasado_test_targets_${TAG}" 2>&1 1>>${LOG_DS}
@@ -252,7 +250,7 @@ FROM datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG};
 SELECT count(*) as num_pasado_validation_targets FROM datos_desa.tb_ds_pasado_validation_targets_${TAG} LIMIT 1;
 EOF
 
-echo -e $(date +"%T")"$CONSULTA_DS_VALIDATION" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_DS_VALIDATION" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_VALIDATION" >>$LOG_DS
 
 echo -e "PASADO-VALIDATION --> datos_desa.tb_ds_pasado_validation_features_${TAG}   datos_desa.tb_ds_pasado_validation_targets_${TAG}" 2>&1 1>>${LOG_DS}
@@ -272,7 +270,7 @@ ON (A.id_carrera=B.id_carrera);
 SELECT count(*) as num_futuro_features FROM datos_desa.tb_ds_futuro_features_${TAG} LIMIT 1;
 EOF
 
-echo -e $(date +"%T")"$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_FUTURO_FEATURES" >>$LOG_DS
 
 echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}" 2>&1 1>>${LOG_DS}

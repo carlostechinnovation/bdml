@@ -65,18 +65,9 @@ if [ "$#" -ne 4 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}
 fi
 
-#filtro_carreras=""
-#filtro_carreras="WHERE id_carrera IN (...)"
 filtro_carreras="${1}"
-
-#filtro_galgos=""
-#filtro_galgos="WHERE galgo_nombre IN (...)"
 filtro_galgos="${2}"
-
-#filtro_cg=""
-#filtro_cg="WHERE cg IN (...)"
 filtro_cg="${3}"
-
 sufijo="${4}"
 
 

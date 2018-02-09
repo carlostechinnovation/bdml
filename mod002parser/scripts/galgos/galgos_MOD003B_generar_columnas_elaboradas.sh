@@ -893,7 +893,8 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo};
 
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} AS 
 SELECT
-dentro.cg, 
+dentro.cg,
+CASE WHEN (dentro.id_carrera<100000) THEN true ELSE false END AS futuro,
 dentro.id_carrera, 
 dentro.galgo_nombre, 
 CAST( dentro.time_sec_norm AS DECIMAL(8,6) ) AS time_sec_norm, 

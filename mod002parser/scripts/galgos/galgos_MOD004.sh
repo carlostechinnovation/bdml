@@ -2,18 +2,26 @@
 
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
+
+
+######################## PARAMETROS ############33
+if [ "$#" -ne 1 ]; then
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}
+fi
+
+TAG="${1}"
+
+
 #### Limpiar LOG ###
 rm -f $LOG_ML
 
-echo -e $(date +"%T")" Modulo 004B - Modelos predictivos (nucleo)" 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" Modulo 004 - Modelos predictivos (nucleo)" 2>&1 1>>${LOG_ML}
 
 PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
 rm -f $PATH_MODELO_GANADOR
 
 
 ########### Modelo predictivo REGRESION ###########
-TAG="SUBGRUPO_X"
-
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" >> "${LOG_ML}"
 
 cat "${LOG_ML}" | grep 'Gana modelo'  >&1
@@ -93,7 +101,73 @@ echo -e $(date +"%T")"$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_VALIDACION" >>$LOG_ML
 
 
+######################### CALCULO DEL SCORE ################
+echo -e $(date +"%T")" Calculando SCORE a partir del dataset de VALIDATION..." 2>&1 1>>${LOG_ML}
 
-echo -e $(date +"%T")"Modulo 004B - FIN\n\n" 2>&1 1>>${LOG_ML}
+#SCORE: de las predichas que hayan quedado primero o segundo, veremos si en REAL quedaron primero o segundo. Y sacamos el porcentaje de acierto.
+
+read -d '' CONSULTA_SCORE <<- EOF
+DROP TABLE datos_desa.tb_val_score_real_${TAG};
+
+CREATE TABLE datos_desa.tb_val_score_real_${TAG} AS
+SELECT id_carrera, galgo_rowid, target_real,
+CASE id_carrera
+  WHEN @curIdCarrera THEN @curRow := @curRow + 1 
+  ELSE (@curRow := 1 AND @curIdCarrera := id_carrera )
+END AS posicion_real
+FROM (
+  SELECT id_carrera, rowid AS galgo_rowid, target_real FROM datos_desa.tb_val_${TAG}  ORDER BY id_carrera ASC, target_real DESC 
+) dentro,
+(SELECT @curRow := 0, @curIdCarrera := '') R;
+
+
+DROP TABLE datos_desa.tb_val_score_predicho_${TAG};
+
+CREATE TABLE datos_desa.tb_val_score_predicho_${TAG} AS
+SELECT id_carrera, galgo_rowid, target_predicho,
+CASE id_carrera
+  WHEN @curIdCarrera THEN @curRow := @curRow + 1 
+  ELSE (@curRow := 1 AND @curIdCarrera := id_carrera )
+END AS posicion_predicha
+FROM (
+  SELECT id_carrera, rowid AS galgo_rowid, target_predicho FROM datos_desa.tb_val_${TAG} ORDER BY id_carrera ASC, target_predicho DESC 
+) dentro,
+(SELECT @curRow := 0, @curIdCarrera := '') R;
+
+
+DROP TABLE datos_desa.tb_score_aciertos_${TAG};
+
+CREATE TABLE datos_desa.tb_score_aciertos_${TAG} AS
+SELECT A.*, B.posicion_real,
+CASE WHEN (A.posicion_predicha IN (1,2) AND B.posicion_real IN (1,2)) THEN true ELSE false END as acierto
+FROM datos_desa.tb_val_score_predicho_${TAG} A
+LEFT JOIN datos_desa.tb_val_score_real_${TAG} B
+ON (A.id_carrera=B.id_carrera AND A.galgo_rowid=B.galgo_rowid)
+;
+EOF
+
+echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" >>$LOG_ML
+
+FILE_TEMP="./temp_numero_MOD004"
+
+#Numeros
+mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_aciertos FROM datos_desa.tb_score_aciertos_${TAG} WHERE acierto=true LIMIT 1;" > ${FILE_TEMP}
+numero_aciertos=$( cat ${FILE_TEMP})
+
+mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones FROM datos_desa.tb_score_aciertos_${TAG} LIMIT 1;" > ${FILE_TEMP}
+numero_predicciones=$( cat ${FILE_TEMP})
+
+echo -e "numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
+echo -e "numero_predicciones = ${numero_predicciones}" 2>&1 1>>${LOG_ML}
+
+SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones" | bc -l)
+echo -e "TAG=$TAG --> SCORE = ${numero_aciertos}/${numero_predicciones} = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
+echo -e "TAG=$TAG --> SCORE = ${numero_aciertos}/${numero_predicciones} = ${SCORE_FINAL}" #Retorno hacia script padre
+
+
+#################
+
+echo -e $(date +"%T")" Modulo 004 - FIN\n\n" 2>&1 1>>${LOG_ML}
 
 

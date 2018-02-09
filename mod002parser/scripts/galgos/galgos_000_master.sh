@@ -20,28 +20,26 @@ echo -e "Ruta log (coordinador)="${PATH_LOG}
 echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD001A.sh'
 
-echo -e $(date +"%T")" Planificador de DESCARGA DIARIA (comandos CRON solo para descargas de datos)" >>$PATH_LOG
-#.${PATH_SCRIPTS}'galgos_MOD001B.sh'
-
-echo -e $(date +"%T")" Limpieza basica (parseado, padding, diferenciales...) y tablas auxiliares utiles" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD002A.sh'
-
-echo -e $(date +"%T")" Limpieza inteligente (scaling, normalizacion...) que necesitan los algoritmos" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD002B.sh'
-
 echo -e $(date +"%T")" Analisis de datos: ESTADISTICA BASICA" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003A.sh'
 
-echo -e $(date +"%T")" OBSOLETO Sistema predictivo simple PGA (funcion con pesos, para cada galgo)" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD003PGA.sh'
-
 echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS y DATASETS" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD003B.sh'
-${PATH_SCRIPTS}'galgos_MOD003C.sh'
+
+
+#### Bucle ###
+echo -e $(date +"%T")" Tablas FILTRADAS" >>$PATH_LOG
+filtro_carreras="WHERE 1=1"
+filtro_galgos="WHERE 1=1"
+filtro_cg="WHERE 1=1"
+sufijo="SUBGRUPO_X"
+
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "${sufijo}"
 
 echo -e $(date +"%T")" INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD004_nucleo.sh'
 ${PATH_SCRIPTS}'galgos_MOD004.sh'
+#### Fin de bucle ###
+
 
 echo -e $(date +"%T")" INFORMES (resultados)" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD005.sh'
@@ -58,3 +56,5 @@ echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
 #sudo service mysql stop
 
 ##########################################
+
+
