@@ -35,4 +35,84 @@ function mostrar_tabla(){
 
 
 
+######## SUBGRUPOS #######################################################################
+function analizarScoreSobreSubgrupos ()
+{
+
+PATH_LOG=${1}
+echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
+
+#filtro_carreras filtro_galgos filtro_cg sufijo
+
+#----Criterios simples ---
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "" "TOTAL"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "TOTAL" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm <=0.33)" "DISTANCIA_CORTA"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "DISTANCIA_CORTA" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE (distancia_norm >0.33 AND  distancia_norm <=0.66))" "DISTANCIA_MEDIA"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "DISTANCIA_MEDIA" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66)" "DISTANCIA_LARGA"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "DISTANCIA_LARGA" >>$PATH_LOG
+
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <=0.33)" "HORA_PRONTO"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "HORA_PRONTO" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >=0.66)" "HORA_TARDE"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "HORA_TARDE" >>$PATH_LOG
+
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm<=0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_JOVENES"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "CON_5_GALGOS_JOVENES" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm<=0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_VIEJOS"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "CON_5_GALGOS_VIEJOS" >>$PATH_LOG
+
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE experiencia_en_clase is NULL OR experiencia_en_clase<=0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "POCA_EXPER_EN_CLASE"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "POCA_EXPER_EN_CLASE" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE experiencia_en_clase>=0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "MUCHA_EXPER_EN_CLASE"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "MUCHA_EXPER_EN_CLASE" >>$PATH_LOG
+
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE peso_galgo_norm<=0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_DELGADOS"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "CON_5_GALGOS_DELGADOS" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE peso_galgo_norm>=0.66 GROUP BY id_carrera HAVING count(*)=3 )" "CON_3_GALGOS_PESADOS"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "CON_3_GALGOS_PESADOS" >>$PATH_LOG
+
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE entrenador_posicion_norm>=0.5 )" "TRAINER_BUENOS_GALGOS"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "TRAINER_BUENOS_GALGOS" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE entrenador_posicion_norm<0.5 )" "TRAINER_MALOS_GALGOS"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "TRAINER_MALOS_GALGOS" >>$PATH_LOG
+
+
+#----Criterios COMPLEJOS ---
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_elaborada_galgos_pre WHERE vel_going_largas_max_norm<=0.33 ) )" "LARGA_Y_ALGUNO_LENTO"
+${PATH_SCRIPTS}'galgos_MOD004.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
+
+}
+##########################################################################################
 

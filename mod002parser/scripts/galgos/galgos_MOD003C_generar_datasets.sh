@@ -33,8 +33,8 @@ C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.premio_primero_n
 velocidad_con_going_norm AS TARGET
 
   FROM datos_desa.tb_filtrada_carrerasgalgos_${TAG} A
-  LEFT JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre=B.galgo_nombre)
-  LEFT JOIN datos_desa.tb_filtrada_carreras_${TAG} C ON (A.id_carrera=C.id_carrera)
+  INNER JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre=B.galgo_nombre)
+  INNER JOIN datos_desa.tb_filtrada_carreras_${TAG} C ON (A.id_carrera=C.id_carrera)
 ) dentro
 
 WHERE (futuro=true OR (futuro=false AND dentro.TARGET IS NOT NULL))
@@ -70,7 +70,7 @@ ALTER TABLE datos_desa.tb_dataset_ids_futuros_${TAG} ADD INDEX tb_dscids_f_idx(i
 SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_IDS_PASADOS_Y_FUTUROS" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_IDS_PASADOS_Y_FUTUROS" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_IDS_PASADOS_Y_FUTUROS" >>$LOG_DS
 
 

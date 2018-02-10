@@ -107,7 +107,7 @@ echo -e $(date +"%T")" Calculando SCORE a partir del dataset de VALIDATION..." 2
 #SCORE: de las predichas que hayan quedado primero o segundo, veremos si en REAL quedaron primero o segundo. Y sacamos el porcentaje de acierto.
 
 read -d '' CONSULTA_SCORE <<- EOF
-DROP TABLE datos_desa.tb_val_score_real_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_score_real_${TAG};
 
 CREATE TABLE datos_desa.tb_val_score_real_${TAG} AS
 SELECT id_carrera, galgo_rowid, target_real,
@@ -121,7 +121,7 @@ FROM (
 (SELECT @curRow := 0, @curIdCarrera := '') R;
 
 
-DROP TABLE datos_desa.tb_val_score_predicho_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_score_predicho_${TAG};
 
 CREATE TABLE datos_desa.tb_val_score_predicho_${TAG} AS
 SELECT id_carrera, galgo_rowid, target_predicho,
@@ -135,7 +135,7 @@ FROM (
 (SELECT @curRow := 0, @curIdCarrera := '') R;
 
 
-DROP TABLE datos_desa.tb_score_aciertos_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_score_aciertos_${TAG};
 
 CREATE TABLE datos_desa.tb_score_aciertos_${TAG} AS
 SELECT A.*, B.posicion_real,
@@ -162,8 +162,8 @@ echo -e "numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
 echo -e "numero_predicciones = ${numero_predicciones}" 2>&1 1>>${LOG_ML}
 
 SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones" | bc -l)
-echo -e "TAG=$TAG --> SCORE = ${numero_aciertos}/${numero_predicciones} = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
-echo -e "TAG=$TAG --> SCORE = ${numero_aciertos}/${numero_predicciones} = ${SCORE_FINAL}" #Retorno hacia script padre
+echo -e "TAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/${numero_predicciones} = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
+echo -e "TAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/${numero_predicciones} = ${SCORE_FINAL}" #Retorno hacia script padre
 
 
 #################
