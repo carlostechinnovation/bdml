@@ -115,7 +115,6 @@ public class GalgosManager implements Serializable {
 						guardarEnFicheros);
 
 				spdcf.ejecutar(pathCarreraDetalle, carrera);
-
 			}
 
 			desnormalizarSemillasYGuardarlasEnFicheros(fileGalgosIniciales);
@@ -133,16 +132,17 @@ public class GalgosManager implements Serializable {
 	 */
 	public void desnormalizarSemillasYGuardarlasEnFicheros(String fileGalgosIniciales) {
 
+		MY_LOGGER.info("La lista galgosFuturos contiene = " + galgosFuturos.size());
+
 		// *********************************************************************
 		// Desnormalizar, llevando a relaciones carrera-galgo
 		Set<SportiumCarreraGalgo> carreraGalgos = new HashSet<SportiumCarreraGalgo>();
 		for (SportiumCarrera carrera : galgosFuturos) {
 			if (carrera.galgosNombres != null && !carrera.galgosNombres.isEmpty()) {
 
-				int trap = 1;// La lista de galgosNombres esta ordenada segun el TRAP
+				int trap = 1;// La lista de galgosNombres NO esta ordenada segun el TRAP!!!!
 
 				for (String galgoNombre : carrera.galgosNombres) {
-
 					String id = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora + "#" + galgoNombre;
 					carreraGalgos.add(new SportiumCarreraGalgo(id, galgoNombre, trap, carrera));
 					trap++;
@@ -364,7 +364,7 @@ public class GalgosManager implements Serializable {
 
 		MY_LOGGER.info("BUCLE-Condiciones --> quedanPendientes =" + quedanPendientes);
 		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralCarrerasProcesadasMax =" + debajoUmbralCarrerasProcesadasMax);
-		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralProfundidadMax =" + debajoUmbralProfundidadMax + " = " + out);
+		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralProfundidadMax =" + debajoUmbralProfundidadMax);
 		MY_LOGGER.info("BUCLE-Condiciones --> TOTAL (para ver si seguimos procesando mas carreras) = " + out);
 
 		return out;

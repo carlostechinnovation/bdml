@@ -26,20 +26,20 @@ PATH_LIMPIO_AGREGADOS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/wa
 PATH_LIMPIO_ESTADISTICAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_limpio_estadisticas"
 
 
-echo -e $(date +"%T")"Path del log: ${LOG_DESCARGA_BRUTO}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Path del log: ${LOG_DESCARGA_BRUTO}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 rm -f ${LOG_DESCARGA_BRUTO}
 
-echo -e $(date +"%T")"Galgos-Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Galgos-Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 ##########################################
-echo -e $(date +"%T")"Borrando ficheros antiguos..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Borrando ficheros antiguos..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 rm -f "$PATH_BRUTO/*"
 rm -f "$PATH_LIMPIO/*"
 rm -f "${PATH_FILE_GALGOS_INICIALES}"
 rm -f "${PATH_FILE_GALGOS_INICIALES_FULL}"
 
 ##########################################
-echo -e $(date +"%T")"Borrando tablas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Borrando tablas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 consultar "DROP TABLE IF EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
@@ -49,7 +49,7 @@ consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados\W;" "${LOG_DESCAR
 sleep 4s
 
 ##########################################
-echo -e $(date +"%T")"Generando fichero de SENTENCIAS SQL (varios CREATE TABLE) con prefijo="prefijoPathDatosBruto 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Generando fichero de SENTENCIAS SQL (varios CREATE TABLE) con prefijo="prefijoPathDatosBruto 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 rm $FILE_SENTENCIAS_CREATE_TABLE
 java -jar ${PATH_JAR} "GALGOS_01" "$FILE_SENTENCIAS_CREATE_TABLE" 2>&1 1>>${LOG_DESCARGA_BRUTO}
@@ -57,7 +57,7 @@ SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 ##########################################
-echo -e $(date +"%T")"SPORTIUM - Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" SPORTIUM - Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 java -jar ${PATH_JAR} "GALGOS_02" "${PATH_BRUTO}semillas" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_FULL}' INTO TABLE datos_desa.tb_carrerasgalgos_semillasfuturas FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
@@ -65,8 +65,8 @@ consultar "SELECT COUNT(*) as num_galgos_iniciales_SPORTIUM FROM datos_desa.tb_c
 
 
 ##########################################
-echo -e $(date +"%T")"GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+#java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_LIMPIO_CARRERAS}' INTO TABLE datos_desa.tb_galgos_carreras FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_CARRERAS_WARNINGS"
 
@@ -78,7 +78,7 @@ consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_LIMPIO_AGREGADOS}'
 
 
 ##########################################
-echo -e $(date +"%T")"GBGB - Comprobando tablas de datos HISTORICOS recien creadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" GBGB - Comprobando tablas de datos HISTORICOS recien creadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 mostrar_tabla "CARRERAS" "datos_desa.tb_galgos_carreras" "${LOG_DESCARGA_BRUTO}"
 mostrar_tabla "POSICIONES EN CARRERAS" "datos_desa.tb_galgos_posiciones_en_carreras" "${LOG_DESCARGA_BRUTO}"
@@ -412,6 +412,8 @@ velocidad_con_going, (velocidad_con_going - @min_velocidad_con_going)/(@max_velo
 scoring_remarks
 
 FROM datos_desa.tb_galgos_historico;
+
+ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx(id_carrera, galgo_nombre);
 
 SELECT * FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
 SELECT count(*) as num_XX_norm FROM datos_desa.tb_galgos_historico_norm LIMIT 5;

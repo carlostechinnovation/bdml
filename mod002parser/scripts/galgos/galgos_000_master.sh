@@ -35,8 +35,8 @@ analizarScoreSobreSubgrupos "$PATH_LOG"
 
 
 #echo -e $(date +"%T")" DATASETS + FILTRADAS + INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "" "SUBGRUPO_X"
-#${PATH_SCRIPTS}'galgos_MOD004.sh' "SUBGRUPO_X" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD003C.sh' "" "" "" "PENDIENTE"
+#${PATH_SCRIPTS}'galgos_MOD004.sh' "PENDIENTE" >>$PATH_LOG
 
 
 #echo -e $(date +"%T")" INFORMES (resultados)" >>$PATH_LOG
