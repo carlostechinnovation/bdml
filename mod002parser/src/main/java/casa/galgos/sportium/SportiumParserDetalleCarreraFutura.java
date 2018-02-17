@@ -115,14 +115,14 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		// Futura = si no contiene la cabecera "Posición"
 		boolean futura = primeraPestania.childNode(1).toString().contains("osici") == false;
-		MY_LOGGER.info("Sportium - Si NO contiene 'posicion' es FUTURA --> = " + futura);
+		MY_LOGGER.debug("Sportium - Si NO contiene 'posicion' es FUTURA --> = " + futura);
 
 		int numElementosPrimeraPestania = primeraPestania.childNodes().size();
-		MY_LOGGER.info("Sportium - parsear - numElementosPrimeraPestania = " + numElementosPrimeraPestania);
+		MY_LOGGER.debug("Sportium - parsear - numElementosPrimeraPestania = " + numElementosPrimeraPestania);
 
 		if (futura && numElementosPrimeraPestania > 3) {
 
-			MY_LOGGER.info(
+			MY_LOGGER.debug(
 					"Sportium - parsear - primeraPestania.childNodes() = \n" + primeraPestania.childNodes().toString());
 
 			for (Node epp : primeraPestania.childNodes()) {
@@ -286,20 +286,23 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 	}
 
-	/**
-	 * @param itemsSeleccionados
-	 * @return
-	 */
-	public static List<SportiumGalgoFuturoEnCarreraAux> parsearTablaDeGalgos(List<Element> itemsSeleccionados) {
-
-		List<SportiumGalgoFuturoEnCarreraAux> out = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
-
-		MY_LOGGER.info("Sportium - parsearTablaDeGalgos-itemsSeleccionados =  " + itemsSeleccionados.size());
-
-		for (Element fila : itemsSeleccionados) {
-		}
-
-		return out;
-	}
+	// /**
+	// * @param itemsSeleccionados
+	// * @return
+	// */
+	// public static List<SportiumGalgoFuturoEnCarreraAux>
+	// parsearTablaDeGalgos(List<Element> itemsSeleccionados) {
+	//
+	// List<SportiumGalgoFuturoEnCarreraAux> out = new
+	// ArrayList<SportiumGalgoFuturoEnCarreraAux>();
+	//
+	// MY_LOGGER.info("Sportium - parsearTablaDeGalgos-itemsSeleccionados = " +
+	// itemsSeleccionados.size());
+	//
+	// for (Element fila : itemsSeleccionados) {
+	// }
+	//
+	// return out;
+	// }
 
 }

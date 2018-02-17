@@ -206,7 +206,6 @@ mysql -u root --password=datos1986 -N --execute="SELECT id_carrera, galgo_nombre
 
 ##################### CALCULO ECONÓMICO ################
 
-
 echo -e "Calculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 -N --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A LEFT JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre);" 2>&1 1>>${LOG_ML}
 

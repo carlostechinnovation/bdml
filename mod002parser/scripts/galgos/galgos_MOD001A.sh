@@ -363,6 +363,8 @@ edad_en_dias, (edad_en_dias - @min_edad_en_dias)/(@max_edad_en_dias - @min_edad_
 
 FROM datos_desa.tb_galgos_posiciones_en_carreras;
 
+ALTER TABLE datos_desa.tb_galgos_posiciones_en_carreras_norm ADD INDEX tb_GPECN_idx(id_carrera,galgo_nombre);
+
 SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras_norm LIMIT 5;
 SELECT count(*) as num_posiciones_en_carreras_norm FROM datos_desa.tb_galgos_posiciones_en_carreras_norm LIMIT 5;
 
@@ -413,7 +415,8 @@ scoring_remarks
 
 FROM datos_desa.tb_galgos_historico;
 
-ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx(id_carrera, galgo_nombre);
+ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx1(id_carrera, galgo_nombre);
+ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx2(galgo_nombre,clase);
 
 SELECT * FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
 SELECT count(*) as num_XX_norm FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
