@@ -29,8 +29,8 @@ import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
 import casa.galgos.gbgb.GbgbParserCarreraDetalle;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
-import casa.galgos.sportium.SportiumCarrera;
-import casa.galgos.sportium.SportiumCarreraGalgo;
+import casa.galgos.sportium.CarreraSemillaSportium;
+import casa.galgos.sportium.CarreraGalgoSemillaSportium;
 import casa.galgos.sportium.SportiumDownloader;
 import casa.galgos.sportium.SportiumParserCarrerasFuturas;
 import casa.galgos.sportium.SportiumParserDetalleCarreraFutura;
@@ -59,7 +59,7 @@ public class GalgosManager implements Serializable {
 	public List<String> galgosYaAnalizados = new ArrayList<String>();
 
 	// LISTAS con datos DEFINITIVOS para guardar en sistema de ficheros
-	public List<SportiumCarrera> galgosFuturos = new ArrayList<SportiumCarrera>(); // Galgos en los que vamos a apostar
+	public List<CarreraSemillaSportium> galgosFuturos = new ArrayList<CarreraSemillaSportium>(); // Galgos en los que vamos a apostar
 																					// dinero real
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
@@ -84,9 +84,10 @@ public class GalgosManager implements Serializable {
 	 * @param prefijoPathDatosBruto
 	 * @param guardarEnFicheros
 	 * @param fileGalgosIniciales
+	 *            SALIDA
 	 * @throws InterruptedException
 	 */
-	public void descargarYParsearSemillas(String prefijoPathDatosBruto, boolean guardarEnFicheros,
+	public void descargarYParsearSemillasSportium(String prefijoPathDatosBruto, boolean guardarEnFicheros,
 			String fileGalgosIniciales) throws InterruptedException {
 
 		MY_LOGGER.info("Descargando carreras FUTURAS con sus galgos (semillas)...");
@@ -107,7 +108,7 @@ public class GalgosManager implements Serializable {
 
 			String pathCarreraDetalle = "";
 
-			for (SportiumCarrera carrera : galgosFuturos) {
+			for (CarreraSemillaSportium carrera : galgosFuturos) {
 				contador++;
 				pathCarreraDetalle = prefijoPathDatosBruto + tag + contador;
 
@@ -136,15 +137,15 @@ public class GalgosManager implements Serializable {
 
 		// *********************************************************************
 		// Desnormalizar, llevando a relaciones carrera-galgo
-		Set<SportiumCarreraGalgo> carreraGalgos = new HashSet<SportiumCarreraGalgo>();
-		for (SportiumCarrera carrera : galgosFuturos) {
+		Set<CarreraGalgoSemillaSportium> carreraGalgos = new HashSet<CarreraGalgoSemillaSportium>();
+		for (CarreraSemillaSportium carrera : galgosFuturos) {
 			if (carrera.galgosNombres != null && !carrera.galgosNombres.isEmpty()) {
 
 				int trap = 1;// La lista de galgosNombres NO esta ordenada segun el TRAP!!!!
 
 				for (String galgoNombre : carrera.galgosNombres) {
 					String id = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora + "#" + galgoNombre;
-					carreraGalgos.add(new SportiumCarreraGalgo(id, galgoNombre, trap, carrera));
+					carreraGalgos.add(new CarreraGalgoSemillaSportium(id, galgoNombre, trap, carrera));
 					trap++;
 				}
 			}
@@ -152,7 +153,7 @@ public class GalgosManager implements Serializable {
 
 		// *********************************************************************
 		Set<String> galgosIniciales = new HashSet<String>();
-		for (SportiumCarreraGalgo fila : carreraGalgos) {
+		for (CarreraGalgoSemillaSportium fila : carreraGalgos) {
 			galgosIniciales.add(fila.galgoNombre);
 		}
 
@@ -188,7 +189,7 @@ public class GalgosManager implements Serializable {
 
 				// ****************************
 				primero = true;
-				for (SportiumCarreraGalgo fila : carreraGalgos) {
+				for (CarreraGalgoSemillaSportium fila : carreraGalgos) {
 
 					MY_LOGGER.debug("Fila=" + fila.toString());
 

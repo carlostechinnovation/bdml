@@ -1,0 +1,1069 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ng="http://angularjs.org">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"Uw4FUV5UGwYCXFhRAQU="};window.NREUM||(NREUM={}),__nr_require=function(t,n,e){function r(e){if(!n[e]){var o=n[e]={exports:{}};t[e][0].call(o.exports,function(n){var o=t[e][1][n];return r(o||n)},o,o.exports)}return n[e].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<e.length;o++)r(e[o]);return r}({1:[function(t,n,e){function r(t){try{s.console&&console.log(t)}catch(n){}}var o,i=t("ee"),a=t(15),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,n,e){r(e.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,n){return t}).join(", ")))},{}],2:[function(t,n,e){function r(t,n,e,r,s){try{p?p-=1:o(s||new UncaughtException(t,n,e),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,n,e){this.message=t||"Uncaught error with no additional information",this.sourceURL=n,this.line=e}function o(t,n){var e=n?null:c.now();i("err",[t,e])}var i=t("handle"),a=t(16),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,l="nr@seenError",p=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(8),t(7),"addEventListener"in window&&t(5),c.xhrWrappable&&t(9),d=!0)}s.on("fn-start",function(t,n,e){d&&(p+=1)}),s.on("fn-err",function(t,n,e){d&&!e[l]&&(f(e,l,function(){return!0}),this.thrown=!0,o(e))}),s.on("fn-end",function(){d&&!this.thrown&&p>0&&(p-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,n,e){t("loader").features.ins=!0},{}],4:[function(t,n,e){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),s=t(7),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(6);var b=NREUM.o.EV;o.on(m,function(t,n){var e=t[0];e instanceof b&&(this.bstStart=g.now())}),o.on(w,function(t,n){var e=t[0];e instanceof b&&i("bst",[e,n,this.bstStart,g.now()])}),a.on(m,function(t,n,e){this.bstStart=g.now(),this.bstType=e}),a.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(w,function(t,n){i(v,[n,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,n,e){function r(t){for(var n=t;n&&!n.hasOwnProperty(u);)n=Object.getPrototypeOf(n);n&&o(n)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,n){return t[1]}var a=t("ee").get("events"),s=t(18)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";n.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,n){var e=t[1],r=c(e,"nr@wrapped",function(){function t(){if("function"==typeof e.handleEvent)return e.handleEvent.apply(e,arguments)}var n={object:t,"function":e}[typeof e];return n?s(n,"fn-",null,n.name||"anonymous"):e});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,n,e){var r=t("ee").get("history"),o=t(18)(r);n.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,n,e){var r=t("ee").get("raf"),o=t(18)(r),i="equestAnimationFrame";n.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,n,e){function r(t,n,e){t[0]=a(t[0],"fn-",null,e)}function o(t,n,e){this.method=e,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,e)}var i=t("ee").get("timer"),a=t(18)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";n.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],9:[function(t,n,e){function r(t,n){d.inPlace(n,["onreadystatechange"],"fn-",s)}function o(){var t=this,n=u.context(t);t.readyState>3&&!n.resolved&&(n.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):w?w(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,n){return n}function c(t,n){for(var e in t)n[e]=t[e];return n}t(5);var f=t("ee"),u=f.get("xhr"),d=t(18)(u),l=NREUM.o,p=l.XHR,h=l.MO,m=l.PR,w=l.SI,v="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];n.exports=u;var b=window.XMLHttpRequest=function(t){var n=new p(t);try{u.emit("new-xhr",[n],n),n.addEventListener(v,o,!1)}catch(e){try{u.emit("internal-error",[e])}catch(r){}}return n};if(c(p,b),b.prototype=p.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,n){r(t,n),i(n)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!w&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===v||a()})},{}],10:[function(t,n,e){function r(t){var n=this.params,e=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!n.aborted){if(e.duration=a.now()-this.startTime,4===t.readyState){n.status=t.status;var i=o(t,this.lastSize);if(i&&(e.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(n.cat=c.split(", ").pop())}}else n.status=0;e.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[n,e,this.startTime])}}}function o(t,n){var e=t.responseType;if("json"===e&&null!==n)return n;var r="arraybuffer"===e||"blob"===e||"json"===e?t.response:t.responseText;return h(r)}function i(t,n){var e=c(n),r=t.params;r.host=e.hostname+":"+e.port,r.pathname=e.pathname,t.sameOrigin=e.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var n=this;n.totalCbs=0,n.called=0,n.cbTime=0,n.end=r,n.ended=!1,n.xhrGuids={},n.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){n.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,n){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&n.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,n){var e=this.metrics,r=t[0],o=this;if(e&&r){var i=h(r);i&&(e.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof n.onload))&&o.end(n)}catch(e){try{f.emit("internal-error",[e])}catch(r){}}};for(var s=0;s<d;s++)n.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,n,e){this.cbTime+=t,n?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof e.onload||this.end(e)}),f.on("xhr-load-added",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&!this.xhrGuids[e]&&(this.xhrGuids[e]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,n){var e=""+l(t)+!!n;this.xhrGuids&&this.xhrGuids[e]&&(delete this.xhrGuids[e],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],n)}),f.on("removeEventListener-end",function(t,n){n instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],n)}),f.on("fn-start",function(t,n,e){n instanceof m&&("onload"===e&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,n){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,n],n)})}},{}],11:[function(t,n,e){n.exports=function(t){var n=document.createElement("a"),e=window.location,r={};n.href=t,r.port=n.port;var o=n.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=n.hostname||e.hostname,r.pathname=n.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!n.protocol||":"===n.protocol||n.protocol===e.protocol,a=n.hostname===document.domain&&n.port===e.port;return r.sameOrigin=i&&(!n.hostname||a),r}},{}],12:[function(t,n,e){function r(){}function o(t,n,e){return function(){return i(t,[f.now()].concat(s(arguments)),n?null:this,e),n?void 0:this}}var i=t("handle"),a=t(15),s=t(16),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],l="api-",p=l+"ixn-";a(d,function(t,n){u[n]=o(l+n,!0,"api")}),u.addPageAction=o(l+"addPageAction",!0),u.setCurrentRouteName=o(l+"routeName",!0),n.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,n){var e={},r=this,o="function"==typeof n;return i(p+"tracer",[f.now(),t,e],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],e),o)try{return n.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],e),t}finally{c.emit("fn-end",[f.now()],e)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,n){h[n]=o(p+n)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],13:[function(t,n,e){n.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(n){return}}}},{}],14:[function(t,n,e){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),n.exports=r},{}],15:[function(t,n,e){function r(t,n){var e=[],r="",i=0;for(r in t)o.call(t,r)&&(e[i]=n(r,t[r]),i+=1);return e}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],16:[function(t,n,e){function r(t,n,e){n||(n=0),"undefined"==typeof e&&(e=t?t.length:0);for(var r=-1,o=e-n||0,i=Array(o<0?0:o);++r<o;)i[r]=t[n+r];return i}n.exports=r},{}],17:[function(t,n,e){n.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],18:[function(t,n,e){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(16),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;n.exports=function(t,n){function e(t,n,e,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof e?e(r,a):e||{}}catch(f){l([f,"",[r,a,o],s])}u(n+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(n+"err",[r,a,d],s),d}finally{u(n+"end",[r,a,c],s)}}return r(t)?t:(n||(n=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,n,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<n.length;c++)s=n[c],a=t[s],r(a)||(t[s]=e(a,f?s+o:o,i,s))}function u(e,r,o){if(!c||n){var i=c;c=!0;try{t.emit(e,r,o,n)}catch(a){l([a,e,r,o])}c=i}}function d(t,n){if(Object.defineProperty&&Object.keys)try{var e=Object.keys(t);return e.forEach(function(e){Object.defineProperty(n,e,{get:function(){return t[e]},set:function(n){return t[e]=n,n}})}),n}catch(r){l([r])}for(var o in t)s.call(t,o)&&(n[o]=t[o]);return n}function l(n){try{t.emit("internal-error",n)}catch(e){}}return t||(t=o),e.inPlace=f,e.flag=a,e}},{}],ee:[function(t,n,e){function r(){}function o(t){function n(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function e(e,r,o,i){if(!l.aborted||i){t&&t(e,r,o);for(var a=n(o),s=h(e),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[y[e]];return d&&d.push([g,e,r,a]),a}}function p(t,n){v[t]=h(t).concat(n)}function h(t){return v[t]||[]}function m(t){return d[t]=d[t]||o(e)}function w(t,n){f(t,function(t,e){n=n||"feature",y[e]=n,n in u||(u[n]=[])})}var v={},y={},g={on:p,emit:e,get:m,listeners:h,context:n,buffer:w,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var s="nr@context",c=t("gos"),f=t(15),u={},d={},l=n.exports=o();l.backlog=u},{}],gos:[function(t,n,e){function r(t,n,e){if(o.call(t,n))return t[n];var r=e();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,n,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[n]=r,r}var o=Object.prototype.hasOwnProperty;n.exports=r},{}],handle:[function(t,n,e){function r(t,n,e,r){o.buffer([t],r),o.emit(t,n,e)}var o=t("ee").get("handle");n.exports=r,r.ee=o},{}],id:[function(t,n,e){function r(t){var n=typeof t;return!t||"object"!==n&&"function"!==n?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");n.exports=r},{}],loader:[function(t,n,e){function r(){if(!x++){var t=b.info=NREUM.info,n=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&n))return u.abort();f(y,function(n,e){t[n]||(t[n]=e)}),c("mark",["onload",a()+b.offset],null,"api");var e=l.createElement("script");e.src="https://"+t.agent,n.parentNode.insertBefore(e,n)}}function o(){"complete"===l.readyState&&i()}function i(){c("mark",["domContent",a()+b.offset],null,"api")}function a(){return E.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-b.offset}var s=(new Date).getTime(),c=t("handle"),f=t(15),u=t("ee"),d=window,l=d.document,p="addEventListener",h="attachEvent",m=d.XMLHttpRequest,w=m&&m.prototype;NREUM.o={ST:setTimeout,SI:d.setImmediate,CT:clearTimeout,XHR:m,REQ:d.Request,EV:d.Event,PR:d.Promise,MO:d.MutationObserver};var v=""+location,y={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1071.min.js"},g=m&&w&&w[p]&&!/CriOS/.test(navigator.userAgent),b=n.exports={offset:s,now:a,origin:v,features:{},xhrWrappable:g};t(12),l[p]?(l[p]("DOMContentLoaded",i,!1),d[p]("load",r,!1)):(l[h]("onreadystatechange",o),d[h]("onload",r)),c("mark",["firstbyte",s],null,"api");var x=0,E=t(17)},{}]},{},["loader",2,10,4,3]);</script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+                <link rel="shortcut icon" href="https://www.betbright.com/favicon.ico">
+
+        <link rel="apple-touch-icon" href="https://www.betbright.com/client/src/legacy/shared/images/mobile/apple-touch-iphone.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="https://www.betbright.com/client/src/legacy/shared/images/mobile/apple-touch-ipad.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="https://www.betbright.com/client/src/legacy/shared/images/mobile/apple-touch-iphone4.png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="https://www.betbright.com/client/src/legacy/shared/images/mobile/apple-touch-ipad-retina.png" />
+        <link href="https://plus.google.com/100238062723216084866" rel="publisher"/>
+
+        <title>Greyhound Racing Odds from BetBright - UK and Ireland</title>
+        <meta name="description" content="Bet now on daily Greyhound Racing Coupons featuring BAGs and BEGs from UK and Irish tracks with odds on all the Greyhound Cups and Derbies.">
+        <meta name="keywords" content="greyound racing betting, greyhound racing odds">
+
+        
+        <script type="text/javascript">
+window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o||e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e,n){function r(t){try{c.console&&console.log(t)}catch(e){}}var o,i=t("ee"),a=t(15),c={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(c.console=!0,o.indexOf("dev")!==-1&&(c.dev=!0),o.indexOf("nr_dev")!==-1&&(c.nrDev=!0))}catch(s){}c.nrDev&&i.on("internal-error",function(t){r(t.stack)}),c.dev&&i.on("fn-err",function(t,e,n){r(n.stack)}),c.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(c,function(t,e){return t}).join(", ")))},{}],2:[function(t,e,n){function r(t,e,n,r,o){try{d?d-=1:i("err",[o||new UncaughtException(t,e,n)])}catch(c){try{i("ierr",[c,(new Date).getTime(),!0])}catch(s){}}return"function"==typeof f&&f.apply(this,a(arguments))}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function o(t){i("err",[t,(new Date).getTime()])}var i=t("handle"),a=t(16),c=t("ee"),s=t("loader"),f=window.onerror,u=!1,d=0;s.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(l){"stack"in l&&(t(8),t(7),"addEventListener"in window&&t(5),s.xhrWrappable&&t(9),u=!0)}c.on("fn-start",function(t,e,n){u&&(d+=1)}),c.on("fn-err",function(t,e,n){u&&(this.thrown=!0,o(n))}),c.on("fn-end",function(){u&&!this.thrown&&d>0&&(d-=1)}),c.on("internal-error",function(t){i("ierr",[t,(new Date).getTime(),!0])})},{}],3:[function(t,e,n){t("loader").features.ins=!0},{}],4:[function(t,e,n){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(8),c=t(7),s="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",l="resource",p="-start",h="-end",m="fn"+p,w="fn"+h,v="bstTimer",y="pushState";t("loader").features.stn=!0,t(6);var g=NREUM.o.EV;o.on(m,function(t,e){var n=t[0];n instanceof g&&(this.bstStart=Date.now())}),o.on(w,function(t,e){var n=t[0];n instanceof g&&i("bst",[n,e,this.bstStart,Date.now()])}),a.on(m,function(t,e,n){this.bstStart=Date.now(),this.bstType=n}),a.on(w,function(t,e){i(v,[e,this.bstStart,Date.now(),this.bstType])}),c.on(m,function(){this.bstStart=Date.now()}),c.on(w,function(t,e){i(v,[e,this.bstStart,Date.now(),"requestAnimationFrame"])}),o.on(y+p,function(t){this.time=Date.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+s]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["c"+s]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(l)]),window.performance["webkitC"+s]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],5:[function(t,e,n){function r(t){for(var e=t;e&&!e.hasOwnProperty(u);)e=Object.getPrototypeOf(e);e&&o(e)}function o(t){c.inPlace(t,[u,d],"-",i)}function i(t,e){return t[1]}var a=t("ee").get("events"),c=t(17)(a,!0),s=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";e.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,e){var n=t[1],r=s(n,"nr@wrapped",function(){function t(){if("function"==typeof n.handleEvent)return n.handleEvent.apply(n,arguments)}var e={object:t,"function":n}[typeof n];return e?c(e,"fn-",null,e.name||"anonymous"):n});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],6:[function(t,e,n){var r=t("ee").get("history"),o=t(17)(r);e.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],7:[function(t,e,n){var r=t("ee").get("raf"),o=t(17)(r),i="equestAnimationFrame";e.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],8:[function(t,e,n){function r(t,e,n){t[0]=a(t[0],"fn-",null,n)}function o(t,e,n){this.method=n,this.timerDuration="number"==typeof t[1]?t[1]:0,t[0]=a(t[0],"fn-",this,n)}var i=t("ee").get("timer"),a=t(17)(i),c="setTimeout",s="setInterval",f="clearTimeout",u="-start",d="-";e.exports=i,a.inPlace(window,[c,"setImmediate"],c+d),a.inPlace(window,[s],s+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(s+u,r),i.on(c+u,o)},{}],9:[function(t,e,n){function r(t,e){d.inPlace(e,["onreadystatechange"],"fn-",c)}function o(){var t=this,e=u.context(t);t.readyState>3&&!e.resolved&&(e.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,w,"fn-",c)}function i(t){v.push(t),h&&(g=-g,b.data=g)}function a(){for(var t=0;t<v.length;t++)r([],v[t]);v.length&&(v=[])}function c(t,e){return e}function s(t,e){for(var n in t)e[n]=t[n];return e}t(5);var f=t("ee"),u=f.get("xhr"),d=t(17)(u),l=NREUM.o,p=l.XHR,h=l.MO,m="readystatechange",w=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],v=[];e.exports=u;var y=window.XMLHttpRequest=function(t){var e=new p(t);try{u.emit("new-xhr",[e],e),e.addEventListener(m,o,!1)}catch(n){try{u.emit("internal-error",[n])}catch(r){}}return e};if(s(p,y),y.prototype=p.prototype,d.inPlace(y.prototype,["open","send"],"-xhr-",c),u.on("send-xhr-start",function(t,e){r(t,e),i(e)}),u.on("open-xhr-start",r),h){var g=1,b=document.createTextNode(g);new h(a).observe(b,{characterData:!0})}else f.on("fn-end",function(t){t[0]&&t[0].type===m||a()})},{}],10:[function(t,e,n){function r(t){var e=this.params,n=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!e.aborted){if(n.duration=(new Date).getTime()-this.startTime,4===t.readyState){e.status=t.status;var i=o(t,this.lastSize);if(i&&(n.rxSize=i),this.sameOrigin){var a=t.getResponseHeader("X-NewRelic-App-Data");a&&(e.cat=a.split(", ").pop())}}else e.status=0;n.cbTime=this.cbTime,f.emit("xhr-done",[t],t),c("xhr",[e,n,this.startTime])}}}function o(t,e){var n=t.responseType;if("json"===n&&null!==e)return e;var r="arraybuffer"===n||"blob"===n||"json"===n?t.response:t.responseText;return h(r)}function i(t,e){var n=s(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}var a=t("loader");if(a.xhrWrappable){var c=t("handle"),s=t(11),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,l=t("id"),p=t(14),h=t(13),m=window.XMLHttpRequest;a.features.xhr=!0,t(9),f.on("new-xhr",function(t){var e=this;e.totalCbs=0,e.called=0,e.cbTime=0,e.end=r,e.ended=!1,e.xhrGuids={},e.lastSize=null,p&&(p>34||p<10)||window.opera||t.addEventListener("progress",function(t){e.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,e){var n=this.metrics,r=t[0],o=this;if(n&&r){var i=h(r);i&&(n.txSize=i)}this.startTime=(new Date).getTime(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof e.onload))&&o.end(e)}catch(n){try{f.emit("internal-error",[n])}catch(r){}}};for(var a=0;a<d;a++)e.addEventListener(u[a],this.listener,!1)}),f.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),f.on("xhr-load-added",function(t,e){var n=""+l(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,e){var n=""+l(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],e)}),f.on("removeEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],e)}),f.on("fn-start",function(t,e,n){e instanceof m&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=(new Date).getTime()))}),f.on("fn-end",function(t,e){this.xhrCbStart&&f.emit("xhr-cb-time",[(new Date).getTime()-this.xhrCbStart,this.onload,e],e)})}},{}],11:[function(t,e,n){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!e.protocol||":"===e.protocol||e.protocol===n.protocol,a=e.hostname===document.domain&&e.port===n.port;return r.sameOrigin=i&&(!e.hostname||a),r}},{}],12:[function(t,e,n){function r(){}function o(t,e,n){return function(){return i(t,[(new Date).getTime()].concat(c(arguments)),e?null:this,n),e?void 0:this}}var i=t("handle"),a=t(15),c=t(16),s=t("ee").get("tracer"),f=NREUM;"undefined"==typeof window.newrelic&&(newrelic=f);var u=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],d="api-",l=d+"ixn-";a(u,function(t,e){f[e]=o(d+e,!0,"api")}),f.addPageAction=o(d+"addPageAction",!0),f.setCurrentRouteName=o(d+"routeName",!0),e.exports=newrelic,f.interaction=function(){return(new r).get()};var p=r.prototype={createTracer:function(t,e){var n={},r=this,o="function"==typeof e;return i(l+"tracer",[Date.now(),t,n],r),function(){if(s.emit((o?"":"no-")+"fn-start",[Date.now(),r,o],n),o)try{return e.apply(this,arguments)}finally{s.emit("fn-end",[Date.now()],n)}}}};a("setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,e){p[e]=o(l+e)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,(new Date).getTime()])}},{}],13:[function(t,e,n){e.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(e){return}}}},{}],14:[function(t,e,n){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),e.exports=r},{}],15:[function(t,e,n){function r(t,e){var n=[],r="",i=0;for(r in t)o.call(t,r)&&(n[i]=e(r,t[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],16:[function(t,e,n){function r(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(o<0?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=r},{}],17:[function(t,e,n){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(16),a="nr@original",c=Object.prototype.hasOwnProperty,s=!1;e.exports=function(t,e){function n(t,e,n,o){function nrWrapper(){var r,a,c,s;try{a=this,r=i(arguments),c="function"==typeof n?n(r,a):n||{}}catch(f){l([f,"",[r,a,o],c])}u(e+"start",[r,a,o],c);try{return s=t.apply(a,r)}catch(d){throw u(e+"err",[r,a,d],c),d}finally{u(e+"end",[r,a,s],c)}}return r(t)?t:(e||(e=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,e,o,i){o||(o="");var a,c,s,f="-"===o.charAt(0);for(s=0;s<e.length;s++)c=e[s],a=t[c],r(a)||(t[c]=n(a,f?c+o:o,i,c))}function u(n,r,o){if(!s||e){var i=s;s=!0;try{t.emit(n,r,o)}catch(a){l([a,n,r,o])}s=i}}function d(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){l([r])}for(var o in t)c.call(t,o)&&(e[o]=t[o]);return e}function l(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=o),n.inPlace=f,n.flag=a,n}},{}],ee:[function(t,e,n){function r(){}function o(t){function e(t){return t&&t instanceof r?t:t?s(t,c,i):i()}function n(n,r,o){if(!l.aborted){t&&t(n,r,o);for(var i=e(o),a=h(n),c=a.length,s=0;s<c;s++)a[s].apply(i,r);var f=u[y[n]];return f&&f.push([g,n,r,i]),i}}function p(t,e){v[t]=h(t).concat(e)}function h(t){return v[t]||[]}function m(t){return d[t]=d[t]||o(n)}function w(t,e){f(t,function(t,n){e=e||"feature",y[n]=e,e in u||(u[e]=[])})}var v={},y={},g={on:p,emit:n,get:m,listeners:h,context:e,buffer:w,abort:a,aborted:!1};return g}function i(){return new r}function a(){(u.api||u.feature)&&(l.aborted=!0,u=l.backlog={})}var c="nr@context",s=t("gos"),f=t(15),u={},d={},l=e.exports=o();l.backlog=u},{}],gos:[function(t,e,n){function r(t,e,n){if(o.call(t,e))return t[e];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[e]=r,r}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],handle:[function(t,e,n){function r(t,e,n,r){o.buffer([t],r),o.emit(t,e,n)}var o=t("ee").get("handle");e.exports=r,r.ee=o},{}],id:[function(t,e,n){function r(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");e.exports=r},{}],loader:[function(t,e,n){function r(){if(!b++){var t=g.info=NREUM.info,e=d.getElementsByTagName("script")[0];if(setTimeout(f.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&e))return f.abort();s(v,function(e,n){t[e]||(t[e]=n)}),c("mark",["onload",a()],null,"api");var n=d.createElement("script");n.src="https://"+t.agent,e.parentNode.insertBefore(n,e)}}function o(){"complete"===d.readyState&&i()}function i(){c("mark",["domContent",a()],null,"api")}function a(){return(new Date).getTime()}var c=t("handle"),s=t(15),f=t("ee"),u=window,d=u.document,l="addEventListener",p="attachEvent",h=u.XMLHttpRequest,m=h&&h.prototype;NREUM.o={ST:setTimeout,CT:clearTimeout,XHR:h,REQ:u.Request,EV:u.Event,PR:u.Promise,MO:u.MutationObserver},t(12);var w=""+location,v={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-1016.min.js"},y=h&&m&&m[l]&&!/CriOS/.test(navigator.userAgent),g=e.exports={offset:a(),origin:w,features:{},xhrWrappable:y};d[l]?(d[l]("DOMContentLoaded",i,!1),u[l]("load",r,!1)):(d[p]("onreadystatechange",o),u[p]("onload",r)),c("mark",["firstbyte",a()],null,"api");var b=0},{}]},{},["loader",2,10,4,3]);
+;NREUM.info={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",licenseKey:"a723dde4c3",applicationID:"5289364",sa:1}
+</script>
+                    <script>
+                document.domain = "betbright.com";
+            </script>
+        
+        <link href='//fonts.googleapis.com/css?family=Roboto:400,300,300italic,900,700,500' rel='stylesheet' type='text/css' />
+
+        <link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.betbright.com/greyhound-racing/2018-02-19/international/central-park/central-park-11-01"/>            
+        
+
+	
+        
+        
+        
+        
+        <script>
+        (function() {
+            var postponed = [],
+                ready_to_run = false;
+            window.postpone = function (fn) {
+        	if (ready_to_run) {
+        	    fn();
+        	} else {
+        	    postponed.push(fn);
+        	}
+            };
+            window.run_postponed = function () {
+        	for (var i=0; i<postponed.length; i++) {
+        	    postponed[i]();
+        	}
+        	postponed = [];
+        	ready_to_run = true;
+            };
+        })();
+
+        var base_url="https://www.betbright.com/";
+        var cookieDomain =".betbright.com";
+        var gameflex_host = "gameflex.betbright.com";
+        </script>
+
+            <script src="https://dd6zx4ibq538k.cloudfront.net/smartserve-4729.js" async defer></script>
+
+        <script>
+    window.autostartQuiz = 0;
+</script>
+        <script src="https://www.google.com/recaptcha/api.js?render=explicit" async defer></script>    </head>
+
+        
+        <link rel="stylesheet" type="text/css" href="/client/build/bb-common.css">
+    <link rel="stylesheet" type="text/css" href="/client/build/sportsbook-common.css">
+    <link rel="stylesheet" type="text/css" href="/client/build/desktop-sportsbook.css">
+    <script type="text/javascript" src="/client/build/manifest.js"></script>
+    <script type="text/javascript" src="/client/build/babel-polyfill.js"></script>
+    <script type="text/javascript" src="/client/build/bb-globals.js"></script>
+
+    <body class=" sportsbook-controller"  >
+        <!-- Google Tag Manager -->
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MVVSHW"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MVVSHW');</script>
+<!-- End Google Tag Manager -->
+
+        <script>
+            /******************************************************************
+                Do not remove this script tag from here. It us used by Facebook
+            ******************************************************************/
+        </script>
+        
+                
+        <!-- ClickTale Top part -->
+        <script type="text/javascript">
+            var WRInitTime=(new Date()).getTime();
+        </script>
+        <!-- ClickTale end of Top part -->
+
+   <div class="header" data-role="page"> 
+
+       <div class="wrapper">
+        
+            <a href="https://www.betbright.com/" class="logo"></a>
+
+                    
+                    <div id="login_box">
+                        <div class="credentials">
+                            <input type="submit" value="Login" class="modal-login-btn">
+                            <a href="https://www.betbright.com/register" class="join">Join Now</a>
+                        </div>
+                    </div>
+
+                 
+
+        </div><!-- wrapper_header0 -->
+    </div><!-- header0 -->
+
+    <div id="top_nav">
+        <div class="wrapper">
+            <ul class="brands">
+                <li class="large"><a href="https://www.betbright.com/" class="active" data-interaction="Top Bar Menu;Sports">Sports</a></li><!--
+                --><li class="large"><a href="https://www.betbright.com/inplay"  data-interaction="Top Bar Menu;In-Play">In-Play</a></li><!--
+                --><li class="large"><a href="https://casino.betbright.com/" class=" casino-games-token" data-interaction="Top Bar Menu;Casino">Casino</a></li><!--
+                --><li class="large"><a href="https://games.betbright.com/" class=" casino-games-token" data-interaction="Top Bar Menu;Games">Games</a></li>
+                <li class="large"><a href="https://livecasino.betbright.com/" class=" casino-games-token" data-interaction="Top Bar Menu;Live Casino">Live Casino</a></li><!--
+                --><li class="large"><a href="https://www.betbright.com/bbtv" class="launch-bbtv" data-optitrack="product;bbtv" data-interaction="Top Bar Menu;BBTV"><i class="bbtv-icon"></i>&nbsp;</a></li><!--
+                --><li><a href="https://www.betbright.com/betting-app" target="_blank" data-interaction="Top Bar Menu;Mobile">Mobile</a></li><!--
+                --><li><a href="http://blog.betbright.com" target="_blank" data-interaction="Top Bar Menu;Blog">Blog</a></li>
+            </ul>
+
+            <ul class="customers">
+                <li><a href="https://www.betbright.com/promo_cards" data-interaction="Top Bar Menu;Promotions">Promotions</a></li>
+                                    <li id="betting_units" data-interaction="Top Bar Menu;Betting Units">
+
+                        
+                        <a href="#"><span>Odds</span> Fractions</a>
+
+                        <ul class="dropdown">
+                            <li data-betting-unit="FRACTION"><span>Fractions</span></li>
+                            <li data-betting-unit="DECIMAL"><span>Decimal</span></li>
+                        </ul>
+
+                        <form method="post" id="odds_display">
+                            <input type="hidden" name="odds_display" value="FRACTION" />
+                        </form>
+
+                    </li> 
+
+                
+                <li>
+                    <a href="https://www.betbrighthelp.com/"
+                       class="customer-support" 
+                       data-interaction="Top Bar Menu;Customer Support"
+                       target="_blank"
+                    >
+                        Support
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="content">
+        
+            <div class="wrapper">
+                <div class="content_wrapper_parent  ">
+
+                                        <div id="content_wrapper">
+                        <!-- ***** left_panel ***** -->
+<div id="left_panel">
+    
+
+    <div class="side_menu">
+        <div  class="side_menu_topic"><a href="https://www.betbright.com/">SPORTS</a></div>
+        <ul class="left_nav">
+    
+            <li >
+                <a href="https://www.betbright.com/inplay" class="to_inplay" data-optitrack="Betting Type;live">In-Play</a>
+            </li>
+
+        <li class=""><a href="https://www.betbright.com/horse-racing" class="horse-racing" data-optitrack="Sport;Horse Racing">Horse Racing </a></li><li class=""><a href="https://www.betbright.com/virtual-sports" class="virtual-sports ribbon new" data-optitrack="Sport;Virtual Sports">Virtual Sports </a></li><li class="opened_menu"><a href="https://www.betbright.com/greyhound-racing" class="greyhound-racing" data-optitrack="Sport;Greyhound Racing">Greyhound Racing </a><ul><li class=""><a class="" href="https://www.betbright.com/greyhound-racing/today" data-optitrack="Greyhound Racing;Today's Races">Today's Races</a></li><li class=""><a class="" href="https://www.betbright.com/greyhound-racing/tomorrow" data-optitrack="Greyhound Racing;Tomorrow's Races">Tomorrow's Races</a></ul><!-- branch --></li><!-- sport --><li class=""><a href="https://www.betbright.com/football" class="football" data-optitrack="Sport;Football">Football </a></li><li class=""><a href="https://www.betbright.com/tennis" class="tennis" data-optitrack="Sport;Tennis">Tennis </a></li><li class=""><a href="https://www.betbright.com/american-football" class="american-football" data-optitrack="Sport;American Football">American Football </a></li><li class=""><a href="https://www.betbright.com/basketball" class="basketball" data-optitrack="Sport;Basketball">Basketball </a></li><li class=""><a href="https://www.betbright.com/boxing" class="boxing" data-optitrack="Sport;Boxing">Boxing </a></li><li class=""><a href="https://www.betbright.com/cricket" class="cricket" data-optitrack="Sport;Cricket">Cricket </a></li><li class=""><a href="https://www.betbright.com/darts" class="darts" data-optitrack="Sport;Darts">Darts </a></li><li class=""><a href="https://www.betbright.com/golf" class="golf" data-optitrack="Sport;Golf">Golf </a></li><li class=""><a href="https://www.betbright.com/mma" class="mma" data-optitrack="Sport;MMA/UFC">MMA/UFC </a></li><li class=""><a href="https://www.betbright.com/motor-racing" class="motor-racing" data-optitrack="Sport;Motor Racing">Motor Racing </a></li><li class=""><a href="https://www.betbright.com/rugby-union" class="rugby-union" data-optitrack="Sport;Rugby Union">Rugby Union </a></li><li class=""><a href="https://www.betbright.com/rugby-league" class="rugby-league" data-optitrack="Sport;Rugby League">Rugby League </a></li><li class=""><a href="https://www.betbright.com/snooker" class="snooker" data-optitrack="Sport;Snooker">Snooker </a></li><li class=""><a href="https://www.betbright.com/special" class="special" data-optitrack="Sport;Special">Special </a></li>    
+
+        </ul>
+    </div><!-- side_menu -->
+
+</div><!-- end left_panel -->
+
+<div id="content_container_wrapper">
+	<div id="content_container">
+		
+            <h1 class="main_heading">Greyhound Racing</h1>
+    		<div class="inner_container">
+            
+				<div class="no_events">
+					<p>This race is no longer available for betting.</p><p>Please click on the tab to the left to view our current races.</p>
+				</div>
+
+	 				
+		</div>
+	</div>
+
+</div>
+
+<div id="racecard_popup"><span class="icon"></span><span class="content"></span></div>
+
+
+<script type="text/javascript">
+    postpone(function () {
+        $(document).ready(function() {
+            $('.left_nav_anchor').click(function(e){
+                e.preventDefault();
+                var $this = $(this);
+                var anchor = $this.attr('href');
+                $('html, body').animate({scrollTop:$(anchor).offset().top}, 'slow');
+                return false;
+            });
+        });
+    });
+</script>
+    <div id="right_panel">
+        
+ 
+
+            <div class="RightnavBanners__wrapper">
+                <div class="swiper-slide0" name="3500" >  
+                    <div class="device">
+                        <div class="swiper-container0" id="swiper-container" >
+                            <div class="swiper-wrapper" >  
+                                
+                                            <div class="swiper-slide slide-0" > 
+                                                <div class="rightnav_img" >
+                                                    <a  href="https://www.betbright.com/betting-app" data-interaction="Banner;6050"><img src="https://www.betbright.com/images/specials/banners/6050/appmobilerighthandnavv2.png"></a>                                                </div>
+                                            </div>
+                                            
+                                        
+                                    
+                                                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="RightnavBanners__tscs" data-interaction="Banner;More Details">
+                    <span>TERMS &amp; CONDITIONS</span>
+                </div>
+
+                <div class="RightnavBanners__tscs-details">
+                    <div id="BannerDetails_6050" class="details">
+                        <span>Download the BetBright app for our best experience including Acca Plus One, Genius and much, much more.</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <br clear="all" />
+
+            <div data-speed="3500"  id="recover_speed0" style="display:none;"></div>  
+
+            <script type="text/javascript">
+            postpone(function () {
+                $(document).ready(function(){
+                    var autoplay = $('#recover_speed0').attr('data-speed');
+                    if(autoplay == 0) { autoplay = '4000';}
+                    var mySwiper = $('.swiper-container0').swiper({
+                        loop:false,
+                        speed:200,
+                        autoplay: autoplay,
+                        grabCursor: true,
+                        paginationClickable: true,
+                        mouseTouch: true
+                    });
+
+                    $('.swiper-container').click(function(){ autoplay: false });
+
+                    rightNavBannersTSCS();
+                });
+            });
+            </script> 
+    <div id="casino-nano-games">
+
+	<div class="collapsible content_area">
+		<span id="nano-games-content" class="action">
+			MINIGAMES
+		</span>
+
+		<div id="selection_container_nano-games-content">
+
+			<div class="slider">
+				<div id="casino-game-launching">
+					<div id="game-launcher"></div>
+				</div>
+
+				<div class="cycle-slideshow"
+					data-cycle-pager=".thumbnails ul"
+					data-cycle-pager-template=""
+					data-cycle-fx="scrollHorz"
+					data-cycle-speed=500
+					data-cycle-paused="true"
+					data-cycle-slides="> div" 
+					data-cycle-pause-on-hover="true"
+					data-cycle-update-view=1
+					data-cycle-log="false"
+					data-cycle-auto-height="calc"
+					>
+
+					
+											<div>
+							<div id="nano_game_id_2144" class="game-wrapper">
+								<img src="https://www.betbright.com/upload/casino/games/2144.jpg" alt="Nano Live Roulette" />
+
+								<div class="hover-state">
+									<div class="buttons">
+										
+																																										<a href="https://livecasino.betbright.com/live-game-launch/immersive-roulette" class="button demo-play play-full-size">Play<br/>full size</a>
+																				
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+											<div>
+							<div id="nano_game_id_1265" class="game-wrapper">
+								<img src="https://www.betbright.com/upload/casino/games/1265.png" alt="Mini Blackjack - Standard Limit" />
+
+								<div class="hover-state">
+									<div class="buttons">
+										
+																																										<a href="https://casino.betbright.com/real-game-launch/blackjack-classic-standard-limit-5-1" class="button demo-play play-full-size">Play<br/>full size</a>
+																				
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+											<div>
+							<div id="nano_game_id_1267" class="game-wrapper">
+								<img src="https://www.betbright.com/upload/casino/games/1267.png" alt="Mini Roulette - Standard Limit" />
+
+								<div class="hover-state">
+									<div class="buttons">
+										
+																																										<a href="https://casino.betbright.com/real-game-launch/european-roulette-5-1" class="button demo-play play-full-size">Play<br/>full size</a>
+																				
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					
+				</div>
+
+				<div id="thumbnails-panel">
+					
+					<h3></h3>
+
+					<div class="thumbnails">
+						<ul>
+															<li style="background-image: url(https://www.betbright.com/upload/casino/games/2144.jpg)" data-game-id="2144">
+									<a href="#"></a>
+								</li>
+															<li style="background-image: url(https://www.betbright.com/upload/casino/games/1265.png)" data-game-id="1265">
+									<a href="#"></a>
+								</li>
+															<li style="background-image: url(https://www.betbright.com/upload/casino/games/1267.png)" data-game-id="1267">
+									<a href="#"></a>
+								</li>
+													</ul>
+					</div>
+					
+				</div>
+			</div>
+
+		</div>
+		
+	</div>
+
+	<a href="https://games.betbright.com/" class="view-all-games">
+		<span>View all games</span>
+	</a>
+
+</div>
+
+
+<div id="my-streams">
+    <div class="collapsible content_area">
+        <span id="my-streams-content" class="action heading">
+            <span id="my-streams-content" class="heading_icon type_horse-racing"></span>
+            MY LIVE RACES
+        </span>
+
+        <div id="selection_container_my-streams-content">
+
+            <div class="body">
+                <p class="text"><span class="icon"></span><span>View live UK, Irish, US &amp; Indian racing</span></p>
+                <div id="my-streams-list">
+                    <span class="loading_spinner"></span>
+                </div>
+                <p class="text small-text">Your races will appear 30 mins before start time</p>
+            </div>
+
+        </div>
+    </div>
+        <a href="#" class="launch-bbtv" data-sport-slug="greyhound-racing" data-interaction="My Live Races Widget;BBTV"><span>Launch <i class="bbtv-icon"></i></span></a>
+</div>    </div>
+
+
+
+            </div><!-- end content_wrapper -->
+    </div><!-- end content_wrapper_parent -->
+               </div><!-- end wrapper -->
+           
+</div><!-- end content -->
+<footer class="footer">
+	    <div class="footer_wrapper1">
+
+        
+        <ul class="top">
+            <li><a href="https://www.betbright.com/">SPORTS</a></li><!--
+            --><li><a href="https://www.betbright.com/inplay">IN-PLAY</a></li><!--
+            --><li><a href="https://casino.betbright.com/"  target="_blank">CASINO</a></li><!--
+            --><li><a href="https://games.betbright.com/"  target="_blank">GAMES</a></li><!--
+            --><li><a href="https://livecasino.betbright.com/"  target="_blank">LIVE CASINO</a></li><!--
+            --><li><a href="http://blog.betbright.com" target="_blank">BLOG</a></li>
+
+        </ul>
+
+        <ul class="bottom">
+            <li><a href="https://www.betbrighthelp.com/about-us" target="_blank">About Us</a></li><!--
+            --><li><a href="http://careers.betbright.com" target="_blank">Careers</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/help" target="_blank">Help</a></li><!--
+            --><li><a href="http://www.betbrightaffiliates.com/" target="_blank">BetBright Affiliates</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/responsible-gambling" target="_blank">Responsible Gambling</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/terms-and-conditions" target="_blank">Terms &amp; Conditions</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/privacy-policy" target="_blank">Privacy Policy</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/" target="_blank">Contact Us</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/cookie-policy" target="_blank">Cookie Policy</a></li><!--
+            --><li><a href="https://www.betbrighthelp.com/betting-rules" target="_blank">Betting Rules</a></li><!--
+            --><li><a href="https://www.betbright.com/lp/bonus/tsandcs" target="_blank">Casino Welcome Bonus T&amp;Cs</a></li>
+        </ul>
+
+        <hr class="hrline"> 
+        <img src="https://www.betbright.com/client/src/legacy/shared/images/footer_logos.png" class="footer_logos" /> 
+        <hr class="hrline">
+
+    </div><!-- end footer_wrapper1 -->
+    <br>
+       
+    
+        <div class="footer_wrapper2 center">
+        <div class="footer_content">
+            <b >BETBRIGHT: </b> BetBright brings the excitement of betting to you through our unique sports betting service. If you like <a href="https://www.betbright.com/">Sportsbook</a> betting, BetBright offers fantastic promotions and a high quality betting experience. You can get a piece of the action by simply <a href="https://www.betbright.com/register">registering today</a> and experiencing it for yourself.
+        </div>
+        
+        <div class="footer_content footer_content_last">
+            <strong>SPORTS BETTING:</strong> BetBright provides betting odds for hundreds of events throughout the <a title="live sporting calendar" href="https://www.betbright.com/inplay/upcoming">live sporting calendar</a>. We offer <a title="football betting" href="https://www.betbright.com/football">football betting</a> on all the major tournaments, UK and Irish <a title="horse racing odds" href="https://www.betbright.com/horse-racing">horse racing odds</a>, a broad range of <a title="golf bets" href="https://www.betbright.com/golf">golf bets</a> and all the major <a title="tennis" href="https://www.betbright.com/tennis">tennis odds</a> among our growing range of services! For new customers we've generous, risk-free, free bet promotions and other great specials that bring sports betting to a whole new level.
+
+        </div>
+        <br><br><br>
+    
+        <div class="footer_content2">
+            To opt out of marketing messages text noinfo to 64455.<br><br>
+        </div>
+            <br>
+        </div>
+                <div class="footer_wrapper3 center"> 
+            <span class="line_height_16"><br>&copy; 2018 
+            Dedsert (Ireland) Limited. All rights reserved.<br /> 
+            Dedsert (Ireland) Ltd is licensed and regulated by the UK Gambling
+            Commission for the provision of facilities for gambling to customers
+            in the UK 
+            (<a href="https://secure.gamblingcommission.gov.uk/gccustomweb/PublicRegister/PRSearch.aspx?ExternalAccountId=36719" target="_blank">Licence Details</a>).
+            <br />
+            Dedsert (Ireland) Ltd also operates under a bookmaker’s licence issued in the Republic of Ireland.
+
+            <br></span>
+            <span class="line_height_16">
+                Gambling involves an element of risk.
+                <a href="https://www.betbrighthelp.com/responsible-gambling" target="_blank">Bet Responsibly</a>.
+                To opt out of marketing messages text noinfo to 64455.<br>
+                Dedsert (Ireland) Limited, 2nd Floor Heather House, Heather
+                Road, Sandyford Industrial Estate, Dublin 18<br /> 
+            </span>
+        </div> </footer>
+<script type="text/javascript">
+    window.debug_mode = false;
+    var user_game_timeout = 0;
+    var betslip_logged_in = 0;
+    var qubitSettings = {
+        debug: false    };
+</script>
+
+<script type="text/javascript">
+    var wsSettings = {
+        inplay: {
+            host_name: "wss://wss.betbright.com",
+            host_port: "443"
+        },
+        preplay: {
+            host_name: "wss://wss-pre.betbright.com",
+            host_port: "443"
+        },
+        cashout: {
+            host_name: "wss://wss-cashout.betbright.com",
+            host_port: "443",
+            reset_connection_attempts: 0,
+            reconnection_interval_min: 3000,
+            reconnection_interval_max: 15000        }
+    }
+</script>
+<script>
+    window.autostartDeposit = 0;
+</script>
+<script> var js_settings = {}; js_settings.customersCurrencyIso = 'GBP'; js_settings.max_bet_slip_selections = '25';</script>
+
+    <script>var facebook_appid = 731007370364135;</script>
+    <script type="text/javascript">
+        var min_stake = 0;
+        var max_stake = 1000;
+
+        var eh_host_name = "wss://wss-pre.betbright.com";
+        var eh_host_port = "443";
+    </script>
+
+    <script type="text/javascript" src="/client/build/bb-common.js"></script>
+    <script type="text/javascript" src="/client/build/sportsbook-common.js"></script>
+    <script type="text/javascript" src="/client/build/desktop-sportsbook.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("a.fancybox").fancybox({
+                //'transitionIn'	:	'elastic',
+                //'transitionOut'	:	'elastic',
+                //'speedIn'		:	600, 
+                //'speedOut'		:	200, 
+                //'overlayShow'	:	false
+                'type' : 'iframe',
+                'overlayColor' : '#000'
+            });
+        });
+    </script>
+
+        <script type="text/javascript">
+       var free_bets = "undefined";
+       var multibet_structures = {"1":{"structure":[{"id":1,"amount":1}],"unit_size":"1"},"2":{"structure":[{"id":2,"amount":1}],"unit_size":"2"},"3":{"structure":[{"id":3,"amount":1}],"unit_size":"3"},"4":{"structure":[{"id":4,"amount":1}],"unit_size":"4"},"5":{"structure":[{"id":5,"amount":1}],"unit_size":"5"},"6":{"structure":[{"id":6,"amount":1}],"unit_size":"6"},"7":{"structure":[{"id":7,"amount":1}],"unit_size":"7"},"8":{"structure":[{"id":8,"amount":1}],"unit_size":"8"},"9":{"structure":[{"id":9,"amount":1}],"unit_size":"9"},"10":{"structure":[{"id":10,"amount":1}],"unit_size":"10"},"11":{"structure":[{"id":11,"amount":1}],"unit_size":"11"},"12":{"structure":[{"id":12,"amount":1}],"unit_size":"12"},"13":{"structure":[{"id":13,"amount":1}],"unit_size":"13"},"14":{"structure":[{"id":14,"amount":1}],"unit_size":"14"},"15":{"structure":[{"id":15,"amount":1}],"unit_size":"15"},"16":{"structure":[{"id":16,"amount":1}],"unit_size":"16"},"17":{"structure":[{"id":17,"amount":1}],"unit_size":"17"},"18":{"structure":[{"id":18,"amount":1}],"unit_size":"18"},"19":{"structure":[{"id":19,"amount":1}],"unit_size":"19"},"20":{"structure":[{"id":20,"amount":1}],"unit_size":"20"},"21":{"structure":[{"id":2,"amount":3},{"id":3,"amount":1}],"unit_size":null},"22":{"structure":[{"id":1,"amount":4},{"id":2,"amount":6},{"id":3,"amount":4},{"id":4,"amount":1}],"unit_size":null},"23":{"structure":[{"id":1,"amount":5},{"id":2,"amount":10},{"id":3,"amount":10},{"id":4,"amount":5},{"id":5,"amount":1}],"unit_size":null},"24":{"structure":[{"id":1,"amount":6},{"id":2,"amount":15},{"id":3,"amount":20},{"id":4,"amount":15},{"id":5,"amount":6},{"id":6,"amount":1}],"unit_size":null},"25":{"structure":[{"id":2,"amount":6},{"id":3,"amount":4},{"id":4,"amount":1}],"unit_size":null},"26":{"structure":[{"id":0,"amount":1}],"unit_size":null},"27":{"structure":[{"id":2,"amount":10},{"id":3,"amount":10},{"id":4,"amount":5},{"id":5,"amount":1}],"unit_size":null},"28":{"structure":[{"id":2,"amount":15},{"id":3,"amount":20},{"id":4,"amount":15},{"id":5,"amount":6},{"id":6,"amount":1}],"unit_size":null},"29":{"structure":[{"id":2,"amount":21},{"id":3,"amount":35},{"id":4,"amount":35},{"id":5,"amount":21},{"id":6,"amount":7},{"id":7,"amount":1}],"unit_size":null},"30":{"structure":[{"id":2,"amount":28},{"id":3,"amount":56},{"id":4,"amount":70},{"id":5,"amount":56},{"id":6,"amount":28},{"id":7,"amount":8},{"id":8,"amount":1}],"unit_size":null}};
+    </script>
+
+
+<script type="text/javascript">
+        
+        setBbClientState('product:app_id', '1');
+    setBbClientState('customer:is_logged_in', 0);
+    setBbClientState('customer:currency:symbol', '£');
+    
+    /*SET PLATFORM */
+    setBbClientState('device:platform', '1');
+
+    /*SET SITE URL*/
+    setBbClientState('site:url', 'https://www.betbright.com/');
+
+    
+    /*SET ENVIRONMENT*/
+    setBbClientState('site:environment', 'production');
+
+     /*SET LAST RELOAD TIME*/
+    setBbClientState('site:last-reload-time', '2018-02-19 17:20:51');
+    
+    /*SET BETTING UNIT*/
+    setBbClientState('customer:betting-unit', 'FRACTION');
+    
+            setBbClientState('auth:logged_in', false);
+        setBbClientState('customer:country', '');
+    setBbClientState('customer:fast_stake', '');
+    
+    /**
+     * SET IS REGISTRATION MODAL ALLOWED
+     */
+    setBbClientState(
+        'registration:is-reg-modal-allowed',
+        !!0    );
+
+    setBbClientState(
+        'balance:refreshCoolingOffPeriod', 
+        15000    );
+
+    setBbClientState(
+        'recommend:selections:delay', 
+        43200    );
+
+    setBbClientState(
+        'recommend:global:selection:status', 
+        1    );
+
+    setBbClientState(
+        'recommend:betplacement:selection:status', 
+        1    );
+
+    setBbClientState(
+        'recommend:betreceipt:selection:status', 
+        1    );
+
+    setBbClientState(
+        'recommend:numberOfBets:selection:status', 
+        1    );
+
+    setBbClientState(
+        'recommend:numberOfbBetsThreshold:selection', 
+        10    );
+
+    
+        setBbClientState('state:init', true);
+    </script>
+<script>
+    dataLayer.push({
+        'platform': 'Desktop',
+    });
+    </script>
+<script type="text/javascript">
+    (function initializeQubitTracking() {
+        if (typeof qubitInterface !== 'undefined') {
+                                    //egView should be the first event to be sent to qubit
+            qubitInterface.pageView('production', '');
+
+            //then we can send egUser event
+            var egUserDataLayer = {};
+            
+            var domElements = '.bb-casino-sub-links .mobile-left-menu__link, .bb-casino-game-link, .casino-container .more-info-cell, .inplay .navigation-tabs .item, #back-home, #game-container .exit-game, .search-container .search-results, #recent-search-hint-box li, #play-for-real-button';
+
+            $(document).on('click', domElements, function qubitTrackCasinoCategoryChange() {
+                // Delay to allow for dynamic change of href by casino app
+                setTimeout(function qubitTrackCasinoCategoryChangeDelayed() {
+                    qubitInterface.pageView('production', '');
+                    qubitInterface.onUserPageLoad(null);
+                }, 100);
+            });
+
+            // An interaction is defined as Type:Name where type is the component (ie: header) and name is the element clicked (ie: account dropdown)
+            $(document).on('click taphold', '[data-interaction]', function qubitTrackInteraction() {
+                var interaction = $(this).data('interaction').split(';');
+                qubitInterface.trackInteraction(interaction[0], interaction[1]);
+            });
+
+            $(document).on('onheadermenuclick', function qubitTrackInteractionMobileMenu() {
+                qubitInterface.trackInteraction('Header', 'Menu');
+            });
+
+            $(document).on('change', '#settingsPopUpId .select-dropdown', function qubitTrackInteractionRecallOptions() {
+                var option = $(this).find(':selected');
+                var interaction = option.data('interaction').split(';');
+                qubitInterface.trackInteraction(interaction[0], interaction[1].replace('{option}', option.html()));
+            });
+
+            $(document).on('cycle-after', '#freelegInfoModal .cycle-slideshow', function qubitTrackInteractionTutorials(event, optionHash) {
+                qubitInterface.trackInteraction('Acca +1', 'Tutorial page ' + (parseInt(optionHash.nextSlide,10) + 1));
+            });
+
+            $(document).on('cycle-after', '#recallInfoModal .cycle-slideshow', function qubitTrackInteractionTutorials(event, optionHash) {
+                qubitInterface.trackInteraction('Recall', 'Tutorial page ' + (parseInt(optionHash.nextSlide,10) + 1));
+            });
+
+            var $lhasaWidget = $('.ScheduleWidgetLhasa');
+            if ($lhasaWidget.length) {
+                var sportSlug = $lhasaWidget.data('sport-slug');
+                $lhasaWidget.on(
+                    'lhasaWidget:onCategoryCollapse',
+                    '.ScheduleWidgetLhasa__Category',
+                    function qubitTrackInteractionRaceCountryCollapse (e, isCollapsed) {
+                        var interactionNamePrefix = 'Country';
+                        var interactionNameSuffix = 'Expand';
+
+                        if (isCollapsed) {
+                            interactionNameSuffix = 'Collapse';
+                        }
+
+                        qubitInterface.trackInteraction(
+                            sportSlug + ' Meetings Widget',
+                            interactionNamePrefix + ' ' + interactionNameSuffix
+                        );
+                    }
+                );
+            }
+
+            $(document).on('bbModal:opened', '#betfinder', function qubitTrackBetfinder() {
+                qubitInterface.trackInteraction('Genius', 'Open');
+            });
+
+            // Deposit Modal
+            $(document).on('bbModal:opened', '#deposit-modal', function qubitTrackDepositOpen () {
+                qubitInterface.virtualPageView('Deposit', '', 'production', '');
+            });
+
+            $(document).on('deposit:showSetDepositLimits', function qubitTrackDepositLimitsOpen() {
+                qubitInterface.virtualPageView('Deposit_Limit', '', 'production', '');
+            });
+
+            $(document).on('deposit:onPaymentMethodSelected', function depositOnPaymentMethodSelected(e, data) {
+                qubitInterface.virtualPageView('Banking', data.paymentMethod.charAt(0).toUpperCase() + data.paymentMethod.slice(1), 'production', '');
+            });
+
+            $(document).on('deposit:onSuccess', function qubitTrackDepositLimitsOpen() {
+                qubitInterface.virtualPageView('Banking', 'Deposit Success', 'production', '');
+            });
+
+            $(document).on('deposit:onFail', function qubitTrackDepositLimitsOpen() {
+                qubitInterface.virtualPageView('Banking', 'Deposit Fail', 'production', '');
+            });
+
+            $(document).on('deposit:onSubmit', function qubitTrackDeposit(e, data) {
+                qubitInterface.onPayment(null, 'deposit', data.amount, data.paymentMethod);
+            });
+
+            $(document).on('withdraw:onSubmit', function qubitTrackWithdraw(e, data) {
+                qubitInterface.onPayment(null, 'withdraw', data.amount);
+            });
+
+            $(document).on('withdraw:onCancel', function qubitTrackCancelWithdraw(e, data) {
+                qubitInterface.onPayment(null, 'cancel withdraw', data.amount, data.method);
+            });
+        }
+    })();
+</script>
+
+
+    <div id="betslip-desktop__container">
+        <div data-bb-modal-toggle="betslip" data-bb-modal-shown='false' data-bb-modal-mode='slideIn' id='betslip-desktop__launchButton'>
+            <span id="caret"></span>
+            <p class="vertical-text">BETSLIP</p>
+            <label id='betslip-desktop__counter'></label>
+        </div>
+        
+<div id="betslip" data-bb-modal="true"      data-inplay-ws="%7B%22hostName%22%3A%22wss%3A%5C%2F%5C%2Fwss.betbright.com%22%2C%22hostPort%22%3A443%7D" data-freeleg="%7B%22bonus_limit%22%3A50%2C%22is_eligible%22%3Afalse%7D">
+    <div class="bb-modal-title betslip-title">
+        <a href="#" data-ajax="false" id="betslip-clear" class="betslip-title__clear">CLEAR</a>
+      
+            <span id="betslip-balance" class="betslip-title__balance  betslip-title__balance--hidden ">
+                <span class="betslip-title__cash js-wallet-total">
+                    &pound;0.00                </span>
+                <span id="betslip-title-freebets" class="betslip-title__freebets betslip-title__freebets--hidden">Free Bets: 
+                    <span class="js-wallet-freebets">
+                        &pound;                    </span>
+                </span>
+            </span>
+        <a href="#" id="betslip-close" data-ajax="false" data-bb-modal-close class="bb-modal-close"></a>
+    </div>
+
+    <div data-bb-tabs class="betslipTabbed">
+        <ul class='bb_tabs'>
+            <li class='bb_tab bb_tab_active' data-target-id='#target_betslip' data-interaction="betslip;BetSlip">
+                <span id="betslip-counter" class="bb_tab__counter">
+                    0                </span>
+                <span>MY BETSLIP</span>
+            </li>
+            <li id="bb-tab-my-bets" data-gtm="bb-tab-my-bets" class='bb_tab' data-target-id='#target_openbets'>
+                <span id="mybets-counter" class="bb_tab__counter">
+                    0                </span>
+                <span>MY BETS</span>
+            </li>
+        </ul>
+        <div id='target_betslip' class='bb_tabs_content bb_tab_active'>
+
+            <div class="bb-modal-content">
+                <div id="betslip-placement" class="bb-modal-page bb-modal-current-page" data-page-id="0">
+                    <li id="fancy-keyboard" class="betslip-fancy-keyboard"><div class="betslip-fancy-keyboard__row"><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="1"><div class="h-button-style">1</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="2"><div class="h-button-style">2</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="3"><div class="h-button-style">3</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="4"><div class="h-button-style">4</div></div><div class="betslip-fancy-keyboard__button--quickamount betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="qa-10"><div class="h-button-style">£10</div></div><div class="betslip-fancy-keyboard__button--quickamount betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="qa-50"><div class="h-button-style">£50</div></div></div><div class="betslip-fancy-keyboard__row"><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="5"><div class="h-button-style">5</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="6"><div class="h-button-style">6</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="7"><div class="h-button-style">7</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="8"><div class="h-button-style">8</div></div><div class="betslip-fancy-keyboard__button--quickamount betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="qa-25"><div class="h-button-style">£25</div></div><div class="betslip-fancy-keyboard__button--quickamount betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="qa-100"><div class="h-button-style">£100</div></div></div><div class="betslip-fancy-keyboard__row"><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="9"><div class="h-button-style">9</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="0"><div class="h-button-style">0</div></div><div class=" betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="sign-dot"><div class="h-button-style">.</div></div><div class="betslip-fancy-keyboard__button--delete betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="action-back"><div class="h-button-style"></div></div><div class="betslip-fancy-keyboard__button--done betslip-fancy-keyboard__button js-keyboard-button" data-btnValue="action-done"><div class="h-button-style">DONE</div></div></div><div id="betslip-fancy-keyboard__freebet" class="betslip-fancy-keyboard__row"><div id="freebet-container"><div class="h-button-style"><label class="betslip-fancy-keyboard__freebet-label">use a free bet</label></div></div></div></li>                    <ul id="betslip-selections-list">
+    
+</ul>
+<p id="betslip-selections-warnings" class="hide"></p>
+                    <div id="betslip-multiples" class="betslip-multiples__panel betslip-multiples__panel--hidden">
+    <h2 class="betslip-multiples__header">MULTIPLES / ACCUMULATORS <span id="betslip-multiples-counter" class="betslip-multiples__counter" data-multiples-counter="0">0</span></h2>
+    <ul id="betslip-multiples-list" class="betslip-multiples__list">
+            </ul>
+</div>
+                    <div id='bb-betslip-placement-recommendations-container'></div>
+                    <div class="betslip-footer">
+                        <span class="betslip-footer__total-stake">Total Stake: &pound;<span id="betslip-total-stake">0</span></span>
+                        <span class="betslip-footer__potential-returns">Potential Returns: <span id="betslip-potential-returns">0</span></span>
+
+                        <div class="betslip-footer__logged-in ">
+                            <a href="#" id="betslip-get-on" data-bb-modal-page='1' class="get-on-icon betslip_get-on-action-button betslip-footer__get-on"></a>
+                            <span id="betslip-need-stake-to-get-on" class="betslip-footer__need-stake">You need to enter a stake to Get On!</span>
+                        </div>
+
+
+                        <div class="betslip-footer__logged-out betslip-footer__logged-out--visible">
+                            <a href="#" id="betslip-get-on__open-login-popup" class="get-on-icon betslip_get-on-action-button betslip-dialog__get-on betslip-dialog__login-get-on"></a>
+                        </div>
+
+                        <span id="betslip-odds-have-changed" class="betslip-footer__odds-have-changed betslip-footer__odds-have-changed--hidden">(Odds have changed on <span>0 selections</span>)</span>
+                    </div>
+                </div>
+                <div id="betslip-receipt" class="bb-modal-page" data-page-id="1">
+                    <div id="betslip-receipt__content">
+                    </div>
+                    <div class="betslip-receipt-result">
+                        <span id='betslip-receipt-result__msg' class='betslip-receipt-result__msg' data-role="betreceipt-confirmation"></span>
+                        <p class="betslip-receipt-result__total-stake">Total stake: &pound;<span id="betslip-receipt__total-stake"></span></p>
+                        <p class="betslip-receipt-result__potential-return">Potential Returns: <span id="betslip-receipt__potential-return"></span></p>
+                    </div>
+                    <div id='bb-betslip-receipt-recommendations-container'></div>
+                    <div class="betslip-footer">
+                        <div class="betslip-footer__buttons">
+                            <a href="#" data-ajax="false" data-bb-modal-changePage='0' id="betslip-receipt-retain" data-selections-to-retain="" class="betslip-footer__button betslip-footer__button--retain" data-role="betreceipt-retain">retain selections</a>
+                            <a href="#" data-ajax="false" data-bb-modal-changePage='0' id="betslip-receipt-continue" class="betslip-footer__button betslip-footer__button--continue" data-role="betreceipt-continue">continue</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id='target_openbets' class='bb_tabs_content'>
+        </div>
+    </div>
+</div>
+    </div>
+
+
+<script type="text/javascript">
+        if (typeof jwplayer !== "undefined") {
+            jwplayer.key = "izA2wRvtU+Fm5K8pPgPX2Tj2cIBdSLF9BY4NQH7Q2SY=";
+        }
+    </script>
+<script>
+run_postponed();
+</script>
+
+<div class="modal-login" id="modal-login" data-bb-modal="true" data-force-next-overlay="true">
+    <div class="bb-modal-page" data-page-id="loginPage">
+        <div class="bb-modal-title">
+            <span>Login</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <form id="modal-login-form" action="/"  data-email="" method="post">
+            <div class="modal-login__info-box"></div>
+            <div class="modal-login__input-wrapper">
+                <input autocapitalize="off" spellcheck="false" type="text" class="textfield" name="login-email" id="modal-login__email-field" placeholder="Email" required tabindex="1" data-autofocus="true">
+            </div>
+            <div class="modal-login__input-wrapper">
+                <input autocapitalize="off" spellcheck="false" type="password" class="textfield" name="login-password" id="modal-login__password-field" placeholder="Password" required tabindex="2" />
+            </div>
+                            <div class="modal-login-remember-me">
+                    <label class="checkbox-blue">
+                        <input type="checkbox" id="modal-login__rememberme-field" data-role="none" checked>
+                        <span></span>
+                        <span class="label-text">Remember Me</span>
+                    </label>
+                </div>
+            
+            <div id="modal-login__recaptcha" class="g-recaptcha" data-sitekey="6LcCXA8UAAAAADTSlEub6sk1YFfLNZA-5qo2ZzCq" ></div>
+            <div class="modal-login-footer">
+                <button type="submit" class="modal-login-footer__login"></button>
+                <a href="#" class="modal-login-footer__login-btn" data-bb-modal-page="1"></a>
+                <span data-bb-modal-changePage="forgotPasswordPage" class="modal-login-footer__forgot">Forgot Password?</span>
+                <a href="https://www.betbright.com/register" class="modal-login-footer__join">Join now!</a>
+            </div>
+        </form>
+    </div>
+    <div class="bb-modal-page" data-page-id="pinLoginPage">
+        <div class="bb-modal-title">
+            <span>Pin Login</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <form id="modal-pin-login-form" class="modal-login__pin-form" action="/">
+            <div class="modal-login__info-box"></div>
+            <div class="modal-login__info pin-login__info">
+                Enter your four-digit PIN number:
+            </div>
+            <div class="modal-login__input-wrapper pin-input-wrapper">
+                <div class="modal-login__show_padlock"></div>
+                <input class="pin-input asterisk-mask" id="pin1" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="1" data-autofocus="true"/>
+                <input class="pin-input asterisk-mask" id="pin2" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="2" />
+                <input class="pin-input asterisk-mask" id="pin3" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="3" />
+                <input class="pin-input asterisk-mask" id="pin4" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="4" />
+                <img class="modal-login__show_password pin-login__show_password show_blue" src="/client/src/legacy/shared/images/mobile/icons_png/show_blue.png" />
+                <img class="modal-login__show_password pin-login__show_password hide_grey" src="/client/src/legacy/shared/images/mobile/icons_png/hide_grey.png" hidden />
+            </div>
+            <div class="modal-login__current-account">
+                Account: <strong></strong>
+            </div>
+            <div class="modal-login-footer">
+                <button type="submit" class="modal-login-footer__login" tabindex=5></button>
+                <span data-bb-modal-changePage="loginPage" class="modal-login-footer__change_account">Login with Password or Change Account</span>
+            </div>
+        </form>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="forgotPasswordPage">
+        <div class="bb-modal-title">
+            <span data-bb-modal-changePage="loginPage" class="modal-login__back"></span>
+            <span>forgot password</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <form id="modal-forgot-password-form" action="/">
+            <div>
+                <div class="modal-login__info-box"></div>
+                <div class="modal-login__info">
+                    Please enter your email address to get a password reset link:
+                </div>
+                <div class="modal-login__input-wrapper">
+                    <input autocapitalize="off" spellcheck="false" type="text" class="textfield" name="email" id="forgot-password__email-field" placeholder="Email" required tabindex="1" data-autofocus="true" />
+                </div>
+                <div class="forgot-password__join">
+                    Not a member?
+                    <a href="https://www.betbright.com/register" class="link">Join now!</a>
+                </div>
+            </div>
+            <div class="modal-login-footer forgot-password__footer">
+                <button class="modal-login__submit-btn" type="submit" data-role="none">SUBMIT</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="resetEmailSent">
+        <div class="bb-modal-title">
+            <span>Reset email sent</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <div class="modal-login__info">
+            An email containing the password reset link
+            has been sent to your address. Please check your
+            mailbox and follow the instructions in the email
+            to reset your password.
+        </div>
+        <div class="modal-login-footer reset-ok__footer">
+                <div data-bb-modal-close="" class="modal-login__submit-btn modal-login__ok-btn" data-role="none">
+                OK
+            </div>
+            <div class="reset-ok__resend-text">
+                Didn't get the email?
+                <span data-bb-modal-changePage="forgotPasswordPage" class="reset-ok__back" id="resend-forgot-password">Resend it!</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="suggestPinPage">
+        <div class="bb-modal-title">
+            <span class="title-message"></span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <div class="modal-login__info">
+        </div>
+        <button class="modal-login__submit-btn quick-login-new__submit-btn" type="submit" data-role="none">
+            <div class="stars">****</div>
+            <div class="enable">Enable PIN Login</div>
+        </button>
+        <div>
+            <a href="#" class="quick-login-new__no-thanks" data-bb-modal-close="">
+                No, thanks
+            </a>
+        </div>
+        <div class="modal-login-footer quick-login-new__footer">
+            <div class="reset-ok__resend-text">
+            </div>
+        </div>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="enableTouchId">
+        <div class="bb-modal-title">
+            <span>Quick Login</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <div class="modal-login__info">
+            Login faster with Touch ID
+        </div>
+            <button class="modal-login__submit-btn quick-login-new__submit-btn quick-login-new__fingerprint-btn" type="submit" data-role="none">
+                <div class="enable">Enable Touch ID</div>
+            </button>
+        <div>
+            <a href="#" class="quick-login-new__no-thanks" data-bb-modal-close="">
+                No, thanks
+            </a>
+        </div>
+        <div class="modal-login-footer quick-login-new__footer">
+            <div class="reset-ok__resend-text">
+                You can set this up at any time in Account settings
+            </div>
+        </div>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="createPinPage">
+        <div class="bb-modal-title">
+            <span data-bb-modal-changePage="suggestPinPage" class="modal-login__back"></span>
+            <span>Set PIN</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <form id="modal-create-pin-form" class="modal-login__pin-form" action="/">
+            <div class="modal-login__info-box"></div>
+            <div class="modal-login__info pin-login__info">
+                Create your four-digit PIN number:
+            </div>
+            <div class="modal-login__input-wrapper pin-input-wrapper">
+                <div class="modal-login__show_padlock"></div>
+                <input class="pin-input asterisk-mask" id="pin1" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="1" data-autofocus="true"/>
+                <input class="pin-input asterisk-mask" id="pin2" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="2" />
+                <input class="pin-input asterisk-mask" id="pin3" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="3" />
+                <input class="pin-input asterisk-mask" id="pin4" required autocapitalize="off" spellcheck="false" type="number" min="0" max="9" tabindex="4" />
+                <img class="modal-login__show_password pin-login__show_password show_blue" src="/client/src/legacy/shared/images/mobile/icons_png/show_blue.png" />
+                <img class="modal-login__show_password pin-login__show_password hide_grey" src="/client/src/legacy/shared/images/mobile/icons_png/hide_grey.png" hidden />
+            </div>
+            <div class="modal-login-footer pin-login__footer">
+                <button class="modal-login__submit-btn" type="submit" data-role="none">Next</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="pinConfirmationPage">
+        <div class="bb-modal-title">
+            <span class="title-message"></span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <div class="success-page__content">
+            <div class="modal-login__info-box success">
+                Done!
+            </div>
+            <div class="modal-login__info success-page__info">
+            </div>
+        </div>
+        <div class="modal-login-footer success-page__footer">
+            <div data-bb-modal-close="" class="get-on-icon success-page__get-on">
+          </div>
+        </div>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="touchIdConfirmationPage">
+        <div class="bb-modal-title">
+            TouchID Enabled
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <div class="success-page__content">
+            <div class="modal-login__info-box success">
+                Done!
+            </div>
+            <div class="modal-login__info success-page__info">
+                TouchID is now enabled for this device.
+            </div>
+        </div>
+        <div class="modal-login-footer success-page__footer">
+            <div data-bb-modal-close="" class="get-on-icon success-page__get-on">
+          </div>
+        </div>
+    </div>
+
+    <div class="bb-modal-page" data-page-id="maxFailedAttempts">
+        <div class="bb-modal-title">
+            <span data-bb-modal-changePage="loginPage" class="modal-login__back"></span>
+            <span>Login unavailable</span>
+            <a href="#" data-ajax="false" data-bb-modal-close="" class="bb-modal-close"></a>
+        </div>
+        <div class="modal-login__info-box max-failed-attempts__info-box error">
+            You have made 5 incorrect login attempts.
+        </div>
+        <div class="max-failed-attempts__info">
+            For security reasons, no further login attempts can be made to your account for the next <span id="max-failed-attempts__time" class="max-failed-attempts__time"></span>.
+        </div>
+        <div class="modal-login-footer max-failed-attempts__footer">
+            <div data-bb-modal-close="" class="modal-login__submit-btn modal-login__ok-btn" data-role="none">
+                OK
+            </div>
+            <span data-bb-modal-changePage="forgotPasswordPage" class="modal-login-footer__forgot">Forgot Password?</span>
+            <a href="https://www.betbrighthelp.com/" target="_blank" class="modal-login-footer__join">Customer Support</a>
+      </div>
+   </div>
+          <input id="modal-login__wookie" type="hidden" name="wookie" value="pG7SsvToMe+L/UWaY/IWk71mDYqiLYESm2MLpHhPw+w=" />
+   </div>
+<script type="text/javascript">window.NREUM||(NREUM={});NREUM.info={"beacon":"bam.nr-data.net","licenseKey":"a723dde4c3","applicationID":"5289364","transactionName":"YVcEN0dZCEEABhFeC1gdMxFcFw9cBQAdGRReQg==","queueTime":0,"applicationTime":102,"atts":"TRAHQQ9DG08=","errorBeacon":"bam.nr-data.net","agent":""}</script></body>
+</html>

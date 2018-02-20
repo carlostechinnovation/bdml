@@ -7,7 +7,7 @@ import java.util.List;
 
 import utilidades.Constantes;
 
-public class SportiumCarrera implements Serializable {
+public class CarreraSemillaSportium implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,7 +19,7 @@ public class SportiumCarrera implements Serializable {
 	public Integer hora;// hhmm
 	public List<String> galgosNombres = new ArrayList<String>();// ordenados segun el trap
 
-	public SportiumCarrera(String urlDetalle, String estadio, Long dia, Integer hora, List<String> galgosNombres) {
+	public CarreraSemillaSportium(String urlDetalle, String estadio, Long dia, Integer hora, List<String> galgosNombres) {
 		super();
 		this.urlDetalle = urlDetalle;
 		this.estadio = estadio;

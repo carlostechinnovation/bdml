@@ -12,11 +12,12 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import casa.galgos.GalgosManager;
+import casa.galgos.betbright.BetbrightManager;
 import casa.galgos.gbgb.GalgoAgregados;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
-import casa.galgos.sportium.SportiumCarreraGalgo;
+import casa.galgos.sportium.CarreraGalgoSemillaSportium;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -185,7 +186,8 @@ public class Mod002Parser implements Serializable {
 			out += (new GalgoAgregados(null, null, null, null, null, null, null, null, null, null, null, null, null))
 					.generarSqlCreateTable("");
 
-			out += (new SportiumCarreraGalgo(null, null, null, null)).generarSqlCreateTable();
+			out += (new CarreraGalgoSemillaSportium(null, null, null, null)).generarSqlCreateTable("");
+			out += (new CarreraGalgoSemillaSportium(null, null, null, null)).generarSqlCreateTable("_betbright");
 
 			try {
 
@@ -197,11 +199,22 @@ public class Mod002Parser implements Serializable {
 				e.printStackTrace();
 			}
 
-		} else if (param1 != null && param1.equals("GALGOS_02") && param2 != null && !param2.isEmpty() && param3 != null
-				&& !param3.isEmpty()) {
+		} else if (param1 != null && param1.equals("GALGOS_02_SPORTIUM") && param2 != null && !param2.isEmpty()
+				&& param3 != null && !param3.isEmpty()) {
 
 			try {
-				GalgosManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
+				GalgosManager.getInstancia().descargarYParsearSemillasSportium(param2, true, param3);
+
+			} catch (InterruptedException e) {
+				MY_LOGGER.error("ERROR Excepcion de galgos.");
+				e.printStackTrace();
+			}
+
+		} else if (param1 != null && param1.equals("GALGOS_02_BETBRIGHT") && param2 != null && !param2.isEmpty()
+				&& param3 != null && !param3.isEmpty()) {
+
+			try {
+				BetbrightManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
 
 			} catch (InterruptedException e) {
 				MY_LOGGER.error("ERROR Excepcion de galgos.");

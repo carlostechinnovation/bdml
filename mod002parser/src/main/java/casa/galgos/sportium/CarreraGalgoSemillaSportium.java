@@ -2,14 +2,14 @@ package casa.galgos.sportium;
 
 import utilidades.Constantes;
 
-public class SportiumCarreraGalgo {
+public class CarreraGalgoSemillaSportium {
 
 	public String id;// dia#hora#estadio#galgo_nombre
 	public String galgoNombre;
 	public Integer trap;
-	public SportiumCarrera modelo;
+	public CarreraSemillaSportium modelo;
 
-	public SportiumCarreraGalgo(String id, String galgoNombre, Integer trap, SportiumCarrera modelo) {
+	public CarreraGalgoSemillaSportium(String id, String galgoNombre, Integer trap, CarreraSemillaSportium modelo) {
 		super();
 		this.id = id;
 		this.galgoNombre = galgoNombre;
@@ -30,9 +30,9 @@ public class SportiumCarreraGalgo {
 		return out;
 	}
 
-	public String generarSqlCreateTable() {
+	public String generarSqlCreateTable(String subtipo) {
 
-		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas" + " (";
+		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_cg_semillas_sportium" + subtipo + " (";
 
 		out += "id varchar(100) NOT NULL  PRIMARY KEY, ";
 		out += "dia BIGINT NOT NULL, ";

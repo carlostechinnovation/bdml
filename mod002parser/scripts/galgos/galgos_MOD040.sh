@@ -21,11 +21,12 @@ rm -f $PATH_MODELO_GANADOR
 
 
 ########### Modelo predictivo REGRESION ###########
+echo -e $(date +"%T")" Prediciendo..." 2>&1 1>>${LOG_ML}
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" >> "${LOG_ML}"
 
 cat "${LOG_ML}" | grep 'Gana modelo'  >&1
 
-echo -e $(date +"%T")"Tabla de validacion..." 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" Generando tabla de validacion..." 2>&1 1>>${LOG_ML}
 
 PATH_FILE_VALIDATION_TARGETS_PREDICHOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pasado_validation_targets_predichos_"${TAG}".txt"
 
@@ -201,7 +202,7 @@ echo -e "TAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/$
 
 
 echo -e "Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -N --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto FROM datos_desa.tb_val_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto FROM datos_desa.tb_val_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
 
 
 ##################### CALCULO ECONÓMICO ################
@@ -211,10 +212,14 @@ mysql -u root --password=datos1986 -N --execute="CREATE TABLE datos_desa.tb_val_
 
 mysql -u root --password=datos1986 -N --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
 
-
+echo -e "Ejemplos de filas con valoración ECONÓMICA (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_val_economico_${TAG} LIMIT 10;" 2>&1 1>>${LOG_ML}
 
 #############################################
 
 echo -e $(date +"%T")" Modulo 004 - FIN\n\n" 2>&1 1>>${LOG_ML}
+
+
+
 
 

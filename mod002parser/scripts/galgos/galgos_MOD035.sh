@@ -21,9 +21,9 @@ sufijo="${4}"
 ####### BLOQUE POR TAG ##########
 echo -e $(date +"%T")" TAG=${sufijo}" 2>&1 1>>${LOG_DS}
 
-"/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD003C_generar_tablas_filtradas.sh" "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "${sufijo}"
+"/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD036_filtradas.sh" "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "${sufijo}"
 
-"/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD003C_generar_datasets.sh" "${sufijo}"
+"/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD037_datasets.sh" "${sufijo}"
 ####################
 
 

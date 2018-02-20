@@ -29,12 +29,16 @@ public class Constantes {
 	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 16 * 7;// Ultimas X semanas
 	public static final String GALGOS_SPORTIUM_PREFIJO = "https://sport-mobile.sportium.es";
 	public static final String GALGOS_FUTUROS_SPORTIUM = GALGOS_SPORTIUM_PREFIJO + "/es/s/GREY/Galgos";
+	public static final String GALGOS_BETBRIGHT_PREFIJO = "https://www.betbright.com";
+	public static final String GALGOS_FUTUROS_BETBRIGHT = GALGOS_BETBRIGHT_PREFIJO + "/greyhound-racing";
+	public static final String GALGOS_FUTUROS_BETBRIGHT_TODAY = GALGOS_FUTUROS_BETBRIGHT + "/today";
+	public static final String GALGOS_FUTUROS_BETBRIGHT_TOMORROW = GALGOS_FUTUROS_BETBRIGHT + "/tomorrow";
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 10; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 5; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 1000;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 50;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
 	public static final Integer MIN_PESO_GALGO = 15;// kg

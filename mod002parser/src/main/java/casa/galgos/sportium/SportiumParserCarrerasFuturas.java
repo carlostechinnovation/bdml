@@ -42,12 +42,12 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
-	public List<SportiumCarrera> ejecutar(String pathIn) {
+	public List<CarreraSemillaSportium> ejecutar(String pathIn) {
 
 		MY_LOGGER.info("GALGOS-SportiumParserCarrerasFuturas: INICIO");
 
 		String bruto = "";
-		List<SportiumCarrera> out = null;
+		List<CarreraSemillaSportium> out = null;
 
 		try {
 			bruto = SportiumParserCarrerasFuturas.readFile(pathIn, Charset.forName("ISO-8859-1"));
@@ -84,14 +84,14 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	 * @param in
 	 * @return
 	 */
-	public static List<SportiumCarrera> parsear(String in) {
+	public static List<CarreraSemillaSportium> parsear(String in) {
 
 		Document doc = Jsoup.parse(in);
 		Elements tablasDeCarrerasDiarias = doc.getElementsByClass("racing-events-for-date");
 
 		int numDias = tablasDeCarrerasDiarias.size();
 
-		List<SportiumCarrera> listaCarreras = new ArrayList<SportiumCarrera>();
+		List<CarreraSemillaSportium> listaCarreras = new ArrayList<CarreraSemillaSportium>();
 
 		if (tablasDeCarrerasDiarias != null) {
 
@@ -107,9 +107,9 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 		MY_LOGGER.info("Sportium - Parseadas " + listaCarreras.size() + " carreras FUTURAS");
 
 		// LIMITAMOS SALIDA
-		List<SportiumCarrera> out = new ArrayList<SportiumCarrera>();
+		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();
 		int anhadidas = 0;
-		for (SportiumCarrera item : listaCarreras) {
+		for (CarreraSemillaSportium item : listaCarreras) {
 
 			out.add(item);
 			anhadidas++;
@@ -125,9 +125,9 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	 * @param diaFila
 	 * @return
 	 */
-	public static List<SportiumCarrera> parsearTablaDia(Element diaFila) {
+	public static List<CarreraSemillaSportium> parsearTablaDia(Element diaFila) {
 
-		List<SportiumCarrera> out = new ArrayList<SportiumCarrera>();
+		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();
 
 		String diaStr = ((TextNode) diaFila.childNode(0).childNode(0).childNode(0)).text().trim();
 		Long dia = parsearDiaStr(diaStr);
@@ -177,9 +177,9 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	 * @param dia
 	 * @return
 	 */
-	public static List<SportiumCarrera> parsearCarrerasDeUnEstadio(Element filaCarrerasEnEstadio, Long dia) {
+	public static List<CarreraSemillaSportium> parsearCarrerasDeUnEstadio(Element filaCarrerasEnEstadio, Long dia) {
 
-		List<SportiumCarrera> out = new ArrayList<SportiumCarrera>();
+		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();
 
 		List<String> galgosNombres = new ArrayList<String>();
 
@@ -207,7 +207,7 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 							String ultimo = trozos[trozos.length - 1];
 							Integer horaInglesa = Integer.valueOf(ultimo.split("-")[0].replace(".", ""));
 
-							SportiumCarrera modelo = new SportiumCarrera(urlDetalle, estadio, dia, horaInglesa,
+							CarreraSemillaSportium modelo = new CarreraSemillaSportium(urlDetalle, estadio, dia, horaInglesa,
 									galgosNombres);
 							out.add(modelo);
 

@@ -18,7 +18,7 @@ cat "${FOLDER_INFORMES}galgos_MOD004_gagst.out" | grep 'GAGST-Gana modelo' >>$PA
 
 #########################
 echo -e $(date +"%T")"Entradas- features: cada FILA es un GALGO EN UNA CARRERA FUTURA" >&1
-"/root/git/bdml/mod002parser/scripts/galgos/galgos_generador_datasets.sh" "WHERE PO1.galgo_nombre IN (SELECT MAX(galgo_nombre) AS galgo_nombre FROM datos_desa.tb_carrerasgalgos_semillasfuturas GROUP BY galgo_nombre)" "_gagst_post"
+"/root/git/bdml/mod002parser/scripts/galgos/galgos_generador_datasets.sh" "WHERE PO1.galgo_nombre IN (SELECT MAX(galgo_nombre) AS galgo_nombre FROM datos_desa.tb_cg_semillas_sportium GROUP BY galgo_nombre)" "_gagst_post"
 
 
 echo -e $(date +"%T")"MACHINE LEARNING - GAGST - Prediciendo los targets..."
@@ -35,7 +35,7 @@ sleep 4s
 echo -e $(date +"%T")"Mostrando los galgos con sus targets..." >&1
 
 mysql -u root --password=datos1986 --execute="SET @rank1=0; DROP TABLE IF EXISTS datos_desa.tb_galgos_data_final_gagst; CREATE TABLE datos_desa.tb_galgos_data_final_gagst AS SELECT @rank1:=@rank1+1 AS rank, 
-id, dia, hora, estadio, galgo_nombre FROM datos_desa.tb_carrerasgalgos_semillasfuturas\W;" >&1
+id, dia, hora, estadio, galgo_nombre FROM datos_desa.tb_cg_semillas_sportium\W;" >&1
 mysql -u root --password=datos1986 --execute="SET @rank2=0;  DROP TABLE IF EXISTS datos_desa.tb_galgos_target_final_gagst; CREATE TABLE datos_desa.tb_galgos_target_final_gagst AS SELECT @rank2:=@rank2+1 AS rank, target AS PREDICCION FROM datos_desa.tb_galgos_target_gagst_post;" >&1
 
 echo -e $(date +"%T")"Carreras futuras con solo 1 o 2 ganadores predichos:" >>${PATH_INFORME_FINAL}

@@ -1,4 +1,4 @@
-package casa.galgos.sportium;
+package casa.galgos.betbright;
 
 import java.util.List;
 
@@ -14,28 +14,28 @@ import utilidades.ResourceFile;
  * @author root
  *
  */
-public class SportiumParserCarrerasFuturasTest {
+public class BetbrightParserCarrerasFuturasTest {
 
 	@Before
 	public void iniciar() {
 	}
 
 	@Rule
-	public ResourceFile res = new ResourceFile("/" + "carreras_futuras.html");
+	public ResourceFile res = new ResourceFile("/" + "betbright_carreras_futuras.html");
 
 	@Test
 	public void parsearTest() throws Exception {
 
 		String contenidoWeb = res.getContent("ISO-8859-1");
 
-		List<CarreraSemillaSportium> out = SportiumParserCarrerasFuturas.parsear(contenidoWeb);
+		List<String> out = BetbrightParserCarrerasFuturas.parsear(contenidoWeb);
 
 		// TODO rellenar
 		Assert.assertTrue(out != null);
 		Assert.assertTrue(!out.isEmpty());
 
-		for (CarreraSemillaSportium fila : out) {
-			Assert.assertTrue(fila.urlDetalle != null && !fila.urlDetalle.isEmpty());
+		for (String fila : out) {
+			Assert.assertTrue(fila != null && !fila.isEmpty());
 		}
 
 	}

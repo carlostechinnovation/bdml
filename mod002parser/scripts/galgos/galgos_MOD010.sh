@@ -12,6 +12,8 @@ FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galg
 
 PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
 PATH_FILE_GALGOS_INICIALES_FULL="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt_full"
+PATH_FILE_GALGOS_INICIALES_BB="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales_bb.txt"
+PATH_FILE_GALGOS_INICIALES_BB_FULL="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales_bb.txt_full"
 PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
 PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
 PATH_LIMPIO_HISTORICO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_historico_file"
@@ -29,7 +31,7 @@ PATH_LIMPIO_ESTADISTICAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_l
 echo -e $(date +"%T")" Path del log: ${LOG_DESCARGA_BRUTO}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 rm -f ${LOG_DESCARGA_BRUTO}
 
-echo -e $(date +"%T")" Galgos-Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Galgos-Modulo 010 - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 ##########################################
 echo -e $(date +"%T")" Borrando ficheros antiguos..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
@@ -37,11 +39,15 @@ rm -f "$PATH_BRUTO/*"
 rm -f "$PATH_LIMPIO/*"
 rm -f "${PATH_FILE_GALGOS_INICIALES}"
 rm -f "${PATH_FILE_GALGOS_INICIALES_FULL}"
+rm -f "${PATH_FILE_GALGOS_INICIALES_BB}"
+rm -f "${PATH_FILE_GALGOS_INICIALES_BB_FULL}"
 
 ##########################################
 echo -e $(date +"%T")" Borrando tablas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
-consultar "DROP TABLE IF EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_betbright\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+
 consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_historico\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
@@ -57,16 +63,21 @@ SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 ##########################################
-echo -e $(date +"%T")" SPORTIUM - Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
-java -jar ${PATH_JAR} "GALGOS_02" "${PATH_BRUTO}semillas" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_FULL}' INTO TABLE datos_desa.tb_carrerasgalgos_semillasfuturas FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
-consultar "SELECT COUNT(*) as num_galgos_iniciales_SPORTIUM FROM datos_desa.tb_carrerasgalgos_semillasfuturas LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
+java -jar ${PATH_JAR} "GALGOS_02_SPORTIUM" "${PATH_BRUTO}semillas_sportium" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_FULL}' INTO TABLE datos_desa.tb_cg_semillas_sportium FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
+consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
+
+
+java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT" "${PATH_BRUTO}semillas_betbright" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+consultar "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_BB_FULL}' INTO TABLE datos_desa.tb_cg_semillas_betbright FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
+consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_betbright LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
 
 
 ##########################################
 echo -e $(date +"%T")" GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-#java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_LIMPIO_CARRERAS}' INTO TABLE datos_desa.tb_galgos_carreras FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_CARRERAS_WARNINGS"
 
@@ -94,21 +105,21 @@ echo -e $(date +"%T")"SEMILLAS - Metiendo filas artificiales con los datos conoc
 #Pendiente descargar dato "SP" si se conoce en ese instante
 
 read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES <<- EOF
-DROP TABLE IF EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas_b;
+DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_b;
 
-CREATE TABLE datos_desa.tb_carrerasgalgos_semillasfuturas_b AS
+CREATE TABLE datos_desa.tb_cg_semillas_sportium_b AS
 SELECT DHE  
-FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_carrerasgalgos_semillasfuturas dentro1) dentro2 
+FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) dentro2 
 GROUP BY DHE 
 ORDER BY DHE DESC;
 
-SELECT * FROM datos_desa.tb_carrerasgalgos_semillasfuturas_b LIMIT 5;
-SELECT count(*) as num_filas_b FROM datos_desa.tb_carrerasgalgos_semillasfuturas_b LIMIT 5;
+SELECT * FROM datos_desa.tb_cg_semillas_sportium_b LIMIT 5;
+SELECT count(*) as num_filas_b FROM datos_desa.tb_cg_semillas_sportium_b LIMIT 5;
 
 
-DROP TABLE IF EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas_c;
+DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_c;
 
-CREATE TABLE datos_desa.tb_carrerasgalgos_semillasfuturas_c AS
+CREATE TABLE datos_desa.tb_cg_semillas_sportium_c AS
 SELECT  
 B.*,
 
@@ -117,32 +128,32 @@ CASE
   ELSE (@curRow := @curRow + 1 )
 END AS DHE_incr
 
-FROM datos_desa.tb_carrerasgalgos_semillasfuturas_b B,
+FROM datos_desa.tb_cg_semillas_sportium_b B,
 (SELECT @curRow := 0, @curDHE := '') R
 ORDER BY DHE ASC;
 
-SELECT * FROM datos_desa.tb_carrerasgalgos_semillasfuturas_c LIMIT 5;
-SELECT count(*) as num_filas_c FROM datos_desa.tb_carrerasgalgos_semillasfuturas_c LIMIT 5;
+SELECT * FROM datos_desa.tb_cg_semillas_sportium_c LIMIT 5;
+SELECT count(*) as num_filas_c FROM datos_desa.tb_cg_semillas_sportium_c LIMIT 5;
 
 
-DROP TABLE IF EXISTS datos_desa.tb_carrerasgalgos_semillasfuturas_d;
+DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_d;
 
-CREATE TABLE datos_desa.tb_carrerasgalgos_semillasfuturas_d AS
+CREATE TABLE datos_desa.tb_cg_semillas_sportium_d AS
 SELECT 
 INICIAL.* , C.DHE_incr AS id_carrera_artificial
-FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_carrerasgalgos_semillasfuturas dentro1) INICIAL
-LEFT JOIN datos_desa.tb_carrerasgalgos_semillasfuturas_c C
+FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) INICIAL
+LEFT JOIN datos_desa.tb_cg_semillas_sportium_c C
 ON (INICIAL.DHE=C.DHE)
 ;
 
-SELECT * FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d LIMIT 5;
-SELECT count(*) as num_filas_d FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d LIMIT 5;
+SELECT * FROM datos_desa.tb_cg_semillas_sportium_d LIMIT 5;
+SELECT count(*) as num_filas_d FROM datos_desa.tb_cg_semillas_sportium_d LIMIT 5;
 
 
 
 
-set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d);
-set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d);
+set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
+set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 
 DELETE FROM datos_desa.tb_galgos_carreras 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
@@ -164,7 +175,7 @@ count(*)  AS num_galgos,
 NULL AS premio_primero, NULL AS premio_segundo, NULL AS premio_otros, NULL AS premio_total_carrera, NULL AS going_allowance_segundos, 
 NULL AS fc_1, NULL AS fc_2, NULL AS fc_pounds, 
 NULL AS tc_1, NULL AS tc_2, NULL AS tc_3, NULL AS tc_pounds
-FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d A
+FROM datos_desa.tb_cg_semillas_sportium_d A
 GROUP BY DHE;
 
 SELECT count(*) FROM datos_desa.tb_galgos_carreras 
@@ -197,7 +208,7 @@ NULL AS galgo_madre,
 NULL AS nacimiento,
 NULL AS comment,
 NULL AS edad_en_dias
-FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d;
+FROM datos_desa.tb_cg_semillas_sportium_d;
 
 
 SELECT count(*) FROM datos_desa.tb_galgos_posiciones_en_carreras 
@@ -238,7 +249,7 @@ NULL AS calculated_time,
 NULL AS velocidad_real,
 NULL AS velocidad_con_going,
 NULL AS scoring_remarks
-FROM datos_desa.tb_carrerasgalgos_semillasfuturas_d;
+FROM datos_desa.tb_cg_semillas_sportium_d;
 
 
 SELECT count(*) FROM datos_desa.tb_galgos_historico 
@@ -479,7 +490,7 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_NORMALIZACIONES" >>$LOG_
 
 ##########################################
 
-echo -e $(date +"%T")"Galgos-Modulo 001A - FIN" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")"Galgos-Modulo 010 - FIN" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 
 

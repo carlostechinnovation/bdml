@@ -41,7 +41,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 	 * @param carreraIn
 	 * @return Instancia Carrera con los galgos ya rellenos
 	 */
-	public SportiumCarrera ejecutar(String pathIn, SportiumCarrera carreraIn) {
+	public CarreraSemillaSportium ejecutar(String pathIn, CarreraSemillaSportium carreraIn) {
 
 		MY_LOGGER.debug("GALGOS-SportiumParserDetalleCarreraFutura: INICIO");
 
@@ -285,24 +285,5 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 		}
 
 	}
-
-	// /**
-	// * @param itemsSeleccionados
-	// * @return
-	// */
-	// public static List<SportiumGalgoFuturoEnCarreraAux>
-	// parsearTablaDeGalgos(List<Element> itemsSeleccionados) {
-	//
-	// List<SportiumGalgoFuturoEnCarreraAux> out = new
-	// ArrayList<SportiumGalgoFuturoEnCarreraAux>();
-	//
-	// MY_LOGGER.info("Sportium - parsearTablaDeGalgos-itemsSeleccionados = " +
-	// itemsSeleccionados.size());
-	//
-	// for (Element fila : itemsSeleccionados) {
-	// }
-	//
-	// return out;
-	// }
 
 }
