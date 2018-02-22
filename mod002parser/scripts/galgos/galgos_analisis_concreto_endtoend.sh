@@ -51,7 +51,7 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR"
 
 ########################################################################################################
 
-echo -e "\nATENCION: debo que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n"
+echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n"
 
 
 

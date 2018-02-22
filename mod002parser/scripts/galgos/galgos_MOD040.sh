@@ -21,7 +21,7 @@ rm -f $PATH_MODELO_GANADOR
 
 
 ########### Modelo predictivo REGRESION ###########
-echo -e $(date +"%T")" Prediciendo..." 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" Entrenando el modelo (train) y sacando score (test)..." 2>&1 1>>${LOG_ML}
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" >> "${LOG_ML}"
 
 cat "${LOG_ML}" | grep 'Gana modelo'  >&1
@@ -163,7 +163,7 @@ SELECT AB.*, @rowid:=@rowid+1 as rowid
 FROM (
   SELECT A.id_carrera, A.galgo_nombre
   FROM datos_desa.tb_dataset_con_ids_${TAG} A 
-  RIGHT JOIN datos_desa.tb_dataset_ids_futuros_${TAG} B
+  RIGHT JOIN datos_desa.tb_dataset_ids_pasado_validation_${TAG} B
   ON (A.id_carrera=B.id_carrera)
 ) AB
 , (SELECT @rowid:=0) R;
@@ -197,23 +197,35 @@ echo -e "numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
 echo -e "numero_predicciones_1o2 = ${numero_predicciones_1o2}" 2>&1 1>>${LOG_ML}
 
 SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1o2" | bc -l)
-echo -e "TAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/${numero_predicciones_1o2} = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
+echo -e "\nTAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/${numero_predicciones_1o2} = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
 echo -e "TAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/${numero_predicciones_1o2} = ${SCORE_FINAL}" #Retorno hacia script padre
 
 
-echo -e "Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
+echo -e "\nEjemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto FROM datos_desa.tb_val_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
 
 
 ##################### CALCULO ECONÓMICO ################
 
-echo -e "Calculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -N --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A LEFT JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre);" 2>&1 1>>${LOG_ML}
+echo -e "\nCalculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_val_economico_${TAG};" 2>&1 1>>${LOG_ML}
 
-mysql -u root --password=datos1986 -N --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A LEFT JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre);" 2>&1 1>>${LOG_ML}
 
-echo -e "Ejemplos de filas con valoración ECONÓMICA (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
+
+echo -e "\nEjemplos de filas con valoración ECONÓMICA (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_val_economico_${TAG} LIMIT 10;" 2>&1 1>>${LOG_ML}
+
+
+
+FILE_TEMP="./temp_numero"
+rm -f ${FILE_TEMP}
+mysql -u root --password=datos1986 -N --execute="SELECT SUM(beneficio_bruto)/SUM(gastado_1o2) AS rentabilidad_${TAG} FROM datos_desa.tb_val_economico_${TAG};" > ${FILE_TEMP}
+rentabilidad=$( cat ${FILE_TEMP})
+
+echo -e "\nRentabilidad (sobre dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" 2>&1 1>>${LOG_ML}
+echo -e "\nRentabilidad (dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" #Hacia script padre
 
 #############################################
 

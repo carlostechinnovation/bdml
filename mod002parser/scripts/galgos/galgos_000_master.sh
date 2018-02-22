@@ -13,9 +13,7 @@ rm -f $PATH_LOG
 
 
 ##########################################
-#sudo service mysql start
 
-##########################################
 echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos ------------" >>$PATH_LOG
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${PATH_LOG}
@@ -31,14 +29,15 @@ echo -e "Ruta log (coordinador)="${PATH_LOG}
 
 
 #### Analisis de SUBGRUPOS ###
-#analizarScoreSobreSubgrupos "$PATH_LOG"
+analizarScoreSobreSubgrupos "$PATH_LOG"
 
 
 echo -e $(date +"%T")" DATASETS + FILTRADAS + INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
 
-#echo -e $(date +"%T")" INFORMES (resultados)" >>$PATH_LOG
+
+#echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados)" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD050.sh'
 
 #echo -e $(date +"%T")" Análisis posterior" >>$PATH_LOG
@@ -48,11 +47,6 @@ ${PATH_SCRIPTS}'galgos_analisis_concreto_endtoend.sh'
 #echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD007.sh'
 
-
-
-##########################################
-
-#sudo service mysql stop
 
 ##########################################
 

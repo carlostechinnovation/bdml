@@ -34,11 +34,11 @@ public class Constantes {
 	public static final String GALGOS_FUTUROS_BETBRIGHT_TODAY = GALGOS_FUTUROS_BETBRIGHT + "/today";
 	public static final String GALGOS_FUTUROS_BETBRIGHT_TOMORROW = GALGOS_FUTUROS_BETBRIGHT + "/tomorrow";
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 5; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 20; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 50;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
 	public static final Integer MIN_PESO_GALGO = 15;// kg
