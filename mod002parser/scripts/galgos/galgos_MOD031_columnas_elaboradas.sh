@@ -959,7 +959,7 @@ SELECT * FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} ORDER BY cg LIMIT
 SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} LIMIT 5;
 EOF
 
-echo -e $(date +"%T")"\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
+#echo -e $(date +"%T")"\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
 
 

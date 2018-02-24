@@ -190,7 +190,7 @@ FILE_TEMP="./temp_numero_MOD004"
 mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_aciertos_connombre_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos=$( cat ${FILE_TEMP})
 
-mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_aciertos_connombre_${TAG} WHERE predicha_1o2=true LIMIT 1;" > ${FILE_TEMP}
+mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_aciertos_connombre_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
 numero_predicciones_1o2=$( cat ${FILE_TEMP})
 
 echo -e "numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
@@ -210,12 +210,13 @@ mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, p
 echo -e "\nCalculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_val_economico_${TAG};" 2>&1 1>>${LOG_ML}
 
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A LEFT JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre);" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A INNER JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre AND GH.sp>=2.01);" 2>&1 1>>${LOG_ML}
 
 mysql -u root --password=datos1986 --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
 
 echo -e "\nEjemplos de filas con valoración ECONÓMICA (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_val_economico_${TAG} LIMIT 10;" 2>&1 1>>${LOG_ML}
+
 
 
 
@@ -226,6 +227,8 @@ rentabilidad=$( cat ${FILE_TEMP})
 
 echo -e "\nRentabilidad (sobre dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" 2>&1 1>>${LOG_ML}
 echo -e "\nRentabilidad (dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" #Hacia script padre
+
+echo -e "\nATENCION: Solo pongo DINERO en las carreras predichas 1º o 2º y que paguen más de 2.01 euros por ganador y colocado!!!! \n\n" 2>&1 1>>${LOG_ML}
 
 #############################################
 

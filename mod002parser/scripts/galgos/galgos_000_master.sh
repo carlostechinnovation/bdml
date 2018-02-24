@@ -21,20 +21,20 @@ echo -e "Ruta log (coordinador)="${PATH_LOG}
 #echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD010.sh'
 
-#echo -e $(date +"%T")" Analisis de datos: ESTADISTICA BASICA" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD020.sh'
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD020.sh'
 
 #echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD030.sh'
 
 
 #### Analisis de SUBGRUPOS ###
-analizarScoreSobreSubgrupos "$PATH_LOG"
+#analizarScoreSobreSubgrupos "$PATH_LOG"
 
 
-echo -e $(date +"%T")" DATASETS + FILTRADAS + INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
+#echo -e $(date +"%T")" FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
+#${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
 
 
 #echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados)" >>$PATH_LOG
@@ -42,7 +42,7 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
 
 #echo -e $(date +"%T")" Análisis posterior" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD060.sh'
-${PATH_SCRIPTS}'galgos_analisis_concreto_endtoend.sh'
+#${PATH_SCRIPTS}'galgos_analisis_concreto_endtoend.sh'
 
 #echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD007.sh'
