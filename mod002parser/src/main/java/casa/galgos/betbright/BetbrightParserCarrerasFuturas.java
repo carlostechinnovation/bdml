@@ -39,12 +39,18 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 		MY_LOGGER.info("GALGOS-BetbrightParserCarrerasFuturas: INICIO");
 
 		String bruto = "";
-		List<String> out = null;
+		List<String> out = new ArrayList<String>();
 
 		try {
 			bruto = BetbrightParserCarrerasFuturas.readFile(pathIn, Charset.forName("ISO-8859-1"));
-			out = parsear(bruto);
-			// MY_LOGGER.info("GALGOS-BetbrightParserCarrerasFuturas: out=" + out);
+			if (descargaBanned(bruto)) {
+				MY_LOGGER.error(
+						"BB-ERROR: La pagina descargada no contiene info útil. Han detectado que ejecutamos desde un robot!!!!");
+
+			} else {
+				out = parsear(bruto);
+				// MY_LOGGER.info("GALGOS-BetbrightParserCarrerasFuturas: out=" + out);
+			}
 
 		} catch (Exception e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
@@ -70,11 +76,16 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 		return new String(encoded, encoding);
 	}
 
+	public static boolean descargaBanned(String in) {
+		return in.contains("noindex,nofollow");
+	}
+
 	/**
-	 * Extrae info util \
+	 * Extrae info útil.
 	 * 
 	 * @param in
-	 * @return
+	 *            Contenido BRUTO de la pagina web.
+	 * @return Info útil.
 	 * @throws Exception
 	 */
 	public static List<String> parsear(String in) {
@@ -83,6 +94,11 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 
 	}
 
+	/**
+	 * @param in
+	 *            Contenido BRUTO de la pagina web.
+	 * @return Lista de URLs a detalle de carreras.
+	 */
 	public static List<String> extraerUrls(String in) {
 
 		String BUSCADO = Constantes.GALGOS_FUTUROS_BETBRIGHT;
@@ -128,4 +144,5 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 
 		return in.contains(urlBase) && in.split("-").length >= 4;
 	}
+
 }

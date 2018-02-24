@@ -46,28 +46,46 @@ public class BetbrightManager implements Serializable {
 	}
 
 	/**
+	 * Descarga y parsea las carreras FUTURAS de BETBRIGHT.
+	 * 
 	 * @param prefijoPathDatosBruto
+	 *            Path absoluto de la CARPETA donde se van a GUARDAR los DATOS
+	 *            BRUTOS.
 	 * @param guardarEnFicheros
+	 *            BOOLEAN que indica si se quieren GUARDAR los resultados en la
+	 *            carpeta (o no, si son pruebas).
 	 * @param fileGalgosIniciales
 	 *            SALIDA
 	 * @throws InterruptedException
+	 * @throws IOException
 	 */
 	public void descargarYParsearSemillas(String prefijoPathDatosBruto, boolean guardarEnFicheros,
-			String fileGalgosIniciales) throws InterruptedException {
+			String fileGalgosIniciales) throws InterruptedException, IOException {
 
-		MY_LOGGER.info("Descargando pagina de entrada en BETRIGHT con carreras FUTURAS --> TODAY...");
-		(new BetbrightDownloader()).descargarDeURLsAFicheros(Constantes.GALGOS_FUTUROS_BETBRIGHT_TODAY,
-				prefijoPathDatosBruto, guardarEnFicheros);
-		MY_LOGGER.info("Descargando pagina de entrada en BETRIGHT con carreras FUTURAS --> TOMORROW...");
-		(new BetbrightDownloader()).descargarDeURLsAFicheros(Constantes.GALGOS_FUTUROS_BETBRIGHT_TOMORROW,
-				prefijoPathDatosBruto, guardarEnFicheros);
+		if (Constantes.GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA) {
 
-		MY_LOGGER.info("Extrayendo las URLs del detalle de cada carrera BETRIGHT-FUTURA...");
+			MY_LOGGER.info("Descargando pagina de entrada en BETBRIGHT con carreras FUTURAS --> TODAY...");
+			boolean borrarCarpeta = true;
+			(new BetbrightDownloader()).descargarDeURLsAFicheros(Constantes.GALGOS_FUTUROS_BETBRIGHT_TODAY,
+					prefijoPathDatosBruto, guardarEnFicheros && borrarCarpeta);
+
+			MY_LOGGER.info("Descargando pagina de entrada en BETBRIGHT con carreras FUTURAS --> TOMORROW...");
+			borrarCarpeta = false;// porque no quiero borrar lo que ya he descargado (today)
+			(new BetbrightDownloader()).descargarDeURLsAFicheros(Constantes.GALGOS_FUTUROS_BETBRIGHT_TOMORROW,
+					prefijoPathDatosBruto, guardarEnFicheros && borrarCarpeta);
+
+		} else {
+			MY_LOGGER.info(
+					"ATENCION: se supone que las carreras futuras TODAY + TOMORROW de BB las ha descargado un script (hack) externo en: "
+							+ prefijoPathDatosBruto);
+		}
+
+		MY_LOGGER.info(
+				"Tenemos los ficheros brutos TODAY y TOMORROW, de los que podremos extraer las URLs del detalle de cada carrera BETBRIGHT-FUTURA...");
 		List<String> urlsCarrerasFuturas = (new BetbrightParserCarrerasFuturas()).ejecutar(prefijoPathDatosBruto);
-
 		MY_LOGGER.info("URLs obtenidas: " + urlsCarrerasFuturas.size());
 
-		// LIMITAMOS numero de carreras procesadas
+		MY_LOGGER.info("LIMITAMOS numero de carreras procesadas: " + Constantes.MAX_NUM_CARRERAS_SEMILLA);
 		int anhadidas = 0;
 		for (String urlCarrera : urlsCarrerasFuturas) {
 			carreras.add(new CarreraSemillaBetright(urlCarrera, null, null, null, null, null,
@@ -78,33 +96,91 @@ public class BetbrightManager implements Serializable {
 			}
 		}
 
-		if (carreras != null && !carreras.isEmpty()) {
-
-			String tag = "_BB_DET_";
-			int contador = 0;
-			BetbrightParserDetalleCarreraFutura spdcf = new BetbrightParserDetalleCarreraFutura();
-
-			String pathCarreraDetalle = "";
-
-			for (CarreraSemillaBetright carrera : carreras) {
-				contador++;
-				pathCarreraDetalle = prefijoPathDatosBruto + tag + contador;
-
-				(new BetbrightDownloader()).descargarDeURLsAFicheros(carrera.urlDetalle, pathCarreraDetalle,
-						guardarEnFicheros);
-
-				// Para cada carrera, extraigo toda la info que pueda y la meto en la instancia
-				spdcf.ejecutar(pathCarreraDetalle, carrera);
-			}
-
-			desnormalizarSemillasYGuardarlasEnFicheros(fileGalgosIniciales);
-
-			MY_LOGGER.info("BB-Carreras FUTURAS con sus galgos (semillas): OK");
+		if (urlsCarrerasFuturas == null || urlsCarrerasFuturas.isEmpty()) {
+			MY_LOGGER.error("BB-ERROR: No hemos descargado NINGUNA carrera FUTURA (semilla)!!!!");
 
 		} else {
-			MY_LOGGER.info("BB-Carreras FUTURAS con sus galgos (semillas): ERROR!!!!");
+
+			guardarListaEnFichero(urlsCarrerasFuturas, prefijoPathDatosBruto + "_listaurlsdetalles");
+
+		}
+	}
+
+	/**
+	 * Descarga y parsea las carreras FUTURAS de BETBRIGHT.
+	 * 
+	 * @param prefijoPathDatosBruto
+	 *            Path absoluto de la CARPETA donde se van a GUARDAR los DATOS
+	 *            BRUTOS.
+	 * @param guardarEnFicheros
+	 *            BOOLEAN que indica si se quieren GUARDAR los resultados en la
+	 *            carpeta (o no, si son pruebas).
+	 * @param fileGalgosIniciales
+	 *            SALIDA
+	 * @throws InterruptedException
+	 * @throws IOException
+	 */
+	public void descargarYParsearSemillasDetalles(String prefijoPathDatosBruto, boolean guardarEnFicheros,
+			String fileGalgosIniciales) throws InterruptedException, IOException {
+
+		MY_LOGGER.info("Descarga de paginas web de DETALLE...");
+
+		String tag = "_DET_";
+		int contador = 0;
+		BetbrightParserDetalleCarreraFutura spdcf = new BetbrightParserDetalleCarreraFutura();
+
+		String pathCarreraDetalle = "";
+
+		for (CarreraSemillaBetright carrera : carreras) {
+			contador++;
+			pathCarreraDetalle = prefijoPathDatosBruto + tag + contador;
+
+			if (Constantes.GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA) {
+				(new BetbrightDownloader()).descargarDeURLsAFicheros(carrera.urlDetalle, pathCarreraDetalle,
+						guardarEnFicheros);
+			} else {
+				MY_LOGGER.info(
+						"ATENCION: se supone que la carrera futura de BB se ha descargado mediante script (hack) externo en: "
+								+ pathCarreraDetalle);
+			}
+
+			// Para cada carrera, extraigo toda la info que pueda y la meto en la instancia
+			spdcf.ejecutar(pathCarreraDetalle, carrera);
 		}
 
+		desnormalizarSemillasYGuardarlasEnFicheros(fileGalgosIniciales);
+
+		MY_LOGGER.info("BB-Carreras FUTURAS con sus galgos (semillas): OK");
+
+	}
+
+	/**
+	 * Guarda los elementos de la lista, en un fichero. Mete cada elemento en una
+	 * fila.
+	 * 
+	 * @param urlsCarrerasFuturas
+	 * @param pathListaUrlsDetalles
+	 * @throws IOException
+	 */
+	public void guardarListaEnFichero(List<String> urlsCarrerasFuturas, String pathListaUrlsDetalles)
+			throws IOException {
+
+		MY_LOGGER.info("La lista de URLs de detalle la metemos en este fichero: " + pathListaUrlsDetalles);
+		if (Files.exists(Paths.get(pathListaUrlsDetalles))) {
+			MY_LOGGER.debug("Borrando fichero de listaurlsdetalles preexistente...");
+			Files.delete(Paths.get(pathListaUrlsDetalles));
+		}
+
+		boolean primero = true;
+		for (String urlCarrera : urlsCarrerasFuturas) {
+
+			String aux = primero ? "" : "\n";
+			aux += urlCarrera;
+
+			Files.write(Paths.get(pathListaUrlsDetalles), aux.getBytes(), StandardOpenOption.APPEND);
+
+			primero = false;
+		}
 	}
 
 	/**

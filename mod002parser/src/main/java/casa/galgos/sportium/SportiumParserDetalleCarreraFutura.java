@@ -59,7 +59,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 			}
 
 		} catch (Exception e) {
-			MY_LOGGER.error("Error:" + e.getMessage());
+			MY_LOGGER.error("Error: " + e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -102,7 +102,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 					|| pestania.toString().contains("class=\"mkt racecard\"")) {
 				primeraPestania = pestania;
 
-				MY_LOGGER.debug("\n\n\nPESTANIA COGIDA:  " + pestania.toString() + "\n\n");
+				// MY_LOGGER.debug("\n\n\nPESTANIA COGIDA: " + pestania.toString() + "\n\n");
 			}
 		}
 
@@ -122,9 +122,6 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		if (futura && numElementosPrimeraPestania > 3) {
 
-			MY_LOGGER.debug(
-					"Sportium - parsear - primeraPestania.childNodes() = \n" + primeraPestania.childNodes().toString());
-
 			for (Node epp : primeraPestania.childNodes()) {
 				parsearTbodyFila((Element) epp, galgos);
 			}
@@ -141,9 +138,13 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 	 */
 	public static void parsearTbodyFila(Element fila, List<SportiumGalgoFuturoEnCarreraAux> out) {
 
-		boolean esElCero = fila.toString().contains("value=\"00\"");
+		MY_LOGGER.debug("\nSportium - parsearTbodyFila --------------\n");
+		// MY_LOGGER.debug("\n" + fila.toString() + "\n\n----------------------\n");
 
-		if (!esElCero) {
+		boolean sinContenidoUtil = fila.toString().contains("<thead>") || fila.toString().contains("value=\"00\"")
+				|| fila.toString().contains("<td class=\"number\"></td>");
+
+		if (!sinContenidoUtil) {
 
 			List<Element> galgoElements = new ArrayList<Element>();
 			for (Node nodo : fila.childNodes()) {
@@ -159,7 +160,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 			}
 
-			MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-galgoElements =  " + galgoElements.size());
+			MY_LOGGER.debug("Sportium - parsearTbodyFila-galgoElements =  " + galgoElements.size());
 
 			if (galgoElements != null && !galgoElements.isEmpty()) {
 
@@ -169,7 +170,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 				Integer trap = (trapPasadoStr != null && !trapPasadoStr.isEmpty())
 						? Integer.valueOf(String.valueOf(trapPasadoStr.charAt(0)))
 						: null;
-				MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-trap =  " + trap);
+				MY_LOGGER.debug("Sportium - parsearTbodyFila-trap =  " + trap);
 
 				// NOMBRE
 				String galgoNombreStr = "";
@@ -197,12 +198,11 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 						}
 					}
 				}
-				MY_LOGGER.debug("Sportium - parsearTablaDeGalgos-galgoNombreStr =  " + galgoNombreStr);
+				MY_LOGGER.debug("Sportium - parsearTbodyFila-galgoNombreStr =  " + galgoNombreStr);
 
 				// PRICE HISTORY --> Vacio
 				boolean contieneDatosHistoricos = galgoElements.toString().contains("price-history");
-				MY_LOGGER
-						.debug("Sportium - parsearTablaDeGalgos-contieneDatosHistoricos =  " + contieneDatosHistoricos);
+				MY_LOGGER.debug("Sportium - parsearTbodyFila-contieneDatosHistoricos =  " + contieneDatosHistoricos);
 
 				// SP
 				Float sp = null;
@@ -219,8 +219,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 									if (e.toString().contains("price dec") && e.toString().contains(".")) {
 
-										MY_LOGGER.debug(
-												"Sportium - parsearTablaDeGalgos- price_dec --> " + e.toString());
+										MY_LOGGER.debug("Sportium - parsearTbodyFila- price_dec --> " + e.toString());
 
 										String spStr = "";
 										if (e instanceof TextNode) {
@@ -229,8 +228,8 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 												sp = Float.valueOf(spStr);
 											}
 										} else {
-											MY_LOGGER.debug("Sportium - parsearTablaDeGalgos- price_dec OTRO --> "
-													+ e.getClass());
+											MY_LOGGER.debug(
+													"Sportium - parsearTbodyFila- price_dec OTRO --> " + e.getClass());
 
 											for (Node e2 : e.childNodes()) {
 												if (e2.toString().contains("price dec")
@@ -239,7 +238,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 													for (Node e3 : e2.childNodes()) {
 
 														MY_LOGGER.debug(
-																"Sportium - parsearTablaDeGalgos- price_dec OTRO --> "
+																"Sportium - parsearTbodyFila- price_dec OTRO --> "
 																		+ e3.getClass());
 														spStr = ((TextNode) e3).text().trim();
 
@@ -277,7 +276,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 							: galgoNombreStr;
 
 					out.add(new SportiumGalgoFuturoEnCarreraAux(trap, galgoNombreStr, sp));
-					MY_LOGGER.debug("Sportium - parsearTbodyFila- guardar -->SI");
+					MY_LOGGER.debug("Sportium - parsearTbodyFila- guardar -->SI\n");
 				}
 
 			}

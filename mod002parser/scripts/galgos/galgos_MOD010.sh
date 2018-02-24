@@ -35,8 +35,8 @@ echo -e $(date +"%T")" Galgos-Modulo 010 - Obtener datos en BRUTO" 2>&1 1>>${LOG
 
 ##########################################
 echo -e $(date +"%T")" Borrando ficheros antiguos..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-rm -f "$PATH_BRUTO/*"
-rm -f "$PATH_LIMPIO/*"
+rm -f "$PATH_BRUTO*"
+rm -f "$PATH_LIMPIO*"
 rm -f "${PATH_FILE_GALGOS_INICIALES}"
 rm -f "${PATH_FILE_GALGOS_INICIALES_FULL}"
 rm -f "${PATH_FILE_GALGOS_INICIALES_BB}"
@@ -62,7 +62,7 @@ java -jar ${PATH_JAR} "GALGOS_01" "$FILE_SENTENCIAS_CREATE_TABLE" 2>&1 1>>${LOG_
 SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
-##########################################
+#################### FUTURAS - SPORTIUM ######################
 echo -e $(date +"%T")" Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 java -jar ${PATH_JAR} "GALGOS_02_SPORTIUM" "${PATH_BRUTO}semillas_sportium" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
@@ -70,10 +70,32 @@ consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIA
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
 
 
+#################### FUTURAS - BETBRIGHT ######################
+echo -e $(date +"%T")" Descargando todas las carreras FUTURAS de BETBRIGHT usando un navegador..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+BB_URL_TODAY="www.betbright.com/greyhound-racing/today"
+BB_URL_TOMORROW="www.betbright.com/greyhound-racing/tomorrow"
+BB_FICHEROS="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright*"
+BB_FICHERO_TODAY="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_today.html"
+BB_FICHERO_TOMORROW="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_tomorrow.html"
+
+echo -e $(date +"%T")" Borrando todos estos ficheros: ${BB_FICHEROS}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+rm -fR "${BB_FICHEROS}"
+
+"${PATH_SCRIPTS}save_page_as.sh" "${BB_URL_TODAY}" --destination "${BB_FICHERO_TODAY}" --browser "google-chrome"
+"${PATH_SCRIPTS}save_page_as.sh" "${BB_URL_TOMORROW}" --destination "${BB_FICHERO_TOMORROW}" --browser "google-chrome"
+
+echo -e $(date +"%T")" Parseando las carreras FUTURAS (today y tomorrow) de BETBRIGHT mediante JAVA aqui: ${PATH_BRUTO}semillas_betbright" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+
 java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT" "${PATH_BRUTO}semillas_betbright" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+echo -e "PENDIENTE Leer todas las URLs de detalles (del fichero) y descargar cada detalle uno a uno mediante script externo. La ruta de cada FICHERO BRUTO DE DETALLE debe ser: ${PATH_BRUTO}semillas_betbright_DET_XXX (donde XXX es 1, 2... 10,11...111,112)" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT_DETALLES" "${PATH_BRUTO}semillas_betbright" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+
 consultar "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_BB_FULL}' INTO TABLE datos_desa.tb_cg_semillas_betbright FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_betbright LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
-
 
 ##########################################
 echo -e $(date +"%T")" GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}

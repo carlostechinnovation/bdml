@@ -18,11 +18,11 @@ echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos -------
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${PATH_LOG}
 
-#echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
-#${PATH_SCRIPTS}'galgos_MOD010.sh'
+echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD010.sh'
 
-echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD020.sh'
+#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD020.sh'
 
 #echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD030.sh'

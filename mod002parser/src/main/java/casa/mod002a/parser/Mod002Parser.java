@@ -67,8 +67,9 @@ public class Mod002Parser implements Serializable {
 	 * PARAM2 - Path entrada: TAG del día.
 	 * 
 	 * @param args
+	 * @throws IOException
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 
 		// LOGS: Set up a simple configuration that logs on the console.
 		BasicConfigurator.configure();
@@ -215,6 +216,17 @@ public class Mod002Parser implements Serializable {
 
 			try {
 				BetbrightManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
+
+			} catch (InterruptedException e) {
+				MY_LOGGER.error("ERROR Excepcion de galgos.");
+				e.printStackTrace();
+			}
+
+		} else if (param1 != null && param1.equals("GALGOS_02_BETBRIGHT_DETALLES") && param2 != null
+				&& !param2.isEmpty() && param3 != null && !param3.isEmpty()) {
+
+			try {
+				BetbrightManager.getInstancia().descargarYParsearSemillasDetalles(param2, true, param3);
 
 			} catch (InterruptedException e) {
 				MY_LOGGER.error("ERROR Excepcion de galgos.");

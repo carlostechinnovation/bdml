@@ -25,29 +25,31 @@ public class GbgbDownloader {
 	}
 
 	/**
+	 * Dada una URL, descarga su contenido de Internet en una carpeta indicada.
+	 * 
 	 * @param pathOut
-	 *            Path absoluto donde guardar el fichero bruto descargado
+	 *            Path absoluto del FICHERO (no carpeta) donde se van a GUARDAR los
+	 *            DATOS BRUTOS.
 	 * @param borrarSiExiste
-	 *            Borrar fichero destino, si ya existe.
+	 *            BOOLEAN que indica si se quiere BORRAR el FICHERO (no la carpeta)
+	 *            de donde se van a guardar los DATOS BRUTOS.
+	 * @param urlEntrada
+	 *            URL de la página web a descargar
 	 */
-	public void descargarCarreras(String pathOut, Boolean borrarSiExiste, String urlBet365) {
+	public void descargarCarreras(String pathOut, Boolean borrarSiExiste, String urlEntrada) {
 
-		MY_LOGGER.debug("INICIO");
-		MY_LOGGER.debug("pathOut=" + pathOut);
-		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.info("[URL|pathOut|borrarSiExiste] --> " + urlEntrada + " | " + pathOut + " | " + borrarSiExiste);
 
 		try {
-
-			MY_LOGGER.debug("Borrando fichero de salida preexistente " + pathOut + " ...");
-			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.debug("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
-				if (borrarSiExiste) {
-					Files.delete(Paths.get(pathOut));
-				}
+			if (Files.exists(Paths.get(pathOut)) && borrarSiExiste) {
+				MY_LOGGER.debug("Borrando fichero de salida preexistente...");
+				Files.delete(Paths.get(pathOut));
 			}
 
+			MY_LOGGER.info("--- Peticion HTTP normal ---");
 			// Request
-			URL url = new URL(urlBet365);
+			URL url = new URL(urlEntrada);
+			HttpURLConnection.setFollowRedirects(true);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(true); // Conexion usada para output
@@ -55,7 +57,6 @@ public class GbgbDownloader {
 			// Request Headers
 			con.setRequestProperty("Content-Type",
 					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-			String contentType = con.getHeaderField("Content-Type");
 
 			// TIMEOUTs
 			con.setConnectTimeout(5000);
@@ -63,14 +64,16 @@ public class GbgbDownloader {
 
 			// Handling Redirects
 			con.setInstanceFollowRedirects(false);
-			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.debug("HTTP GET " + url + " ...");
-			con = (HttpURLConnection) url.openConnection();
+			// MY_LOGGER.info("--- Peticion HTTP con REDIRECTS ---");
+			// HttpURLConnection.setFollowRedirects(true);
+			// con = (HttpURLConnection) url.openConnection();
+			// con.connect();// COMUNICACION
 
 			// CODIGO de RESPUESTA
 			int status = con.getResponseCode();
 			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
+				MY_LOGGER.info("--- Peticion HTTP escapando caracteres espacio en URL ---");
 				String location = con.getHeaderField("Location");
 				URL newUrl = new URL(location);
 				con = (HttpURLConnection) newUrl.openConnection();
@@ -90,7 +93,6 @@ public class GbgbDownloader {
 			// Escribir SALIDA
 			MY_LOGGER.debug("Escribiendo a fichero...");
 			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.debug("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {

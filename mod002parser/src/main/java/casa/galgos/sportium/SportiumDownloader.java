@@ -25,26 +25,31 @@ public class SportiumDownloader {
 	}
 
 	/**
+	 * Dada una URL, descarga su contenido de Internet en una carpeta indicada.
+	 * 
+	 * @param urlCarrera
+	 *            URL de la página web a descargar
 	 * @param pathOut
+	 *            Path absoluto del FICHERO (no carpeta) donde se van a GUARDAR los
+	 *            DATOS BRUTOS.
 	 * @param borrarSiExiste
+	 *            BOOLEAN que indica si se quiere BORRAR el FICHERO (no la carpeta)
+	 *            de donde se van a guardar los DATOS BRUTOS.
 	 */
 	public void descargarDeURLsAFicheros(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info(pathOut + "-->" + urlCarrera);
-		MY_LOGGER.debug("borrarSiExiste=" + borrarSiExiste);
+		MY_LOGGER.info("[URL|pathOut|borrarSiExiste] --> " + urlCarrera + " | " + pathOut + " | " + borrarSiExiste);
 
 		try {
-
-			MY_LOGGER.debug("Borrando fichero de salida preexistente " + pathOut + " ...");
-			if (Files.exists(Paths.get(pathOut))) {
-				MY_LOGGER.debug("El fichero ya existe. Lo borramos para crear el nuevo: " + pathOut);
-				if (borrarSiExiste) {
-					Files.delete(Paths.get(pathOut));
-				}
+			if (Files.exists(Paths.get(pathOut)) && borrarSiExiste) {
+				MY_LOGGER.debug("Borrando fichero de salida preexistente...");
+				Files.delete(Paths.get(pathOut));
 			}
 
+			MY_LOGGER.info("--- Peticion HTTP normal ---");
 			// Request
 			URL url = new URL(urlCarrera);
+			HttpURLConnection.setFollowRedirects(true);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			con.setDoOutput(true); // Conexion usada para output
@@ -52,7 +57,6 @@ public class SportiumDownloader {
 			// Request Headers
 			con.setRequestProperty("Content-Type",
 					"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-			String contentType = con.getHeaderField("Content-Type");
 
 			// TIMEOUTs
 			con.setConnectTimeout(5000);
@@ -60,14 +64,16 @@ public class SportiumDownloader {
 
 			// Handling Redirects
 			con.setInstanceFollowRedirects(false);
-			HttpURLConnection.setFollowRedirects(true);
 
-			MY_LOGGER.debug("HTTP GET " + url + " ...");
-			con = (HttpURLConnection) url.openConnection();
+			// MY_LOGGER.info("--- Peticion HTTP con REDIRECTS ---");
+			// HttpURLConnection.setFollowRedirects(true);
+			// con = (HttpURLConnection) url.openConnection();
+			// con.connect();// COMUNICACION
 
 			// CODIGO de RESPUESTA
 			int status = con.getResponseCode();
 			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
+				MY_LOGGER.info("--- Peticion HTTP escapando caracteres espacio en URL ---");
 				String location = con.getHeaderField("Location");
 				URL newUrl = new URL(location.replace(" ", "%20"));
 				con = (HttpURLConnection) newUrl.openConnection();
@@ -87,7 +93,6 @@ public class SportiumDownloader {
 			// Escribir SALIDA
 			MY_LOGGER.debug("Escribiendo a fichero...");
 			MY_LOGGER.debug("StringBuffer con " + content.length() + " elementos de 16-bits)");
-			MY_LOGGER.debug("Path fichero salida: " + pathOut);
 			Files.write(Paths.get(pathOut), content.toString().getBytes());
 
 		} catch (IOException e) {

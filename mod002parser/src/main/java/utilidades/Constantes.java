@@ -26,19 +26,21 @@ public class Constantes {
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
 	public static final String GALGOS_GBGB_HISTORICO_GALGO = GALGOS_GBGB + "/RaceCard.aspx?dogName=";
-	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 24 * 7;// Ultimas X semanas
+	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 4 * 7;// Ultimas X semanas
 	public static final String GALGOS_SPORTIUM_PREFIJO = "https://sport-mobile.sportium.es";
 	public static final String GALGOS_FUTUROS_SPORTIUM = GALGOS_SPORTIUM_PREFIJO + "/es/s/GREY/Galgos";
 	public static final String GALGOS_BETBRIGHT_PREFIJO = "https://www.betbright.com";
 	public static final String GALGOS_FUTUROS_BETBRIGHT = GALGOS_BETBRIGHT_PREFIJO + "/greyhound-racing";
 	public static final String GALGOS_FUTUROS_BETBRIGHT_TODAY = GALGOS_FUTUROS_BETBRIGHT + "/today";
 	public static final String GALGOS_FUTUROS_BETBRIGHT_TOMORROW = GALGOS_FUTUROS_BETBRIGHT + "/tomorrow";
+	public static final boolean GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA = false; // como me banean, lo descargo
+																						// desde fuera con un script
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 30; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 2; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 3000;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 5;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 100L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
 	public static final Integer MIN_PESO_GALGO = 15;// kg

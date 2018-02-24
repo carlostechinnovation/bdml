@@ -36,7 +36,7 @@ public class SportiumParserDetalleCarreraFuturaTest {
 		Document doc = Jsoup.parse(contenidoWeb);
 
 		Elements tablaDeGalgos = doc.getElementsByClass("racecard");
-		Element tbody = (Element) tablaDeGalgos.get(0).childNode(1);
+		Element tbody = (Element) tablaDeGalgos.get(0).childNode(3);
 
 		List<SportiumGalgoFuturoEnCarreraAux> out = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
