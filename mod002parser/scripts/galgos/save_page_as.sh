@@ -6,7 +6,7 @@ set -o pipefail
 
 # Assert existence of xdotool to begin with
 if ! xdotool --help &>/dev/null; then
-    printf "ERROR: 'xdotool' is not present (or not in the PATH). Please visit http://www.semicomplete.com/projects/xdotool/ to download it for your platform.\n" >&2
+    echo -e "ERROR: 'xdotool' is not present (or not in the PATH). Please visit http://www.semicomplete.com/projects/xdotool/ to download it for your platform.\n" >&2
     exit 1
 fi
 
@@ -19,16 +19,16 @@ suffix=""
 url=""
 
 function print_usage() {
-    printf "\n%s: Open the given url in a browser tab/window, perform 'Save As' operation and close the tab/window.\n\n" "${scriptname}" >&2
-    printf "USAGE:\n   %s URL [OPTIONS]\n\n" "${scriptname}" >&2
-    printf "URL                      The url of the web page to be saved.\n\n" >&2
-    printf "options:\n" >&2
-    printf "  -d, --destination      Destination path. If a directory, then file is saved with default name inside the directory, else assumed to be full path of target file. Default = '%s'\n" "${destination}" >&2
-    printf "  -s, --suffix           An optional suffix string for the target file name (ignored if --destination arg is a full path)\n" >&2
-    printf "  -b, --browser          Browser executable to be used (must be one of 'google-chrome', 'chromium-browser' or 'firefox'). Default = '%s'.\n" "${browser}" >&2
-    printf "  --load-wait-time       Number of seconds to wait for the page to be loaded (i.e., seconds to sleep before Ctrl+S is 'pressed'). Default = %s\n" "${load_wait_time}" >&2
-    printf "  --save-wait-time       Number of seconds to wait for the page to be saved (i.e., seconds to sleep before Ctrl+F4 is 'pressed'). Default = %s\n" "${save_wait_time}" >&2
-    printf "  -h, --help             Display this help message and exit.\n" >&2
+    echo -e "\n%s: Open the given url in a browser tab/window, perform 'Save As' operation and close the tab/window.\n\n" "${scriptname}" >&2
+    echo -e "USAGE:\n   %s URL [OPTIONS]\n\n" "${scriptname}" >&2
+    echo -e "URL                      The url of the web page to be saved.\n\n" >&2
+    echo -e "options:\n" >&2
+    echo -e "  -d, --destination      Destination path. If a directory, then file is saved with default name inside the directory, else assumed to be full path of target file. Default = '%s'\n" "${destination}" >&2
+    echo -e "  -s, --suffix           An optional suffix string for the target file name (ignored if --destination arg is a full path)\n" >&2
+    echo -e "  -b, --browser          Browser executable to be used (must be one of 'google-chrome', 'chromium-browser' or 'firefox'). Default = '%s'.\n" "${browser}" >&2
+    echo -e "  --load-wait-time       Number of seconds to wait for the page to be loaded (i.e., seconds to sleep before Ctrl+S is 'pressed'). Default = %s\n" "${load_wait_time}" >&2
+    echo -e "  --save-wait-time       Number of seconds to wait for the page to be saved (i.e., seconds to sleep before Ctrl+F4 is 'pressed'). Default = %s\n" "${save_wait_time}" >&2
+    echo -e "  -h, --help             Display this help message and exit.\n" >&2
 }
 
 while [ "$#" -gt 0 ]
@@ -65,12 +65,12 @@ do
             exit 0
             ;;
         -*)
-            printf "ERROR: Unknown option: %s\n" "${1}">&2
+            echo -e "ERROR: Unknown option: %s\n" "${1}">&2
             print_usage
             exit 1
             ;;
         *)  if [ ! -z "$url" ]; then
-                printf "ERROR: Expected exactly one positional argument (URL) to be present, but encountered a second one ('%s').\n\n" "${1}" >&2
+                echo -e "ERROR: Expected exactly one positional argument (URL) to be present, but encountered a second one ('%s').\n\n" "${1}" >&2
                 print_usage
                 exit 1
             fi
@@ -84,70 +84,70 @@ done
 # (Inspiration: http://stackoverflow.com/a/13596664/1857518)
 function has_non_printable_or_non_ascii() {
     LANG=C
-    if printf "%s" "${1}" | grep '[^ -~]\+' &>/dev/null; then
-        printf 1
+    if echo -e "%s" "${1}" | grep '[^ -~]\+' &>/dev/null; then
+        echo -e 1
     else
-        printf 0
+        echo -e 0
     fi
 }
 
 function validate_input() {
     if [[ -z "${url}" ]]; then
-        printf "ERROR: URL must be specified." >&2
+        echo -e "ERROR: URL must be specified." >&2
         print_usage
         exit 1
     fi
 
     if [[ -d "${destination}" ]]; then
-        printf "INFO: The specified destination ('%s') is a directory path, will save file inside it with the default name.\n" "${destination}">&2
+        echo -e "INFO: The specified destination ('%s') is a directory path, will save file inside it with the default name.\n" "${destination}">&2
     else
         local basedir="$(dirname "${destination}")"
         if [[ ! -d "${basedir}" ]]; then
-            printf "ERROR: Directory '%s' does not exist - Will NOT continue.\n" "${basedir}" >&2
+            echo -e "ERROR: Directory '%s' does not exist - Will NOT continue.\n" "${basedir}" >&2
             exit 1
         fi
     fi
     destination="$(readlink -f "$destination")"  # Ensure absolute path
 
     if [[ "${browser}" != "google-chrome" && "${browser}" != "chromium-browser" && "${browser}" != "firefox" ]]; then
-        printf "ERROR: Browser (%s) is not supported, must be one of 'google-chrome', 'chromium-browser' or 'firefox'.\n" "${browser}" >&2
+        echo -e "ERROR: Browser (%s) is not supported, must be one of 'google-chrome', 'chromium-browser' or 'firefox'.\n" "${browser}" >&2
         exit 1
     fi
 
     if ! command -v "${browser}" &>/dev/null; then
-        printf "ERROR: Command '${browser}' not found. Make sure it is installed, and in path.\n" >&2
+        echo -e "ERROR: Command '${browser}' not found. Make sure it is installed, and in path.\n" >&2
         exit 1
     fi
 
     local num_regexp='^.[0-9]+$|^[0-9]+$|^[0-9]+.[0-9]+$'  # Matches a valid number (in decimal notation)
     if [[ ! "${load_wait_time}" =~ $num_regexp || ! "${save_wait_time}" =~ $num_regexp ]]; then
-        printf "ERROR: --load-wait-time (='%s'), and --save_wait_time(='%s') must be valid numbers.\n" "${load_wait_time}" "${load_wait_time}" >&2
+        echo -e "ERROR: --load-wait-time (='%s'), and --save_wait_time(='%s') must be valid numbers.\n" "${load_wait_time}" "${load_wait_time}" >&2
         exit 1
     fi
 
     if [[ $(has_non_printable_or_non_ascii "${destination}") -eq 1 || $(has_non_printable_or_non_ascii "${suffix}") -eq 1 ]]; then
-        printf "ERROR: Either --destination ('%s') or --suffix ('%s') contains a non ascii or non-printable ascii character(s). " "${destination}" "${suffix}" >&2
-        printf "'xdotool' does not mingle well with non-ascii characters (https://code.google.com/p/semicomplete/issues/detail?id=14).\n\n" >&2
-        printf '!!!! Will NOT proceed !!!!\n' >&2
+        echo -e  "ERROR: Either --destination ('%s') or --suffix ('%s') contains a non ascii or non-printable ascii character(s). " "${destination}" "${suffix}" >&2
+        echo -e  "'xdotool' does not mingle well with non-ascii characters (https://code.google.com/p/semicomplete/issues/detail?id=14).\n\n" >&2
+        echo -e  '!!!! Will NOT proceed !!!!\n' >&2
         exit 1
     fi
 }
 validate_input
 ##############
 
-echo -e "Launch ${browser}, and wait for the page to load..."
+echo -e "Abriendo ${browser} con opciones ESPECIALES y esperando a que se cargue la pagina..."
 sudo ${browser} --no-sandbox --incognito "${url}" &>/dev/null &
 sleep ${load_wait_time}
 
-echo -e "Find the id for the ${browser} window..."
+echo -e "Buscando el ID de la ventana del navegador..."
 browser_wid="$(xdotool search --sync --onlyvisible --class "${browser}" | head -n 1)"
 wid_re='^[0-9]+$'  # window-id must be a valid integer
 if [[ ! "${browser_wid}" =~ ${wid_re} ]]; then
-    printf "ERROR: Unable to find X-server window id for browser.\n" >&2
+    echo -e "ERROR: Unable to find X-server window id for browser.\n" >&2
     exit 1
 fi
 
-echo -e "Activate the ${browser} window, and PRESS ctrl+s"
+echo -e "Activando la ventana encontrada y pulsando CTRL+S..."
 xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+s"
 
 sleep 1 # Give 'Save as' dialog box time to show up
@@ -161,7 +161,7 @@ fi
 # Find window id for the "Save file" dialog box
 savefile_wid="$(xdotool search --name "$savefile_dialog_title" | head -n 1)"
 if [[ ! "${savefile_wid}" =~ ${wid_re}  ]]; then
-    printf "ERROR: Unable to find window id for 'Save File' Dialog.\n" >&2
+    echo -e "ERROR: Unable to find window id for 'Save File' Dialog.\n" >&2
     exit 1
 fi
 
@@ -188,8 +188,8 @@ if [[ ! -z "${suffix}" ]]; then
     # but this is the only fix I can think for this special case right now. Of course it's easy to tweak the number of
     # Left key moves you need if you know your file types in advance.
     if [[ "${is_kde}" -eq 1 ]]; then
-        printf "INFO: Desktop session is found to be '${DESKTOP_SESSION}', hence the full file name will be highlighted. " >&2
-        printf "Assuming extension .html to move back 5 character left before adding suffix (change accordingly if you need to).\n" >&2
+        echo -e "INFO: Desktop session is found to be '${DESKTOP_SESSION}', hence the full file name will be highlighted. " >&2
+        echo -e "Assuming extension .html to move back 5 character left before adding suffix (change accordingly if you need to).\n" >&2
         xdotool windowactivate "${savefile_wid}" key --delay 40 --clearmodifier End Left Left Left Left Left
     else
         xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifiers Right
@@ -218,15 +218,14 @@ if [[ ! -z "${destination}" ]]; then
 fi
 xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifiers Return
 
-echo -e "INFO: Saving web page ...\n"
-
+echo -e "GUARDANDO en ruta = ${destination}\n"
 
 
 
 echo -e "Waiting for the file to be completely saved..."
 sleep ${save_wait_time}
 
-echo -e "Close the browser tab/window (Ctrl+w for KDE, Ctrl+F4 otherwise)..."
+echo -e "Cerrando el tab/ventana del navegador (Ctrl+w for KDE, Ctrl+F4 otherwise)..."
 if [[ "${is_kde}" -eq 1 ]]; then
     xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+w"
 else
@@ -236,12 +235,13 @@ fi
 
 
 
-echo -e "Buscamos el proceso del navegador web abierto..."
-ps -aux | grep '/usr/bin/google-chrome --incognito' | awk '{print $2}'  > "./navegador_temp"
-head -n 1 "./navegador_temp" > "./navegador_id_temp"
-num_proceso_navegador=$(cat "./navegador_id_temp")
-kill -9 ${num_proceso_navegador}
-echo -e "Proceso navegador WEB matado."
+echo -e "Buscamos el proceso del navegador web abierto para matarlo... (NO LO HACEMOS)"
+#ps -aux | grep '/usr/bin/google-chrome --incognito' | awk '{print $2}'  > "./navegador_temp"
+#head -n 1 "./navegador_temp" > "./navegador_id_temp"
+#num_proceso_navegador=$(cat "./navegador_id_temp")
+#echo -e "Proceso navegador WEB=${num_proceso_navegador}"
+#kill -9 ${num_proceso_navegador}
+#echo -e "Proceso navegador WEB matado."
 
 
 
