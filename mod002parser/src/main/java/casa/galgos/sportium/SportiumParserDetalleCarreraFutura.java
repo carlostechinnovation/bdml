@@ -50,7 +50,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 		try {
 			bruto = SportiumParserDetalleCarreraFutura.readFile(pathIn, Charset.forName("ISO-8859-1"));
 
-			List<SportiumGalgoFuturoEnCarreraAux> galgosExtraidos = parsear(bruto);
+			List<SportiumGalgoFuturoEnCarreraAux> galgosExtraidos = parsear(bruto, carreraIn.urlDetalle);
 
 			if (galgosExtraidos != null) {
 				for (SportiumGalgoFuturoEnCarreraAux item : galgosExtraidos) {
@@ -89,16 +89,18 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<SportiumGalgoFuturoEnCarreraAux> parsear(String in) throws Exception {
+	public static List<SportiumGalgoFuturoEnCarreraAux> parsear(String in, String urlFuenteWeb) throws Exception {
 
 		Document doc = Jsoup.parse(in);
 		Elements tablaDeGalgos = doc.getElementsByClass("racecard");
 
 		List<SportiumGalgoFuturoEnCarreraAux> galgos = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
+		MY_LOGGER.info("tablaDeGalgos -->" + tablaDeGalgos.size());
 		Element primeraPestania = null;
 		for (Element pestania : tablaDeGalgos) {
-			if (pestania.toString().contains("class=\"mkt_content racecard sortable\"")
+			if (pestania.toString().contains(">Posici")
+					|| pestania.toString().contains("class=\"mkt_content racecard sortable\"")
 					|| pestania.toString().contains("class=\"mkt racecard\"")) {
 				primeraPestania = pestania;
 
@@ -108,9 +110,11 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		if (primeraPestania == null) {
 			MY_LOGGER.error(
-					"Sportium - parsear: NO se ha podido parsear bien el detalle de una carrera futura de Sportium.");
+					"Sportium - parsear: NO se ha podido parsear bien el detalle de una carrera futura de Sportium. Web que ha creado el error: "
+							+ urlFuenteWeb + "\nContenido a parsear:\n\n" + tablaDeGalgos.toString() + "\n\n");
 			throw new Exception(
-					"Sportium - parsear: NO se ha podido parsear bien el detalle de una carrera futura de Sportium.");
+					"Sportium - parsear: NO se ha podido parsear bien el detalle de una carrera futura de Sportium. Web que ha creado el error: "
+							+ urlFuenteWeb + "\nContenido a parsear:\n\n" + tablaDeGalgos.toString() + "\n\n");
 		}
 
 		// Futura = si no contiene la cabecera "Posición"

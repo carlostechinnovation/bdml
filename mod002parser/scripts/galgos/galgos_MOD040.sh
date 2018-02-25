@@ -210,7 +210,7 @@ mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, p
 echo -e "\nCalculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_val_economico_${TAG};" 2>&1 1>>${LOG_ML}
 
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A INNER JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre AND GH.sp>=2.01);" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A INNER JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre AND A.posicion_predicha IN (1,2) AND GH.sp>=2.01);" 2>&1 1>>${LOG_ML}
 
 mysql -u root --password=datos1986 --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
 

@@ -40,16 +40,18 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @param carreraIn
 	 * @return Instancia Carrera con los galgos ya rellenos
 	 */
-	public CarreraSemillaBetright ejecutar(String pathIn, CarreraSemillaBetright carreraIn) {
+	public CarreraSemillaBetright ejecutar(String pathIn, String urlCarreraDetalle) {
 
 		MY_LOGGER.debug("GALGOS-BetbrightParserDetalleCarreraFutura: INICIO");
 
 		String bruto = "";
+		CarreraSemillaBetright out = new CarreraSemillaBetright(urlCarreraDetalle, null, null, null, null, null,
+				new ArrayList<CarreraGalgoSemillaBetright>());
 
 		try {
 			bruto = BetbrightParserDetalleCarreraFutura.readFile(pathIn, Charset.forName("ISO-8859-1"));
 
-			parsear(bruto, carreraIn);
+			parsear(bruto, out);
 
 		} catch (Exception e) {
 			MY_LOGGER.error("Error:" + e.getMessage());
@@ -57,7 +59,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 		}
 
 		MY_LOGGER.debug("GALGOS-BetbrightParserDetalleCarreraFutura: FIN");
-		return carreraIn;
+		return out;
 	}
 
 	/**
@@ -82,7 +84,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public static void parsear(String in, CarreraSemillaBetright carreraIn) throws Exception {
+	public static void parsear(String in, CarreraSemillaBetright modelo) throws Exception {
 
 		Document doc = Jsoup.parse(in);
 
@@ -95,10 +97,10 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 			Element filasGalgos = contenido.getElementsByClass("racecard-inner").get(0);
 
 			// Parseamos el contenido y lo metemos en CarreraSemillaBetright
-			parsearCabecera(cabeceraCarrera, carreraIn);
-			parsearFilasGalgos(filasGalgos, carreraIn);
+			parsearCabecera(cabeceraCarrera, modelo);
+			parsearFilasGalgos(filasGalgos, modelo);
 
-			MY_LOGGER.info("Betbright - Numero de galgos extraidos de la carrera futura: " + carreraIn.listaCG.size());
+			MY_LOGGER.info("Betbright - Numero de galgos extraidos de la carrera futura: " + modelo.listaCG.size());
 		}
 
 	}

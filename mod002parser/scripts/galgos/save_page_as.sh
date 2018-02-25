@@ -225,6 +225,7 @@ echo -e "GUARDANDO en ruta = ${destination}\n"
 echo -e "Waiting for the file to be completely saved..."
 sleep ${save_wait_time}
 
+
 echo -e "Cerrando el tab/ventana del navegador (Ctrl+w for KDE, Ctrl+F4 otherwise)..."
 if [[ "${is_kde}" -eq 1 ]]; then
     xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+w"
@@ -233,19 +234,20 @@ else
 fi
 
 
+echo -e "Buscamos el proceso del navegador web abierto para matarlo..."
+ps -aux | grep '/usr/bin/google-chrome --incognito' | awk '{print $2}'  > "./navegador_temp"
+head -n 1 "./navegador_temp" > "./navegador_id_temp"
+num_proceso_navegador=$(cat "./navegador_id_temp")
+echo -e "Proceso navegador WEB=${num_proceso_navegador}"
+
+if [ ${num_proceso_navegador} -gt 0 ]
+  then
+    kill -9 ${num_proceso_navegador}
+    echo -e "Proceso navegador WEB matado."
+fi
 
 
-echo -e "Buscamos el proceso del navegador web abierto para matarlo... (NO LO HACEMOS)"
-#ps -aux | grep '/usr/bin/google-chrome --incognito' | awk '{print $2}'  > "./navegador_temp"
-#head -n 1 "./navegador_temp" > "./navegador_id_temp"
-#num_proceso_navegador=$(cat "./navegador_id_temp")
-#echo -e "Proceso navegador WEB=${num_proceso_navegador}"
-#kill -9 ${num_proceso_navegador}
-#echo -e "Proceso navegador WEB matado."
-
-
-
-echo -e "INFO: Done!\n" 
+echo -e "Descarga hecha (via hack)\n" 
 
 
 

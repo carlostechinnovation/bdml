@@ -69,7 +69,7 @@ public class Mod002Parser implements Serializable {
 	 * @param args
 	 * @throws IOException
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 
 		// LOGS: Set up a simple configuration that logs on the console.
 		BasicConfigurator.configure();

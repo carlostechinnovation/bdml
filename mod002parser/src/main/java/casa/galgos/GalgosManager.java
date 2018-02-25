@@ -29,8 +29,8 @@ import casa.galgos.gbgb.GbgbGalgoHistoricoCarrera;
 import casa.galgos.gbgb.GbgbParserCarreraDetalle;
 import casa.galgos.gbgb.GbgbParserGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
-import casa.galgos.sportium.CarreraSemillaSportium;
 import casa.galgos.sportium.CarreraGalgoSemillaSportium;
+import casa.galgos.sportium.CarreraSemillaSportium;
 import casa.galgos.sportium.SportiumDownloader;
 import casa.galgos.sportium.SportiumParserCarrerasFuturas;
 import casa.galgos.sportium.SportiumParserDetalleCarreraFutura;
@@ -59,8 +59,9 @@ public class GalgosManager implements Serializable {
 	public List<String> galgosYaAnalizados = new ArrayList<String>();
 
 	// LISTAS con datos DEFINITIVOS para guardar en sistema de ficheros
-	public List<CarreraSemillaSportium> galgosFuturos = new ArrayList<CarreraSemillaSportium>(); // Galgos en los que vamos a apostar
-																					// dinero real
+	public List<CarreraSemillaSportium> galgosFuturos = new ArrayList<CarreraSemillaSportium>(); // Galgos en los que
+																									// vamos a apostar
+	// dinero real
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
 	public Set<String> urlsHistoricoGalgos = new LinkedHashSet<String>(); // URLs de historicos SIN DUPLICADOS

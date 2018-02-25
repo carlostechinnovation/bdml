@@ -28,10 +28,22 @@ public class SportiumParserDetalleCarreraFuturaTest {
 	@Rule
 	public ResourceFile trozoPaginaFuturo = new ResourceFile("/" + "sportium_carrera_detalle_con_SP_filadetalle.html");
 
+	@Rule
+	public ResourceFile paginaMedioVacia = new ResourceFile("/" + "sportium_carrera_detalle_con_SP_mediovacia.html");
+
 	@Test
 	public void parsearTbodyFilaTest() throws Exception {
 
-		String contenidoWeb = trozoPaginaFuturo.getContent("ISO-8859-1");
+		nucleo(trozoPaginaFuturo);
+		nucleo(paginaMedioVacia);
+	}
+
+	/**
+	 * @param pagina
+	 */
+	public void nucleo(ResourceFile pagina) throws Exception {
+
+		String contenidoWeb = pagina.getContent("ISO-8859-1");
 
 		Document doc = Jsoup.parse(contenidoWeb);
 

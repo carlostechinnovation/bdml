@@ -49,7 +49,7 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 
 			} else {
 				out = parsear(bruto);
-				// MY_LOGGER.info("GALGOS-BetbrightParserCarrerasFuturas: out=" + out);
+				MY_LOGGER.debug("GALGOS-BetbrightParserCarrerasFuturas: out=" + out);
 			}
 
 		} catch (Exception e) {
@@ -89,9 +89,11 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 	 * @throws Exception
 	 */
 	public static List<String> parsear(String in) {
+		MY_LOGGER.debug("\n------ ENTRADA (antes de parsear)--------\n");
+		MY_LOGGER.debug(in.toString());
+		MY_LOGGER.debug("\n--------------\n");
 
 		return extraerUrls(in);
-
 	}
 
 	/**
