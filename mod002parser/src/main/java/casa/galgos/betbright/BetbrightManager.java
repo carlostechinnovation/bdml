@@ -135,10 +135,10 @@ public class BetbrightManager implements Serializable {
 		boolean primero = true;
 		for (String urlCarrera : urlsCarrerasFuturas) {
 
-			String aux = primero ? "" : "\n";
-			aux += urlCarrera;
+			String aux = urlCarrera + "\n";
 
-			Files.write(Paths.get(pathListaUrlsDetalles), aux.getBytes(), StandardOpenOption.CREATE_NEW);
+			Files.write(Paths.get(pathListaUrlsDetalles), aux.getBytes(),
+					primero ? StandardOpenOption.CREATE_NEW : StandardOpenOption.APPEND);
 
 			primero = false;
 		}

@@ -49,7 +49,7 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 
 			} else {
 				out = parsear(bruto);
-				MY_LOGGER.debug("GALGOS-BetbrightParserCarrerasFuturas: out=" + out);
+				// MY_LOGGER.debug("GALGOS-BetbrightParserCarrerasFuturas: out=" + out);
 			}
 
 		} catch (Exception e) {
@@ -89,9 +89,9 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 	 * @throws Exception
 	 */
 	public static List<String> parsear(String in) {
-		MY_LOGGER.debug("\n------ ENTRADA (antes de parsear)--------\n");
-		MY_LOGGER.debug(in.toString());
-		MY_LOGGER.debug("\n--------------\n");
+		// MY_LOGGER.debug("\n------ ENTRADA (antes de parsear)--------\n");
+		// MY_LOGGER.debug(in.toString());
+		// MY_LOGGER.debug("\n--------------\n");
 
 		return extraerUrls(in);
 	}
@@ -120,6 +120,7 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 			String urlExtraida = restante.substring(0, indiceFinal);
 			if (!urlExtraida.contains(",") && urlExtraida.split("-").length >= 4) {
 				urlsExtraidas.add(urlExtraida);
+				MY_LOGGER.info(urlExtraida);
 			}
 
 			restante = restante.substring(indiceFinal + 1);
@@ -129,9 +130,9 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 
 		MY_LOGGER.debug("GALGOS-BetbrightParserCarrerasFuturas - " + "URLs encontradas ==> " + urlsExtraidas.size());
 
-		for (String cad : urlsExtraidas) {
-			MY_LOGGER.debug(cad);
-		}
+		// for (String cad : urlsExtraidas) {
+		// MY_LOGGER.debug(cad);
+		// }
 
 		return urlsExtraidas;
 
