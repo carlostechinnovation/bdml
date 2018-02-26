@@ -118,9 +118,10 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 			int indiceFinal = restante.indexOf("\"");
 
 			String urlExtraida = restante.substring(0, indiceFinal);
-			if (!urlExtraida.contains(",") && urlExtraida.split("-").length >= 4) {
-				urlsExtraidas.add(urlExtraida);
-				MY_LOGGER.info(urlExtraida);
+			if (urlExtraida != null && !urlExtraida.isEmpty() && !urlExtraida.contains(",")
+					&& urlExtraida.split("-").length >= 4 && !urlExtraida.contains("<") && !urlExtraida.contains(">")) {
+				urlsExtraidas.add(urlExtraida.trim());
+				// MY_LOGGER.debug("#" + urlExtraida + "#");
 			}
 
 			restante = restante.substring(indiceFinal + 1);
@@ -129,13 +130,7 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 		}
 
 		MY_LOGGER.debug("GALGOS-BetbrightParserCarrerasFuturas - " + "URLs encontradas ==> " + urlsExtraidas.size());
-
-		// for (String cad : urlsExtraidas) {
-		// MY_LOGGER.debug(cad);
-		// }
-
 		return urlsExtraidas;
-
 	}
 
 	/**

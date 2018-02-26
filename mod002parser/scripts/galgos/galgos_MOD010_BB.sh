@@ -80,13 +80,13 @@ echo -e $(date +"%T")" Parseando las carreras FUTURAS (today y tomorrow) de BETB
 java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT" "${BB_FICHERO_PREFIJO}" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 
-echo -e "Leemos todas las URLs de detalles (del fichero) y descargamos cada detalle uno a uno mediante script externo. La ruta de cada FICHERO BRUTO DE DETALLE debe ser: ${PATH_BRUTO}semillas_betbright_DET_XXX (donde XXX es 1, 2... 10,11...111,112)" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e "Leemos fichero con URLs y descargamos los ficheros de detalle, uno a uno..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
-java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT_DETALLES" "${PATH_BRUTO}semillas_betbright" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-echo -e "BB_Ejemplo de fichero limpio:\n"$(head -n 3 "${PATH_FILE_GALGOS_INICIALES_BB}")
 
-#consultar "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_BB_FULL}' INTO TABLE datos_desa.tb_cg_semillas_betbright FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" #"$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
-#consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_betbright LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
+### PENDIENTE DETALLES
+
+
+
 
 ##########################################
 

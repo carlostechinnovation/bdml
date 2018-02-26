@@ -49,13 +49,18 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 				new ArrayList<CarreraGalgoSemillaBetright>());
 
 		try {
+
+			if (!Files.exists(Paths.get(pathIn))) {
+				throw new Exception("Fichero BB-DETALLE no existe: " + pathIn);
+			}
+
 			bruto = BetbrightParserDetalleCarreraFutura.readFile(pathIn, Charset.forName("ISO-8859-1"));
 
 			parsear(bruto, out);
 
 		} catch (Exception e) {
-			MY_LOGGER.error("Error:" + e.getMessage());
-			e.printStackTrace();
+			MY_LOGGER.error("ERROR --> " + e.getMessage());
+			// e.printStackTrace();
 		}
 
 		MY_LOGGER.debug("GALGOS-BetbrightParserDetalleCarreraFutura: FIN");
