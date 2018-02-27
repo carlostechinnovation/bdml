@@ -135,11 +135,11 @@ function validate_input() {
 validate_input
 ##############
 
-echo -e "Abriendo ${browser} con opciones ESPECIALES y esperando a que se cargue la pagina..."
+#echo -e "Abriendo ${browser} con opciones ESPECIALES y esperando a que se cargue la pagina..."
 sudo ${browser} --no-sandbox --incognito "${url}" &>/dev/null &
 sleep ${load_wait_time}
 
-echo -e "Buscando el ID de la ventana del navegador..."
+#echo -e "Buscando el ID de la ventana del navegador..."
 browser_wid="$(xdotool search --sync --onlyvisible --class "${browser}" | head -n 1)"
 wid_re='^[0-9]+$'  # window-id must be a valid integer
 if [[ ! "${browser_wid}" =~ ${wid_re} ]]; then
@@ -147,7 +147,7 @@ if [[ ! "${browser_wid}" =~ ${wid_re} ]]; then
     exit 1
 fi
 
-echo -e "Activando la ventana encontrada y pulsando CTRL+S..."
+#echo -e "Activando la ventana encontrada y pulsando CTRL+S..."
 xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+s"
 
 sleep 1 # Give 'Save as' dialog box time to show up
@@ -158,6 +158,7 @@ if [[ "${browser}" == "firefox" ]]; then
 else
     savefile_dialog_title="Save file"
 fi
+
 # Find window id for the "Save file" dialog box
 savefile_wid="$(xdotool search --name "$savefile_dialog_title" | head -n 1)"
 if [[ ! "${savefile_wid}" =~ ${wid_re}  ]]; then
@@ -166,7 +167,7 @@ if [[ ! "${savefile_wid}" =~ ${wid_re}  ]]; then
 fi
 
 # Fix for Issue #1: Explicitly focus on the "name" field (works on both: gnome, and kde)
-xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifier "Alt+n"
+xdotool windowactivate "${savefile_wid}" key --delay 100 --clearmodifier "Alt+n"
 
 # Check if we are using kde
 is_kde=0
@@ -190,9 +191,9 @@ if [[ ! -z "${suffix}" ]]; then
     if [[ "${is_kde}" -eq 1 ]]; then
         echo -e "INFO: Desktop session is found to be '${DESKTOP_SESSION}', hence the full file name will be highlighted. " >&2
         echo -e "Assuming extension .html to move back 5 character left before adding suffix (change accordingly if you need to).\n" >&2
-        xdotool windowactivate "${savefile_wid}" key --delay 40 --clearmodifier End Left Left Left Left Left
+        xdotool windowactivate "${savefile_wid}" key --delay 100 --clearmodifier End Left Left Left Left Left
     else
-        xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifiers Right
+        xdotool windowactivate "${savefile_wid}" key --delay 100 --clearmodifiers Right
     fi
     set -u
     ###########################
@@ -201,32 +202,29 @@ if [[ ! -z "${suffix}" ]]; then
     if [[ "${suffix::1}}" == "-" ]]; then
         extraarg="-"
     fi
-    xdotool type --delay 10 --clearmodifiers "${extraarg}" "${suffix}"
+    xdotool type --delay 100 --clearmodifiers "${extraarg}" "${suffix}"
 fi
 
 # Activate the 'Save File' dialog and type in the appropriate filename (depending on ${destination} value: 1) directory, 2) full path, 3) empty)
 if [[ ! -z "${destination}" ]]; then
     if [[ -d "${destination}" ]]; then
         # Case 1: --destination was a directory.
-        xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifiers Home
-        xdotool type --delay 10 --clearmodifiers "${destination}/"
+        xdotool windowactivate "${savefile_wid}" key --delay 100 --clearmodifiers Home
+        xdotool type --delay 100 --clearmodifiers "${destination}/"
     else
         # Case 2: --destination was full path.
-        xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifiers "ctrl+a" "BackSpace"
-        xdotool type --delay 10 --clearmodifiers "${destination}"
+        xdotool windowactivate "${savefile_wid}" key --delay 100 --clearmodifiers "ctrl+a" "BackSpace"
+        xdotool type --delay 100 --clearmodifiers "${destination}"
     fi
 fi
-xdotool windowactivate "${savefile_wid}" key --delay 20 --clearmodifiers Return
+xdotool windowactivate "${savefile_wid}" key --delay 100 --clearmodifiers Return
 
-echo -e "GUARDANDO en ruta = ${destination}\n"
+#echo -e "GUARDANDO en ruta = ${destination}\n"
 
-
-
-echo -e "Waiting for the file to be completely saved..."
+#echo -e "Waiting for the file to be completely saved..."
 sleep ${save_wait_time}
 
-
-echo -e "Cerrando el tab/ventana del navegador (Ctrl+w for KDE, Ctrl+F4 otherwise)..."
+#echo -e "Cerrando el tab/ventana del navegador (Ctrl+w for KDE, Ctrl+F4 otherwise)..."
 if [[ "${is_kde}" -eq 1 ]]; then
     xdotool windowactivate "${browser_wid}" key --clearmodifiers "ctrl+w"
 else
@@ -234,16 +232,16 @@ else
 fi
 
 
-echo -e "Buscamos el proceso del navegador web abierto para matarlo..."
+#echo -e "Buscamos el proceso del navegador web abierto para matarlo..."
 ps -aux | grep '/usr/bin/google-chrome --incognito' | awk '{print $2}'  > "./navegador_temp"
 head -n 1 "./navegador_temp" > "./navegador_id_temp"
 num_proceso_navegador=$(cat "./navegador_id_temp")
-echo -e "Proceso navegador WEB=${num_proceso_navegador}"
+#echo -e "Proceso navegador WEB=${num_proceso_navegador}"
 
 if [ ${num_proceso_navegador} -gt 0 ]
   then
     kill -9 ${num_proceso_navegador}
-    echo -e "Proceso navegador WEB matado."
+    #echo -e "Proceso navegador WEB matado."
 fi
 
 

@@ -26,14 +26,21 @@ public class CarreraGalgoSemillaBetright {
 	@Override
 	public String toString() {
 		String out = "";
-		out += id + Constantes.SEPARADOR_CAMPO;
-		out += carrera.dia + Constantes.SEPARADOR_CAMPO;
-		out += carrera.hora + Constantes.SEPARADOR_CAMPO;
-		out += carrera.estadio + Constantes.SEPARADOR_CAMPO;
-		out += galgoNombre + Constantes.SEPARADOR_CAMPO;
-		out += trap + Constantes.SEPARADOR_CAMPO;
-		out += entrenador + Constantes.SEPARADOR_CAMPO;
-		out += precioSp;
+		out += id;
+		out += Constantes.SEPARADOR_CAMPO;
+		out += carrera.dia != null ? carrera.dia : "";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += carrera.hora != null ? carrera.hora : "";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += carrera.estadio != null && !carrera.estadio.isEmpty() ? carrera.estadio : "";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += galgoNombre != null && !galgoNombre.isEmpty() ? galgoNombre : "";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += trap != null ? trap : "";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += (entrenador != null && !entrenador.isEmpty() ? entrenador : "");
+		out += Constantes.SEPARADOR_CAMPO;
+		out += precioSp != null ? precioSp : "";
 		out += Constantes.SEPARADOR_FILA;
 		return out;
 	}

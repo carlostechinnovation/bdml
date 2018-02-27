@@ -32,60 +32,9 @@ echo -e $(date +"%T")" Borrando ficheros antiguos..." 2>&1 1>>${LOG_DESCARGA_BRU
 rm -f "$PATH_BRUTO*"
 rm -f "$PATH_LIMPIO*"
 
+
 #################### FUTURAS - BETBRIGHT ######################
-PATH_FILE_GALGOS_INICIALES_BB="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales_bb.txt"
-PATH_FILE_GALGOS_INICIALES_BB_FULL="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales_bb.txt_full"
-
-echo -e $(date +"%T")" Descargando todas las carreras FUTURAS de BETBRIGHT usando un navegador..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-BB_URL_TODAY="www.betbright.com/greyhound-racing/today"
-BB_URL_TOMORROW="www.betbright.com/greyhound-racing/tomorrow"
-BB_FICHEROS="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright*"
-BB_FICHERO_PREFIJO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_"
-BB_FICHERO_TODAY="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_today.html"
-BB_FICHERO_TOMORROW="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_tomorrow.html"
-
-echo -e $(date +"%T")" Borrando todos estos ficheros: ${BB_FICHEROS}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-sudo rm -rf ${BB_FICHEROS}
-sleep 2s
-
-num_betbright_restantes=$(ls -l ${BB_FICHEROS} | wc -l)
-echo -e $(date +"%T")" Comprobacion de ficheros NO borrados = "${num_betbright_restantes} 2>&1 1>>${LOG_DESCARGA_BRUTO}
-if [ ${num_betbright_restantes} -gt 0 ]
-  then
-    echo -e "No se han borrado bien los ficheros antiguos de Betbright." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-    exit -1
-fi
-
-
-echo -e $(date +"%T")" Descarga de carreras BB-FUTURAS-TODAY a fichero = "${BB_FICHERO_TODAY} 2>&1 1>>${LOG_DESCARGA_BRUTO}
-"${PATH_SCRIPTS}save_page_as.sh" "${BB_URL_TODAY}" --destination "${BB_FICHERO_TODAY}" --browser "google-chrome" --load-wait-time 6 --save-wait-time 4
-sleep 1s
-echo -e $(date +"%T")" Descarga de carreras BB-FUTURAS-TOMORROW a fichero = "${BB_FICHERO_TOMORROW} 2>&1 1>>${LOG_DESCARGA_BRUTO}
-"${PATH_SCRIPTS}save_page_as.sh" "${BB_URL_TOMORROW}" --destination "${BB_FICHERO_TOMORROW}" --browser "google-chrome" --load-wait-time 6 --save-wait-time 4
-sleep 1s
-
-
-echo -e $(date +"%T")" Borrando ${PATH_FILE_GALGOS_INICIALES_BB} ..."
-rm -f "${PATH_FILE_GALGOS_INICIALES_BB}"
-sleep 2s
-echo -e $(date +"%T")" Borrando ${PATH_FILE_GALGOS_INICIALES_BB_FULL} ..."
-rm -f "${PATH_FILE_GALGOS_INICIALES_BB_FULL}"
-sleep 2s
-echo -e "Comprobando ficheros borrados:"
-echo -e $(ls -l "${PATH_FILE_GALGOS_INICIALES_BB}")
-echo -e $(ls -l "${PATH_FILE_GALGOS_INICIALES_BB_FULL}")
-sleep 2s
-
-echo -e $(date +"%T")" Parseando las carreras FUTURAS (today y tomorrow) de BETBRIGHT mediante JAVA para guardarlas aqui: ${PATH_BRUTO}semillas_betbright" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT" "${BB_FICHERO_PREFIJO}" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-
-
-echo -e "Leemos fichero con URLs y descargamos los ficheros de detalle, uno a uno..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-
-
-### PENDIENTE DETALLES
-
-
+obtenerFuturasBetbright
 
 
 ##########################################

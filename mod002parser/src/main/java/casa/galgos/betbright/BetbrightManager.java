@@ -26,7 +26,6 @@ public class BetbrightManager implements Serializable {
 	static Logger MY_LOGGER = Logger.getLogger(BetbrightManager.class);
 
 	// LISTAS con datos DEFINITIVOS para guardar en sistema de ficheros
-	public List<CarreraSemillaBetright> carreras = new ArrayList<CarreraSemillaBetright>();
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
 	public Set<String> urlsHistoricoGalgos = new LinkedHashSet<String>(); // URLs de historicos SIN DUPLICADOS
@@ -98,7 +97,7 @@ public class BetbrightManager implements Serializable {
 
 		MY_LOGGER.info("URLs obtenidas = TODAY | TOMORROW: " + urlsCarrerasFuturasToday.size() + " | "
 				+ urlsCarrerasFuturasTomorrow.size());
-		List<String> urlsCarrerasFuturas = new ArrayList<String>();
+		Set<String> urlsCarrerasFuturas = new HashSet<String>();// Quitamos repetidos
 		urlsCarrerasFuturas.addAll(urlsCarrerasFuturasToday);
 		urlsCarrerasFuturas.addAll(urlsCarrerasFuturasTomorrow);
 
@@ -123,7 +122,7 @@ public class BetbrightManager implements Serializable {
 	 * @param pathListaUrlsDetalles
 	 * @throws IOException
 	 */
-	public void guardarListaEnFichero(List<String> urlsCarrerasFuturas, String pathListaUrlsDetalles)
+	public void guardarListaEnFichero(Set<String> urlsCarrerasFuturas, String pathListaUrlsDetalles)
 			throws IOException {
 
 		MY_LOGGER.info("Lista de URLs de detalle - Guardando en = " + pathListaUrlsDetalles);
@@ -155,7 +154,7 @@ public class BetbrightManager implements Serializable {
 	 *            BOOLEAN que indica si se quieren GUARDAR los resultados en la
 	 *            carpeta (o no, si son pruebas).
 	 * @param pathListaUrlsDetalles
-	 *            SALIDA
+	 *            Path al FICHERO DE ENTRADA que contiene las URLs de detalle.
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
@@ -175,26 +174,59 @@ public class BetbrightManager implements Serializable {
 
 		List<String> urlsDetalles = leerFicheroConListaDeUrlsDetalles(pathListaUrlsDetalles);
 
-		for (String urlCarreraDetalle : urlsDetalles) {
-			contador++;
-			pathCarreraDetalle = prefijoPathDatosBruto + tag + contador;
+		List<CarreraSemillaBetright> csbbLista = new ArrayList<CarreraSemillaBetright>();
 
-			if (Constantes.GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA) {
-				(new BetbrightDownloader()).descargarDeURLsAFicheros(urlCarreraDetalle, pathCarreraDetalle,
-						guardarEnFicheros);
-			} else {
-				MY_LOGGER.info(
-						"ATENCION: se supone que la carrera futura de BB se ha descargado mediante script (hack) externo en: "
-								+ pathCarreraDetalle);
+		if (urlsDetalles != null && !urlsDetalles.isEmpty()) {
+
+			for (String urlCarreraDetalle : urlsDetalles) {
+				contador++;
+				pathCarreraDetalle = prefijoPathDatosBruto + tag + contador + ".html";// la terminacion HTML la añade el
+																						// script externo
+
+				if (Constantes.GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA) {
+					(new BetbrightDownloader()).descargarDeURLsAFicheros(urlCarreraDetalle, pathCarreraDetalle,
+							guardarEnFicheros);
+				} else {
+					boolean existe = Files.exists(Paths.get(pathCarreraDetalle));
+					String msg = "La carrera futura de BB deberia estar ya descargada mediante script (hack) externo en: "
+							+ pathCarreraDetalle;
+					msg += existe ? "" : " --> NO EXISTE!!";
+					MY_LOGGER.info(msg);
+					if (!existe) {
+						throw new Exception(msg);
+					}
+				}
+
+				// PARSEAR Para cada carrera, extraigo toda la info que pueda y la meto en la
+				// instancia
+				CarreraSemillaBetright csbb = spdcf.ejecutar(pathCarreraDetalle, urlCarreraDetalle);
+
+				if (csbb != null && csbb.distancia != null && csbb.tipoPista != null && csbb.listaCG != null
+						&& !csbb.listaCG.isEmpty()) {
+					csbbLista.add(csbb);
+					MY_LOGGER.info(csbb.toString());
+
+				} else {
+					String msg = "BB-PARSEAR-DETALLE Mal parseado: URL=" + urlCarreraDetalle + " FICHERO="
+							+ pathCarreraDetalle;
+					MY_LOGGER.error(msg);
+					throw new Exception(msg);
+				}
+
+				// TODO Borrar. Esto solo es para pruebas
+				if (contador >= 2) {
+					break;
+				}
+
 			}
 
-			// Para cada carrera, extraigo toda la info que pueda y la meto en la instancia
-			spdcf.ejecutar(pathCarreraDetalle, urlCarreraDetalle);
+			desnormalizarSemillasYGuardarlasEnFicheros(prefijoPathDatosBruto, csbbLista);
+
+			MY_LOGGER.info("BB-Carreras FUTURAS con sus galgos (semillas): OK");
+		} else {
+			MY_LOGGER.error("BB-Carreras FUTURAS con sus galgos (semillas): No hay carreras futuras!!");
+			throw new Exception("BB-Carreras FUTURAS con sus galgos (semillas): No hay carreras futuras!!");
 		}
-
-		desnormalizarSemillasYGuardarlasEnFicheros(prefijoPathDatosBruto);
-
-		MY_LOGGER.info("BB-Carreras FUTURAS con sus galgos (semillas): OK");
 
 	}
 
@@ -222,14 +254,15 @@ public class BetbrightManager implements Serializable {
 	/**
 	 * @param fileGalgosIniciales
 	 */
-	public void desnormalizarSemillasYGuardarlasEnFicheros(String fileGalgosIniciales) {
+	public void desnormalizarSemillasYGuardarlasEnFicheros(String fileGalgosIniciales,
+			List<CarreraSemillaBetright> csbbLista) {
 
-		MY_LOGGER.info("La lista galgosFuturos contiene = " + carreras.size());
+		MY_LOGGER.info("La lista csbbLista contiene = " + csbbLista.size());
 
 		// *********************************************************************
 		Set<String> galgosIniciales = new HashSet<String>();
 
-		for (CarreraSemillaBetright c : carreras) {
+		for (CarreraSemillaBetright c : csbbLista) {
 			for (CarreraGalgoSemillaBetright cg : c.listaCG) {
 				galgosIniciales.add(cg.galgoNombre);
 			}
@@ -237,7 +270,7 @@ public class BetbrightManager implements Serializable {
 		}
 		// *** ACUMULO TODOS los cg ******
 		List<CarreraGalgoSemillaBetright> carreraGalgos = new ArrayList<CarreraGalgoSemillaBetright>();
-		for (CarreraSemillaBetright c : carreras) {
+		for (CarreraSemillaBetright c : csbbLista) {
 			carreraGalgos.addAll(c.listaCG);
 		}
 
@@ -245,11 +278,11 @@ public class BetbrightManager implements Serializable {
 
 		if (carreraGalgos != null && !carreraGalgos.isEmpty()) {
 
-			String path = fileGalgosIniciales;
-			String pathFull = fileGalgosIniciales + "_full";
+			String path = fileGalgosIniciales.replace("DATOS_BRUTO", "DATOS_LIMPIO");
+			String pathFull = path + "_full";
 
-			MY_LOGGER.info("Guardando GALGOS SEMILLA en: " + path);
-			MY_LOGGER.info("Guardando CARRERA-GALGO SEMILLA en: " + pathFull);
+			MY_LOGGER.info("Guardando GALGOS BB-SEMILLA en: " + path);
+			MY_LOGGER.info("Guardando CARRERA-GALGO BB-SEMILLA en: " + pathFull);
 
 			try {
 
@@ -263,10 +296,12 @@ public class BetbrightManager implements Serializable {
 				boolean primero = true;
 				for (String galgoNombre : galgosIniciales) {
 					if (primero) {
-						Files.write(Paths.get(path), (galgoNombre + "\n").getBytes(), StandardOpenOption.CREATE);
+						Files.write(Paths.get(path), (galgoNombre + Constantes.SEPARADOR_FILA).getBytes(),
+								StandardOpenOption.CREATE);
 						primero = false;
 					} else {
-						Files.write(Paths.get(path), (galgoNombre + "\n").getBytes(), StandardOpenOption.APPEND);
+						Files.write(Paths.get(path), (galgoNombre + Constantes.SEPARADOR_FILA).getBytes(),
+								StandardOpenOption.APPEND);
 					}
 				}
 				MY_LOGGER.info("Galgos iniciales: " + galgosIniciales.size());
@@ -287,9 +322,8 @@ public class BetbrightManager implements Serializable {
 				MY_LOGGER.info("Carrera-Galgo iniciales: " + carreraGalgos.size());
 
 				// ******** LIMPIAR LISTAS, porque ya he guardado a fichero **********
-				carreras.clear();
+				csbbLista.clear();
 				carreraGalgos.clear();
-				MY_LOGGER.debug("Limpiando lista en memoria. Estado de la lista tras limpiar: " + carreras.size());
 
 			} catch (IOException e) {
 				MY_LOGGER.error("Error:" + e.getMessage());

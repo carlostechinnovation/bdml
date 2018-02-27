@@ -36,13 +36,17 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * aparecen los GALGOS) y una instancia de CARRERA, extrae los galgos (de la web
 	 * bruta) y los mete en la instancia.
 	 * 
-	 * @param pathIn
-	 * @param carreraIn
+	 * @param pathCarreraDetalle
+	 *            Path del FICHERO DE ENTRADA con los datos BRUTOS de detalle.
+	 * @param urlCarreraDetalle
 	 * @return Instancia Carrera con los galgos ya rellenos
+	 * @throws Exception
 	 */
-	public CarreraSemillaBetright ejecutar(String pathIn, String urlCarreraDetalle) {
+	public CarreraSemillaBetright ejecutar(String pathCarreraDetalle, String urlCarreraDetalle) throws Exception {
 
-		MY_LOGGER.debug("GALGOS-BetbrightParserDetalleCarreraFutura: INICIO");
+		MY_LOGGER.info("GALGOS-BetbrightParserDetalleCarreraFutura: INICIO");
+		MY_LOGGER.info("pathIn=" + pathCarreraDetalle);
+		MY_LOGGER.info("urlCarreraDetalle=" + urlCarreraDetalle);
 
 		String bruto = "";
 		CarreraSemillaBetright out = new CarreraSemillaBetright(urlCarreraDetalle, null, null, null, null, null,
@@ -50,17 +54,13 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 
 		try {
 
-			if (!Files.exists(Paths.get(pathIn))) {
-				throw new Exception("Fichero BB-DETALLE no existe: " + pathIn);
-			}
-
-			bruto = BetbrightParserDetalleCarreraFutura.readFile(pathIn, Charset.forName("ISO-8859-1"));
+			bruto = BetbrightParserDetalleCarreraFutura.readFile(pathCarreraDetalle, Charset.forName("ISO-8859-1"));
 
 			parsear(bruto, out);
 
 		} catch (Exception e) {
 			MY_LOGGER.error("ERROR --> " + e.getMessage());
-			// e.printStackTrace();
+			throw e;
 		}
 
 		MY_LOGGER.debug("GALGOS-BetbrightParserDetalleCarreraFutura: FIN");
@@ -77,7 +77,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
 
-		MY_LOGGER.info("Leyendo " + path + " ...");
+		MY_LOGGER.debug("Leyendo " + path + " ...");
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}
@@ -105,7 +105,8 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 			parsearCabecera(cabeceraCarrera, modelo);
 			parsearFilasGalgos(filasGalgos, modelo);
 
-			MY_LOGGER.info("Betbright - Numero de galgos extraidos de la carrera futura: " + modelo.listaCG.size());
+			MY_LOGGER.info("Betbright - Carrera futura ==> " + modelo.dia + "|" + modelo.hora + " --> Num. galgos = "
+					+ modelo.listaCG.size());
 		}
 
 	}

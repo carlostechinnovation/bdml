@@ -11,7 +11,7 @@ PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.
 FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
 
 PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
-PATH_FILE_GALGOS_INICIALES_FULL="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt_full"
+PATH_FILE_GALGOS_INICIALES_FULL="${PATH_FILE_GALGOS_INICIALES}_full"
 
 PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
 PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
@@ -39,8 +39,7 @@ rm -f "$PATH_BRUTO*"
 rm -f "$PATH_LIMPIO*"
 rm -f "${PATH_FILE_GALGOS_INICIALES}"
 rm -f "${PATH_FILE_GALGOS_INICIALES_FULL}"
-rm -f "${PATH_FILE_GALGOS_INICIALES_BB}"
-rm -f "${PATH_FILE_GALGOS_INICIALES_BB_FULL}"
+
 
 
 ##########################################
@@ -73,8 +72,7 @@ consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semilla
 
 
 #################### FUTURAS - BETBRIGHT ######################
-
-
+obtenerFuturasBetbright
 
 
 ##########################################

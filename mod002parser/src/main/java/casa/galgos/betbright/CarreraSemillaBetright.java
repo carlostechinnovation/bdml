@@ -36,17 +36,17 @@ public class CarreraSemillaBetright implements Serializable {
 
 	@Override
 	public String toString() {
-		String out = "";
+		String out = "CSBB = ";
 
 		out += dia;
 		out += Constantes.SEPARADOR_CAMPO;
 		out += hora;
 		out += Constantes.SEPARADOR_CAMPO;
-		out += estadio;
+		out += estadio != null && !estadio.isEmpty() ? estadio : "";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += tipoPista;
+		out += tipoPista != null && !tipoPista.isEmpty() ? tipoPista : "";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += distancia;
+		out += distancia != null ? distancia : "";
 		out += Constantes.SEPARADOR_CAMPO;
 		out += (listaCG != null && !listaCG.isEmpty()) ? listaCG.size() : "";
 		out += Constantes.SEPARADOR_FILA;
