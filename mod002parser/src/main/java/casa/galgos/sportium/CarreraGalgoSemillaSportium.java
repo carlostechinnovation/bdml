@@ -30,9 +30,9 @@ public class CarreraGalgoSemillaSportium {
 		return out;
 	}
 
-	public String generarSqlCreateTable(String subtipo) {
+	public String generarSqlCreateTable() {
 
-		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_cg_semillas_sportium" + subtipo + " (";
+		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_cg_semillas_sportium" + " (";
 
 		out += "id varchar(100) NOT NULL  PRIMARY KEY, ";
 		out += "dia BIGINT NOT NULL, ";

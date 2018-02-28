@@ -39,8 +39,8 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 
 		String contenidoWeb = resFuturo.getContent("ISO-8859-1");
 
-		CarreraSemillaBetright carreraIn = new CarreraSemillaBetright("URL_previa_conocida", null, null, null, null,
-				null, new ArrayList<CarreraGalgoSemillaBetright>());
+		CarreraSemillaBetbright carreraIn = new CarreraSemillaBetbright("URL_previa_conocida", null, null, null, null,
+				null, new ArrayList<CarreraGalgoSemillaBetbright>());
 
 		BetbrightParserDetalleCarreraFutura.parsear(contenidoWeb, carreraIn);
 
@@ -48,7 +48,7 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 		Assert.assertTrue(carreraIn.listaCG.size() == 6);
 		Assert.assertTrue(carreraIn.distancia != null);
 
-		for (CarreraGalgoSemillaBetright item : carreraIn.listaCG) {
+		for (CarreraGalgoSemillaBetbright item : carreraIn.listaCG) {
 			Assert.assertTrue(item != null);
 			Assert.assertTrue(item.galgoNombre != null && !item.galgoNombre.isEmpty());
 		}
@@ -59,8 +59,8 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 
 		String contenidoWeb = resFuturoNula.getContent("ISO-8859-1");
 
-		CarreraSemillaBetright carreraIn = new CarreraSemillaBetright("URL_previa_conocida", null, null, null, null,
-				null, new ArrayList<CarreraGalgoSemillaBetright>());
+		CarreraSemillaBetbright carreraIn = new CarreraSemillaBetbright("URL_previa_conocida", null, null, null, null,
+				null, new ArrayList<CarreraGalgoSemillaBetbright>());
 
 		BetbrightParserDetalleCarreraFutura.parsear(contenidoWeb, carreraIn);
 
@@ -72,8 +72,8 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 
 		String contenidoWeb = resFuturoConSP.getContent("ISO-8859-1");
 
-		CarreraSemillaBetright carreraIn = new CarreraSemillaBetright("URL_previa_conocida", null, null, null, null,
-				null, new ArrayList<CarreraGalgoSemillaBetright>());
+		CarreraSemillaBetbright carreraIn = new CarreraSemillaBetbright("URL_previa_conocida", null, null, null, null,
+				null, new ArrayList<CarreraGalgoSemillaBetbright>());
 
 		BetbrightParserDetalleCarreraFutura.parsear(contenidoWeb, carreraIn);
 
@@ -81,7 +81,7 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 		Assert.assertTrue(carreraIn.listaCG.size() == 6);
 		Assert.assertTrue(carreraIn.distancia != null);
 
-		for (CarreraGalgoSemillaBetright item : carreraIn.listaCG) {
+		for (CarreraGalgoSemillaBetbright item : carreraIn.listaCG) {
 			Assert.assertTrue(item != null);
 			Assert.assertTrue(item.galgoNombre != null && !item.galgoNombre.isEmpty());
 			Assert.assertTrue(item.precioSp != null);
@@ -93,8 +93,8 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 
 		String contenidoWeb = resFuturoConGalgoEliminado.getContent("ISO-8859-1");
 
-		CarreraSemillaBetright carreraIn = new CarreraSemillaBetright("URL_previa_conocida", null, null, null, null,
-				null, new ArrayList<CarreraGalgoSemillaBetright>());
+		CarreraSemillaBetbright carreraIn = new CarreraSemillaBetbright("URL_previa_conocida", null, null, null, null,
+				null, new ArrayList<CarreraGalgoSemillaBetbright>());
 
 		BetbrightParserDetalleCarreraFutura.parsear(contenidoWeb, carreraIn);
 
@@ -102,7 +102,7 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 		Assert.assertTrue(carreraIn.listaCG.size() == 5);
 		Assert.assertTrue(carreraIn.distancia != null);
 
-		for (CarreraGalgoSemillaBetright item : carreraIn.listaCG) {
+		for (CarreraGalgoSemillaBetbright item : carreraIn.listaCG) {
 			Assert.assertTrue(item != null);
 			Assert.assertTrue(item.galgoNombre != null && !item.galgoNombre.isEmpty());
 		}
@@ -111,14 +111,14 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 	@Test
 	public void prueba() throws Exception {
 
-		List<CarreraSemillaBetright> lista = new ArrayList<CarreraSemillaBetright>();
+		List<CarreraSemillaBetbright> lista = new ArrayList<CarreraSemillaBetbright>();
 		for (int i = 0; i < 3; i++) {
-			lista.add(new CarreraSemillaBetright("URL_previa_conocida", null, null, null, null, null,
-					new ArrayList<CarreraGalgoSemillaBetright>()));
+			lista.add(new CarreraSemillaBetbright("URL_previa_conocida", null, null, null, null, null,
+					new ArrayList<CarreraGalgoSemillaBetbright>()));
 			lista.get(i).urlDetalle = "URL" + i;
 		}
 
-		for (CarreraSemillaBetright item : lista) {
+		for (CarreraSemillaBetbright item : lista) {
 			Assert.assertTrue(item != null);
 			Assert.assertTrue(item.urlDetalle != null);
 			Assert.assertTrue(!item.urlDetalle.isEmpty());

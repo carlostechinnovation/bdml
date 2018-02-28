@@ -36,6 +36,9 @@ public class Constantes {
 	public static final boolean GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA = false; // como me banean, lo descargo
 																						// desde fuera con un script
 
+	public static final Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 2;// util para debuguear con pocos casos.
+																				// Normalmente será 100000
+
 	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 40; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;

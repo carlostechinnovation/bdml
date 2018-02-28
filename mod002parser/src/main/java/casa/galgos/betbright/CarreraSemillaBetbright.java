@@ -7,7 +7,7 @@ import java.util.List;
 
 import utilidades.Constantes;
 
-public class CarreraSemillaBetright implements Serializable {
+public class CarreraSemillaBetbright implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,10 +20,10 @@ public class CarreraSemillaBetright implements Serializable {
 	public String estadio;
 	public String tipoPista;
 	public Integer distancia;
-	public List<CarreraGalgoSemillaBetright> listaCG = new ArrayList<CarreraGalgoSemillaBetright>();
+	public List<CarreraGalgoSemillaBetbright> listaCG = new ArrayList<CarreraGalgoSemillaBetbright>();
 
-	public CarreraSemillaBetright(String urlDetalle, Long dia, Integer hora, String estadio, String tipoPista,
-			Integer distancia, List<CarreraGalgoSemillaBetright> listaCG) {
+	public CarreraSemillaBetbright(String urlDetalle, Long dia, Integer hora, String estadio, String tipoPista,
+			Integer distancia, List<CarreraGalgoSemillaBetbright> listaCG) {
 		super();
 		this.urlDetalle = urlDetalle;
 		this.dia = dia;
@@ -46,7 +46,7 @@ public class CarreraSemillaBetright implements Serializable {
 		out += Constantes.SEPARADOR_CAMPO;
 		out += tipoPista != null && !tipoPista.isEmpty() ? tipoPista : "";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += distancia != null ? distancia : "";
+		out += distancia != null ? distancia : "null";
 		out += Constantes.SEPARADOR_CAMPO;
 		out += (listaCG != null && !listaCG.isEmpty()) ? listaCG.size() : "";
 		out += Constantes.SEPARADOR_FILA;

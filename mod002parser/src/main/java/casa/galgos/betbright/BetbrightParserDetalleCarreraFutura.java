@@ -42,15 +42,15 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @return Instancia Carrera con los galgos ya rellenos
 	 * @throws Exception
 	 */
-	public CarreraSemillaBetright ejecutar(String pathCarreraDetalle, String urlCarreraDetalle) throws Exception {
+	public CarreraSemillaBetbright ejecutar(String pathCarreraDetalle, String urlCarreraDetalle) throws Exception {
 
 		MY_LOGGER.info("GALGOS-BetbrightParserDetalleCarreraFutura: INICIO");
 		MY_LOGGER.info("pathIn=" + pathCarreraDetalle);
 		MY_LOGGER.info("urlCarreraDetalle=" + urlCarreraDetalle);
 
 		String bruto = "";
-		CarreraSemillaBetright out = new CarreraSemillaBetright(urlCarreraDetalle, null, null, null, null, null,
-				new ArrayList<CarreraGalgoSemillaBetright>());
+		CarreraSemillaBetbright out = new CarreraSemillaBetbright(urlCarreraDetalle, null, null, null, null, null,
+				new ArrayList<CarreraGalgoSemillaBetbright>());
 
 		try {
 
@@ -89,26 +89,35 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @return
 	 * @throws Exception
 	 */
-	public static void parsear(String in, CarreraSemillaBetright modelo) throws Exception {
+	public static void parsear(String in, CarreraSemillaBetbright modelo) throws Exception {
 
 		Document doc = Jsoup.parse(in);
 
-		Element innerContainer = doc.getElementsByClass("inner_container").get(0);
+		String claseBuscada = "inner_container";
 
-		if (innerContainer.toString().contains("racecard")) {
+		if (doc.toString().contains(claseBuscada)) {
+			MY_LOGGER.warn("Betbright - Carrera futura - Pagina sin contenido util (VERIFICAR a mano si es verdad): "
+					+ modelo.urlDetalle);
 
-			Element contenido = innerContainer.getElementsByClass("racecard").get(0);
-			Element cabeceraCarrera = contenido.getElementsByClass("racecard-header").get(0);
-			Element filasGalgos = contenido.getElementsByClass("racecard-inner").get(0);
+		} else {
 
-			// Parseamos el contenido y lo metemos en CarreraSemillaBetright
-			parsearCabecera(cabeceraCarrera, modelo);
-			parsearFilasGalgos(filasGalgos, modelo);
+			Element innerContainer = doc.getElementsByClass(claseBuscada).get(0);
 
-			MY_LOGGER.info("Betbright - Carrera futura ==> " + modelo.dia + "|" + modelo.hora + " --> Num. galgos = "
-					+ modelo.listaCG.size());
+			if (innerContainer.toString().contains("racecard")) {
+
+				Element contenido = innerContainer.getElementsByClass("racecard").get(0);
+				Element cabeceraCarrera = contenido.getElementsByClass("racecard-header").get(0);
+				Element filasGalgos = contenido.getElementsByClass("racecard-inner").get(0);
+
+				// Parseamos el contenido y lo metemos en CarreraSemillaBetbright
+				parsearCabecera(cabeceraCarrera, modelo);
+				parsearFilasGalgos(filasGalgos, modelo);
+
+				MY_LOGGER.info("Betbright - Carrera futura ==> " + modelo.dia + "|" + modelo.hora
+						+ " --> Num. galgos = " + modelo.listaCG.size());
+			}
+
 		}
-
 	}
 
 	/**
@@ -116,7 +125,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @param carreraIn
 	 * @throws Exception
 	 */
-	public static void parsearCabecera(Element cabeceraCarrera, CarreraSemillaBetright carreraIn) throws Exception {
+	public static void parsearCabecera(Element cabeceraCarrera, CarreraSemillaBetbright carreraIn) throws Exception {
 
 		String trackyHoraMinuto = cabeceraCarrera.getElementsByClass("event-name").get(0).childNode(0).toString()
 				.trim();
@@ -147,7 +156,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @param carreraIn
 	 * @throws Exception
 	 */
-	public static void parsearFilasGalgos(Element filasGalgos, CarreraSemillaBetright carreraIn) throws Exception {
+	public static void parsearFilasGalgos(Element filasGalgos, CarreraSemillaBetbright carreraIn) throws Exception {
 
 		Element a = filasGalgos.getElementsByClass("bb_tabs_content").get(0);
 		List<Node> a_lista = a.childNode(3).childNodes();
@@ -171,7 +180,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 	 * @param carreraIn
 	 * @throws Exception
 	 */
-	public static void parsearFilaGalgo(Element galgoElement, CarreraSemillaBetright carreraIn) throws Exception {
+	public static void parsearFilaGalgo(Element galgoElement, CarreraSemillaBetbright carreraIn) throws Exception {
 
 		Element a = galgoElement.getElementsByClass("horse-datafields").get(0);
 
@@ -213,7 +222,7 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 		// la web. Asi que no les cogemos...
 		// Tampoco cogemos la fila en la que pone "eliminado"
 		if (eliminado == false && entrenador != null && !entrenador.isEmpty()) {
-			CarreraGalgoSemillaBetright cg = new CarreraGalgoSemillaBetright(id, galgoNombre, trap, entrenador,
+			CarreraGalgoSemillaBetbright cg = new CarreraGalgoSemillaBetbright(id, galgoNombre, trap, entrenador,
 					precioSp, carreraIn);
 			carreraIn.listaCG.add(cg);
 		}

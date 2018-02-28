@@ -23,10 +23,12 @@ public class DM01Parser extends ParserDeDia {
 		super();
 	}
 
+	@Override
 	public String getPathEntrada(String tagDia) {
 		return tagDia + Constantes.DATOSMACRO + "01";
 	}
 
+	@Override
 	public String parsear(String tagDia, String in) {
 
 		MY_LOGGER.info("Parseando...");
@@ -261,8 +263,9 @@ public class DM01Parser extends ParserDeDia {
 		return out;
 	}
 
+	@Override
 	public String generarSqlCreateTable() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 

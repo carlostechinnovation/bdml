@@ -2,7 +2,7 @@ package casa.galgos.betbright;
 
 import utilidades.Constantes;
 
-public class CarreraGalgoSemillaBetright {
+public class CarreraGalgoSemillaBetbright {
 
 	public String id;// dia#hora#estadio#galgo_nombre
 	public String galgoNombre;
@@ -10,10 +10,10 @@ public class CarreraGalgoSemillaBetright {
 	public String entrenador;
 	public Float precioSp;
 
-	CarreraSemillaBetright carrera;
+	CarreraSemillaBetbright carrera;
 
-	public CarreraGalgoSemillaBetright(String id, String galgoNombre, Integer trap, String entrenador, Float precioSp,
-			CarreraSemillaBetright carrera) {
+	public CarreraGalgoSemillaBetbright(String id, String galgoNombre, Integer trap, String entrenador, Float precioSp,
+			CarreraSemillaBetbright carrera) {
 		super();
 		this.id = id;
 		this.galgoNombre = galgoNombre;
@@ -28,26 +28,26 @@ public class CarreraGalgoSemillaBetright {
 		String out = "";
 		out += id;
 		out += Constantes.SEPARADOR_CAMPO;
-		out += carrera.dia != null ? carrera.dia : "";
+		out += carrera.dia != null ? carrera.dia : "null";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += carrera.hora != null ? carrera.hora : "";
+		out += carrera.hora != null ? carrera.hora : "null";
 		out += Constantes.SEPARADOR_CAMPO;
 		out += carrera.estadio != null && !carrera.estadio.isEmpty() ? carrera.estadio : "";
 		out += Constantes.SEPARADOR_CAMPO;
 		out += galgoNombre != null && !galgoNombre.isEmpty() ? galgoNombre : "";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += trap != null ? trap : "";
+		out += trap != null ? trap : "null";
 		out += Constantes.SEPARADOR_CAMPO;
 		out += (entrenador != null && !entrenador.isEmpty() ? entrenador : "");
 		out += Constantes.SEPARADOR_CAMPO;
-		out += precioSp != null ? precioSp : "";
+		out += precioSp != null ? precioSp : "null";
 		out += Constantes.SEPARADOR_FILA;
 		return out;
 	}
 
-	public String generarSqlCreateTable(String subtipo) {
+	public String generarSqlCreateTable() {
 
-		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_cg_semillas_betbright" + subtipo + " (";
+		String out = "CREATE TABLE IF NOT EXISTS datos_desa.tb_cg_semillas_betbright" + " (";
 		out += "id varchar(100) NOT NULL  PRIMARY KEY, ";
 		out += "dia BIGINT NOT NULL, ";
 		out += "hora BIGINT NOT NULL, ";

@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import casa.galgos.GalgosManager;
 import casa.galgos.betbright.BetbrightManager;
+import casa.galgos.betbright.CarreraGalgoSemillaBetbright;
 import casa.galgos.gbgb.GalgoAgregados;
 import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
@@ -187,8 +188,8 @@ public class Mod002Parser implements Serializable {
 			out += (new GalgoAgregados(null, null, null, null, null, null, null, null, null, null, null, null, null))
 					.generarSqlCreateTable("");
 
-			out += (new CarreraGalgoSemillaSportium(null, null, null, null)).generarSqlCreateTable("");
-			out += (new CarreraGalgoSemillaSportium(null, null, null, null)).generarSqlCreateTable("_betbright");
+			out += (new CarreraGalgoSemillaSportium(null, null, null, null)).generarSqlCreateTable();
+			out += (new CarreraGalgoSemillaBetbright(null, null, null, null, null, null)).generarSqlCreateTable();
 
 			try {
 
