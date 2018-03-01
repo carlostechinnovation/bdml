@@ -5,7 +5,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 #Script principal COORDINADOR de todas las tareas. Lo que no quiera ejecutar, lo comento.
 
 PATH_LOG="/home/carloslinux/Desktop/LOGS/galgos_coordinador.log"
-PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
+
 
 #limpiar logs
 rm -f "/home/carloslinux/Desktop/LOGS/log4j-application.log"
@@ -19,11 +19,10 @@ echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${PATH_LOG}
 
 echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD010.sh'
-
-## FUTURAS - BETBRIGHT (ASYNC) ##
 rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
-galgos_MOD010_paralelo_BB.sh &
+${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh' & ## FUTURAS - BETBRIGHT (ASYNC) ##
+${PATH_SCRIPTS}'galgos_MOD010.sh' #Sportium
+
 
 echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD020.sh'
