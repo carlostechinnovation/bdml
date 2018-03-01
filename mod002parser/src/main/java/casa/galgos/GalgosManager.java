@@ -441,13 +441,18 @@ public class GalgosManager implements Serializable {
 				+ ordenadoPorClave.keySet().size());
 
 		String clavesSinTraducir = "";
+		int contador = 0;
 		for (String clave : ordenadoPorClave.keySet()) {
 
-			if (ordenadoPorClave.get(clave).intValue() > 50) {// Que haya aparecido mucho
+			if (ordenadoPorClave.get(clave).intValue() > Constantes.NUM_APARICION_REMARKS_RELEVANTES) {
+				contador++;
+				// Que haya aparecido mucho
 				clavesSinTraducir += ordenadoPorClave.get(clave) + "|" + clave + "\n";
 			}
 		}
-		MY_LOGGER.info("Claves: \n" + clavesSinTraducir);
+
+		MY_LOGGER.info("Claves (solo sin han aparecido > " + Constantes.NUM_APARICION_REMARKS_RELEVANTES
+				+ " veces). Son " + contador + " claves RELEVANTES. Son:\n" + clavesSinTraducir);
 
 		return clavesSinTraducir;
 	}

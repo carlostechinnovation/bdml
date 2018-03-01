@@ -26,7 +26,7 @@ public class Constantes {
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
 	public static final String GALGOS_GBGB_HISTORICO_GALGO = GALGOS_GBGB + "/RaceCard.aspx?dogName=";
-	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 8 * 7;// Ultimas X semanas
+	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 16 * 7;// Ultimas X semanas
 	public static final String GALGOS_SPORTIUM_PREFIJO = "https://sport-mobile.sportium.es";
 	public static final String GALGOS_FUTUROS_SPORTIUM = GALGOS_SPORTIUM_PREFIJO + "/es/s/GREY/Galgos";
 	public static final String GALGOS_BETBRIGHT_PREFIJO = "https://www.betbright.com";
@@ -36,10 +36,12 @@ public class Constantes {
 	public static final boolean GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA = false; // como me banean, lo descargo
 																						// desde fuera con un script
 
-	public static final Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 2;// util para debuguear con pocos casos.
+	public static final Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 10;// util para debuguear con pocos casos.
 																				// Normalmente será 100000
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 40; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 50;
+
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 25; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;

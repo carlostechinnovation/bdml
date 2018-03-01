@@ -15,11 +15,11 @@ public class CarreraSemillaBetbright implements Serializable {
 
 	public String urlDetalle;
 
-	public Long dia;// yyyyMMddhhmm
-	public Integer hora;// hhmm
-	public String estadio;
-	public String tipoPista;
-	public Integer distancia;
+	public Long dia = null;// yyyyMMddhhmm
+	public Integer hora = null;// hhmm
+	public String estadio = "\\N";
+	public String tipoPista = "\\N";
+	public Integer distancia = null;
 	public List<CarreraGalgoSemillaBetbright> listaCG = new ArrayList<CarreraGalgoSemillaBetbright>();
 
 	public CarreraSemillaBetbright(String urlDetalle, Long dia, Integer hora, String estadio, String tipoPista,
@@ -38,17 +38,17 @@ public class CarreraSemillaBetbright implements Serializable {
 	public String toString() {
 		String out = "CSBB = ";
 
-		out += dia;
+		out += dia != null ? dia : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += hora;
+		out += hora != null ? hora : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += estadio != null && !estadio.isEmpty() ? estadio : "";
+		out += estadio != null && !estadio.isEmpty() ? estadio : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += tipoPista != null && !tipoPista.isEmpty() ? tipoPista : "";
+		out += tipoPista != null && !tipoPista.isEmpty() ? tipoPista : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += distancia != null ? distancia : "null";
+		out += distancia != null ? distancia : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += (listaCG != null && !listaCG.isEmpty()) ? listaCG.size() : "";
+		out += (listaCG != null && !listaCG.isEmpty()) ? listaCG.size() : "\\N";
 		out += Constantes.SEPARADOR_FILA;
 
 		return out;

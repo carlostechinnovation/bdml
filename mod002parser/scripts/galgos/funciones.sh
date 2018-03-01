@@ -1,11 +1,12 @@
 #!/bin/bash
 
-LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_001A_descarga_bruto.log"
+LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto.log"
+FLAG_BB_DESCARGADO_OK="/home/carloslinux/Desktop/LOGS/galgos_010_BB.descargado.OK"
 DOC_ANALISIS_PREVIO="/home/carloslinux/Desktop/INFORMES/analisis_previo.txt"
-LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_003A_stats_bruto.log"
-LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_003B_columnas_elaboradas.log"
-LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_003C_datasets.log"
-LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_004.log"
+LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
+LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_031_columnas_elaboradas.log"
+LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
+LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
 
 
 function consultar(){
@@ -113,7 +114,9 @@ do
   ((counter++))
   nombreFicheroDetalle="${PATH_BRUTO}semillas_betbright_DET_${counter}.html"
   
-  if [ $counter -le 2 ]
+  #DEBUG: podemos limitar este contador de carreras futuras a descargar (ver linea siguiente)
+  
+  if [ $counter -le 10 ]
   then
     echo -e $(date +"%T")" #=$counter | URL=$urlDetalle | File=${nombreFicheroDetalle}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
     
@@ -136,6 +139,10 @@ consultar "DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_betbright\W;" "${LOG_D
 consultar "LOAD DATA LOCAL INFILE '${PATH_LIMPIO}semillas_betbright_full' INTO TABLE datos_desa.tb_cg_semillas_betbright FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_BB_WARNINGS"
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_betbright LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
 consultar "SELECT * FROM datos_desa.tb_cg_semillas_betbright LIMIT 3\W;" "${LOG_DESCARGA_BRUTO}" "-t"
+
+
+#ASYNC: Fichero que indica que el proceso ha terminado, para que el padre lo sepa.
+echo -e "Descarga de Betbright: OK" >> "$FLAG_BB_DESCARGADO_OK"
 
 }
 

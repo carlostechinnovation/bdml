@@ -4,9 +4,9 @@ import utilidades.Constantes;
 
 public class CarreraGalgoSemillaSportium {
 
-	public String id;// dia#hora#estadio#galgo_nombre
-	public String galgoNombre;
-	public Integer trap;
+	public String id = "\\N";// dia#hora#estadio#galgo_nombre
+	public String galgoNombre = "\\N";
+	public Integer trap = null;
 	public CarreraSemillaSportium modelo;
 
 	public CarreraGalgoSemillaSportium(String id, String galgoNombre, Integer trap, CarreraSemillaSportium modelo) {
@@ -20,12 +20,29 @@ public class CarreraGalgoSemillaSportium {
 	@Override
 	public String toString() {
 		String out = "";
-		out += id + Constantes.SEPARADOR_CAMPO;
-		out += modelo.dia + Constantes.SEPARADOR_CAMPO;
-		out += modelo.hora + Constantes.SEPARADOR_CAMPO;
-		out += modelo.estadio + Constantes.SEPARADOR_CAMPO;
-		out += galgoNombre + Constantes.SEPARADOR_CAMPO;
-		out += trap;
+
+		if (id.contains("20180229")) {
+			// JAVA BUG 29 febrero
+			out += id.replace("20180229", "20180228");
+			out += Constantes.SEPARADOR_CAMPO;
+			out += modelo.dia.toString().replace("20180229", "20180228");
+			out += Constantes.SEPARADOR_CAMPO;
+			out += modelo.hora.toString().replace("20180229", "20180228");
+			out += Constantes.SEPARADOR_CAMPO;
+		} else {
+			out += id;
+			out += Constantes.SEPARADOR_CAMPO;
+			out += modelo.dia;
+			out += Constantes.SEPARADOR_CAMPO;
+			out += modelo.hora;
+			out += Constantes.SEPARADOR_CAMPO;
+		}
+
+		out += modelo.estadio != null && !modelo.estadio.isEmpty() ? modelo.estadio : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += galgoNombre != null && !galgoNombre.isEmpty() ? galgoNombre : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += trap != null ? trap : "\\N";
 		out += Constantes.SEPARADOR_FILA;
 		return out;
 	}

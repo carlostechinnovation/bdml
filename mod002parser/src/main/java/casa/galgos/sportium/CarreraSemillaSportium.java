@@ -13,13 +13,14 @@ public class CarreraSemillaSportium implements Serializable {
 
 	public static final SimpleDateFormat FORMATO = new SimpleDateFormat("yyyyMMddhhmm");
 
-	public String urlDetalle;
-	public String estadio;
-	public Long dia;// yyyyMMddhhmm
-	public Integer hora;// hhmm
+	public String urlDetalle = "\\N";
+	public String estadio = "\\N";
+	public Long dia = null;// yyyyMMddhhmm
+	public Integer hora = null;// hhmm
 	public List<String> galgosNombres = new ArrayList<String>();// ordenados segun el trap
 
-	public CarreraSemillaSportium(String urlDetalle, String estadio, Long dia, Integer hora, List<String> galgosNombres) {
+	public CarreraSemillaSportium(String urlDetalle, String estadio, Long dia, Integer hora,
+			List<String> galgosNombres) {
 		super();
 		this.urlDetalle = urlDetalle;
 		this.estadio = estadio;

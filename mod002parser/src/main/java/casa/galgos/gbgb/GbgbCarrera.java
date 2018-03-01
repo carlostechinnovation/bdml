@@ -14,21 +14,21 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 
 	public static final SimpleDateFormat FORMATO = new SimpleDateFormat("yyyyMMddhhmm");
 
-	public Long id_carrera; // Ej. http://www.gbgb.org.uk/resultsRace.aspx?id=2029176
-	public Long id_campeonato; // Ej. http://www.gbgb.org.uk/resultsMeeting.aspx?id=151735
+	public Long id_carrera = null; // Ej. http://www.gbgb.org.uk/resultsRace.aspx?id=2029176
+	public Long id_campeonato = null; // Ej. http://www.gbgb.org.uk/resultsMeeting.aspx?id=151735
 
 	// Datos BASICOS
 	public String track = "\\N";
 	public String clase = "\\N";
-	public Calendar fechayhora;
-	public Integer distancia;
-	public Short numGalgos;// Hay carreras en las que corren menos de 6 galgos (porque alguno esta
-							// lesionado...)
+	public Calendar fechayhora = null;
+	public Integer distancia = null;
+	public Short numGalgos = null;// Hay carreras en las que corren menos de 6 galgos (porque alguno esta
+	// lesionado...)
 
-	public Integer premio_primero;
-	public Integer premio_segundo;
-	public Integer premio_otros;
-	public Integer premio_total_carrera;
+	public Integer premio_primero = null;
+	public Integer premio_segundo = null;
+	public Integer premio_otros = null;
+	public Integer premio_total_carrera = null;
 
 	public Float going_allowance_segundos = 0.0F;// por defecto=NO
 
@@ -120,49 +120,47 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	@Override
 	public String generarDatosParaExportarSql() {
 
-		String SEP = Constantes.SEPARADOR_CAMPO;
-
 		String out = "";
 
 		out += id_carrera != null ? id_carrera : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += id_campeonato != null ? id_campeonato : "\\N";
-		out += SEP;
-		out += track != null ? track : "";
-		out += SEP;
-		out += clase != null ? clase : "";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
+		out += track != null ? track : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += clase != null ? clase : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
 		out += formatearFechaParaExportar(fechayhora);
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += distancia != null ? distancia : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += numGalgos != null ? numGalgos : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 
-		out += premio_primero != null ? premio_primero : "\\N";
-		out += SEP;
-		out += premio_segundo != null ? premio_segundo : "\\N";
-		out += SEP;
-		out += premio_otros != null ? premio_otros : "\\N";
-		out += SEP;
-		out += premio_total_carrera != null ? premio_total_carrera : "\\N";
-		out += SEP;
+		out += (premio_primero != null && premio_primero.intValue() > 0) ? premio_primero : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += (premio_segundo != null && premio_segundo.intValue() > 0) ? premio_segundo : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += (premio_otros != null && premio_otros.intValue() > 0) ? premio_otros : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
+		out += (premio_total_carrera != null && premio_total_carrera.intValue() > 0) ? premio_total_carrera : "\\N";
+		out += Constantes.SEPARADOR_CAMPO;
 		out += going_allowance_segundos != null ? going_allowance_segundos : "0";// Por defecto 0 segundos
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += fc_1 != null ? fc_1 : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += fc_2 != null ? fc_2 : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += (fc_pounds != null && !"".equals(fc_pounds) && !"\\N".equals(fc_pounds))
 				? Constantes.round2(Float.valueOf(fc_pounds), 2)
 				: "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += tc_1 != null ? tc_1 : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += tc_2 != null ? tc_2 : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += tc_3 != null ? tc_3 : "\\N";
-		out += SEP;
+		out += Constantes.SEPARADOR_CAMPO;
 		out += (tc_pounds != null && !"".equals(tc_pounds) && !"\\N".equals(tc_pounds))
 				? Constantes.round2(Float.valueOf(tc_pounds), 2)
 				: "\\N";
@@ -209,10 +207,16 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += in.get(Calendar.YEAR) + Constantes.SEPARADOR_CAMPO;
 
 		int mes = in.get(Calendar.MONTH) + 1;
-		out += ((mes >= 10) ? mes : ("0" + mes)) + Constantes.SEPARADOR_CAMPO;
-
 		int dia = in.get(Calendar.DAY_OF_MONTH);
-		out += ((dia >= 10) ? dia : ("0" + dia)) + Constantes.SEPARADOR_CAMPO;
+
+		if (mes == 2 && dia == 29) {
+			// JAVA BUG 29 febrero
+			out += "02" + Constantes.SEPARADOR_CAMPO;
+			out += "28" + Constantes.SEPARADOR_CAMPO;
+		} else {
+			out += ((mes >= 10) ? mes : ("0" + mes)) + Constantes.SEPARADOR_CAMPO;
+			out += ((dia >= 10) ? dia : ("0" + dia)) + Constantes.SEPARADOR_CAMPO;
+		}
 
 		int hora = in.get(Calendar.HOUR_OF_DAY);
 		out += ((hora >= 10) ? hora : ("0" + hora)) + Constantes.SEPARADOR_CAMPO;

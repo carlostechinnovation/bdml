@@ -4,11 +4,11 @@ import utilidades.Constantes;
 
 public class CarreraGalgoSemillaBetbright {
 
-	public String id;// dia#hora#estadio#galgo_nombre
-	public String galgoNombre;
-	public Integer trap;
-	public String entrenador;
-	public Float precioSp;
+	public String id = "\\N";// dia#hora#estadio#galgo_nombre
+	public String galgoNombre = "\\N";
+	public Integer trap = null;
+	public String entrenador = "\\N";
+	public Float precioSp = null;
 
 	CarreraSemillaBetbright carrera;
 
@@ -26,21 +26,21 @@ public class CarreraGalgoSemillaBetbright {
 	@Override
 	public String toString() {
 		String out = "";
-		out += id;
+		out += id != null && !id.isEmpty() ? id : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += carrera.dia != null ? carrera.dia : "null";
+		out += carrera.dia != null ? carrera.dia : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += carrera.hora != null ? carrera.hora : "null";
+		out += carrera.hora != null ? carrera.hora : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += carrera.estadio != null && !carrera.estadio.isEmpty() ? carrera.estadio : "";
+		out += carrera.estadio != null && !carrera.estadio.isEmpty() ? carrera.estadio : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += galgoNombre != null && !galgoNombre.isEmpty() ? galgoNombre : "";
+		out += galgoNombre != null && !galgoNombre.isEmpty() ? galgoNombre : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += trap != null ? trap : "null";
+		out += trap != null ? trap : "\\N";
 		out += Constantes.SEPARADOR_CAMPO;
-		out += (entrenador != null && !entrenador.isEmpty() ? entrenador : "");
+		out += (entrenador != null && !entrenador.isEmpty() ? entrenador : "\\N");
 		out += Constantes.SEPARADOR_CAMPO;
-		out += precioSp != null ? precioSp : "null";
+		out += precioSp != null ? precioSp : "\\N";
 		out += Constantes.SEPARADOR_FILA;
 		return out;
 	}

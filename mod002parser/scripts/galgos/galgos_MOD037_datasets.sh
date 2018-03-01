@@ -28,7 +28,7 @@ A.peso_galgo_norm, A.edad_en_dias_norm, A.scoring_remarks, A.experiencia, A.trap
 
 B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, B.vel_real_cortas_mediana_norm, B.vel_real_cortas_max_norm, B.vel_going_cortas_mediana_norm, B.vel_going_cortas_max_norm, B.vel_real_longmedias_mediana_norm, B.vel_real_longmedias_max_norm, B.vel_going_longmedias_mediana_norm, B.vel_going_longmedias_max_norm, B.vel_real_largas_mediana_norm, B.vel_real_largas_max_norm, B.vel_going_largas_mediana_norm, B.vel_going_largas_max_norm,
 
-C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.tc_pounds_norm, C.venue_going_std, C.venue_going_avg,
+C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.tc_pounds_norm, C.venue_going_std, C.venue_going_avg, C.dow_d, C.dow_l, C.dow_m, C.dow_x, C.dow_j, C.dow_v, C.dow_s, C.dow_finde, C.dow_laborable,
 
 velocidad_con_going_norm AS TARGET
 
@@ -145,7 +145,7 @@ peso_galgo_norm, edad_en_dias_norm, scoring_remarks, experiencia, trap_factor, e
 
 vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
 
-distancia_norm, num_galgos_norm, mes_norm, hora_norm, premio_primero_norm, premio_segundo_norm, premio_otros_norm, premio_total_carrera_norm, fc_1_norm, fc_2_norm, fc_pounds_norm, tc_1_norm, tc_2_norm, tc_3_norm, tc_pounds_norm, venue_going_std, venue_going_avg
+distancia_norm, num_galgos_norm, mes_norm, hora_norm, premio_primero_norm, premio_segundo_norm, premio_otros_norm, premio_total_carrera_norm, fc_1_norm, fc_2_norm, fc_pounds_norm, tc_1_norm, tc_2_norm, tc_3_norm, tc_pounds_norm, venue_going_std, venue_going_avg, dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable
 EOF
 
 
