@@ -1,6 +1,10 @@
 #!/bin/bash
 
 PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
+PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+
+PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
+PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
 
 LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto.log"
 LOG_DESCARGA_BRUTO_BB="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto_BB.log"
@@ -10,6 +14,7 @@ LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_031_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
+LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
 
 
 function consultar(){
@@ -42,69 +47,83 @@ function mostrar_tabla(){
 #################### FUTURAS - BETBRIGHT ######################
 function obtenerFuturasBetbright(){
 
+rm -f "${LOG_DESCARGA_BRUTO_BB}"
+
 echo -e $(date +"%T")" Descargando todas las carreras FUTURAS de BETBRIGHT usando un navegador..." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 BB_URL_TODAY="www.betbright.com/greyhound-racing/today"
 BB_URL_TOMORROW="www.betbright.com/greyhound-racing/tomorrow"
-BB_FICHEROS="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright*"
-BB_FICHERO_PREFIJO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_"
-BB_FICHERO_TODAY="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_today.html"
-BB_FICHERO_TOMORROW="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright_tomorrow.html"
+BB_BRUTO_GALGOS="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright/"
+BB_FICHERO_PREFIJO="${BB_BRUTO_GALGOS}betbright_"
+BB_FICHERO_TODAY="${BB_BRUTO_GALGOS}betbright_today.html"
+BB_FICHERO_TOMORROW="${BB_BRUTO_GALGOS}betbright_tomorrow.html"
 
-PATH_FILE_GALGOS_INICIALES_BB="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales_bb.txt"
+BB_LIMPIO_GALGOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/betbright/"
+PATH_FILE_GALGOS_INICIALES_BB="${BB_LIMPIO_GALGOS}galgos_iniciales_bb.txt"
 
 
-echo -e $(date +"%T")" Borrando todos estos ficheros: ${BB_FICHEROS}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-sudo rm -rf ${BB_FICHEROS} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(date +"%T")" Borrando todos estos ficheros ( rm -fR ${BB_BRUTO_GALGOS}* ):" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+rm -fR "${BB_BRUTO_GALGOS}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+rm -fR "${BB_LIMPIO_GALGOS}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
-num_betbright_restantes=$(ls -l ${BB_FICHEROS} | wc -l)
+echo -e "Comprobando si se han borrado los ficheros antiguos:" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(ls -l "${BB_BRUTO_GALGOS}" | grep ' betbright'  ) 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(ls -l "${BB_LIMPIO_GALGOS}" | grep ' betbright'  ) 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+
+echo -e $(date +"%T")" Creando directorio (VACIO): ${BB_BRUTO_GALGOS}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+mkdir "${BB_BRUTO_GALGOS}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+mkdir "${BB_LIMPIO_GALGOS}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+
+
+num_betbright_restantes=$(ls -l "${BB_BRUTO_GALGOS}" | grep ' betbright'  | wc -l)
 echo -e $(date +"%T")" Comprobacion de ficheros NO borrados = "${num_betbright_restantes} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 if [ ${num_betbright_restantes} -gt 0 ]
   then
-    echo -e " No se han borrado bien los ficheros antiguos de Betbright. RESTANTES="${num_betbright_restantes} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+    echo -e $(date +"%T")" ERROR No se han borrado bien los ficheros antiguos de Betbright. RESTANTES="${num_betbright_restantes} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
     exit -1
 fi
 
 
 echo -e $(date +"%T")" Descarga de carreras BB-FUTURAS-TODAY a fichero = "${BB_FICHERO_TODAY} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 "${PATH_SCRIPTS}save_page_as.sh" "${BB_URL_TODAY}" --destination "${BB_FICHERO_TODAY}" --browser "google-chrome" --load-wait-time 4 --save-wait-time 3
-
+sleep 3s #necesario
 echo -e $(date +"%T")" Descarga de carreras BB-FUTURAS-TOMORROW a fichero = "${BB_FICHERO_TOMORROW} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 "${PATH_SCRIPTS}save_page_as.sh" "${BB_URL_TOMORROW}" --destination "${BB_FICHERO_TOMORROW}" --browser "google-chrome" --load-wait-time 4 --save-wait-time 3
-
+sleep 3s #necesario
 
 echo -e $(date +"%T")" Borrando ${PATH_FILE_GALGOS_INICIALES_BB} ..." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-rm -f "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+rm -fR "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 echo -e $(date +"%T")" Comprobando ficheros borrados:" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 echo -e $(date +"%T")" "$(ls -l "${PATH_FILE_GALGOS_INICIALES_BB}") 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e "" > ${PATH_FILE_GALGOS_INICIALES_BB} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
-
-echo -e $(date +"%T")" Parseando las carreras FUTURAS (today y tomorrow) de BETBRIGHT mediante JAVA para guardarlas aqui: ${PATH_BRUTO}semillas_betbright" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(date +"%T")" Parseando las carreras FUTURAS (today y tomorrow) de BETBRIGHT mediante JAVA para guardarlas aqui: ${PATH_FILE_GALGOS_INICIALES_BB}\n\n" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT" "${BB_FICHERO_PREFIJO}" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
 
-echo -e $(date +"%T")"Leemos fichero con URLs y descargamos los ficheros de detalle, uno a uno..." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(date +"%T")" PASO01_Comprobando ficheros de URLs ( ${PATH_FILE_GALGOS_INICIALES_BB} ):" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(date +"%T")" "$(head -n 10 "${PATH_FILE_GALGOS_INICIALES_BB}") 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
 
 ### BB-DETALLES
+echo -e $(date +"%T")" Leemos fichero con URLs y descargamos los ficheros de detalle, uno a uno..." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+
 
 PATH_FILE_GALGOS_INICIALES_BB_FULL="${PATH_FILE_GALGOS_INICIALES_BB}_full"
-BB_FICHEROS_DET="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/semillas_betbright_DET_*"
+BB_FICHEROS_DET="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/betbright/semillas_betbright_DET_*"
 PATH_LIMPIO_GALGOS_BB_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_galgos_bb"
 
 
 echo -e $(date +"%T")" Borrando ${PATH_FILE_GALGOS_INICIALES_BB_FULL} ..." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-rm -f "${PATH_FILE_GALGOS_INICIALES_BB_FULL}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-
+rm -fR "${PATH_FILE_GALGOS_INICIALES_BB_FULL}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 echo -e $(date +"%T")" Comprobando ficheros borrados:" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 echo -e $(date +"%T")" "$(ls -l "${PATH_FILE_GALGOS_INICIALES_BB_FULL}") 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-
+echo -e "" > ${PATH_FILE_GALGOS_INICIALES_BB_FULL} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
 echo -e $(date +"%T")" Leemos todas las URLs de detalles (del fichero) y descargamos cada detalle uno a uno mediante script externo. La ruta de cada FICHERO BRUTO DE DETALLE debe ser: ${PATH_BRUTO}semillas_betbright_DET_XXX (donde XXX es 1, 2... 10,11...111,112)" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
 
-
 echo -e $(date +"%T")" Borrando todos estos ficheros: ${BB_FICHEROS_DET}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-sudo rm -rf ${BB_FICHEROS_DET} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+rm -fR ${BB_FICHEROS_DET} 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
 
 counter=0
@@ -113,7 +132,7 @@ nombreFicheroDetalle=""
 while IFS= read -r urlDetalle
 do
   ((counter++))
-  nombreFicheroDetalle="${PATH_BRUTO}semillas_betbright_DET_${counter}.html"
+  nombreFicheroDetalle="${BB_BRUTO_GALGOS}semillas_betbright_DET_${counter}.html"
   
   #DEBUG: podemos limitar este contador de carreras futuras a descargar (ver linea siguiente)
   
@@ -123,11 +142,14 @@ do
     
     "${PATH_SCRIPTS}save_page_as.sh" "${urlDetalle}" --destination "${nombreFicheroDetalle}" --browser "google-chrome" --load-wait-time 4 --save-wait-time 3  2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
-    #echo -e $(date +"%T") Ficheros acumulados en iteracion=$counter son: \n" $(ls -l '/home/carloslinux/Desktop/DATOS_BRUTO/galgos/' | grep '_DET_' | grep '.html')  2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+    #echo -e $(date +"%T") Ficheros acumulados en iteracion=$counter son: \n" $(ls -l '${BB_BRUTO_GALGOS}' | grep '_DET_' | grep '.html')  2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
   fi
 done <"${PATH_FILE_GALGOS_INICIALES_BB}"
 
+
+echo -e $(date +"%T")" PASO02_Comprobando ficheros de URLs ( ${PATH_FILE_GALGOS_INICIALES_BB} ):" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
+echo -e $(date +"%T")" "$(head -n 10 "${PATH_FILE_GALGOS_INICIALES_BB}") 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
 
 java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT_DETALLES" "${PATH_BRUTO}semillas_betbright" "${PATH_FILE_GALGOS_INICIALES_BB}" 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
@@ -136,14 +158,14 @@ java -jar ${PATH_JAR} "GALGOS_02_BETBRIGHT_DETALLES" "${PATH_BRUTO}semillas_betb
 echo -e $(date +"%T")" BB_Numero de filas en fichero-FULL limpio (${PATH_LIMPIO}semillas_betbright_full) = "$(wc -l "${PATH_LIMPIO}semillas_betbright_full")  2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 echo -e $(date +"%T")" BB_Ejemplo de filas en fichero-FULL limpio (${PATH_LIMPIO}semillas_betbright_full):\n"$(head -n 1 "${PATH_LIMPIO}semillas_betbright_full")  2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 
-consultar "DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_betbright\W;" "${LOG_DESCARGA_BRUTO_BB}" "-tN"
+consultar "TRUNCATE TABLE datos_desa.tb_cg_semillas_betbright\W;" "${LOG_DESCARGA_BRUTO_BB}" "-tN"
 consultar "LOAD DATA LOCAL INFILE '${PATH_LIMPIO}semillas_betbright_full' INTO TABLE datos_desa.tb_cg_semillas_betbright FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_BB_WARNINGS"
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_betbright LIMIT 1\W;" "${LOG_DESCARGA_BRUTO_BB}" "-t"
 consultar "SELECT * FROM datos_desa.tb_cg_semillas_betbright LIMIT 3\W;" "${LOG_DESCARGA_BRUTO_BB}" "-t"
 
 
 echo -e $(date +"%T")" BETBRIGHT-ASYNC: Fichero que indica que el proceso ha terminado, para que el padre lo sepa." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
-echo -e "Descarga de Betbright: OK" >> "$FLAG_BB_DESCARGADO_OK"
+echo -e " Descarga de Betbright: OK" >> "${FLAG_BB_DESCARGADO_OK}"
 
 }
 
@@ -161,6 +183,42 @@ echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_l=1)" "DOW_L"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_L" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_m=1)" "DOW_M"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_M" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_x=1)" "DOW_X"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_X" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_j=1)" "DOW_J"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_J" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_v=1)" "DOW_V"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_V" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_s=1)" "DOW_S"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_S" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_d=1)" "DOW_D"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_D" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_laborable=1)" "DOW_LAB"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_LAB" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_finde=1)" "DOW_FIN"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_FIN" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm <=0.33)" "DISTANCIA_CORTA"

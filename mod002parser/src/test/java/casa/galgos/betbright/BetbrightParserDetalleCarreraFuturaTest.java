@@ -22,7 +22,9 @@ public class BetbrightParserDetalleCarreraFuturaTest {
 	}
 
 	@Rule
-	public ResourceFile resFuturo = new ResourceFile("/" + "betbright_carrera_futura.html");
+	// public ResourceFile resFuturo = new ResourceFile("/" +
+	// "betbright_carrera_futura.html");
+	public ResourceFile resFuturo = new ResourceFile("/" + "detalle_bb.html");
 
 	@Rule
 	public ResourceFile resFuturoNula = new ResourceFile("/" + "betbright_carrera_futura_NULA.html");

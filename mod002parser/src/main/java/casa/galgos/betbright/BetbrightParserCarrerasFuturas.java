@@ -53,7 +53,7 @@ public class BetbrightParserCarrerasFuturas implements Serializable {
 			}
 
 		} catch (Exception e) {
-			MY_LOGGER.error("Error:" + e.getMessage());
+			MY_LOGGER.error("Error: " + e.getMessage());
 			e.printStackTrace();
 		}
 

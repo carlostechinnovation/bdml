@@ -1,5 +1,7 @@
 package casa.galgos.betbright;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -104,11 +106,13 @@ public class BetbrightManager implements Serializable {
 		MY_LOGGER
 				.info("NO LIMITAMOS numero de carreras procesadas porque las semillas IMPORTANTES son las de SPORTIUM. "
 						+ "Estas semillas de Betbright solo nos sirven para extraer cierta info (distancia...) y pueden venir en otro orden de aparicion distinto de SPORTIUM."
-						+ "Así que debemos descargar TODAS los DETALLES de las carreras FUTURAS de BETBRIGHT, sin poner limites.");
+						+ " Así que debemos descargar TODAS los DETALLES de las carreras FUTURAS de BETBRIGHT, sin poner limites.");
 
 		if (urlsCarrerasFuturas == null || urlsCarrerasFuturas.isEmpty()) {
-			MY_LOGGER.error("BB-ERROR: No hemos descargado NINGUNA carrera FUTURA (semilla)!!!!");
-			throw new Exception("BB-ERROR: No hemos descargado NINGUNA carrera FUTURA (semilla)!!!!");
+			MY_LOGGER.warn(
+					"BB-WARN: No hemos descargado NINGUNA carrera FUTURA (semilla)!!!! --> Posible causa: que no haya carreras en la web (hoy o mañana): "
+							+ urlsCarrerasFuturas);
+
 		} else {
 			guardarListaEnFichero(urlsCarrerasFuturas, fileUrlsDetalleCarreras);
 		}
@@ -120,28 +124,53 @@ public class BetbrightManager implements Serializable {
 	 * 
 	 * @param urlsCarrerasFuturas
 	 * @param pathListaUrlsDetalles
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void guardarListaEnFichero(Set<String> urlsCarrerasFuturas, String pathListaUrlsDetalles)
-			throws IOException {
+	public void guardarListaEnFichero(Set<String> urlsCarrerasFuturas, String pathListaUrlsDetalles) throws Exception {
 
-		MY_LOGGER.info("Lista de URLs de detalle - Guardando en = " + pathListaUrlsDetalles);
-		if (Files.exists(Paths.get(pathListaUrlsDetalles))) {
-			MY_LOGGER.debug("Borrando fichero de listaurlsdetalles preexistente...");
-			Files.delete(Paths.get(pathListaUrlsDetalles));
-		}
+		MY_LOGGER.info("Lista de URLs de detalle - Guardando " + urlsCarrerasFuturas.size() + " URLs en = "
+				+ pathListaUrlsDetalles);
 
 		boolean primero = true;
+		if (Files.exists(Paths.get(pathListaUrlsDetalles))) {
+			primero = false; // si estamos descargando las carreras de tomorrow, ya tendremos las de today.
+								// El script es el que se encarga de borrar el fichero preexistente si se
+								// necesita.
+		}
+
 		for (String urlCarrera : urlsCarrerasFuturas) {
 
 			String aux = urlCarrera + "\n";
 
-			Files.write(Paths.get(pathListaUrlsDetalles), aux.getBytes(),
-					primero ? StandardOpenOption.CREATE_NEW : StandardOpenOption.APPEND);
+			// StandardOpenOption opcion = primero ? StandardOpenOption.CREATE :
+			// StandardOpenOption.APPEND;
+
+			MY_LOGGER.info(pathListaUrlsDetalles + "<--" + aux + " (primero=" + primero + ")");
+			// Files.write(Paths.get(pathListaUrlsDetalles), aux.getBytes(),
+			// StandardOpenOption.CREATE);
+
+			File file = new File(pathListaUrlsDetalles);
+			FileWriter fileWriter = new FileWriter(file);
+			fileWriter.write(aux);
+			fileWriter.flush();
+			fileWriter.close();
 
 			primero = false;
 		}
-		MY_LOGGER.info("Lista de URLs de detalle - Guardada OK");
+
+		List<String> lineas = Files.readAllLines(Paths.get(pathListaUrlsDetalles));
+
+		if (Files.exists(Paths.get(pathListaUrlsDetalles)) && !urlsCarrerasFuturas.isEmpty() && !lineas.isEmpty()) {
+
+			MY_LOGGER.info("Lista de URLs de detalle - Guardada OK.");
+			MY_LOGGER.info("Lista de URLs de detalle - Contenido (ejemplo de 1 fila): \n" + lineas.get(0));
+
+		} else {
+			String msg = "Lista de URLs de detalle - Guardada ERROR: no existe!!!!!!";
+			MY_LOGGER.error(msg);
+			throw new Exception(msg);
+		}
+
 	}
 
 	/**

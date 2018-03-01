@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+
 
 #Análisis de una carrera concreta extremo a extremo, que este en el dataset PASADO-VALIDATION y con 6 galgos, para ver si hay algun fallo:
 
@@ -21,9 +23,9 @@ SELECT id_carrera, galgo_nombre, velocidad_con_going_norm FROM datos_desa.tb_fil
 SELECT * FROM datos_desa.tb_ds_pasado_validation_featuresytarget_TOTAL WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
-echo -e "\nAntes de predecir:\n"
-echo -e "$CONSULTA_ANTES_DE_PREDECIR"
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ANTES_DE_PREDECIR"
+echo -e "\nAntes de predecir:\n" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}
 
 ########################################################################################################
 
@@ -45,16 +47,13 @@ SELECT * FROM datos_desa.tb_val_aciertos_connombre_TOTAL WHERE id_carrera=${id_c
 select * FROM datos_desa.tb_val_economico_TOTAL WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
-echo -e "\nDespues de predecir:\n"
-echo -e "$CONSULTA_DESPUES_DE_PREDECIR"
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR"
+echo -e "\nDespues de predecir:\n" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "$CONSULTA_DESPUES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}
 
 ########################################################################################################
 
-echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n"
-
-
-
+echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n" 2>&1 1>>${LOG_060_ENDTOEND}
 
 
 

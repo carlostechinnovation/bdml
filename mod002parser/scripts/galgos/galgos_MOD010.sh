@@ -3,11 +3,7 @@
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 TAG_GBGB="GBGB"
-PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
 
-PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
-PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
-PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
 
 PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
@@ -116,7 +112,7 @@ mysql -u root --password=datos1986 --execute="SELECT COUNT(DISTINCT galgo_nombre
 
 
 ##########################################
-echo -e $(date +"%T")"SEMILLAS - Metiendo filas artificiales con los datos conocidos de las semillas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e "\n\n\n"$(date +"%T")"SEMILLAS - Metiendo filas artificiales con los datos conocidos de las semillas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 
 #Pendiente descargar dato "SP" si se conoce en ese instante
@@ -125,47 +121,36 @@ echo -e $(date +"%T")"SEMILLAS - Metiendo filas artificiales con los datos conoc
 read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_b;
 
-
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_b AS
 SELECT DHE  
 FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) dentro2 
 GROUP BY DHE 
 ORDER BY DHE DESC;
 
-
 SELECT * FROM datos_desa.tb_cg_semillas_sportium_b LIMIT 5;
 SELECT count(*) as num_filas_b FROM datos_desa.tb_cg_semillas_sportium_b LIMIT 5;
 
 
-
-
 DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_c;
-
 
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_c AS
 SELECT  
 B.*,
-
 
 CASE
   WHEN (B.DHE = @curDHE) THEN (@curRow := @curRow)
   ELSE (@curRow := @curRow + 1 )
 END AS DHE_incr
 
-
 FROM datos_desa.tb_cg_semillas_sportium_b B,
 (SELECT @curRow := 0, @curDHE := '') R
 ORDER BY DHE ASC;
-
 
 SELECT * FROM datos_desa.tb_cg_semillas_sportium_c LIMIT 5;
 SELECT count(*) as num_filas_c FROM datos_desa.tb_cg_semillas_sportium_c LIMIT 5;
 
 
-
-
 DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_d;
-
 
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_d AS
 SELECT 
@@ -175,25 +160,15 @@ LEFT JOIN datos_desa.tb_cg_semillas_sportium_c C
 ON (INICIAL.DHE=C.DHE)
 ;
 
-
 SELECT * FROM datos_desa.tb_cg_semillas_sportium_d LIMIT 5;
 SELECT count(*) as num_filas_d FROM datos_desa.tb_cg_semillas_sportium_d LIMIT 5;
-
-
-
-
-
-
 
 
 set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 
-
 DELETE FROM datos_desa.tb_galgos_carreras 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
-
-
 
 
 INSERT INTO datos_desa.tb_galgos_carreras
@@ -226,13 +201,8 @@ ORDER BY id_carrera ASC LIMIT 10;
 
 
 
-
-
-
 DELETE FROM datos_desa.tb_galgos_posiciones_en_carreras 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
-
-
 
 
 INSERT INTO datos_desa.tb_galgos_posiciones_en_carreras
@@ -255,8 +225,6 @@ NULL AS edad_en_dias
 FROM datos_desa.tb_cg_semillas_sportium_d;
 
 
-
-
 SELECT count(*) FROM datos_desa.tb_galgos_posiciones_en_carreras 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
 
@@ -267,13 +235,8 @@ ORDER BY id_carrera ASC LIMIT 10;
 
 
 
-
-
-
 DELETE FROM datos_desa.tb_galgos_historico 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
-
-
 
 
 INSERT INTO datos_desa.tb_galgos_historico
@@ -304,8 +267,6 @@ NULL AS scoring_remarks
 FROM datos_desa.tb_cg_semillas_sportium_d;
 
 
-
-
 SELECT count(*) FROM datos_desa.tb_galgos_historico 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
 
@@ -313,8 +274,6 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 SELECT * FROM datos_desa.tb_galgos_historico 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
 ORDER BY id_carrera ASC LIMIT 10;
-
-
 EOF
 
 
@@ -329,8 +288,6 @@ echo -e $(date +"%T")" NORMALIZACION NUMERICA - Normalizamos los campos NUMERICO
 
 
 read -d '' CONSULTA_NORMALIZACIONES <<- EOF
-
-
 set @min_hora=(select MIN(hora) FROM datos_desa.tb_galgos_carreras);
 set @diff_hora=(select CASE WHEN MIN(hora)=0 THEN MAX(hora) ELSE MAX(hora)-MIN(hora) END FROM datos_desa.tb_galgos_carreras);
 set @min_distancia=(select MIN(distancia) FROM datos_desa.tb_galgos_carreras);
@@ -363,7 +320,6 @@ set @diff_tc_3=(select CASE WHEN MIN(tc_3)=0 THEN MAX(tc_3) ELSE MAX(tc_3)-MIN(t
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_norm;
 
-
 CREATE TABLE datos_desa.tb_galgos_carreras_norm AS 
 SELECT 
 dentro.*,
@@ -376,7 +332,6 @@ CASE WHEN dlmxjvs=6 THEN 1 ELSE 0 END AS dow_v,
 CASE WHEN dlmxjvs=7 THEN 1 ELSE 0 END AS dow_s,
 CASE WHEN (dlmxjvs=7 OR dlmxjvs=1) THEN 1 ELSE 0 END AS dow_finde,
 CASE WHEN (dlmxjvs<>7 AND dlmxjvs<>1) THEN 1 ELSE 0 END AS dow_laborable
-
 
 FROM (
   SELECT 
@@ -429,33 +384,25 @@ SELECT count(*) as num_carreras_norm FROM datos_desa.tb_galgos_carreras_norm LIM
 
 
 
-
-
-
-
-
 set @min_posicion=(select MIN(posicion) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_posicion=(select CASE WHEN MIN(posicion)=0 THEN MAX(posicion) ELSE MAX(posicion)-MIN(posicion) END FROM datos_desa.tb_galgos_carreras);
+set @diff_posicion=(select CASE WHEN MIN(posicion)=0 THEN MAX(posicion) ELSE MAX(posicion)-MIN(posicion) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_trap=(select MIN(trap) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_trap=(select CASE WHEN MIN(trap)=0 THEN MAX(trap) ELSE MAX(trap)-MIN(trap) END FROM datos_desa.tb_galgos_carreras);
+set @diff_trap=(select CASE WHEN MIN(trap)=0 THEN MAX(trap) ELSE MAX(trap)-MIN(trap) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_sp=(select MIN(sp) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_sp=(select CASE WHEN MIN(sp)=0 THEN MAX(sp) ELSE MAX(sp)-MIN(sp) END FROM datos_desa.tb_galgos_carreras);
+set @diff_sp=(select CASE WHEN MIN(sp)=0 THEN MAX(sp) ELSE MAX(sp)-MIN(sp) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_time_sec=(select MIN(time_sec) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_time_sec=(select CASE WHEN MIN(time_sec)=0 THEN MAX(time_sec) ELSE MAX(time_sec)-MIN(time_sec) END FROM datos_desa.tb_galgos_carreras);
+set @diff_time_sec=(select CASE WHEN MIN(time_sec)=0 THEN MAX(time_sec) ELSE MAX(time_sec)-MIN(time_sec) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_time_distance=(select MIN(time_distance) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_time_distance=(select CASE WHEN MIN(time_distance)=0 THEN MAX(time_distance) ELSE MAX(time_distance)-MIN(time_distance) END FROM datos_desa.tb_galgos_carreras);
+set @diff_time_distance=(select CASE WHEN MIN(time_distance)=0 THEN MAX(time_distance) ELSE MAX(time_distance)-MIN(time_distance) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_peso_galgo=(select MIN(peso_galgo) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_peso_galgo=(select CASE WHEN MIN(peso_galgo)=0 THEN MAX(peso_galgo) ELSE MAX(peso_galgo)-MIN(peso_galgo) END FROM datos_desa.tb_galgos_carreras);
+set @diff_peso_galgo=(select CASE WHEN MIN(peso_galgo)=0 THEN MAX(peso_galgo) ELSE MAX(peso_galgo)-MIN(peso_galgo) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_nacimiento=(select MIN(nacimiento) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_nacimiento=(select CASE WHEN MIN(nacimiento)=0 THEN MAX(nacimiento) ELSE MAX(nacimiento)-MIN(nacimiento) END FROM datos_desa.tb_galgos_carreras);
+set @diff_nacimiento=(select CASE WHEN MIN(nacimiento)=0 THEN MAX(nacimiento) ELSE MAX(nacimiento)-MIN(nacimiento) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 set @min_edad_en_dias=(select MIN(edad_en_dias) FROM datos_desa.tb_galgos_posiciones_en_carreras);
-set @diff_edad_en_dias=(select CASE WHEN MIN(edad_en_dias)=0 THEN MAX(edad_en_dias) ELSE MAX(edad_en_dias)-MIN(edad_en_dias) END FROM datos_desa.tb_galgos_carreras);
-
-
+set @diff_edad_en_dias=(select CASE WHEN MIN(edad_en_dias)=0 THEN MAX(edad_en_dias) ELSE MAX(edad_en_dias)-MIN(edad_en_dias) END FROM datos_desa.tb_galgos_posiciones_en_carreras);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_norm;
-
 
 CREATE TABLE datos_desa.tb_galgos_posiciones_en_carreras_norm AS 
 SELECT 
@@ -482,43 +429,35 @@ comment,
 edad_en_dias, 
 CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias=0) THEN NULL ELSE ((edad_en_dias - @min_edad_en_dias)/@diff_edad_en_dias) END AS edad_en_dias_norm
 
-
 FROM datos_desa.tb_galgos_posiciones_en_carreras;
 
-
 ALTER TABLE datos_desa.tb_galgos_posiciones_en_carreras_norm ADD INDEX tb_GPECN_idx(id_carrera,galgo_nombre);
-
 
 SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras_norm LIMIT 5;
 SELECT count(*) as num_posiciones_en_carreras_norm FROM datos_desa.tb_galgos_posiciones_en_carreras_norm LIMIT 5;
 
 
-
-
 set @min_distancia=(select MIN(distancia) FROM datos_desa.tb_galgos_historico);
-set @diff_distancia=(select CASE WHEN MIN(distancia)=0 THEN MAX(distancia) ELSE MAX(distancia)-MIN(distancia) END FROM datos_desa.tb_galgos_carreras);
+set @diff_distancia=(select CASE WHEN MIN(distancia)=0 THEN MAX(distancia) ELSE MAX(distancia)-MIN(distancia) END FROM datos_desa.tb_galgos_historico);
 set @min_trap=(select MIN(trap) FROM datos_desa.tb_galgos_historico);
-set @diff_trap=(select CASE WHEN MIN(trap)=0 THEN MAX(trap) ELSE MAX(trap)-MIN(trap) END FROM datos_desa.tb_galgos_carreras);
+set @diff_trap=(select CASE WHEN MIN(trap)=0 THEN MAX(trap) ELSE MAX(trap)-MIN(trap) END FROM datos_desa.tb_galgos_historico);
 set @min_stmhcp=(select MIN(stmhcp) FROM datos_desa.tb_galgos_historico);
-set @diff_stmhcp=(select CASE WHEN MIN(stmhcp)=0 THEN MAX(stmhcp) ELSE MAX(stmhcp)-MIN(stmhcp) END FROM datos_desa.tb_galgos_carreras);
+set @diff_stmhcp=(select CASE WHEN MIN(stmhcp)=0 THEN MAX(stmhcp) ELSE MAX(stmhcp)-MIN(stmhcp) END FROM datos_desa.tb_galgos_historico);
 set @min_posicion=(select MIN(posicion) FROM datos_desa.tb_galgos_historico);
-set @diff_posicion=(select CASE WHEN MIN(posicion)=0 THEN MAX(posicion) ELSE MAX(posicion)-MIN(posicion) END FROM datos_desa.tb_galgos_carreras);
+set @diff_posicion=(select CASE WHEN MIN(posicion)=0 THEN MAX(posicion) ELSE MAX(posicion)-MIN(posicion) END FROM datos_desa.tb_galgos_historico);
 set @min_win_time=(select MIN(win_time) FROM datos_desa.tb_galgos_historico);
-set @diff_win_time=(select CASE WHEN MIN(win_time)=0 THEN MAX(win_time) ELSE MAX(win_time)-MIN(win_time) END FROM datos_desa.tb_galgos_carreras);
+set @diff_win_time=(select CASE WHEN MIN(win_time)=0 THEN MAX(win_time) ELSE MAX(win_time)-MIN(win_time) END FROM datos_desa.tb_galgos_historico);
 set @min_sp=(select MIN(sp) FROM datos_desa.tb_galgos_historico);
-set @diff_sp=(select CASE WHEN MIN(sp)=0 THEN MAX(sp) ELSE MAX(sp)-MIN(sp) END FROM datos_desa.tb_galgos_carreras);
+set @diff_sp=(select CASE WHEN MIN(sp)=0 THEN MAX(sp) ELSE MAX(sp)-MIN(sp) END FROM datos_desa.tb_galgos_historico);
 set @min_calculated_time=(select MIN(calculated_time) FROM datos_desa.tb_galgos_historico);
-set @diff_calculated_time=(select CASE WHEN MIN(calculated_time)=0 THEN MAX(calculated_time) ELSE MAX(calculated_time)-MIN(calculated_time) END FROM datos_desa.tb_galgos_carreras);
+set @diff_calculated_time=(select CASE WHEN MIN(calculated_time)=0 THEN MAX(calculated_time) ELSE MAX(calculated_time)-MIN(calculated_time) END FROM datos_desa.tb_galgos_historico);
 set @min_velocidad_real=(select MIN(velocidad_real) FROM datos_desa.tb_galgos_historico);
-set @diff_velocidad_real=(select CASE WHEN MIN(velocidad_real)=0 THEN MAX(velocidad_real) ELSE MAX(velocidad_real)-MIN(velocidad_real) END FROM datos_desa.tb_galgos_carreras);
+set @diff_velocidad_real=(select CASE WHEN MIN(velocidad_real)=0 THEN MAX(velocidad_real) ELSE MAX(velocidad_real)-MIN(velocidad_real) END FROM datos_desa.tb_galgos_historico);
 set @min_velocidad_con_going=(select MIN(velocidad_con_going) FROM datos_desa.tb_galgos_historico);
-set @diff_velocidad_con_going=(select CASE WHEN MIN(velocidad_con_going)=0 THEN MAX(velocidad_con_going) ELSE MAX(velocidad_con_going)-MIN(velocidad_con_going) END FROM datos_desa.tb_galgos_carreras);
-
-
+set @diff_velocidad_con_going=(select CASE WHEN MIN(velocidad_con_going)=0 THEN MAX(velocidad_con_going) ELSE MAX(velocidad_con_going)-MIN(velocidad_con_going) END FROM datos_desa.tb_galgos_historico);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_norm;
-
 
 CREATE TABLE datos_desa.tb_galgos_historico_norm AS 
 SELECT 
@@ -553,48 +492,40 @@ scoring_remarks
 
 FROM datos_desa.tb_galgos_historico;
 
-
 ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx1(id_carrera, galgo_nombre);
 ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx2(galgo_nombre,clase);
-
 
 SELECT * FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
 SELECT count(*) as num_XX_norm FROM datos_desa.tb_galgos_historico_norm LIMIT 5;
 
 
-
-
 set @min_vel_real_cortas_mediana=(select MIN(vel_real_cortas_mediana) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_real_cortas_mediana=(select CASE WHEN MIN(vel_real_cortas_mediana)=0 THEN MAX(vel_real_cortas_mediana) ELSE MAX(vel_real_cortas_mediana)-MIN(vel_real_cortas_mediana) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_real_cortas_mediana=(select CASE WHEN MIN(vel_real_cortas_mediana)=0 THEN MAX(vel_real_cortas_mediana) ELSE MAX(vel_real_cortas_mediana)-MIN(vel_real_cortas_mediana) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_real_cortas_max=(select MIN(vel_real_cortas_max) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_real_cortas_max=(select CASE WHEN MIN(vel_real_cortas_max)=0 THEN MAX(vel_real_cortas_max) ELSE MAX(vel_real_cortas_max)-MIN(vel_real_cortas_max) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_real_cortas_max=(select CASE WHEN MIN(vel_real_cortas_max)=0 THEN MAX(vel_real_cortas_max) ELSE MAX(vel_real_cortas_max)-MIN(vel_real_cortas_max) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_going_cortas_mediana=(select MIN(vel_going_cortas_mediana) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_going_cortas_mediana=(select CASE WHEN MIN(vel_going_cortas_mediana)=0 THEN MAX(vel_going_cortas_mediana) ELSE MAX(vel_going_cortas_mediana)-MIN(vel_going_cortas_mediana) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_going_cortas_mediana=(select CASE WHEN MIN(vel_going_cortas_mediana)=0 THEN MAX(vel_going_cortas_mediana) ELSE MAX(vel_going_cortas_mediana)-MIN(vel_going_cortas_mediana) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_going_cortas_max=(select MIN(vel_going_cortas_max) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_going_cortas_max=(select CASE WHEN MIN(vel_going_cortas_max)=0 THEN MAX(vel_going_cortas_max) ELSE MAX(vel_going_cortas_max)-MIN(vel_going_cortas_max) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_going_cortas_max=(select CASE WHEN MIN(vel_going_cortas_max)=0 THEN MAX(vel_going_cortas_max) ELSE MAX(vel_going_cortas_max)-MIN(vel_going_cortas_max) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_real_longmedias_mediana=(select MIN(vel_real_longmedias_mediana) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_real_longmedias_mediana=(select CASE WHEN MIN(vel_real_longmedias_mediana)=0 THEN MAX(vel_real_longmedias_mediana) ELSE MAX(vel_real_longmedias_mediana)-MIN(vel_real_longmedias_mediana) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_real_longmedias_mediana=(select CASE WHEN MIN(vel_real_longmedias_mediana)=0 THEN MAX(vel_real_longmedias_mediana) ELSE MAX(vel_real_longmedias_mediana)-MIN(vel_real_longmedias_mediana) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_real_longmedias_max=(select MIN(vel_real_longmedias_max) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_real_longmedias_max=(select CASE WHEN MIN(vel_real_longmedias_max)=0 THEN MAX(vel_real_longmedias_max) ELSE MAX(vel_real_longmedias_max)-MIN(vel_real_longmedias_max) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_real_longmedias_max=(select CASE WHEN MIN(vel_real_longmedias_max)=0 THEN MAX(vel_real_longmedias_max) ELSE MAX(vel_real_longmedias_max)-MIN(vel_real_longmedias_max) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_going_longmedias_mediana=(select MIN(vel_going_longmedias_mediana) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_going_longmedias_mediana=(select CASE WHEN MIN(vel_going_longmedias_mediana)=0 THEN MAX(vel_going_longmedias_mediana) ELSE MAX(vel_going_longmedias_mediana)-MIN(vel_going_longmedias_mediana) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_going_longmedias_mediana=(select CASE WHEN MIN(vel_going_longmedias_mediana)=0 THEN MAX(vel_going_longmedias_mediana) ELSE MAX(vel_going_longmedias_mediana)-MIN(vel_going_longmedias_mediana) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_going_longmedias_max=(select MIN(vel_going_longmedias_max) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_going_longmedias_max=(select CASE WHEN MIN(vel_going_longmedias_max)=0 THEN MAX(vel_going_longmedias_max) ELSE MAX(vel_going_longmedias_max)-MIN(vel_going_longmedias_max) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_going_longmedias_max=(select CASE WHEN MIN(vel_going_longmedias_max)=0 THEN MAX(vel_going_longmedias_max) ELSE MAX(vel_going_longmedias_max)-MIN(vel_going_longmedias_max) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_real_largas_mediana=(select MIN(vel_real_largas_mediana) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_real_largas_mediana=(select CASE WHEN MIN(vel_real_largas_mediana)=0 THEN MAX(vel_real_largas_mediana) ELSE MAX(vel_real_largas_mediana)-MIN(vel_real_largas_mediana) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_real_largas_mediana=(select CASE WHEN MIN(vel_real_largas_mediana)=0 THEN MAX(vel_real_largas_mediana) ELSE MAX(vel_real_largas_mediana)-MIN(vel_real_largas_mediana) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_real_largas_max=(select MIN(vel_real_largas_max) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_real_largas_max=(select CASE WHEN MIN(vel_real_largas_max)=0 THEN MAX(vel_real_largas_max) ELSE MAX(vel_real_largas_max)-MIN(vel_real_largas_max) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_real_largas_max=(select CASE WHEN MIN(vel_real_largas_max)=0 THEN MAX(vel_real_largas_max) ELSE MAX(vel_real_largas_max)-MIN(vel_real_largas_max) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_going_largas_mediana=(select MIN(vel_going_largas_mediana) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_going_largas_mediana=(select CASE WHEN MIN(vel_going_largas_mediana)=0 THEN MAX(vel_going_largas_mediana) ELSE MAX(vel_going_largas_mediana)-MIN(vel_going_largas_mediana) END FROM datos_desa.tb_galgos_carreras);
+set @diff_vel_going_largas_mediana=(select CASE WHEN MIN(vel_going_largas_mediana)=0 THEN MAX(vel_going_largas_mediana) ELSE MAX(vel_going_largas_mediana)-MIN(vel_going_largas_mediana) END FROM datos_desa.tb_galgos_agregados);
 set @min_vel_going_largas_max=(select MIN(vel_going_largas_max) FROM datos_desa.tb_galgos_agregados);
-set @diff_vel_going_largas_max=(select CASE WHEN MIN(vel_going_largas_max)=0 THEN MAX(vel_going_largas_max) ELSE MAX(vel_going_largas_max)-MIN(vel_going_largas_max) END FROM datos_desa.tb_galgos_carreras);
-
-
+set @diff_vel_going_largas_max=(select CASE WHEN MIN(vel_going_largas_max)=0 THEN MAX(vel_going_largas_max) ELSE MAX(vel_going_largas_max)-MIN(vel_going_largas_max) END FROM datos_desa.tb_galgos_agregados);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_norm;
-
-
 CREATE TABLE datos_desa.tb_galgos_agregados_norm AS 
 SELECT 
 galgo_nombre,
@@ -624,7 +555,6 @@ vel_going_largas_max,
 CASE WHEN (vel_going_largas_max IS NULL OR @diff_vel_going_largas_max=0) THEN NULL ELSE ((vel_going_largas_max - @min_vel_going_largas_max)/@diff_vel_going_largas_max) END AS vel_going_largas_max_norm
 
 FROM datos_desa.tb_galgos_agregados;
-
 
 SELECT * FROM datos_desa.tb_galgos_agregados_norm LIMIT 5;
 SELECT count(*) as num_galgos_agregados_norm FROM datos_desa.tb_galgos_agregados_norm LIMIT 5;

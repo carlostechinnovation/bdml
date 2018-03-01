@@ -95,7 +95,15 @@ public class BetbrightParserDetalleCarreraFutura implements Serializable {
 
 		String claseBuscada = "inner_container";
 
-		if (doc.toString().contains(claseBuscada)) {
+		// System.out.println("\n\n\n--------------------in-------------\n" +
+		// in.toString());
+		// System.out.println("\n\n\n--------------------doc-------------\n" +
+		// doc.toString());
+
+		// boolean inContiene = in.toString().contains(claseBuscada);
+		// boolean docContiene = doc.toString().contains(claseBuscada);
+
+		if (!doc.toString().contains(claseBuscada)) {
 			MY_LOGGER.warn("Betbright - Carrera futura - Pagina sin contenido util (VERIFICAR a mano si es verdad): "
 					+ modelo.urlDetalle);
 
