@@ -1,0 +1,41 @@
+--------- TABLA: datos_desa.tb_ds_pasado_train_features_TOTAL ----------
+Leyenda --> campo : MAX|MIN|AVG|COUNT
+
+                        _scoring_remarks: 0.00|0.00|0.000000|41610
+_posicion_media_en_clase_por_experiencia: NULL
+-----------------------------------------------------
+
+
+
+
+--------- TABLA: datos_desa.tb_ds_futuro_features_TOTAL ----------
+
+Leyenda --> campo : MAX|MIN|AVG|COUNT
+
+                        _peso_galgo_norm: NULL
+                      _edad_en_dias_norm: NULL
+                        _scoring_remarks: NULL
+                            _experiencia: NULL
+                   _experiencia_en_clase: NULL
+_posicion_media_en_clase_por_experiencia: NULL
+                               _dif_peso: NULL
+               _entrenador_posicion_norm: NULL
+                               _eed_norm: NULL
+                                _sp_norm: NULL
+                         _distancia_norm: NULL
+                    _premio_primero_norm: NULL
+                    _premio_segundo_norm: NULL
+                      _premio_otros_norm: NULL
+              _premio_total_carrera_norm: NULL
+                              _fc_1_norm: NULL
+                              _fc_2_norm: NULL
+                         _fc_pounds_norm: NULL
+                              _tc_1_norm: NULL
+                              _tc_2_norm: NULL
+                              _tc_3_norm: NULL
+                         _tc_pounds_norm: NULL
+-----------------------------------------------------
+
+
+
+
