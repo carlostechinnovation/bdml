@@ -29,17 +29,6 @@ distancia_norm
 num_galgos_norm
 mes_norm
 hora_norm
-premio_primero_norm
-premio_segundo_norm
-premio_otros_norm
-premio_total_carrera_norm
-fc_1_norm
-fc_2_norm
-fc_pounds_norm
-tc_1_norm
-tc_2_norm
-tc_3_norm
-tc_pounds_norm
 venue_going_std
 venue_going_avg
 dow_d
