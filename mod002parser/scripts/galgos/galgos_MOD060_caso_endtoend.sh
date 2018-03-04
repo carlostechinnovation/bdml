@@ -3,6 +3,10 @@
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
+echo -e $(date +"%T")" Modulo 060 - ANALISIS DE CASO CONCRETO END-TO-END: INICIO" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "MOD060_endtoend --> LOG = "${LOG_060_ENDTOEND}
+
+
 #Análisis de una carrera concreta extremo a extremo, que este en el dataset PASADO-VALIDATION y con 6 galgos, para ver si hay algun fallo:
 
 FILE_TEMP="./temp_id_carrera_analisis"
@@ -55,5 +59,7 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR" 
 
 echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n" 2>&1 1>>${LOG_060_ENDTOEND}
 
+
+echo -e $(date +"%T")" Modulo 060 - ANALISIS DE CASO CONCRETO END-TO-END: INICIO" 2>&1 1>>${LOG_060_ENDTOEND}
 
 

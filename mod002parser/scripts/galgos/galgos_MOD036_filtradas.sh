@@ -3,8 +3,6 @@
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
-
-
 ################ TABLAS FILTRADAS (a partir de tablas elaboradas) ####################################################################################
 function generarTablasFiltradas ()
 {

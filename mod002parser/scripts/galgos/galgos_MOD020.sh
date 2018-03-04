@@ -8,7 +8,10 @@ rm -f "${DOC_ANALISIS_PREVIO}"
 
 
 echo -e $(date +"%T")" Modulo 020 - Estadística básica de los datos BRUTOS de ENTRADA..." 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
-echo -e $(date +"%T")" Informe: ${DOC_ANALISIS_PREVIO}" 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
+
+echo -e "MOD020 --> LOG = "${LOG_ESTADISTICA_BRUTO}
+echo -e "MOD020-INFORME = "${DOC_ANALISIS_PREVIO}
+
 
 #Limpiar informe
 rm -f "${DOC_ANALISIS_PREVIO}"
@@ -53,7 +56,13 @@ echo -e "Numero MEDIO de CARRERAS conocidas por galgo (ajustado en Constantes: s
 mysql -u root --password=datos1986 -tN --execute="SELECT AVG(num_carreras_por_galgo) AS avg_num_carreras_por_galgo FROM ( SELECT galgo_nombre, count(*) AS num_carreras_por_galgo FROM datos_desa.tb_galgos_historico_norm GROUP BY galgo_nombre ) dentro; " >> "${DOC_ANALISIS_PREVIO}"
 
 
-echo -e "\n----- Analisis de REMARKS-----" >> "${DOC_ANALISIS_PREVIO}"
+echo -e "\n----- Analisis de REMARKS -----" >> "${DOC_ANALISIS_PREVIO}"
+
+echo -e "Crd:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Crd%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+
+echo -e "Wide:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Wide%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
 
 echo -e "RanOn:" >> "${DOC_ANALISIS_PREVIO}"
 mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%RanOn%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"

@@ -81,13 +81,14 @@ numero_ids_pasados=$( cat ${FILE_TEMP})
 numero_pasados_test=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_validation=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_train=$(echo "$numero_ids_pasados-$numero_pasados_test-$numero_pasados_validation" | bc)
-echo -e "Pasados = "${numero_ids_pasados}" ==> [TRAIN | TEST | *VALIDATION] = "${numero_pasados_train}" | "${numero_pasados_test}" | *"${numero_pasados_validation} >>$LOG_DS
+echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation} >>$LOG_DS
+echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation}
 echo -e "* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE." >>$LOG_DS
 
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_ids_futuros=$( cat ${FILE_TEMP})
-echo -e "\nFuturos = ${numero_ids_futuros}" >>$LOG_DS
-
+echo -e "${TAG}|DS-Futuros = ${numero_ids_futuros}" >>$LOG_DS
+echo -e "${TAG}|DS-Futuros = ${numero_ids_futuros}"
 
 ######################################################################
 #3º Crear estas 4 listas de IDs: PASADO-TRAIN, PASADO-TEST, PASADO-VALIDATION, FUTURA (ya creada).
@@ -273,11 +274,24 @@ EOF
 echo -e "$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_FUTURO_FEATURES" >>$LOG_DS
 
-echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}" 2>&1 1>>${LOG_DS}
+echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}\n\n" 2>&1 1>>${LOG_DS}
+
+
+
+######### Análisis del DATASET de PASADO-FEATURES (entrada #######################
+analizarTabla "datos_desa" "tb_ds_pasado_train_features_${TAG}" "${LOG_DS}"
+
+
+######### Análisis del DATASET de ENTRADA #######################
+analizarTabla "datos_desa" "tb_ds_futuro_features_${TAG}" "${LOG_DS}"
+
+
 
 #####################################################################################
 
 rm -f ${FILE_TEMP}
+
+###########################################################################
 
 echo -e $(date +"%T")" Generador de DATASETS (usando tablas filtradas): FIN\n\n" 2>&1 1>>${LOG_DS}
 

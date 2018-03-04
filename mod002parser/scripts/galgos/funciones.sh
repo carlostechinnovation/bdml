@@ -14,7 +14,11 @@ LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_031_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
+LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
+LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
 LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
+LOG_070="/home/carloslinux/Desktop/LOGS/galgos_070.log"
+LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
 
 function consultar(){
@@ -48,6 +52,8 @@ function mostrar_tabla(){
 function obtenerFuturasBetbright(){
 
 rm -f "${LOG_DESCARGA_BRUTO_BB}"
+
+echo -e "MOD010_BB --> LOG = "${LOG_DESCARGA_BRUTO_BB}
 
 echo -e $(date +"%T")" Descargando todas las carreras FUTURAS de BETBRIGHT usando un navegador..." 2>&1 1>>${LOG_DESCARGA_BRUTO_BB}
 BB_URL_TODAY="www.betbright.com/greyhound-racing/today"
@@ -184,6 +190,7 @@ echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
 
+
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_l=1)" "DOW_L"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_L" >>$PATH_LOG
@@ -219,6 +226,7 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_LAB" >>$PATH_LOG
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE dow_finde=1)" "DOW_FIN"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_FIN" >>$PATH_LOG
+
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm <=0.33)" "DISTANCIA_CORTA"
@@ -283,7 +291,151 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" >>$PATH_LOG
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_elaborada_galgos_pre WHERE vel_going_largas_max_norm<=0.33 ) )" "LARGA_Y_ALGUNO_LENTO"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
-
 }
 ##########################################################################################
+
+##################### LIMPIEZA ############################################
+function limpieza ()
+{
+sufijo="${1}"
+
+echo -e $(date +"%T")"------- LIMPIEZA ------" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+
+borrarTablasInnecesarias_036_037_040 "TOTAL"
+
+borrarTablasInnecesarias_036_037_040 "DOW_L"
+borrarTablasInnecesarias_036_037_040 "DOW_M"
+borrarTablasInnecesarias_036_037_040 "DOW_X"
+borrarTablasInnecesarias_036_037_040 "DOW_J"
+borrarTablasInnecesarias_036_037_040 "DOW_V"
+borrarTablasInnecesarias_036_037_040 "DOW_S"
+borrarTablasInnecesarias_036_037_040 "DOW_D"
+borrarTablasInnecesarias_036_037_040 "DOW_LAB"
+borrarTablasInnecesarias_036_037_040 "DOW_FIN" 
+
+borrarTablasInnecesarias_036_037_040 "DISTANCIA_CORTA"
+borrarTablasInnecesarias_036_037_040 "DISTANCIA_MEDIA"
+borrarTablasInnecesarias_036_037_040 "DISTANCIA_LARGA"
+
+borrarTablasInnecesarias_036_037_040 "HORA_PRONTO"
+borrarTablasInnecesarias_036_037_040 "HORA_TARDE"
+
+borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_JOVENES"
+borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_VIEJOS"
+borrarTablasInnecesarias_036_037_040 "POCA_EXPER_EN_CLASE"
+borrarTablasInnecesarias_036_037_040 "MUCHA_EXPER_EN_CLASE"
+borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_DELGADOS"
+borrarTablasInnecesarias_036_037_040 "CON_3_GALGOS_PESADOS"
+borrarTablasInnecesarias_036_037_040 "TRAINER_BUENOS_GALGOS"
+borrarTablasInnecesarias_036_037_040 "TRAINER_MALOS_GALGOS"
+
+borrarTablasInnecesarias_036_037_040 "LARGA_Y_ALGUNO_LENTO" 
+
+}
+
+
+function borrarTablasInnecesarias_036_037_040 ()
+{
+sufijo="${1}"
+TAG="${1}"
+
+echo -e "Borrando tablas innecesarias de 036..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+read -d '' CONSULTA_DROP_TABLAS_036 <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_filtrada_carreras_${sufijo};
+DROP TABLE IF EXISTS datos_desa.tb_filtrada_galgos_${sufijo};
+DROP TABLE IF EXISTS datos_desa.tb_filtrada_carrerasgalgos_${sufijo};
+EOF
+#echo -e "\n$CONSULTA_DROP_TABLAS_036" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_036" >>$LOG_999_LIMPIEZA_FINAL
+
+echo -e "Borrando tablas innecesarias de 037..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+read -d '' CONSULTA_DROP_TABLAS_037 <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_dataset_con_ids_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasados_${TAG};
+
+DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_train_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_test_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_validation_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_train_features_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_train_targets_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_test_features_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_test_targets_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_features_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_targets_${TAG};
+
+EOF
+#echo -e "\n$CONSULTA_DROP_TABLAS_037" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
+
+echo -e "Borrando tablas innecesarias de 040..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+read -d '' CONSULTA_DROP_TABLAS_040 <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux1;
+DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux2;
+DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux3;
+DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux4;
+DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux5;
+DROP TABLE IF EXISTS datos_desa.tb_val_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_score_real_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_score_predicho_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_score_aciertos_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_connombre_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_aciertos_connombre_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_economico_${TAG};
+EOF
+#echo -e "\n$CONSULTA_DROP_TABLAS_040" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
+
+}
+
+
+##########################################################################################
+
+function analizarTabla ()
+{
+schemaEntrada="${1}"
+tablaEntrada="${2}"
+logsalida="${3}"
+
+path_temp="./temp_analisis_tabla"
+rm -f $path_temp
+
+echo -e "--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>&1 1>>${logsalida}
+
+echo -e "Leyenda --> campo : MAX|MIN|AVG|COUNT\n"  2>&1 1>>${logsalida}
+
+mysql -u root --password=datos1986 -N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
+
+query_out="SELECT "
+contador=0
+
+while IFS= read -r linea
+do
+  contador=$((contador+1))
+  if [[ "$contador" -ge 1 ]];then  #Quito la cabecera
+    if [[ "$linea" != *"----"* ]];then #Quito las lineas horizontales
+      query_out="$query_out concat(MAX($linea),'|', MIN($linea),'|', AVG($linea),'|', COUNT($linea) ) AS _$linea, "
+    fi
+  fi
+done < "$path_temp"
+
+#Eliminamos lso dos ultimos caracteres (coma y espacio)
+query_out="${query_out::-2}"
+
+query_out="${query_out} FROM ${schemaEntrada}.${tablaEntrada};"
+
+#Pintar query
+#echo -e "\n\n\n${query_out}\n\n\n" 2>&1 1>>${logsalida}
+
+mysql -u root --password=datos1986 --vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
+
+echo -e "-----------------------------------------------------"  2>&1 1>>${logsalida}
+}
+
+##########################################################################################
+
+
+
+
+
 

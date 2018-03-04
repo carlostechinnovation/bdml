@@ -7,6 +7,8 @@ rm -f $LOG_DS
 
 echo -e $(date +"%T")" Modulo 003C - Generador de TABLAS FILTRADAS Y DATASETS (ETIQUETADOS POR TAG)..." 2>&1 1>>${LOG_DS}
 
+echo -e "MOD035 --> LOG = "${LOG_DS}
+
 
 if [ "$#" -ne 4 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}

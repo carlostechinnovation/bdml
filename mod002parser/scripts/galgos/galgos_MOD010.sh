@@ -27,7 +27,7 @@ rm -f ${LOG_DESCARGA_BRUTO}
 
 
 echo -e $(date +"%T")" Galgos-Modulo 010 - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-
+echo -e "MOD010 --> LOG = "${LOG_DESCARGA_BRUTO}
 
 ##########################################
 echo -e $(date +"%T")" Borrando ficheros antiguos..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
