@@ -45,7 +45,7 @@ SELECT * FROM datos_desa.tb_filtrada_carrerasgalgos_${sufijo} ORDER BY cg LIMIT 
 SELECT count(*) as num_filtrada_carrerasgalgos FROM datos_desa.tb_filtrada_carrerasgalgos_${sufijo} LIMIT 5;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 
 

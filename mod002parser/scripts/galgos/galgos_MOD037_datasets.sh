@@ -44,7 +44,7 @@ ALTER TABLE datos_desa.tb_dataset_con_ids_${TAG} ADD INDEX tb_dscids_idx(id_carr
 SELECT count(*) as num_dataset_con_ids FROM datos_desa.tb_dataset_con_ids_${TAG} LIMIT 5;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_CON_IDs" >>$LOG_DS
 
 echo -e "PASADO y FUTURO (con boolean e IDs) --> datos_desa.tb_dataset_con_ids_${TAG}" 2>&1 1>>${LOG_DS}

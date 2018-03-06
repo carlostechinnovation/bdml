@@ -30,7 +30,7 @@ echo -e $(date +"%T")" TAG=${sufijo}" 2>&1 1>>${LOG_DS}
 
 
 
-echo -e $(date +"%T")"Modulo 035 - FIN\n\n" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Modulo 035 - FIN\n\n" 2>&1 1>>${LOG_DS}
 
 
 

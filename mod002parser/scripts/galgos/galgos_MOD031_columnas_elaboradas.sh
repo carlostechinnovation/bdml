@@ -678,14 +678,14 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_X12" >>$LOG_CE
 function calcularVariableX13 ()
 {
 sufijo="${1}"
-echo -e "\n ---- X13: [(carrera, galgo) -> (scoring_remarks de los ultimos 10/20/50/TODOS los dias anterioes)]" 2>&1 1>>${LOG_CE}
+echo -e "\n ---- X13: [(carrera, galgo) -> (scoring_remarks de los ultimos 10/20/50/TODOS los dias anteriores)]" 2>&1 1>>${LOG_CE}
 echo -e " Media de SCORING_REMARKS considerando las ultimas [1,3,5,7] CARRERAS" 2>&1 1>>${LOG_CE}
 echo -e " Parametros: -->${1}" 2>&1 1>>${LOG_CE}
 
 
 echo -e "cruzarGHyRemarksPuntos: GH LEFT JOIN remarks_puntos. Los puntos finales seran una media/mediana de la 'posición normalizada mirando solo remarks'" 2>&1 1>>${LOG_CE}
 
-read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS <<- EOF
+read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS1 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm;
 
 CREATE TABLE datos_desa.tb_gh_y_remarkspuntos_norm AS
@@ -705,10 +705,14 @@ ORDER BY galgo_nombre ASC, fecha ASC
 ALTER TABLE datos_desa.tb_gh_y_remarkspuntos_norm ADD INDEX tb_gh_y_remarkspuntos_norm_idx1(galgo_nombre, id_carrera);
 ALTER TABLE datos_desa.tb_gh_y_remarkspuntos_norm ADD INDEX tb_gh_y_remarkspuntos_norm_idx2(galgo_nombre, fecha);
 
-SELECT count(*) as num_ghyrmp FROM datos_desa.tb_gh_y_remarkspuntos_norm LIMIT 5;
+SELECT count(*) AS num_ghyrmp FROM datos_desa.tb_gh_y_remarkspuntos_norm LIMIT 5;
 SELECT * FROM datos_desa.tb_gh_y_remarkspuntos_norm LIMIT 10;
+EOF
 
+echo -e "\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
 
+read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS2 <<- EOF
 -- Para cada columna de la izquierda, genero filas por la derecha (con los AAAAMMDD menores que el de la fila actual) 
 DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm2;
 
@@ -722,11 +726,16 @@ LEFT OUTER JOIN datos_desa.tb_gh_y_remarkspuntos_norm B ON (A.galgo_nombre=B.gal
 ORDER BY a_nombre ASC, a_fechaint DESC
 ;
 
-ALTER TABLE datos_desa.tb_gh_y_remarkspuntos_norm2 ADD INDEX tb_gh_y_remarkspuntos_norm2_idx(galgo_nombre, a_fechaint);
-SELECT count(*) FROM datos_desa.tb_gh_y_remarkspuntos_norm2 LIMIT 10;
+ALTER TABLE datos_desa.tb_gh_y_remarkspuntos_norm2 ADD INDEX tb_gh_y_remarkspuntos_norm2_idx1(a_nombre, a_fechaint);
+ALTER TABLE datos_desa.tb_gh_y_remarkspuntos_norm2 ADD INDEX tb_gh_y_remarkspuntos_norm2_idx2(a_nombre, a_idc, a_fechaint);
+SELECT count(*) AS num_ghyrmp2 FROM datos_desa.tb_gh_y_remarkspuntos_norm2 LIMIT 10;
 SELECT * FROM datos_desa.tb_gh_y_remarkspuntos_norm2 LIMIT 10;
+EOF
 
+echo -e "\n\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
 
+read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS3 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm3;
 
 CREATE TABLE datos_desa.tb_gh_y_remarkspuntos_norm3 AS
@@ -738,7 +747,7 @@ T20D.remarks_puntos_historico_20d,
 T50D.remarks_puntos_historico_50d
 
 FROM 
-  (SELECT a_nombre AS galgo_nombre, a_idc AS id_carrera,  a_fechaint AS fecha, AVG(b_puntos) as remarks_puntos_historico FROM datos_desa.tb_gh_y_remarkspuntos_norm2 GROUP BY a_nombre, a_fechaint ) T_todos
+  (SELECT a_nombre AS galgo_nombre, a_idc AS id_carrera,  a_fechaint AS fecha, AVG(b_puntos) as remarks_puntos_historico FROM datos_desa.tb_gh_y_remarkspuntos_norm2 GROUP BY a_nombre, a_idc, a_fechaint ) T_todos
   
   LEFT JOIN 
   (SELECT a_nombre AS galgo_nombre, a_fechaint AS fecha, AVG(b_puntos) as remarks_puntos_historico_10d FROM datos_desa.tb_gh_y_remarkspuntos_norm2 WHERE diff_fecha<=10 GROUP BY a_nombre, a_fechaint ) T10D
@@ -754,12 +763,12 @@ FROM
 ;
 
 ALTER TABLE datos_desa.tb_gh_y_remarkspuntos_norm3 ADD INDEX tb_gh_y_remarkspuntos_norm3_idx(galgo_nombre, id_carrera);
-SELECT count(*) FROM datos_desa.tb_gh_y_remarkspuntos_norm3 LIMIT 10;
+SELECT count(*) AS num_ghyrmp3 FROM datos_desa.tb_gh_y_remarkspuntos_norm3 LIMIT 10;
 SELECT * FROM datos_desa.tb_gh_y_remarkspuntos_norm3 LIMIT 10;
 EOF
 
-echo -e "$CONSULTA_GH_CRUCE_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
+echo -e "\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
+mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
 
 ############
 
@@ -769,11 +778,12 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x13;
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x13 AS 
 SELECT GHRPNM3.* FROM datos_desa.tb_gh_y_remarkspuntos_norm3 GHRPNM3;
 
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x13 ADD INDEX tb_ce_${sufijo}_x13_idx(galgo_nombre, id_carrera);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x13 LIMIT 5;
-SELECT count(*) as num_x13 FROM datos_desa.tb_ce_${sufijo}_x13 LIMIT 5;
+SELECT count(*) AS num_x13 FROM datos_desa.tb_ce_${sufijo}_x13 LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X13" 2>&1 1>>${LOG_CE}
+echo -e "\n\n\n\n$CONSULTA_X13" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X13" >>$LOG_CE
 }
 
@@ -804,7 +814,7 @@ echo -e "datos_desa.tb_ce_${sufijo}_x12b --> id_carrera" 2>&1 1>>${LOG_CE}
 echo -e "datos_desa.tb_ce_${sufijo}_x13 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_CE}
 
 
-echo -e "\n""\n-------- 3 Tablas auxiliares con todas las claves extraidas y haciendo DISTINCT (serás las tablas MAESTRAS de índices)-------" 2>&1 1>>${LOG_CE}
+echo -e "\n""\n-------- 3 Tablas auxiliares con todas las claves extraidas y haciendo DISTINCT (serán las tablas MAESTRAS de índices)-------" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_IDS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ids_carreras_${sufijo};
@@ -1066,7 +1076,7 @@ SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${suf
 EOF
 
 
-#echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
 
 
@@ -1112,6 +1122,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x10b;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x11;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x12a;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x12b;
+DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x13
 EOF
 
 #echo -e "\n$CONSULTA_DROP_TABLAS_INNECESARIAS" 2>&1 1>>${LOG_CE}
@@ -1157,7 +1168,7 @@ echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear 
 generarTablasElaboradas
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-borrarTablasInnecesarias "${sufijo}"
+#borrarTablasInnecesarias "${sufijo}"
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
 

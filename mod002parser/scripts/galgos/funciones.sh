@@ -297,31 +297,31 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_LARGA" >>$PATH_LOG
 
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <=0.20)" "HORA_PRONTO_A"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <= 0.20)" "HORA_PRONTO_A"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO_A" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <0.2 AND hora_norm <=0.4)" "HORA_PRONTO_B"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.2 AND hora_norm <= 0.4)" "HORA_PRONTO_B"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO_B" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >=0.3 AND hora_norm <=0.7)" "HORA_MEDIA"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.3 AND hora_norm <= 0.7)" "HORA_MEDIA"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_MEDIA" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm =0.6 AND hora_norm<=0.8)" "HORA_TARDE_A"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.6 AND hora_norm <= 0.8)" "HORA_TARDE_A"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE_A" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >=0.8)" "HORA_TARDE_B"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.8)" "HORA_TARDE_B"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE_B" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm<=0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_JOVENES"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm <= 0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_JOVENES"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "CON_5_GALGOS_JOVENES" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm<=0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_VIEJOS"
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm <= 0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_VIEJOS"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "CON_5_GALGOS_VIEJOS" >>$PATH_LOG
 
 
