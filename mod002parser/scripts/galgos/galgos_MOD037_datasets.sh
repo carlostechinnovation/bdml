@@ -24,7 +24,7 @@ FROM (
 
 A.id_carrera, A.galgo_nombre, A.futuro,
 
-A.peso_galgo_norm, A.edad_en_dias_norm, A.scoring_remarks, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.eed_norm, A.trap_norm, A.sp_norm,
+A.peso_galgo_norm, A.edad_en_dias_norm, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.eed_norm, A.trap_norm, A.sp_norm, A.remarks_puntos_historico, A.remarks_puntos_historico_10d, A.remarks_puntos_historico_20d, A.remarks_puntos_historico_50d,
 
 B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, B.vel_real_cortas_mediana_norm, B.vel_real_cortas_max_norm, B.vel_going_cortas_mediana_norm, B.vel_going_cortas_max_norm, B.vel_real_longmedias_mediana_norm, B.vel_real_longmedias_max_norm, B.vel_going_longmedias_mediana_norm, B.vel_going_longmedias_max_norm, B.vel_real_largas_mediana_norm, B.vel_real_largas_max_norm, B.vel_going_largas_mediana_norm, B.vel_going_largas_max_norm,
 
@@ -142,7 +142,7 @@ echo -e "FUTURO_IDs -> datos_desa.tb_dataset_ids_futuros_${TAG}" 2>&1 1>>${LOG_D
 #4º Columnas usadas (FEATURES), sin IDs ni target.
 ######################################################################
 read -d '' FEATURES_COMUNES <<- EOF
-peso_galgo_norm, edad_en_dias_norm, scoring_remarks, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, dif_peso, entrenador_posicion_norm, eed_norm, trap_norm, sp_norm,
+peso_galgo_norm, edad_en_dias_norm, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, dif_peso, entrenador_posicion_norm, eed_norm, trap_norm, sp_norm,  remarks_puntos_historico, remarks_puntos_historico_10d, remarks_puntos_historico_20d, remarks_puntos_historico_50d,
 
 vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
 

@@ -285,9 +285,8 @@ public class GbgbParserGalgoHistorico implements Serializable {
 				out += mapa.get(clave).puntos;
 			} else {
 
-				if (remarksClavesSinTraduccion.keySet().size() < Constantes.MAX_NUM_REMARKS_MEMORIZADAS) {// solo guardo
-																											// un numero
-																											// limitado
+				if (!clave.trim().isEmpty()
+						&& remarksClavesSinTraduccion.keySet().size() < Constantes.MAX_NUM_REMARKS_MEMORIZADAS) {
 
 					if (remarksClavesSinTraduccion.containsKey(clave)) {
 						remarksClavesSinTraduccion.replace(clave, remarksClavesSinTraduccion.get(clave) + 1);

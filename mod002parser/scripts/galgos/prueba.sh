@@ -1,9 +1,12 @@
 #!/bin/bash
 
-cadena="hola"
+source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-echo -e "IN=${cadena}"
-echo -e "OUT=${cadena::-1}"
+
+##################MAIN############
+crearTablaRemarksPuntos
+
+cruzarGHyRemarksPuntos
 
 
 

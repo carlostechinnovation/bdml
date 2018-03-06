@@ -10,7 +10,7 @@ rm -f "${DOC_ANALISIS_PREVIO}"
 echo -e $(date +"%T")" Modulo 020 - Estadística básica de los datos BRUTOS de ENTRADA..." 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
 
 echo -e "MOD020 --> LOG = "${LOG_ESTADISTICA_BRUTO}
-echo -e "MOD020-INFORME = "${DOC_ANALISIS_PREVIO}
+echo -e "MOD020-INFORME = "${DOC_ANALISIS_PREVIO} 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
 
 
 #Limpiar informe

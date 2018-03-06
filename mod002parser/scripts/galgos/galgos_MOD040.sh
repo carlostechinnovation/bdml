@@ -2,17 +2,16 @@
 
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
+#### Limpiar LOG ###
+rm -f $LOG_ML
 
 ######################## PARAMETROS ############
 if [ "$#" -ne 1 ]; then
-    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_ML}
 fi
 
 TAG="${1}"
 
-
-#### Limpiar LOG ###
-rm -f $LOG_ML
 
 echo -e $(date +"%T")" Modulo 040 - Modelos predictivos (nucleo)" 2>&1 1>>${LOG_ML}
 
@@ -199,7 +198,7 @@ echo -e "numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
 echo -e "numero_predicciones_1o2 = ${numero_predicciones_1o2}" 2>&1 1>>${LOG_ML}
 
 SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1o2" | bc -l)
-echo -e "\nTAG=$TAG --> SCORE (sobre dataset de validation) = ${numero_aciertos}/${numero_predicciones_1o2} = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
+echo -e "\nDS_PASADO_VALIDATION|${TAG}|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
 
 
 
@@ -223,7 +222,7 @@ mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_val_ec
 
 FILE_TEMP="./temp_numero"
 rm -f ${FILE_TEMP}
-mysql -u root --password=datos1986 -N --execute="SELECT SUM(beneficio_bruto)/SUM(gastado_1o2) AS rentabilidad_${TAG} FROM datos_desa.tb_val_economico_${TAG};" > ${FILE_TEMP}
+mysql -u root --password=datos1986 -N --execute="SELECT ROUND( 100.0 * SUM(beneficio_bruto-gastado_1o2)/SUM(gastado_1o2) , 2) AS rentabilidad_${TAG} FROM datos_desa.tb_val_economico_${TAG};" > ${FILE_TEMP}
 rentabilidad=$( cat ${FILE_TEMP})
 
 echo -e "Rentabilidad (sobre dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" 2>&1 1>>${LOG_ML}
@@ -234,7 +233,7 @@ echo -e "ATENCION: Solo pongo DINERO en las carreras predichas 1º o 2º y que p
 
 ##############################################################
 ############### SALIDA HACIA SCRIPT PADRE ####
-echo -e "DS_PASADO_VALIDATION|${TAG}|SCORE = ${numero_aciertos}/${numero_predicciones_1o2} = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad}"
+echo -e "DS_PASADO_VALIDATION|${TAG}|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %"
 
 ################################################
 ##############################################################

@@ -176,6 +176,61 @@ echo -e " Descarga de Betbright: OK" >> "${FLAG_BB_DESCARGADO_OK}"
 }
 
 
+
+
+########################### REMARKS-PUNTOS #################################
+function insertSelectRemark ()
+{
+  remark_in="${1}"
+
+echo -e "Calculando peso del remark='${remark_in}'..." 2>&1 1>>${LOG_CE}
+
+read -d '' CONSULTA_REMARKS_PUNTOS <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_remark_puntos_1;
+
+CREATE TABLE datos_desa.tb_remark_puntos_1 AS SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico_norm WHERE remarks LIKE '%${remark_in}%' GROUP BY posicion;
+
+set @sum_contador=(SELECT  SUM(contador) FROM datos_desa.tb_remark_puntos_1);
+
+DROP TABLE IF EXISTS datos_desa.tb_remark_puntos_2;
+CREATE TABLE datos_desa.tb_remark_puntos_2 AS SELECT posicion, contador/@sum_contador AS puntos_norm FROM datos_desa.tb_remark_puntos_1;
+
+INSERT INTO datos_desa.tb_remarks_puntos(remark,posicion,remark_puntos_norm) SELECT '${remark_in}' AS remark, posicion, CAST(puntos_norm AS decimal(20,6)) AS remark_puntos_norm FROM datos_desa.tb_remark_puntos_2;
+EOF
+
+  echo -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
+  mysql -u root --password=datos1986 --execute="$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
+}
+
+
+function crearTablaRemarksPuntos ()
+{
+echo -e "La tabla de remarks_puntos indica el PESO/INFLUENCIA que tiene cada REMARK en el campo POSICION. Es una especie de 'posición normalizada mirando solo remarks'" 2>&1 1>>${LOG_CE}
+
+CONSULTA_DROP="DROP TABLE IF EXISTS datos_desa.tb_remarks_puntos;"
+mysql -u root --password=datos1986 --execute="$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
+
+CONSULTA_CREAR="CREATE TABLE datos_desa.tb_remarks_puntos (remark varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '', posicion SMALLINT DEFAULT NULL, remark_puntos_norm decimal(20,2) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
+mysql -u root --password=datos1986 --execute="$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
+
+echo -e "$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
+echo -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
+
+#Calcular e INSERTAR los puntos NORMALIZADOS (peso) de influencia en la posición, por tener cada remark
+insertSelectRemark 'Crd'
+insertSelectRemark 'Crowd'
+insertSelectRemark 'Wide'
+insertSelectRemark 'RanOn'
+insertSelectRemark 'Led'
+insertSelectRemark 'AlwaysLed'
+insertSelectRemark 'ClearRun'
+insertSelectRemark 'Handy'
+insertSelectRemark 'RunUp'
+
+#PENDIENTE Los acronimos Crd=Crowd=Crowded, AlwaysHandy=AHandy, ... Por tanto, debo modificar la funcion insertSelectRemark para que acepte un parametro (ej: 'Crd#Crowd#Crowded') para que filtre considerando que significa lo mismo.
+}
+
+
 ######## SUBGRUPOS #######################################################################
 function analizarScoreSobreSubgrupos ()
 {
@@ -242,13 +297,24 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_LARGA" >>$PATH_LOG
 
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <=0.33)" "HORA_PRONTO"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <=0.20)" "HORA_PRONTO_A"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO_A" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >=0.66)" "HORA_TARDE"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <0.2 AND hora_norm <=0.4)" "HORA_PRONTO_B"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO_B" >>$PATH_LOG
 
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >=0.3 AND hora_norm <=0.7)" "HORA_MEDIA"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_MEDIA" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm =0.6 AND hora_norm<=0.8)" "HORA_TARDE_A"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE_A" >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >=0.8)" "HORA_TARDE_B"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE_B" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm<=0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_JOVENES"
@@ -317,8 +383,11 @@ borrarTablasInnecesarias_036_037_040 "DISTANCIA_CORTA"
 borrarTablasInnecesarias_036_037_040 "DISTANCIA_MEDIA"
 borrarTablasInnecesarias_036_037_040 "DISTANCIA_LARGA"
 
-borrarTablasInnecesarias_036_037_040 "HORA_PRONTO"
-borrarTablasInnecesarias_036_037_040 "HORA_TARDE"
+borrarTablasInnecesarias_036_037_040 "HORA_PRONTO_A"
+borrarTablasInnecesarias_036_037_040 "HORA_PRONTO_B"
+borrarTablasInnecesarias_036_037_040 "HORA_MEDIA"
+borrarTablasInnecesarias_036_037_040 "HORA_TARDE_A"
+borrarTablasInnecesarias_036_037_040 "HORA_TARDE_B"
 
 borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_JOVENES"
 borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_VIEJOS"
