@@ -445,12 +445,20 @@ DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux3;
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux4;
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux5;
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG};
+
 DROP TABLE IF EXISTS datos_desa.tb_val_score_real_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_score_predicho_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_score_aciertos_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_connombre_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_aciertos_connombre_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_economico_${TAG};
+
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_score_real_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_score_predicho_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_1st_score_aciertos_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_connombre_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_aciertos_connombre_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG};
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_040" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL

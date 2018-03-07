@@ -41,15 +41,15 @@ ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" #llama a 036 y 037
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
 
 
-echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados)" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD050.sh' "TOTAL"
+#echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados)" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD050.sh' "TOTAL"
 
-echo -e $(date +"%T")" Análisis posterior" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh'
-${PATH_SCRIPTS}'galgos_MOD060_tablas.sh'
+#echo -e $(date +"%T")" Análisis posterior" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh'
+#${PATH_SCRIPTS}'galgos_MOD060_tablas.sh'
 
-echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD070.sh'
+#echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD070.sh'
 
 #echo -e $(date +"%T")" Limpieza final (tablas pasadas, pero no las futuras)" >>$PATH_LOG
 #limpieza
