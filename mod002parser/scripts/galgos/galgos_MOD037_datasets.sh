@@ -278,13 +278,10 @@ echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}\n\n" 2>&1 1
 
 
 
-######### Análisis del DATASET de PASADO-FEATURES (entrada #######################
-analizarTabla "datos_desa" "tb_ds_pasado_train_features_${TAG}" "${LOG_DS}"
-
-
-######### Análisis del DATASET de ENTRADA #######################
-analizarTabla "datos_desa" "tb_ds_futuro_features_${TAG}" "${LOG_DS}"
-
+######### Análisis del DATASET de PASADO-FEATURES (entrada) y FUTURO_FEATURES (entrada) #######################
+rm -f "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_pasado_train_features_${TAG}" "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_futuro_features_${TAG}" "${LOG_DS_COLPEN}"
 
 
 #####################################################################################

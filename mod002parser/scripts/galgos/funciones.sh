@@ -13,6 +13,7 @@ DOC_ANALISIS_PREVIO="/home/carloslinux/Desktop/INFORMES/analisis_previo.txt"
 LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_031_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
+LOG_DS_COLPEN="/home/carloslinux/Desktop/LOGS/galgos_037_datasets_COLUMNAS_PENDIENTES.log"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
 LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
 LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
@@ -477,7 +478,7 @@ logsalida="${3}"
 path_temp="./temp_analisis_tabla"
 rm -f $path_temp
 
-echo -e "--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>&1 1>>${logsalida}
+echo -e "\n--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>&1 1>>${logsalida}
 
 echo -e "Leyenda --> campo : MAX|MIN|AVG|COUNT\n"  2>&1 1>>${logsalida}
 
@@ -506,7 +507,7 @@ query_out="${query_out} FROM ${schemaEntrada}.${tablaEntrada};"
 
 mysql -u root --password=datos1986 --vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
 
-echo -e "-----------------------------------------------------"  2>&1 1>>${logsalida}
+echo -e "-----------------------------------------------------\n"  2>&1 1>>${logsalida}
 }
 
 ##########################################################################################
