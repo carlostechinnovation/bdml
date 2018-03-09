@@ -39,7 +39,7 @@ public class Constantes {
 	public static final Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 10;// util para debuguear con pocos casos.
 																				// Normalmente será 100000
 
-	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 50;
+	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 35;
 
 	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 10; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)

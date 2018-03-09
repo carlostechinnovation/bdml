@@ -24,11 +24,11 @@ FROM (
 
 A.id_carrera, A.galgo_nombre, A.futuro,
 
-A.peso_galgo_norm, A.edad_en_dias_norm, A.scoring_remarks, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.eed_norm, A.trap_norm, A.sp_norm,
+A.peso_galgo_norm, A.edad_en_dias_norm, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.eed_norm, A.trap_norm, A.sp_norm, A.remarks_puntos_historico, A.remarks_puntos_historico_10d, A.remarks_puntos_historico_20d, A.remarks_puntos_historico_50d,
 
 B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, B.vel_real_cortas_mediana_norm, B.vel_real_cortas_max_norm, B.vel_going_cortas_mediana_norm, B.vel_going_cortas_max_norm, B.vel_real_longmedias_mediana_norm, B.vel_real_longmedias_max_norm, B.vel_going_longmedias_mediana_norm, B.vel_going_longmedias_max_norm, B.vel_real_largas_mediana_norm, B.vel_real_largas_max_norm, B.vel_going_largas_mediana_norm, B.vel_going_largas_max_norm,
 
-C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.premio_primero_norm, C.premio_segundo_norm, C.premio_otros_norm, C.premio_total_carrera_norm, C.fc_1_norm, C.fc_2_norm, C.fc_pounds_norm, C.tc_1_norm, C.tc_2_norm, C.tc_3_norm, C.tc_pounds_norm, C.venue_going_std, C.venue_going_avg, C.dow_d, C.dow_l, C.dow_m, C.dow_x, C.dow_j, C.dow_v, C.dow_s, C.dow_finde, C.dow_laborable,
+C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.venue_going_std, C.venue_going_avg, C.dow_d, C.dow_l, C.dow_m, C.dow_x, C.dow_j, C.dow_v, C.dow_s, C.dow_finde, C.dow_laborable,
 
 velocidad_con_going_norm AS TARGET
 
@@ -44,7 +44,7 @@ ALTER TABLE datos_desa.tb_dataset_con_ids_${TAG} ADD INDEX tb_dscids_idx(id_carr
 SELECT count(*) as num_dataset_con_ids FROM datos_desa.tb_dataset_con_ids_${TAG} LIMIT 5;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_CON_IDs" >>$LOG_DS
 
 echo -e "PASADO y FUTURO (con boolean e IDs) --> datos_desa.tb_dataset_con_ids_${TAG}" 2>&1 1>>${LOG_DS}
@@ -81,13 +81,14 @@ numero_ids_pasados=$( cat ${FILE_TEMP})
 numero_pasados_test=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_validation=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_train=$(echo "$numero_ids_pasados-$numero_pasados_test-$numero_pasados_validation" | bc)
-echo -e "Pasados = "${numero_ids_pasados}" ==> [TRAIN | TEST | *VALIDATION] = "${numero_pasados_train}" | "${numero_pasados_test}" | *"${numero_pasados_validation} >>$LOG_DS
+echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation} >>$LOG_DS
+echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation}
 echo -e "* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE." >>$LOG_DS
 
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_ids_futuros=$( cat ${FILE_TEMP})
-echo -e "\nFuturos = ${numero_ids_futuros}" >>$LOG_DS
-
+echo -e "${TAG}|DS-Futuros = ${numero_ids_futuros}" >>$LOG_DS
+echo -e "${TAG}|DS-Futuros = ${numero_ids_futuros}"
 
 ######################################################################
 #3º Crear estas 4 listas de IDs: PASADO-TRAIN, PASADO-TEST, PASADO-VALIDATION, FUTURA (ya creada).
@@ -141,11 +142,11 @@ echo -e "FUTURO_IDs -> datos_desa.tb_dataset_ids_futuros_${TAG}" 2>&1 1>>${LOG_D
 #4º Columnas usadas (FEATURES), sin IDs ni target.
 ######################################################################
 read -d '' FEATURES_COMUNES <<- EOF
-peso_galgo_norm, edad_en_dias_norm, scoring_remarks, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, dif_peso, entrenador_posicion_norm, eed_norm, trap_norm, sp_norm,
+peso_galgo_norm, edad_en_dias_norm, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, dif_peso, entrenador_posicion_norm, eed_norm, trap_norm, sp_norm,  remarks_puntos_historico, remarks_puntos_historico_10d, remarks_puntos_historico_20d, remarks_puntos_historico_50d,
 
 vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
 
-distancia_norm, num_galgos_norm, mes_norm, hora_norm, premio_primero_norm, premio_segundo_norm, premio_otros_norm, premio_total_carrera_norm, fc_1_norm, fc_2_norm, fc_pounds_norm, tc_1_norm, tc_2_norm, tc_3_norm, tc_pounds_norm, venue_going_std, venue_going_avg, dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable
+distancia_norm, num_galgos_norm, mes_norm, hora_norm, venue_going_std, venue_going_avg, dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable
 EOF
 
 
@@ -273,11 +274,21 @@ EOF
 echo -e "$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_FUTURO_FEATURES" >>$LOG_DS
 
-echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}" 2>&1 1>>${LOG_DS}
+echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}\n\n" 2>&1 1>>${LOG_DS}
+
+
+
+######### Análisis del DATASET de PASADO-FEATURES (entrada) y FUTURO_FEATURES (entrada) #######################
+rm -f "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_pasado_train_features_${TAG}" "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_futuro_features_${TAG}" "${LOG_DS_COLPEN}"
+
 
 #####################################################################################
 
 rm -f ${FILE_TEMP}
+
+###########################################################################
 
 echo -e $(date +"%T")" Generador de DATASETS (usando tablas filtradas): FIN\n\n" 2>&1 1>>${LOG_DS}
 

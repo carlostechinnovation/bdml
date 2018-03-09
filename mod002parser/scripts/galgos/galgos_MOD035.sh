@@ -5,7 +5,9 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 #### Limpiar LOG ###
 rm -f $LOG_DS
 
-echo -e $(date +"%T")" Modulo 003C - Generador de TABLAS FILTRADAS Y DATASETS (ETIQUETADOS POR TAG)..." 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Modulo 035 - Generador de TABLAS FILTRADAS Y DATASETS (ETIQUETADOS POR TAG)..." 2>&1 1>>${LOG_DS}
+
+echo -e "MOD035 --> LOG = "${LOG_DS}
 
 
 if [ "$#" -ne 4 ]; then
@@ -28,7 +30,7 @@ echo -e $(date +"%T")" TAG=${sufijo}" 2>&1 1>>${LOG_DS}
 
 
 
-echo -e $(date +"%T")"Modulo 003C - FIN\n\n" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Modulo 035 - FIN\n\n" 2>&1 1>>${LOG_DS}
 
 
 
