@@ -60,7 +60,13 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 		String out = "";
 
 		for (GbgbGalgoHistoricoCarrera fila : carrerasHistorico) {
-			out += galgo_nombre + SEP + entrenador + SEP;
+
+			String entrenadorLimpio = Constantes.limpiarEntrenador(entrenador);
+
+			out += (galgo_nombre != null && !"".equals(galgo_nombre)) ? galgo_nombre : "\\N";
+			out += SEP;
+			out += (entrenadorLimpio != null) ? entrenadorLimpio : "\\N";
+			out += SEP;
 			out += fila.generarDatosParaExportarSql() + Constantes.SEPARADOR_FILA;
 		}
 

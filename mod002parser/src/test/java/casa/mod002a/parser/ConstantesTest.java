@@ -78,4 +78,13 @@ public class ConstantesTest {
 		Assert.assertTrue(Constantes.round2(0F, 2).equals(0F));
 	}
 
+	@Test
+	public void limpiarEntrenadorTest() {
+		Assert.assertTrue(Constantes.limpiarEntrenador(null) == null);
+		Assert.assertTrue(Constantes.limpiarEntrenador("") == null);
+		Assert.assertTrue(Constantes.limpiarEntrenador("   ") == null);
+		Assert.assertTrue(Constantes.limpiarEntrenador("unknown") == null);
+		Assert.assertTrue(Constantes.limpiarEntrenador("CARLOS").equals("CARLOS"));
+	}
+
 }

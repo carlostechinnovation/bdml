@@ -89,6 +89,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		String SEP = Constantes.SEPARADOR_CAMPO;
 
 		Integer edadEnDias = calcularEdadGalgoEnDias(nacimiento, fechaDeLaCarrera);
+		String entrenadorLimpio = Constantes.limpiarEntrenador(entrenador_nombre);
 
 		String out = "";
 
@@ -111,7 +112,7 @@ public class GbgbPosicionEnCarrera implements Serializable, GalgosGuardable {
 		out += SEP;
 		out += peso_galgo != null ? peso_galgo : "\\N";
 		out += SEP;
-		out += (entrenador_nombre != null && !"".equals(entrenador_nombre)) ? entrenador_nombre : "\\N";
+		out += (entrenadorLimpio != null) ? entrenadorLimpio : "\\N";
 		out += SEP;
 		out += (galgo_padre != null && !"".equals(galgo_padre)) ? galgo_padre : "\\N";
 		out += SEP;

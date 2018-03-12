@@ -38,7 +38,8 @@ public class SportiumDownloader {
 	 */
 	public void descargarDeURLsAFicheros(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 
-		MY_LOGGER.info("[URL|pathOut|borrarSiExiste] --> " + urlCarrera + " | " + pathOut + " | " + borrarSiExiste);
+		MY_LOGGER.info(
+				"[URL|pathOut|borrarSiExiste] --> [" + urlCarrera + " | " + pathOut + " | " + borrarSiExiste + " ]");
 
 		try {
 			if (Files.exists(Paths.get(pathOut)) && borrarSiExiste) {
@@ -46,7 +47,7 @@ public class SportiumDownloader {
 				Files.delete(Paths.get(pathOut));
 			}
 
-			MY_LOGGER.info("--- Peticion HTTP normal ---");
+			MY_LOGGER.debug("--- Peticion HTTP normal ---");
 			// Request
 			URL url = new URL(urlCarrera);
 			HttpURLConnection.setFollowRedirects(true);
@@ -73,7 +74,7 @@ public class SportiumDownloader {
 			// CODIGO de RESPUESTA
 			int status = con.getResponseCode();
 			if (status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM) {
-				MY_LOGGER.info("--- Peticion HTTP escapando caracteres espacio en URL ---");
+				MY_LOGGER.debug("--- Peticion HTTP escapando caracteres espacio en URL ---");
 				String location = con.getHeaderField("Location");
 				URL newUrl = new URL(location.replace(" ", "%20"));
 				con = (HttpURLConnection) newUrl.openConnection();

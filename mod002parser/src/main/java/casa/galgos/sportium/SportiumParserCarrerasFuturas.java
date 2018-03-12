@@ -181,7 +181,7 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 
 		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();
 
-		List<String> galgosNombres = new ArrayList<String>();
+		List<SportiumGalgoFuturoEnCarreraAux> trapGalgonombreSpLista = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
 		String estadio = ((TextNode) filaCarrerasEnEstadio.childNode(0).childNode(0)).text().trim();
 
@@ -207,8 +207,8 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 							String ultimo = trozos[trozos.length - 1];
 							Integer horaInglesa = Integer.valueOf(ultimo.split("-")[0].replace(".", ""));
 
-							CarreraSemillaSportium modelo = new CarreraSemillaSportium(urlDetalle, estadio, dia, horaInglesa,
-									galgosNombres);
+							CarreraSemillaSportium modelo = new CarreraSemillaSportium(urlDetalle, estadio, dia,
+									horaInglesa, trapGalgonombreSpLista);
 							out.add(modelo);
 
 						}

@@ -53,9 +53,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 			List<SportiumGalgoFuturoEnCarreraAux> galgosExtraidos = parsear(bruto, carreraIn.urlDetalle);
 
 			if (galgosExtraidos != null) {
-				for (SportiumGalgoFuturoEnCarreraAux item : galgosExtraidos) {
-					carreraIn.galgosNombres.add(item.galgoNombre);
-				}
+				carreraIn.trapGalgonombreSp = galgosExtraidos;
 			}
 
 		} catch (Exception e) {
@@ -96,7 +94,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		List<SportiumGalgoFuturoEnCarreraAux> galgos = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
-		MY_LOGGER.info("tablaDeGalgos -->" + tablaDeGalgos.size());
+		MY_LOGGER.debug("tablaDeGalgos -->" + tablaDeGalgos.size());
 		Element primeraPestania = null;
 		for (Element pestania : tablaDeGalgos) {
 			if (pestania.toString().contains(">Posici")
@@ -132,7 +130,7 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 
 		}
 
-		MY_LOGGER.info("Sportium - Numero de galgos extraidos de la carrera futura: " + galgos.size());
+		MY_LOGGER.info("Sportium - Numero de galgos EXTRAIDOS de la carrera FUTURA: " + galgos.size());
 		return galgos;
 	}
 
@@ -142,8 +140,8 @@ public class SportiumParserDetalleCarreraFutura implements Serializable {
 	 */
 	public static void parsearTbodyFila(Element fila, List<SportiumGalgoFuturoEnCarreraAux> out) {
 
-		MY_LOGGER.debug("\nSportium - parsearTbodyFila --------------\n");
-		// MY_LOGGER.debug("\n" + fila.toString() + "\n\n----------------------\n");
+		MY_LOGGER.debug("\nSportium - parsearTbodyFila --------------");
+		// MY_LOGGER.debug("\n" + fila.toString() + "\n----------------------\n");
 
 		boolean sinContenidoUtil = fila.toString().contains("<thead>") || fila.toString().contains("value=\"00\"")
 				|| fila.toString().contains("<td class=\"number\"></td>");

@@ -41,10 +41,10 @@ public class Constantes {
 
 	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 35;
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 10; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 25; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 2000;
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 400;
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
@@ -136,6 +136,23 @@ public class Constantes {
 	public static String limpiarTexto(String in) {
 		return in.replace(SEPARADOR_CAMPO, "").replace(SEPARADOR_FILA, "").replace("Â", "").replace("$nbsp", "")
 				.replace(" ", "").trim();
+	}
+
+	/**
+	 * Limpia el dato de entrada, que es el nombre de un entrenador.
+	 * 
+	 * @param in
+	 * @return Nombre del entrenador en MAYUSCULAS. En caso de que la entrada sea
+	 *         null, vacío o 'unknown', la salida es null.
+	 */
+	public static String limpiarEntrenador(String in) {
+		String aux = (in != null) ? in.trim() : null;
+
+		String out = null;
+		if (aux != null && aux != "unknown") {
+			out = aux.toUpperCase();
+		}
+		return out;
 	}
 
 	/**

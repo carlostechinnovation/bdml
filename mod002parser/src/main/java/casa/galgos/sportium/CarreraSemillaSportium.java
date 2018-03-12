@@ -17,16 +17,16 @@ public class CarreraSemillaSportium implements Serializable {
 	public String estadio = "\\N";
 	public Long dia = null;// yyyyMMddhhmm
 	public Integer hora = null;// hhmm
-	public List<String> galgosNombres = new ArrayList<String>();// ordenados segun el trap
+	public List<SportiumGalgoFuturoEnCarreraAux> trapGalgonombreSp = new ArrayList<SportiumGalgoFuturoEnCarreraAux>();
 
 	public CarreraSemillaSportium(String urlDetalle, String estadio, Long dia, Integer hora,
-			List<String> galgosNombres) {
+			List<SportiumGalgoFuturoEnCarreraAux> trapGalgonombreSp) {
 		super();
 		this.urlDetalle = urlDetalle;
 		this.estadio = estadio;
 		this.dia = dia;
 		this.hora = hora;
-		this.galgosNombres = galgosNombres;
+		this.trapGalgonombreSp = trapGalgonombreSp;
 	}
 
 	@Override
@@ -39,14 +39,17 @@ public class CarreraSemillaSportium implements Serializable {
 		out += Constantes.SEPARADOR_CAMPO;
 		out += estadio;
 
-		if (galgosNombres != null && !galgosNombres.isEmpty()) {
+		if (trapGalgonombreSp != null && !trapGalgonombreSp.isEmpty()) {
 
-			out += galgosNombres.size();
+			out += trapGalgonombreSp.size();
 
-			for (String galgo : galgosNombres) {
-
+			for (SportiumGalgoFuturoEnCarreraAux item : trapGalgonombreSp) {
 				out += Constantes.SEPARADOR_CAMPO;
-				out += galgo;
+				out += item.galgoNombre;
+				out += Constantes.SEPARADOR_CAMPO;
+				out += item.trap;
+				out += Constantes.SEPARADOR_CAMPO;
+				out += item.sp;
 			}
 		}
 

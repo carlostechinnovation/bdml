@@ -32,6 +32,7 @@ import casa.galgos.gbgb.GbgbPosicionEnCarrera;
 import casa.galgos.sportium.CarreraGalgoSemillaSportium;
 import casa.galgos.sportium.CarreraSemillaSportium;
 import casa.galgos.sportium.SportiumDownloader;
+import casa.galgos.sportium.SportiumGalgoFuturoEnCarreraAux;
 import casa.galgos.sportium.SportiumParserCarrerasFuturas;
 import casa.galgos.sportium.SportiumParserDetalleCarreraFutura;
 import utilidades.Constantes;
@@ -59,8 +60,11 @@ public class GalgosManager implements Serializable {
 	public List<String> galgosYaAnalizados = new ArrayList<String>();
 
 	// LISTAS con datos DEFINITIVOS para guardar en sistema de ficheros
-	public List<CarreraSemillaSportium> galgosFuturos = new ArrayList<CarreraSemillaSportium>(); // Galgos en los que
-																									// vamos a apostar
+	public List<CarreraSemillaSportium> carrerasFuturasConSusGalgos = new ArrayList<CarreraSemillaSportium>(); // Galgos
+																												// en
+																												// los
+																												// que
+	// vamos a apostar
 	// dinero real
 	public List<GalgosGuardable> guardableCarreras = new ArrayList<GalgosGuardable>();
 	public List<GalgosGuardable> guardablePosicionesEnCarreras = new ArrayList<GalgosGuardable>();
@@ -83,6 +87,7 @@ public class GalgosManager implements Serializable {
 
 	/**
 	 * @param prefijoPathDatosBruto
+	 *            Prefijo del PATH BRUTO de los datos
 	 * @param guardarEnFicheros
 	 * @param fileGalgosIniciales
 	 *            SALIDA
@@ -91,17 +96,18 @@ public class GalgosManager implements Serializable {
 	public void descargarYParsearSemillasSportium(String prefijoPathDatosBruto, boolean guardarEnFicheros,
 			String fileGalgosIniciales) throws InterruptedException {
 
-		MY_LOGGER.info("Descargando carreras FUTURAS con sus galgos (semillas)...");
+		MY_LOGGER.info(
+				"SPORTIUM - Descargando carreras FUTURAS disponibles ahora en DIRECTO con sus galgos (semillas)...");
 
 		(new SportiumDownloader()).descargarDeURLsAFicheros(Constantes.GALGOS_FUTUROS_SPORTIUM, prefijoPathDatosBruto,
 				guardarEnFicheros);
 
-		MY_LOGGER.info("Parseando carreras FUTURAS con sus galgos (semillas)...");
-		galgosFuturos = (new SportiumParserCarrerasFuturas()).ejecutar(prefijoPathDatosBruto);
+		MY_LOGGER.info("Parseando el fichero bruto con la LISTA de carreras FUTURAS y sus galgos (semillas)...");
+		carrerasFuturasConSusGalgos = (new SportiumParserCarrerasFuturas()).ejecutar(prefijoPathDatosBruto);
 
-		MY_LOGGER.info("Filas parseadas: " + galgosFuturos.size());
+		MY_LOGGER.info("Filas parseadas (carrerasFuturasConSusGalgos): " + carrerasFuturasConSusGalgos.size());
 
-		if (galgosFuturos != null && !galgosFuturos.isEmpty()) {
+		if (carrerasFuturasConSusGalgos != null && !carrerasFuturasConSusGalgos.isEmpty()) {
 
 			String tag = "_BRUTOCARRERADET_";
 			int contador = 0;
@@ -109,7 +115,7 @@ public class GalgosManager implements Serializable {
 
 			String pathCarreraDetalle = "";
 
-			for (CarreraSemillaSportium carrera : galgosFuturos) {
+			for (CarreraSemillaSportium carrera : carrerasFuturasConSusGalgos) {
 				contador++;
 				pathCarreraDetalle = prefijoPathDatosBruto + tag + contador;
 
@@ -134,28 +140,32 @@ public class GalgosManager implements Serializable {
 	 */
 	public void desnormalizarSemillasYGuardarlasEnFicheros(String fileGalgosIniciales) {
 
-		MY_LOGGER.info("La lista galgosFuturos contiene = " + galgosFuturos.size());
+		MY_LOGGER.info("Lista carrerasFuturasConSusGalgos contiene = " + carrerasFuturasConSusGalgos.size());
 
 		// *********************************************************************
-		// Desnormalizar, llevando a relaciones carrera-galgo
+		// DESNORMALIZAR, llevando a relaciones carrera-galgo
 		Set<CarreraGalgoSemillaSportium> carreraGalgos = new HashSet<CarreraGalgoSemillaSportium>();
-		for (CarreraSemillaSportium carrera : galgosFuturos) {
-			if (carrera.galgosNombres != null && !carrera.galgosNombres.isEmpty()) {
+		for (CarreraSemillaSportium carrera : carrerasFuturasConSusGalgos) {
 
-				int trap = 1;// La lista de galgosNombres NO esta ordenada segun el TRAP!!!!
+			String carreraPrefijo = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora;
+			MY_LOGGER.info("------ CARRERA = " + carreraPrefijo + " ---------");
 
-				for (String galgoNombre : carrera.galgosNombres) {
-					String id = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora + "#" + galgoNombre;
-					carreraGalgos.add(new CarreraGalgoSemillaSportium(id, galgoNombre, trap, carrera));
-					trap++;
+			if (carrera.trapGalgonombreSp != null && !carrera.trapGalgonombreSp.isEmpty()) {
+
+				for (SportiumGalgoFuturoEnCarreraAux item : carrera.trapGalgonombreSp) {
+					String id = carreraPrefijo + "#" + item.galgoNombre;
+					MY_LOGGER.info("CG = " + id);
+					carreraGalgos.add(new CarreraGalgoSemillaSportium(id, item.galgoNombre, item.trap, carrera));
 				}
 			}
 		}
 
+		MY_LOGGER.info("Carrera-galgos (DESNORMALIZADO): " + carreraGalgos.size());
+
 		// *********************************************************************
-		Set<String> galgosIniciales = new HashSet<String>();
+		Set<String> galgosInicialesSinDuplicados = new HashSet<String>();
 		for (CarreraGalgoSemillaSportium fila : carreraGalgos) {
-			galgosIniciales.add(fila.galgoNombre);
+			galgosInicialesSinDuplicados.add(fila.galgoNombre);
 		}
 
 		// ******************************************************************
@@ -178,7 +188,7 @@ public class GalgosManager implements Serializable {
 
 				// ****************************
 				boolean primero = true;
-				for (String galgoNombre : galgosIniciales) {
+				for (String galgoNombre : galgosInicialesSinDuplicados) {
 					if (primero) {
 						Files.write(Paths.get(path), (galgoNombre + "\n").getBytes(), StandardOpenOption.CREATE);
 						primero = false;
@@ -186,13 +196,13 @@ public class GalgosManager implements Serializable {
 						Files.write(Paths.get(path), (galgoNombre + "\n").getBytes(), StandardOpenOption.APPEND);
 					}
 				}
-				MY_LOGGER.info("Galgos iniciales: " + galgosIniciales.size());
+				MY_LOGGER.info("Galgos iniciales (sin duplicados): " + galgosInicialesSinDuplicados.size());
 
 				// ****************************
 				primero = true;
 				for (CarreraGalgoSemillaSportium fila : carreraGalgos) {
 
-					MY_LOGGER.debug("Fila=" + fila.toString());
+					MY_LOGGER.debug("CG --> " + fila.toString());
 
 					if (primero) {
 						Files.write(Paths.get(pathFull), (fila.toString()).getBytes(), StandardOpenOption.CREATE);
@@ -201,12 +211,14 @@ public class GalgosManager implements Serializable {
 						Files.write(Paths.get(pathFull), (fila.toString()).getBytes(), StandardOpenOption.APPEND);
 					}
 				}
-				MY_LOGGER.info("Carrera-Galgo iniciales: " + carreraGalgos.size());
+				MY_LOGGER.info("Carrera-Galgo iniciales: " + carreraGalgos.size()
+						+ " (si el numero es el mismo que el de galgos semilla, es que todos los galgos solo corren 1 vez hoy, no varias)");
 
 				// ******** LIMPIAR LISTAS, porque ya he guardado a fichero **********
-				galgosFuturos.clear();
+				carrerasFuturasConSusGalgos.clear();
 				carreraGalgos.clear();
-				MY_LOGGER.debug("Limpiando lista en memoria. Estado de la lista tras limpiar: " + galgosFuturos.size());
+				MY_LOGGER.debug("Limpiando lista en memoria. Estado de la lista tras limpiar: "
+						+ carrerasFuturasConSusGalgos.size());
 
 			} catch (IOException e) {
 				MY_LOGGER.error("Error:" + e.getMessage());
@@ -360,14 +372,13 @@ public class GalgosManager implements Serializable {
 
 		boolean out = quedanPendientes && debajoUmbralCarrerasProcesadasMax && debajoUmbralProfundidadMax;
 
-		MY_LOGGER.info(
-				"BUCLE-Condiciones: Ya se han procesado las carreras de profundidad 1, 2... (desde los galgos semillas) y ahora la profundidad mínima de las carreras PENDIENTES es ="
-						+ extraerProfundidadMinimaConCarrerasPendientes());
+		MY_LOGGER.info("BUCLE-Condiciones - Profundidad mínima de las carreras PENDIENTES es ="
+				+ extraerProfundidadMinimaConCarrerasPendientes());
 
-		MY_LOGGER.info("BUCLE-Condiciones --> quedanPendientes =" + quedanPendientes);
-		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralCarrerasProcesadasMax =" + debajoUmbralCarrerasProcesadasMax);
-		MY_LOGGER.info("BUCLE-Condiciones --> debajoUmbralProfundidadMax =" + debajoUmbralProfundidadMax);
-		MY_LOGGER.info("BUCLE-Condiciones --> TOTAL (para ver si seguimos procesando mas carreras) = " + out);
+		MY_LOGGER.info(
+				"BUCLE-Condiciones = [quedanPendientes|debajoUmbralCarrerasProcesadasMax|debajoUmbralProfundidadMax] ="
+						+ quedanPendientes + " | " + debajoUmbralCarrerasProcesadasMax + " | "
+						+ debajoUmbralProfundidadMax + " = " + out);
 
 		return out;
 

@@ -58,12 +58,17 @@ consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 
 #################### FUTURAS - SPORTIUM ######################
-echo -e $(date +"%T")" Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+PATH_BRUTO_SEMILLAS_SPORTIUM="${PATH_BRUTO}semillas_sportium"
 
-java -jar ${PATH_JAR} "GALGOS_02_SPORTIUM" "${PATH_BRUTO}semillas_sportium" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Borrando las paginas BRUTAS de detalle (carreras FUTURAS)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+rm -fR "${PATH_BRUTO_SEMILLAS_SPORTIUM}_BRUTOCARRERADET*"
+
+echo -e $(date +"%T")" Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+java -jar ${PATH_JAR} "GALGOS_02_SPORTIUM" "${PATH_BRUTO_SEMILLAS_SPORTIUM}" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 consultar_sobreescribirsalida "TRUNCATE TABLE datos_desa.tb_cg_semillas_sportium\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_FULL}' INTO TABLE datos_desa.tb_cg_semillas_sportium FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
+
 
 
 ###################### FUTURAS - SPORTIUM - DETALLE ####################
@@ -96,15 +101,15 @@ mysql -u root --password=datos1986 --execute="SELECT COUNT(DISTINCT galgo_nombre
 
 
 ##########################################
-echo -e "\n\n\n"$(date +"%T")"SEMILLAS - Metiendo filas artificiales con los datos conocidos de las semillas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e "\n\n\n"$(date +"%T")"SEMILLAS (FUTURAS) - Metiendo filas artificiales con los datos conocidos de las semillas:" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 #Pendiente descargar dato "SP" si se conoce en ese instante
 
-read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES <<- EOF
+read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_b;
 
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_b AS
-SELECT DHE  
+SELECT DHE
 FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) dentro2 
 GROUP BY DHE 
 ORDER BY DHE DESC;
@@ -149,6 +154,20 @@ SELECT count(*) as num_filas_d FROM datos_desa.tb_cg_semillas_sportium_d LIMIT 5
 set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 
+
+DROP TABLE IF EXISTS datos_desa.tb_galgo_y_su_entrenador;
+
+CREATE TABLE datos_desa.tb_galgo_y_su_entrenador AS
+SELECT galgo_nombre, entrenador FROM datos_desa.tb_galgos_historico 
+WHERE entrenador IS NOT NULL AND entrenador <> '' AND entrenador <> 'unknown'
+ GROUP BY galgo_nombre, entrenador;
+
+SELECT count(*) FROM datos_desa.tb_galgo_y_su_entrenador LIMIT 10;
+SELECT * FROM datos_desa.tb_galgo_y_su_entrenador LIMIT 10;
+EOF
+
+
+read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS <<- EOF
 DELETE FROM datos_desa.tb_galgos_carreras 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
 
@@ -156,7 +175,7 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 INSERT INTO datos_desa.tb_galgos_carreras
 SELECT 
 MAX(id_carrera_artificial) AS id_carrera, 
-0 AS id_campeonato, 
+NULL AS id_campeonato, 
 MAX(estadio) AS track, 
 NULL AS clase, 
 CONVERT(SUBSTRING( CAST(MAX(dia) AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
@@ -180,53 +199,20 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 SELECT * FROM datos_desa.tb_galgos_carreras 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
 ORDER BY id_carrera ASC LIMIT 10;
+EOF
 
 
-
-DELETE FROM datos_desa.tb_galgos_posiciones_en_carreras 
-WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
-
-
-INSERT INTO datos_desa.tb_galgos_posiciones_en_carreras
-SELECT 
-id_carrera_artificial AS id_carrera,
-0 AS id_campeonato,
-NULL AS posicion,
-galgo_nombre AS galgo_nombre,
-trap AS trap,
-NULL AS sp,
-NULL AS time_sec,
-NULL AS time_distance,
-NULL AS peso_galgo,
-NULL AS entrenador_nombre,
-NULL AS galgo_padre,
-NULL AS galgo_madre,
-NULL AS nacimiento,
-NULL AS comment,
-NULL AS edad_en_dias
-FROM datos_desa.tb_cg_semillas_sportium_d;
-
-
-SELECT count(*) FROM datos_desa.tb_galgos_posiciones_en_carreras 
-WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
-
-
-SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras 
-WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
-ORDER BY id_carrera ASC LIMIT 10;
-
-
-
+read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO <<- EOF
 DELETE FROM datos_desa.tb_galgos_historico 
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
 
 
 INSERT INTO datos_desa.tb_galgos_historico
 SELECT 
-galgo_nombre,
-NULL AS entrenador,
+A.galgo_nombre AS galgo_nombre,
+B.entrenador AS entrenador,
 id_carrera_artificial AS id_carrera,
-0 AS id_campeonato,
+NULL AS id_campeonato,
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 5,2), UNSIGNED INTEGER) AS mes, 
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 7,2), UNSIGNED INTEGER) AS dia, 
@@ -246,7 +232,11 @@ NULL AS calculated_time,
 NULL AS velocidad_real,
 NULL AS velocidad_con_going,
 NULL AS scoring_remarks
-FROM datos_desa.tb_cg_semillas_sportium_d;
+FROM datos_desa.tb_cg_semillas_sportium_d A
+
+LEFT JOIN datos_desa.tb_galgo_y_su_entrenador B
+ON (A.galgo_nombre=B.galgo_nombre)
+;
 
 
 SELECT count(*) FROM datos_desa.tb_galgos_historico 
@@ -259,9 +249,57 @@ ORDER BY id_carrera ASC LIMIT 10;
 EOF
 
 
-#echo -e $(date +"%T")"$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES <<- EOF
+DELETE FROM datos_desa.tb_galgos_posiciones_en_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
 
+INSERT INTO datos_desa.tb_galgos_posiciones_en_carreras
+SELECT 
+id_carrera_artificial AS id_carrera,
+NULL AS id_campeonato,
+NULL AS posicion,
+A.galgo_nombre AS galgo_nombre,
+trap AS trap,
+NULL AS sp,
+NULL AS time_sec,
+NULL AS time_distance,
+NULL AS peso_galgo,
+B.entrenador AS entrenador_nombre,
+NULL AS galgo_padre,
+NULL AS galgo_madre,
+NULL AS nacimiento,
+NULL AS comment,
+NULL AS edad_en_dias
+FROM datos_desa.tb_cg_semillas_sportium_d A
+
+LEFT JOIN datos_desa.tb_galgo_y_su_entrenador B
+ON (A.galgo_nombre=B.galgo_nombre)
+;
+
+SELECT count(*) FROM datos_desa.tb_galgos_posiciones_en_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales);
+
+
+SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras 
+WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
+ORDER BY id_carrera ASC LIMIT 10;
+EOF
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+#echo -e $(date +"%T")"$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+#echo -e $(date +"%T")"$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+#echo -e $(date +"%T")"$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Posiciones..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+#echo -e $(date +"%T")"$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 
 
@@ -539,7 +577,6 @@ FROM datos_desa.tb_galgos_agregados;
 
 SELECT * FROM datos_desa.tb_galgos_agregados_norm LIMIT 5;
 SELECT count(*) as num_galgos_agregados_norm FROM datos_desa.tb_galgos_agregados_norm LIMIT 5;
-
 EOF
 
 #echo -e "$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_DESCARGA_BRUTO}

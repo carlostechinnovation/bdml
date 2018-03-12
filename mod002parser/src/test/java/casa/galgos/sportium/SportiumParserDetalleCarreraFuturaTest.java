@@ -31,11 +31,16 @@ public class SportiumParserDetalleCarreraFuturaTest {
 	@Rule
 	public ResourceFile paginaMedioVacia = new ResourceFile("/" + "sportium_carrera_detalle_con_SP_mediovacia.html");
 
+	@Rule
+	public ResourceFile paginaConTrapsDesordenados = new ResourceFile(
+			"/" + "sportium_carrera_detalle_con_SP_traps_desordenados.html");
+
 	@Test
 	public void parsearTbodyFilaTest() throws Exception {
 
 		nucleo(trozoPaginaFuturo);
 		nucleo(paginaMedioVacia);
+		nucleo(paginaConTrapsDesordenados);
 	}
 
 	/**

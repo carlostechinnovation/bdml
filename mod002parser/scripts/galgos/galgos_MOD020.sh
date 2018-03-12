@@ -40,6 +40,15 @@ mysql -u root --password=datos1986 -tN --execute="SELECT count(*) FROM datos_des
 echo -e "tb_galgos_agregados_norm:" >> "${DOC_ANALISIS_PREVIO}"
 mysql -u root --password=datos1986 -tN --execute="SELECT count(*) FROM datos_desa.tb_galgos_agregados_norm;" >> "${DOC_ANALISIS_PREVIO}"
 
+echo -e "-------------- TABLAS NORMALIZADAS: datos ARTIFICIALES sobre carreras FUTURAS --------------" >> "${DOC_ANALISIS_PREVIO}"
+echo -e "tb_galgos_carreras_norm --> Deben aparecer 6 galgos por carrera futura:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -tN --execute="SELECT * FROM datos_desa.tb_galgos_carreras_norm WHERE id_carrera<=50 ORDER BY id_carrera LIMIT 12;" >> "${DOC_ANALISIS_PREVIO}"
+echo -e "tb_galgos_posiciones_en_carreras_norm --> Deberia haber 6 filas por cada carrera futura (pero no más):" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -tN --execute="SELECT id_carrera, count(*) AS contador FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera<=50 GROUP BY id_carrera HAVING contador>6 ORDER BY id_carrera LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+echo -e "tb_galgos_historico_norm --> Deben aparecer los historicos (artificiales) de una carrera futura:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -tN --execute="SELECT * FROM datos_desa.tb_galgos_historico_norm WHERE id_carrera<=50 ORDER BY id_carrera LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+echo -e "tb_galgos_agregados_norm --> No deberia haber ningun galgo_agregado duplicado:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -tN --execute="SELECT galgo_nombre, count(*) AS contador FROM datos_desa.tb_galgos_agregados_norm GROUP BY galgo_nombre HAVING contador>=2 LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
 
 
 echo -e "\n----- Analisis de CARRERAS -----" >> "${DOC_ANALISIS_PREVIO}"
@@ -54,6 +63,8 @@ echo -e "\nNumero MEDIO de GALGOS que corren en una CARRERA:" >> "${DOC_ANALISIS
 mysql -u root --password=datos1986 -tN --execute="SELECT count(DISTINCT id_carrera)/count(DISTINCT galgo_nombre) FROM datos_desa.tb_galgos_historico_norm;" >> "${DOC_ANALISIS_PREVIO}"
 echo -e "Numero MEDIO de CARRERAS conocidas por galgo (ajustado en Constantes: semanas hacia atrás):" >> "${DOC_ANALISIS_PREVIO}"
 mysql -u root --password=datos1986 -tN --execute="SELECT AVG(num_carreras_por_galgo) AS avg_num_carreras_por_galgo FROM ( SELECT galgo_nombre, count(*) AS num_carreras_por_galgo FROM datos_desa.tb_galgos_historico_norm GROUP BY galgo_nombre ) dentro; " >> "${DOC_ANALISIS_PREVIO}"
+echo -e "\nGalgos con mas de un entrenador conocido:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -tN --execute="SELECT galgo_nombre, count(DISTINCT entrenador) AS num_entrenadores FROM datos_desa.tb_galgos_historico_norm GROUP BY galgo_nombre HAVING num_entrenadores>=2;" >> "${DOC_ANALISIS_PREVIO}"
 
 
 echo -e "\n----- Analisis de REMARKS -----" >> "${DOC_ANALISIS_PREVIO}"
