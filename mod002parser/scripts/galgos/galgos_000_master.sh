@@ -13,7 +13,7 @@ rm -f $PATH_LOG
 
 
 ##########################################
-
+echo -e $(date +"%T")" ************** MASTER: INICIO ***************" >>$PATH_LOG
 echo -e "Tiempo de 5 segundos para que abras los logs (tailf)..."
 #sleep 5s
 
@@ -21,10 +21,10 @@ echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos -------
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${PATH_LOG}
 
-echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
+#echo -e $(date +"%T")" Descarga de datos (planificado con CRON)" >>$PATH_LOG
 #rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh' & ## FUTURAS - BETBRIGHT (ASYNC) ##
-${PATH_SCRIPTS}'galgos_MOD010.sh' #Sportium
+#${PATH_SCRIPTS}'galgos_MOD010.sh' #Sportium
 
 
 echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$PATH_LOG
@@ -34,7 +34,7 @@ echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD030.sh'
 
 echo -e $(date +"%T")" FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL" >>$PATH_LOG
-analizarScoreSobreSubgrupos "$PATH_LOG"
+#analizarScoreSobreSubgrupos "$PATH_LOG"
 
 #Subgrupo GANADOR (con mas rentabilidad)
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" #llama a 036 y 037
@@ -55,6 +55,6 @@ ${PATH_SCRIPTS}'galgos_MOD070.sh'
 #limpieza
 
 ##########################################
-
+echo -e $(date +"%T")" ************** MASTER: FIN ***************" >>$PATH_LOG
 
 

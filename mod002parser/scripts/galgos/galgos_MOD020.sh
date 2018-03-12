@@ -41,14 +41,17 @@ echo -e "tb_galgos_agregados_norm:" >> "${DOC_ANALISIS_PREVIO}"
 mysql -u root --password=datos1986 -tN --execute="SELECT count(*) FROM datos_desa.tb_galgos_agregados_norm;" >> "${DOC_ANALISIS_PREVIO}"
 
 echo -e "-------------- TABLAS NORMALIZADAS: datos ARTIFICIALES sobre carreras FUTURAS --------------" >> "${DOC_ANALISIS_PREVIO}"
-echo -e "tb_galgos_carreras_norm --> Deben aparecer 6 galgos por carrera futura:" >> "${DOC_ANALISIS_PREVIO}"
-mysql -u root --password=datos1986 -tN --execute="SELECT * FROM datos_desa.tb_galgos_carreras_norm WHERE id_carrera<=50 ORDER BY id_carrera LIMIT 12;" >> "${DOC_ANALISIS_PREVIO}"
-echo -e "tb_galgos_posiciones_en_carreras_norm --> Deberia haber 6 filas por cada carrera futura (pero no más):" >> "${DOC_ANALISIS_PREVIO}"
-mysql -u root --password=datos1986 -tN --execute="SELECT id_carrera, count(*) AS contador FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera<=50 GROUP BY id_carrera HAVING contador>6 ORDER BY id_carrera LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+echo -e "tb_galgos_carreras_norm --> Carreras futuras con id artificial:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_carreras_norm WHERE id_carrera<=50 ORDER BY id_carrera LIMIT 12;" >> "${DOC_ANALISIS_PREVIO}"
+
+echo -e "tb_galgos_posiciones_en_carreras_norm --> Deberia haber 6 filas por cada carrera futura (pero no más). Esta consulta debe devolver 0 resultados:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT id_carrera, count(*) AS contador FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera<=50 GROUP BY id_carrera HAVING contador>6 ORDER BY id_carrera LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+
 echo -e "tb_galgos_historico_norm --> Deben aparecer los historicos (artificiales) de una carrera futura:" >> "${DOC_ANALISIS_PREVIO}"
-mysql -u root --password=datos1986 -tN --execute="SELECT * FROM datos_desa.tb_galgos_historico_norm WHERE id_carrera<=50 ORDER BY id_carrera LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
-echo -e "tb_galgos_agregados_norm --> No deberia haber ningun galgo_agregado duplicado:" >> "${DOC_ANALISIS_PREVIO}"
-mysql -u root --password=datos1986 -tN --execute="SELECT galgo_nombre, count(*) AS contador FROM datos_desa.tb_galgos_agregados_norm GROUP BY galgo_nombre HAVING contador>=2 LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT * FROM datos_desa.tb_galgos_historico_norm WHERE id_carrera<=50 ORDER BY id_carrera LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
+
+echo -e "tb_galgos_agregados_norm --> No deberia haber ningun galgo_agregado duplicado. Esta consulta debe devolver 0 resultados:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT galgo_nombre, count(*) AS contador FROM datos_desa.tb_galgos_agregados_norm GROUP BY galgo_nombre HAVING contador>=2 LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
 
 
 echo -e "\n----- Analisis de CARRERAS -----" >> "${DOC_ANALISIS_PREVIO}"
@@ -84,6 +87,8 @@ mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as co
 echo -e "AlwaysLed:" >> "${DOC_ANALISIS_PREVIO}"
 mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%AlwaysLed%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
 
+echo -e "Rls:" >> "${DOC_ANALISIS_PREVIO}"
+mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Rls%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${DOC_ANALISIS_PREVIO}"
 
 
 echo -e $(date +"%T")" Modulo 020 - FIN" 2>&1 1>>${LOG_ESTADISTICA_BRUTO}
