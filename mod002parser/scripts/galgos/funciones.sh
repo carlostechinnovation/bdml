@@ -6,6 +6,7 @@ PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.
 PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
 PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
 
+LOG_MASTER="/home/carloslinux/Desktop/LOGS/galgos_coordinador.log"
 LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto.log"
 LOG_DESCARGA_BRUTO_BB="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto_BB.log"
 FLAG_BB_DESCARGADO_OK="/home/carloslinux/Desktop/LOGS/galgos_010_BB.descargado.OK"
