@@ -98,13 +98,13 @@ SELECT id_carrera, count(*) AS contador  FROM datos_desa.tb_val_${TAG}  GROUP BY
 EOF
 
 
-echo -e $(date +"%T")"$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_VALIDACION" >>$LOG_ML
+#echo -e $(date +"%T")"$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
 
 
 ######################### CALCULO DEL SCORE + Rentabilidad en Predicción de target=1o2 y target=1st ################
-${PATH_SCRIPTS}galgos_MOD041_1o2.sh "${TAG}"
-${PATH_SCRIPTS}galgos_MOD042_1st.sh "${TAG}"
+${PATH_SCRIPTS}galgos_MOD041_1o2.sh "${TAG}" 2>&1 1>>${LOG_ML}
+${PATH_SCRIPTS}galgos_MOD042_1st.sh "${TAG}" 2>&1 1>>${LOG_ML}
 
 ################################################
 ##############################################################
