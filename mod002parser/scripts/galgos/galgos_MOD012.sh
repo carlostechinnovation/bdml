@@ -7,7 +7,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f ${LOG_012}
 
 
-echo -e $(date +"%T")" Galgos-Modulo 012 - Limpieza: INICIO" 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" Galgos-Modulo 012 - Normalizacion: INICIO" 2>&1 1>>${LOG_012}
 echo -e "MOD012 --> LOG = "${LOG_012}
 
 
@@ -290,12 +290,20 @@ SELECT count(*) as num_galgos_agregados_norm FROM datos_desa.tb_galgos_agregados
 EOF
 
 #echo -e "$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_012}
+
+echo -e "\n\n\n ----------- Tablas normalizadas -------------\n" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_galgos_carreras_norm" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_galgos_posiciones_en_carreras_norm" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_galgos_historico_norm" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_galgos_agregados_norm" 2>&1 1>>${LOG_012}
+echo -e "----------------------------------------------------\n" 2>&1 1>>${LOG_012}
+
 mysql -u root --password=datos1986 --execute="$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_012}
 
 
 ##########################################
 
-echo -e $(date +"%T")" Galgos-Modulo 012 - Limpieza: FIN" 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" Galgos-Modulo 012 - Normalizacion: FIN" 2>&1 1>>${LOG_012}
 
 
 
