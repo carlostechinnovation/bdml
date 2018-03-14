@@ -73,6 +73,7 @@ SELECT * FROM datos_desa.tb_val_${TAG}_aux5 LIMIT 5;
 
 ALTER TABLE datos_desa.tb_val_${TAG}_aux1 ADD INDEX tb_val_${TAG}_aux1_idx(rowid);
 ALTER TABLE datos_desa.tb_val_${TAG}_aux2 ADD INDEX tb_val_${TAG}_aux2_idx(rowid);
+ALTER TABLE datos_desa.tb_val_${TAG}_aux3 ADD INDEX tb_val_${TAG}_aux3_idx(rowid);
 ALTER TABLE datos_desa.tb_val_${TAG}_aux4 ADD INDEX tb_val_${TAG}_aux4_idx(rowid);
 ALTER TABLE datos_desa.tb_val_${TAG}_aux5 ADD INDEX tb_val_${TAG}_aux5_idx(rowid);
 

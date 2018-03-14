@@ -19,25 +19,24 @@ echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos -------
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${LOG_MASTER}
 
-#echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
-#rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
+echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
+rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
-#${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
+${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 
 echo -e $(date +"%T")" **** Análisis de SUBGRUPOS y GRUPOS_SP ****" >>$LOG_MASTER
-echo -e 
 resetTablaRentabilidades #Reseteando tabla de rentabilidades
 echo -e $(date +"%T")" Para cada SUBGRUPO, calculamos FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL..." >>$LOG_MASTER
 analizarScoreSobreSubgrupos "$LOG_MASTER"
