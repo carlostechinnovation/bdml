@@ -365,6 +365,75 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
 }
 ##########################################################################################
 
+######## MOD040 - ECONOMIA #######################################################################
+
+
+function calculoEconomico ()
+{
+tag_prediccion="${1}"     #Toma los valores: '1st' ó '1o2'
+filtro_posicion_predicha="${2}" #Toma los valores: '1' ó '1,2'
+sp_min="${3}"     #Limite inferior (inclusive) del grupo según SP
+sp_max="${4}"     #Limite superior (excluido) del grupo según SP
+tag_grupo_sp="${5}"    #TAG que identifica al grupo según SP
+tag_subgrupo="${6}"    #TAG del subgrupo de analisis (calculado en modulo 035)
+
+echo -e "ECONOMICO sobre DS-PASADO-VALIDATION -->[Prediccion|filtro_pos|sp_min|sp_max|grupo_sp|subgrupo] = [$tag_prediccion|$filtro_posicion_predicha|$sp_min|$sp_max|$tag_grupo_sp|$tag_subgrupo]" 2>&1 1>>${LOG_ML}
+
+read -d '' CONSULTA_ECONOMICA <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};
+CREATE TABLE datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} AS
+SELECT A.*, GH.sp, 1 AS gastado_${tag_prediccion}, acierto*1*sp AS beneficio_bruto 
+FROM datos_desa.tb_val_${tag_prediccion}_aciertos_connombre_${TAG} A 
+INNER JOIN datos_desa.tb_galgos_historico_norm GH 
+ON (
+  A.id_carrera=GH.id_carrera 
+  AND A.galgo_nombre=GH.galgo_nombre 
+  AND A.posicion_predicha IN ( $filtro_posicion_predicha ) 
+  AND GH.sp >= ${sp_min} AND GH.sp < ${sp_max}  
+);
+
+SELECT 'NULOS' AS tipo, count(*) AS contador_${tag_grupo_sp} 
+FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} 
+WHERE beneficio_bruto IS NULL   
+UNION ALL   
+SELECT 'LLENOS' AS tipo, count(*) AS contador 
+FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} 
+WHERE beneficio_bruto IS NOT NULL 
+LIMIT 10;
+EOF
+
+FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
+rm -f ${FILE_TEMP_PRED}
+
+
+mysql -u root --password=datos1986 -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
+numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
+
+
+#echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
+
+FILE_TEMP="./temp_MOD040_rentabilidad"
+rm -f ${FILE_TEMP}
+
+mysql -u root --password=datos1986 -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
+rentabilidad=$( cat ${FILE_TEMP})
+
+
+FILE_TEMP="./temp_MOD040_num_ciertos_gruposp"
+#Numeros: SOLO pongo el dinero en las que el sistema me predice 1st, pero no en las otras predichas.
+mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
+numero_aciertos_gruposp=$( cat ${FILE_TEMP})
+
+####SALIDA
+echo -e "${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|ACIERTOS = ${numero_aciertos_gruposp}|CASOS_${tag_prediccion} = ${numero_predicciones_grupo_sp}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %"
+echo -e "ATENCION: Solo pongo DINERO en las carreras predichas $tag_prediccion y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n"
+
+}
+
+
+
+
 ##################### LIMPIEZA ############################################
 function limpieza ()
 {

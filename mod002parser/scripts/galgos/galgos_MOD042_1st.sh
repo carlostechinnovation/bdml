@@ -96,7 +96,7 @@ ON (A.galgo_rowid=B.rowid);
 ALTER TABLE datos_desa.tb_val_1st_aciertos_connombre_${TAG} ADD INDEX tb_val_1st_aciertos_connombre_${TAG}_idx(id_carrera, galgo_nombre);
 EOF
 
-echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
+#echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" >>$LOG_ML
 
 FILE_TEMP="./temp_numero_MOD042"
@@ -112,51 +112,28 @@ echo -e "MOD042_1st numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
 echo -e "MOD042_1st numero_predicciones_1st = ${numero_predicciones_1st}" 2>&1 1>>${LOG_ML}
 
 SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1st" | bc -l)
-echo -e "\MOD042_1st|DS_PASADO_VALIDATION|${TAG}|ACIERTOS=${numero_aciertos}|CASOS_1st=${numero_predicciones_1st}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
+echo -e "MOD042_1st|DS_PASADO_VALIDATION|${TAG}|Cualquier_SP|ACIERTOS=${numero_aciertos}|CASOS_1st=${numero_predicciones_1st}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
 
 
 
-echo -e "\MOD042_1st Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
+echo -e "MOD042_1st Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1st, acierto FROM datos_desa.tb_val_1st_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
 
 
-##################### CALCULO ECONÓMICO ################
+##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################
 
-echo -e "\MOD042_1st Calculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG};" 2>&1 1>>${LOG_ML}
+#llamadas
+calculoEconomico "1st" "1" "1.00" "1.50" "SP100150" "${TAG}"
+calculoEconomico "1st" "1" "1.50" "2.00" "SP150200" "${TAG}"
+calculoEconomico "1st" "1" "2.00" "2.50" "SP200250" "${TAG}"
+calculoEconomico "1st" "1" "2.50" "3.00" "SP250300" "${TAG}"
+calculoEconomico "1st" "1" "3.00" "999.00" "SP30099900" "${TAG}"
+calculoEconomico "1st" "1" "1.00" "999.00" "SP10099900" "${TAG}"
+calculoEconomico "1st" "1" "2.00" "999.00" "SP20099900" "${TAG}"
 
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_1st_economico_${TAG} AS SELECT A.*, GH.sp, 1 AS gastado_1st, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_1st_aciertos_connombre_${TAG} A INNER JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre AND A.posicion_predicha IN (1) AND GH.sp>=2.01);" 2>&1 1>>${LOG_ML}
-
-mysql -u root --password=datos1986 --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_1st_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_1st_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
-
-echo -e "\MOD042_1st Ejemplos de filas con valoración ECONÓMICA (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_val_1st_economico_${TAG} LIMIT 10;" 2>&1 1>>${LOG_ML}
-
-
-
-FILE_TEMP="./temp_numero_MOD042_economico"
-rm -f ${FILE_TEMP}
-mysql -u root --password=datos1986 -N --execute="SELECT ROUND( 100.0 * SUM(beneficio_bruto-gastado_1st)/SUM(gastado_1st) , 2) AS rentabilidad_${TAG} FROM datos_desa.tb_val_1st_economico_${TAG};" > ${FILE_TEMP}
-rentabilidad=$( cat ${FILE_TEMP})
-
-echo -e "MOD042_1st Rentabilidad (sobre dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" 2>&1 1>>${LOG_ML}
-
-
-echo -e "MOD042_1st ATENCION: Solo pongo DINERO en las carreras predichas 1º y que paguen más de 2.01 euros por ganador (1st)!!!! \n\n" 2>&1 1>>${LOG_ML}
-
-
-
-##############################################################
-############### SALIDA HACIA SCRIPT PADRE ####
-echo -e "MOD042_1st|DS_PASADO_VALIDATION|${TAG}|ACIERTOS=${numero_aciertos}|CASOS_1st=${numero_predicciones_1st}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %"
-echo -e "MOD042_1st ATENCION: Solo pongo DINERO en las carreras predichas 1º y que paguen más de 2.01 euros por ganador (1st)!!!!\n"
-
-################################################
 ##############################################################
 
 echo -e $(date +"%T")" MOD042_1st - FIN\n\n" 2>&1 1>>${LOG_ML}
-
-
 
 
 

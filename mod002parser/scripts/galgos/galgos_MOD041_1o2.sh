@@ -120,37 +120,17 @@ echo -e "\nMOD041_1o2 Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 
 mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto FROM datos_desa.tb_val_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
 
 
-##################### CALCULO ECONÓMICO ################
+##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################
 
-echo -e "\nMOD041_1o2 Calculo ECONOMICO sobre DS-PASADO-VALIDATION..." 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_val_economico_${TAG};" 2>&1 1>>${LOG_ML}
+#llamadas
+calculoEconomico "1o2" "1,2" "1.00" "1.50" "SP100150" "${TAG}"
+calculoEconomico "1o2" "1,2" "1.50" "2.00" "SP150200" "${TAG}"
+calculoEconomico "1o2" "1,2" "2.00" "2.50" "SP200250" "${TAG}"
+calculoEconomico "1o2" "1,2" "2.50" "3.00" "SP250300" "${TAG}"
+calculoEconomico "1o2" "1,2" "3.00" "999.00" "SP30099900" "${TAG}"
+calculoEconomico "1o2" "1,2" "1.00" "999.00" "SP10099900" "${TAG}"
+calculoEconomico "1o2" "1,2" "2.00" "999.00" "SP20099900" "${TAG}"
 
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_val_economico_${TAG} AS SELECT A.*, GH.sp, 2 AS gastado_1o2, acierto*1*sp AS beneficio_bruto FROM datos_desa.tb_val_aciertos_connombre_${TAG} A INNER JOIN datos_desa.tb_galgos_historico_norm GH ON (A.id_carrera=GH.id_carrera AND A.galgo_nombre=GH.galgo_nombre AND A.posicion_predicha IN (1,2) AND GH.sp>=2.01);" 2>&1 1>>${LOG_ML}
-
-mysql -u root --password=datos1986 --execute="SELECT 'NULOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NULL   UNION ALL   SELECT 'LLENOS' AS tipo, count(*) AS contador FROM datos_desa.tb_val_economico_${TAG} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" 2>&1 1>>${LOG_ML}
-
-echo -e "\nMOD041_1o2 Ejemplos de filas con valoración ECONÓMICA (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_val_economico_${TAG} LIMIT 10;" 2>&1 1>>${LOG_ML}
-
-
-
-FILE_TEMP="./temp_numero_MOD041_economico"
-rm -f ${FILE_TEMP}
-mysql -u root --password=datos1986 -N --execute="SELECT ROUND( 100.0 * SUM(beneficio_bruto-gastado_1o2)/SUM(gastado_1o2) , 2) AS rentabilidad_${TAG} FROM datos_desa.tb_val_economico_${TAG};" > ${FILE_TEMP}
-rentabilidad=$( cat ${FILE_TEMP})
-
-echo -e "MOD041_1o2 Rentabilidad (sobre dataset PASADO_VALIDATION; señal de compra si >1.0) - ${TAG} --> ${rentabilidad}" 2>&1 1>>${LOG_ML}
-
-
-echo -e "MOD041_1o2 ATENCION: Solo pongo DINERO en las carreras predichas 1º o 2º y que paguen más de 2.01 euros por ganador y colocado!!!! \n\n" 2>&1 1>>${LOG_ML}
-
-
-##############################################################
-############### SALIDA HACIA SCRIPT PADRE ####
-echo -e "MOD041_1o2|DS_PASADO_VALIDATION|${TAG}|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %"
-echo -e "MOD041_1o2 ATENCION: Solo pongo DINERO en las carreras predichas 1º o 2º y que paguen más de 2.01 euros por ganador o colocado (1o2))!!!!\n"
-
-################################################
 ##############################################################
 
 echo -e $(date +"%T")" MOD041_1o2 - FIN\n\n" 2>&1 1>>${LOG_ML}
