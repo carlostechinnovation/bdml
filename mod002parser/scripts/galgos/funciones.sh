@@ -376,13 +376,15 @@ sp_min="${3}"     #Limite inferior (inclusive) del grupo según SP
 sp_max="${4}"     #Limite superior (excluido) del grupo según SP
 tag_grupo_sp="${5}"    #TAG que identifica al grupo según SP
 tag_subgrupo="${6}"    #TAG del subgrupo de analisis (calculado en modulo 035)
+dinero_gastado="${7}"	#Dinero gastado por apuesta
 
 echo -e "ECONOMICO sobre DS-PASADO-VALIDATION -->[Prediccion|filtro_pos|sp_min|sp_max|grupo_sp|subgrupo] = [$tag_prediccion|$filtro_posicion_predicha|$sp_min|$sp_max|$tag_grupo_sp|$tag_subgrupo]" 2>&1 1>>${LOG_ML}
 
 read -d '' CONSULTA_ECONOMICA <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};
+
 CREATE TABLE datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} AS
-SELECT A.*, GH.sp, 1 AS gastado_${tag_prediccion}, acierto*1*sp AS beneficio_bruto 
+SELECT A.*, GH.sp, ${dinero_gastado} AS gastado_${tag_prediccion}, acierto * 1 * sp AS beneficio_bruto 
 FROM datos_desa.tb_val_${tag_prediccion}_aciertos_connombre_${TAG} A 
 INNER JOIN datos_desa.tb_galgos_historico_norm GH 
 ON (
@@ -402,16 +404,16 @@ WHERE beneficio_bruto IS NOT NULL
 LIMIT 10;
 EOF
 
+
+echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
+
 FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
 rm -f ${FILE_TEMP_PRED}
-
 
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
 numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
 
-
-#echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
 
 FILE_TEMP="./temp_MOD040_rentabilidad"
 rm -f ${FILE_TEMP}
@@ -426,12 +428,10 @@ mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_acie
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
 ####SALIDA
-echo -e "${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|ACIERTOS = ${numero_aciertos_gruposp}|CASOS_${tag_prediccion} = ${numero_predicciones_grupo_sp}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %"
-echo -e "ATENCION: Solo pongo DINERO en las carreras predichas $tag_prediccion y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n"
+echo -e "${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|ACIERTOS = ${numero_aciertos_gruposp}|CASOS_${tag_prediccion} = ${numero_predicciones_grupo_sp}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %" 2>&1 1>>${LOG_MASTER}
+echo -e "ATENCION: Solo pongo DINERO en las carreras predichas $tag_prediccion y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_MASTER}
 
 }
-
-
 
 
 ##################### LIMPIEZA ############################################

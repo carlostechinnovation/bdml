@@ -115,7 +115,6 @@ SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1st" | bc -
 echo -e "MOD042_1st|DS_PASADO_VALIDATION|${TAG}|Cualquier_SP|ACIERTOS=${numero_aciertos}|CASOS_1st=${numero_predicciones_1st}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
 
 
-
 echo -e "MOD042_1st Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1st, acierto FROM datos_desa.tb_val_1st_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
 
@@ -123,13 +122,13 @@ mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, p
 ##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################
 
 #llamadas
-calculoEconomico "1st" "1" "1.00" "1.50" "SP100150" "${TAG}"
-calculoEconomico "1st" "1" "1.50" "2.00" "SP150200" "${TAG}"
-calculoEconomico "1st" "1" "2.00" "2.50" "SP200250" "${TAG}"
-calculoEconomico "1st" "1" "2.50" "3.00" "SP250300" "${TAG}"
-calculoEconomico "1st" "1" "3.00" "999.00" "SP30099900" "${TAG}"
-calculoEconomico "1st" "1" "1.00" "999.00" "SP10099900" "${TAG}"
-calculoEconomico "1st" "1" "2.00" "999.00" "SP20099900" "${TAG}"
+calculoEconomico "1st" "1" "1.00" "1.50" "SP100150" "${TAG}" "1"
+calculoEconomico "1st" "1" "1.50" "2.00" "SP150200" "${TAG}" "1"
+calculoEconomico "1st" "1" "2.00" "2.50" "SP200250" "${TAG}" "1"
+calculoEconomico "1st" "1" "2.50" "3.00" "SP250300" "${TAG}" "1"
+calculoEconomico "1st" "1" "3.00" "999.00" "SP30099900" "${TAG}" "1"
+calculoEconomico "1st" "1" "1.00" "999.00" "SP10099900" "${TAG}" "1"
+calculoEconomico "1st" "1" "2.00" "999.00" "SP20099900" "${TAG}" "1"
 
 ##############################################################
 

@@ -282,10 +282,11 @@ SELECT GH.anio, GH.mes, GH.dia, GH.id_carrera, GH.galgo_nombre, GH.clase,
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx1(galgo_nombre, clase);
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx2(clase, experiencia_cualitativo);
+SELECT * FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 LIMIT 5;
+SELECT count(*) as num_x6e FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 LIMIT 5;
 
-
-set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) FROM datos_desa.tb_ce_${sufijo}_x6c);
-set @diff_experiencia_en_clase=(select CASE WHEN MIN(experiencia_en_clase)=0 THEN MAX(experiencia_en_clase) ELSE MAX(experiencia_en_clase)-MIN(experiencia_en_clase) END FROM datos_desa.tb_ce_${sufijo}_x6c);
+set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) AS min_eec FROM datos_desa.tb_ce_${sufijo}_x6c);
+set @diff_experiencia_en_clase=(select CASE WHEN MIN(experiencia_en_clase)=0 THEN MAX(experiencia_en_clase) ELSE MAX(experiencia_en_clase)-MIN(experiencia_en_clase) END AS dif_eec FROM datos_desa.tb_ce_${sufijo}_x6c);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e;
@@ -311,7 +312,7 @@ SELECT count(*) as num_x6e FROM datos_desa.tb_ce_${sufijo}_x6e LIMIT 5;
 EOF
 
 
-#echo -e "\n$CONSULTA_X6DE" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X6DE" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="$CONSULTA_X6DE" 2>&1 1>>$LOG_CE
 }
 
@@ -319,7 +320,7 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_X6DE" 2>&1 1>>$LOG_CE
 function calcularVariableX7 ()
 {
 sufijo="${1}"
-echo -e "\n ---- X7: peso del galgo en relacion al peso medio de los galgos que corren en esa distancia (centenas de metros). Toma valores NULL cuando no hemos descargado las filas de la tabla de posiciones en carrera (que es la que tiene el peso de cada galgo)." 2>&1 1>>${LOG_CE}
+echo -e "\n ---- X7: diferencia relativa de peso del galgo respecto al PESO MEDIO de los galgos que corren en esa DISTANCIA (centenas de metros). Toma valores NULL cuando no hemos descargado las filas de la tabla de posiciones en carrera (que es la que tiene el peso de cada galgo)." 2>&1 1>>${LOG_CE}
 
 echo -e " X7: [(carrera, galgo) -> (diferencia respecto al peso medio en esa distancia_centenas)]" 2>&1 1>>${LOG_CE}
 echo -e " Parametros: -->${1}" 2>&1 1>>${LOG_CE}

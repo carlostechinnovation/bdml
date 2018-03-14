@@ -25,20 +25,20 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
 
-echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL" >>$LOG_MASTER
-#analizarScoreSobreSubgrupos "$LOG_MASTER"
+echo -e $(date +"%T")" FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL" >>$LOG_MASTER
+analizarScoreSobreSubgrupos "$LOG_MASTER"
 
-#Subgrupo GANADOR (con mas rentabilidad)
+Subgrupo GANADOR (con mas rentabilidad)
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" >>$LOG_MASTER #llama a 036 y 037
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$LOG_MASTER
 
