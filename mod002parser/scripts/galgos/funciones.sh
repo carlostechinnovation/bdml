@@ -17,6 +17,7 @@ LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_031_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
 LOG_DS_COLPEN="/home/carloslinux/Desktop/LOGS/galgos_037_datasets_COLUMNAS_PENDIENTES.log"
+FILELOAD_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/galgos_040_FILELOAD_RENTABILIDADES.txt"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
 LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
 LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
@@ -24,6 +25,8 @@ LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
 LOG_070="/home/carloslinux/Desktop/LOGS/galgos_070.log"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
+PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
+INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
 
 function consultar(){
   sentencia_sql=${1}
@@ -366,6 +369,20 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
 ##########################################################################################
 
 ######## MOD040 - ECONOMIA #######################################################################
+function resetTablaRentabilidades ()
+{
+echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+consultar "DROP TABLE IF EXISTS datos_desa.tb_rentabilidades\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, score DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4))\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+
+rm -f $FILELOAD_RENTABILIDADES #vacío
+}
+
+function cargarTablaRentabilidades ()
+{
+echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${FILELOAD_RENTABILIDADES}' INTO TABLE datos_desa.tb_rentabilidades FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_RENTABILIDADES_WARNINGS"
+}
 
 
 function calculoEconomico ()
@@ -428,9 +445,13 @@ mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_acie
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
 ####SALIDA
-echo -e "${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|ACIERTOS = ${numero_aciertos_gruposp}|CASOS_${tag_prediccion} = ${numero_predicciones_grupo_sp}|SCORE = ${SCORE_FINAL}|Rentabilidad = ${rentabilidad} %" 2>&1 1>>${LOG_MASTER}
-echo -e "ATENCION: Solo pongo DINERO en las carreras predichas $tag_prediccion y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_MASTER}
+MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${SCORE_FINAL}|${rentabilidad}" 2>&1 1>>${LOG_ML}
 
+echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
+echo -e "ATENCION: Solo pongo DINERO en las carreras predichas $tag_prediccion y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
+
+#Cargando fichero de rentabilidades a la tabla
+cargarTablaRentabilidades
 }
 
 

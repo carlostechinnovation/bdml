@@ -32,19 +32,28 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL" >>$LOG_MASTER
+
+echo -e $(date +"%T")" **** Análisis de SUBGRUPOS y GRUPOS_SP ****" >>$LOG_MASTER
+echo -e 
+resetTablaRentabilidades #Reseteando tabla de rentabilidades
+echo -e $(date +"%T")" Para cada SUBGRUPO, calculamos FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL..." >>$LOG_MASTER
 analizarScoreSobreSubgrupos "$LOG_MASTER"
+echo -e $(date +"%T")" Informe de rentabilidades (usar para poner DINERO solo en los grupos_sp indicados): ${INFORME_RENTABILIDADES}" >>$LOG_MASTER
+CASOS_SUFICIENTES="400"
+consultar_sobreescribirsalida "SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento > 10 AND casos > $CASOS_SUFICIENTES ORDER BY rentabilidad_porciento DESC LIMIT 10;" "${INFORME_RENTABILIDADES}" ""
+SUBGRUPO_GANADOR=$( mysql -u root --password=datos1986  --execute="SELECT subgrupo FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento > 10 AND casos > 100 ORDER BY rentabilidad_porciento DESC LIMIT 10;" )
+echo -e $(date +"%T")" Subgrupo con más rentabilidad (y con suficientes casos: CASOS > $CASOS_SUFICIENTES ) = ${SUBGRUPO_GANADOR}" >>$LOG_MASTER
 
-Subgrupo GANADOR (con mas rentabilidad)
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" >>$LOG_MASTER #llama a 036 y 037
-${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$LOG_MASTER
 
+echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, calculamos FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL (el modelo estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "$SUBGRUPO_GANADOR" >>$LOG_MASTER #llama a 036 y 037
+${PATH_SCRIPTS}'galgos_MOD040.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
-echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados)" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD050.sh' "TOTAL" >>$LOG_MASTER
+echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
 echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' >>$LOG_MASTER
