@@ -99,12 +99,12 @@ SELECT id_carrera, count(*) AS contador  FROM datos_desa.tb_val_${TAG}  GROUP BY
 EOF
 
 
-#echo -e $(date +"%T")"$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
+echo -e "$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
 
 
 ######################### CALCULO DEL SCORE + Rentabilidad en Predicción de target=1o2 y target=1st ################
-echo -e "MOD040 - Analisis economico por grupos de SP: sirve para ELEGIR en qué carreras pongo el euro, de las 200 que haya apostables. Es decir, debo mirar estos resultados poner el euro sólo en las que cumplan ese grupo_sp." 2>&1 1>>${LOG_MASTER}
+echo -e "MOD040 - Analisis economico por grupos de SP: sirve para ELEGIR en qué carreras pongo el euro, de las 200 que haya apostables. Es decir, debo mirar estos resultados poner el euro sólo en las que cumplan ese grupo_sp." 2>&1 1>>${LOG_ML}
 ${PATH_SCRIPTS}galgos_MOD041_1o2.sh "${TAG}" 2>&1 1>>${LOG_ML}
 ${PATH_SCRIPTS}galgos_MOD042_1st.sh "${TAG}" 2>&1 1>>${LOG_ML}
 

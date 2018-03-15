@@ -266,13 +266,25 @@ echo -e "PASADO-VALIDATION --> datos_desa.tb_ds_pasado_validation_features_${TAG
 echo -e $(date +"%T")" FUTURO-FEATURES..." 2>&1 1>>${LOG_DS}
 
 read -d '' CONSULTA_DS_FUTURO_FEATURES <<- EOF
+-- Con id_carrera y galgo_nombre.
+DROP TABLE IF EXISTS datos_desa.tb_ds_futuro_features_id_${TAG};
+
+CREATE TABLE datos_desa.tb_ds_futuro_features_id_${TAG} AS
+SELECT A.*
+FROM datos_desa.tb_dataset_con_ids_${TAG} A
+RIGHT JOIN datos_desa.tb_dataset_ids_futuros_${TAG} B
+ON (A.id_carrera=B.id_carrera)
+;
+
+SELECT count(*) as num_futuro_features FROM datos_desa.tb_ds_futuro_features_id_${TAG} LIMIT 1;
+
+
+-- Sin id_carrera y galgo_nombre.
 DROP TABLE IF EXISTS datos_desa.tb_ds_futuro_features_${TAG};
 
 CREATE TABLE datos_desa.tb_ds_futuro_features_${TAG} AS 
 SELECT ${FEATURES_COMUNES} 
-FROM datos_desa.tb_dataset_con_ids_${TAG} A
-RIGHT JOIN datos_desa.tb_dataset_ids_futuros_${TAG} B
-ON (A.id_carrera=B.id_carrera);
+FROM datos_desa.tb_ds_futuro_features_id_${TAG};
 
 SELECT count(*) as num_futuro_features FROM datos_desa.tb_ds_futuro_features_${TAG} LIMIT 1;
 EOF
