@@ -27,6 +27,7 @@ LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
 INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
+INFORME_PREDICCIONES="/home/carloslinux/Desktop/LOGS/INFORME_PREDICCIONES.txt"
 
 function consultar(){
   sentencia_sql=${1}

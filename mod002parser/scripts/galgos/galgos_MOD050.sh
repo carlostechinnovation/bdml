@@ -20,9 +20,14 @@ python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/g
 
 
 PATH_FILE_FUTURO_TARGETS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/datos_desa.tb_ds_futuro_targets_${TAG}.txt"
+PATH_FILE_FUTURO_TARGETS_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/datos_desa.tb_ds_futuro_targets_2_${TAG}.txt"
 
+#Limpiar los brackets metidos por python
+cat "${PATH_FILE_FUTURO_TARGETS}" | tr -d '[' | tr ']' ' ' > "${PATH_FILE_FUTURO_TARGETS_LIMPIO}"
+
+echo -e $(date +"%T")" Path de targets FUTUROS predichos = "$PATH_FILE_FUTURO_TARGETS_LIMPIO 2>&1 1>>${LOG_050}
 echo -e $(date +"%T")" Ejemplo de targets FUTUROS predichos:" 2>&1 1>>${LOG_050}
-echo -e $(head -n 10 $PATH_FILE_FUTURO_TARGETS) 2>&1 1>>${LOG_050}
+echo -e $(head -n 10 $PATH_FILE_FUTURO_TARGETS_LIMPIO) 2>&1 1>>${LOG_050}
 
 
 echo -e $(date +"%T")" Generando tabla de predicciones FUTURAS (subgrupo ${TAG})..." 2>&1 1>>${LOG_ML}
@@ -33,15 +38,16 @@ CREATE TABLE datos_desa.tb_fut_${TAG}_aux1 AS
 SELECT A.*, @rowid:=@rowid+1 as rowid FROM datos_desa.tb_ds_futuro_features_${TAG} A, (SELECT @rowid:=0) R;
 
 DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux3;
-CREATE TABLE datos_desa.tb_fut_${TAG}_aux3 (TARGET decimal(8,6) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-LOAD DATA LOCAL INFILE '$PATH_FILE_FUTURO_TARGETS' INTO TABLE datos_desa.tb_fut_${TAG}_aux3;
+CREATE TABLE datos_desa.tb_fut_${TAG}_aux3 (TARGET decimal(10,8) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+LOAD DATA LOCAL INFILE '$PATH_FILE_FUTURO_TARGETS_LIMPIO' INTO TABLE datos_desa.tb_fut_${TAG}_aux3;
 
 DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux4;
 CREATE TABLE datos_desa.tb_fut_${TAG}_aux4 AS
 SELECT A.*, @rowid:=@rowid+1 as rowid FROM datos_desa.tb_fut_${TAG}_aux3 A, (SELECT @rowid:=0) R;
 
 
--- En la tabla FUTURO-FEATURES no tengo el ID_Carrera. Por tanto, tengo que usar un identificador unico de fila.
+-- Metemos id_carrera y galgo_nombre ---------------
+
 DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux5;
 CREATE TABLE datos_desa.tb_fut_${TAG}_aux5 AS
 SELECT dentro.id_carrera, @rowid:=@rowid+1 as rowid 
@@ -53,10 +59,10 @@ SELECT count(*) as num_tb_fut3 FROM datos_desa.tb_fut_${TAG}_aux3 LIMIT 1;
 SELECT count(*) as num_tb_fut4 FROM datos_desa.tb_fut_${TAG}_aux4 LIMIT 1;
 SELECT count(*) as num_tb_fut5 FROM datos_desa.tb_fut_${TAG}_aux5 LIMIT 1;
 
-SELECT * FROM datos_desa.tb_fut_${TAG}_aux1 LIMIT 5;
-SELECT * FROM datos_desa.tb_fut_${TAG}_aux3 LIMIT 5;
-SELECT * FROM datos_desa.tb_fut_${TAG}_aux4 LIMIT 5;
-SELECT * FROM datos_desa.tb_fut_${TAG}_aux5 LIMIT 5;
+SELECT * FROM datos_desa.tb_fut_${TAG}_aux1 LIMIT 3;
+SELECT * FROM datos_desa.tb_fut_${TAG}_aux3 LIMIT 3;
+SELECT * FROM datos_desa.tb_fut_${TAG}_aux4 LIMIT 3;
+SELECT * FROM datos_desa.tb_fut_${TAG}_aux5 LIMIT 3;
 
 
 DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG};
@@ -133,6 +139,27 @@ echo -e "$CONSULTA_PREDICCIONES_FUTURAS_2" 2>&1 1>>${LOG_050}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_2"  2>&1 1>>$LOG_050
 
 
+###################### INFORME ##########################
+echo -e "MOD050 - Informe..." 2>&1 1>>${LOG_050}
+
+#limpiar
+rm -f "$INFORME_PREDICCIONES"
+
+read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
+SELECT 
+B.anio,B.mes,B.dia, B.track AS estadio, B.hora,B.minuto,
+A.galgo_nombre, A.target_predicho
+FROM datos_desa.tb_fut_1st_final_${TAG} A
+LEFT JOIN  datos_desa.tb_galgos_carreras B
+ON (A.id_carrera=B.id_carrera)
+WHERE A.posicion_predicha=1 
+
+ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
+
+EOF
+
+echo -e "$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$INFORME_PREDICCIONES
 
 
 ###################### MAIL ##########################
