@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
 PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 
@@ -12,8 +13,7 @@ LOG_DESCARGA_BRUTO_BB="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto_
 FLAG_BB_DESCARGADO_OK="/home/carloslinux/Desktop/LOGS/galgos_010_BB.descargado.OK"
 LOG_011="/home/carloslinux/Desktop/LOGS/galgos_011_limpieza.log"
 LOG_012="/home/carloslinux/Desktop/LOGS/galgos_012_normalizacion.log"
-DOC_ANALISIS_PREVIO="/home/carloslinux/Desktop/INFORMES/analisis_previo.txt"
-LOG_ESTADISTICA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
+LOG_020_ESTADISTICA="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
 LOG_CE="/home/carloslinux/Desktop/LOGS/galgos_031_columnas_elaboradas.log"
 LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
 LOG_DS_COLPEN="/home/carloslinux/Desktop/LOGS/galgos_037_datasets_COLUMNAS_PENDIENTES.log"
@@ -29,6 +29,8 @@ PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warn
 INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
 INFORME_PREDICCIONES="/home/carloslinux/Desktop/LOGS/INFORME_PREDICCIONES.txt"
 
+#########################################################################
+
 function consultar(){
   sentencia_sql=${1}
   path_log_sql=${2}
@@ -41,7 +43,7 @@ function consultar_sobreescribirsalida(){
   path_output_file=${2}
   opciones=${3}
   mysql -u root --password=datos1986 ${opciones} --execute="${sentencia_sql}" >"$path_output_file"
-  sleep 4s
+  sleep 2s
 }
 
 function mostrar_tabla(){
@@ -575,7 +577,7 @@ rm -f $path_temp
 
 echo -e "\n--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>&1 1>>${logsalida}
 
-echo -e "Leyenda --> campo : MAX|MIN|AVG|COUNT\n"  2>&1 1>>${logsalida}
+echo -e "Leyenda --> campo : MAX|MIN|AVG|NO_NULOS|NULOS\n"  2>&1 1>>${logsalida}
 
 mysql -u root --password=datos1986 -N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
 
@@ -587,12 +589,12 @@ do
   contador=$((contador+1))
   if [[ "$contador" -ge 1 ]];then  #Quito la cabecera
     if [[ "$linea" != *"----"* ]];then #Quito las lineas horizontales
-      query_out="$query_out concat(MAX($linea),'|', MIN($linea),'|', AVG($linea),'|', COUNT($linea) ) AS _$linea, "
+      query_out="$query_out concat(MAX($linea),'|', MIN($linea),'|', AVG($linea),'|', COUNT($linea),'|', COUNT(*)-COUNT($linea) ) AS _$linea, "
     fi
   fi
 done < "$path_temp"
 
-#Eliminamos lso dos ultimos caracteres (coma y espacio)
+#Eliminamos los dos ultimos caracteres (coma y espacio)
 query_out="${query_out::-2}"
 
 query_out="${query_out} FROM ${schemaEntrada}.${tablaEntrada};"
