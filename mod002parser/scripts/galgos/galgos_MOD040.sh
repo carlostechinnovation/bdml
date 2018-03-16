@@ -13,8 +13,7 @@ fi
 TAG="${1}"
 
 
-echo -e $(date +"%T")" Modulo 040 - Modelos predictivos (nucleo)" 2>&1 1>>${LOG_ML}
-
+echo -e $(date +"%T")" | 040 | Modelos predictivos | INICIO" >>$LOG_070
 echo -e "MOD040 --> LOG = "${LOG_ML}
 
 PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
@@ -113,7 +112,7 @@ ${PATH_SCRIPTS}galgos_MOD042_1st.sh "${TAG}" 2>&1 1>>${LOG_ML}
 ################################################
 ##############################################################
 
-echo -e $(date +"%T")" Modulo 040 - FIN\n\n" 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" | 040 | Modelos predictivos | FIN" >>$LOG_070
 
 
 

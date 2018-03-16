@@ -7,7 +7,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f ${LOG_011}
 
 
-echo -e $(date +"%T")" Galgos-Modulo 011 - Limpieza: INICIO" 2>&1 1>>${LOG_011}
+echo -e $(date +"%T")" | 011 | INICIO" >>$LOG_070
 echo -e "MOD011 --> LOG = "${LOG_011}
 
 
@@ -41,7 +41,7 @@ echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${L
 #######################################
 
 
-echo -e $(date +"%T")" Galgos-Modulo 011 - Limpieza: FIN" 2>&1 1>>${LOG_011}
+echo -e $(date +"%T")" | 011 | FIN" >>$LOG_070
 
 
 

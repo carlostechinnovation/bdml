@@ -3,7 +3,7 @@
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
-echo -e $(date +"%T")" Generador de DATASETS: INICIO" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" | 037 | Datasets | INICIO" >>$LOG_070
 
 echo -e $(date +"%T")" Solo debo usar las columnas que conocere en el futuro. Por ejemplo, no puedo coger going allowance." 2>&1 1>>${LOG_DS}
 
@@ -308,7 +308,6 @@ rm -f ${FILE_TEMP}
 
 ###########################################################################
 
-echo -e $(date +"%T")" Generador de DATASETS (usando tablas filtradas): FIN\n\n" 2>&1 1>>${LOG_DS}
-
+echo -e $(date +"%T")" | 037 | Datasets | FIN" >>$LOG_070
 
 

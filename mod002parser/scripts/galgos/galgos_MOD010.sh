@@ -26,7 +26,7 @@ echo -e $(date +"%T")" Path del log: ${LOG_DESCARGA_BRUTO}" 2>&1 1>>${LOG_DESCAR
 rm -f ${LOG_DESCARGA_BRUTO}
 
 
-echo -e $(date +"%T")" Galgos-Modulo 010 - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" | 010 | Descarga datos brutos | INICIO" >>$LOG_070
 echo -e "MOD010 --> LOG = "${LOG_DESCARGA_BRUTO}
 
 ##########################################
@@ -427,7 +427,7 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIA
 
 ##########################################
 
-echo -e $(date +"%T")" Galgos-Modulo 010 - FIN" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" | 010 | Descarga datos brutos | FIN" >>$LOG_070
 
 
 

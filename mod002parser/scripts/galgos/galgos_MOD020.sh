@@ -5,8 +5,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 #Borrar log
 rm -f "${LOG_020_ESTADISTICA}"
 
-
-echo -e $(date +"%T")" Modulo 020 - Estadística básica de los datos BRUTOS de ENTRADA..." 2>&1 1>>${LOG_020_ESTADISTICA}
+echo -e $(date +"%T")" | 020 | Estadistica basica | INICIO" >>$LOG_070
 echo -e "MOD020 --> LOG = "${LOG_020_ESTADISTICA}
 
 #Limpiar informe
@@ -122,8 +121,7 @@ echo -e "\n------------------------------------------------------\n" >> "${LOG_0
 
 #####################################################################################################
 
-echo -e $(date +"%T")" Modulo 020 - FIN" 2>&1 1>>${LOG_020_ESTADISTICA}
-
+echo -e $(date +"%T")" | 020 | Estadistica basica | FIN" >>$LOG_070
 
 
 

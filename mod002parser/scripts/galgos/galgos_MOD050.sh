@@ -7,8 +7,8 @@ TAG="${1}"
 #### Limpiar LOG ###
 rm -f $LOG_050
 
+echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
 
-echo -e $(date +"%T")" Modulo 050 - PREDICCIÓN de carreras futuras: INICIO" 2>&1 1>>${LOG_050}
 echo -e "MOD050 --> LOG = "${LOG_050}
 
 
@@ -167,6 +167,8 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_INFORME"
 
 ##################################################
 
-echo -e $(date +"%T")" Modulo 050 - PREDICCIÓN de carreras futuras: FIN" 2>&1 1>>${LOG_050}
+echo -e $(date +"%T")" | 050 | Prediccion FUTURA | FIN" >>$LOG_070
+
+
 
 

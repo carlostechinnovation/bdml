@@ -8,10 +8,11 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 #limpiar logs
 rm -f "/home/carloslinux/Desktop/LOGS/log4j-application.log"
 rm -f $LOG_MASTER
+rm -f $LOG_070
 
 
 ##########################################
-echo -e $(date +"%T")" ************** MASTER: INICIO ***************" >>$LOG_MASTER
+echo -e $(date +"%T")" | MASTER | Coordinador | INICIO" >>$LOG_070
 echo -e "Tiempo de 5 segundos para que abras los logs (tailf)..."
 #sleep 5s
 
@@ -22,7 +23,7 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
 rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
-#${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
+${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
 
 echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
@@ -69,6 +70,6 @@ ${PATH_SCRIPTS}'galgos_MOD070.sh' >>$LOG_MASTER
 #limpieza
 
 ##########################################
-echo -e $(date +"%T")" ************** MASTER: FIN ***************" >>$LOG_MASTER
+echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
 
 

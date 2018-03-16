@@ -10,8 +10,7 @@ fi
 
 TAG="${1}"
 
-
-echo -e $(date +"%T")" Modulo 041_1o2 - Modelos predictivos (nucleo)" 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" | 041_1o2 | Modelos predictivos: 1o2 | INICIO" >>$LOG_070
 
 echo -e "MOD041_1o2 --> LOG = "${LOG_ML}
 
@@ -132,8 +131,7 @@ calculoEconomico "1o2" "1,2" "2.00" "999.00" "SP20099900" "${TAG}" "2"
 
 ##############################################################
 
-echo -e $(date +"%T")" MOD041_1o2 - FIN\n\n" 2>&1 1>>${LOG_ML}
-
+echo -e $(date +"%T")" | 041_1o2 | Modelos predictivos: 1o2 | FIN" >>$LOG_070
 
 
 

@@ -68,13 +68,13 @@ filtro_galgos="${2}"
 filtro_cg="${3}"
 sufijo="${4}"
 
+echo -e $(date +"%T")" | 036 | Filtradas (subgrupos) | INICIO" >>$LOG_070
 
-echo -e $(date +"%T")" Generador de Tablas FILTRADAS (ya elaboradas): INICIO" 2>&1 1>>${LOG_DS}
 echo -e $(date +"%T")" Parametros: -->${1}-->${2}-->${3}-->${4}" 2>&1 1>>${LOG_DS}
 
 generarTablasFiltradas "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "$sufijo"
 
-echo -e $(date +"%T")" Generador de FILTRADAS: FIN\n\n" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" | 036 | Filtradas (subgrupos) | FIN" >>$LOG_070
 
 
 

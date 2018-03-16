@@ -5,7 +5,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 #Borrar log
 rm -f ${LOG_012}
 
-echo -e $(date +"%T")" Galgos-Modulo 012 - Normalizacion: INICIO" 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" | 012 | INICIO" >>$LOG_070
 echo -e "MOD012 --> LOG = "${LOG_012}
 
 ##########################################
@@ -292,7 +292,6 @@ mysql -u root --password=datos1986 --execute="$CONSULTA_NORMALIZACIONES" 2>&1 1>
 
 ##########################################
 
-echo -e $(date +"%T")" Galgos-Modulo 012 - Normalizacion: FIN\n" 2>&1 1>>${LOG_012}
-
+echo -e $(date +"%T")" | 012 | FIN" >>$LOG_070
 
 

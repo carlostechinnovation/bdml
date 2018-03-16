@@ -22,7 +22,7 @@ LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
 LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
 LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
 LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
-LOG_070="/home/carloslinux/Desktop/LOGS/galgos_070.log"
+LOG_070="/home/carloslinux/Desktop/LOGS/INFORME_TIC.txt"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"

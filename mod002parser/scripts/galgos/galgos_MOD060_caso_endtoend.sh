@@ -6,7 +6,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f $LOG_060_ENDTOEND
 
 
-echo -e $(date +"%T")" Modulo 060 - ANALISIS DE CASO CONCRETO END-TO-END: INICIO" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e $(date +"%T")" | 060 | Analisis caso concreto end-to-end | INICIO" >>$LOG_070
 echo -e "MOD060_endtoend --> LOG = "${LOG_060_ENDTOEND}
 
 
@@ -70,7 +70,7 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1
 echo -e "\n----------------------------\n" 2>&1 1>>${LOG_060_ENDTOEND}
 echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n" 2>&1 1>>${LOG_060_ENDTOEND}
 
-echo -e $(date +"%T")" Modulo 060 - ANALISIS DE CASO CONCRETO END-TO-END: FIN" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e $(date +"%T")" | 060 | Analisis caso concreto end-to-end | FIN" >>$LOG_070
 
 
 
