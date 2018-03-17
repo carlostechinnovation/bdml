@@ -82,7 +82,7 @@ mysql -u root --password=datos1986 -t --execute="SELECT galgo_nombre, count(*) A
 
 echo -e "\n\n----- Analisis de CARRERAS -----" >> "${LOG_020_ESTADISTICA}"
 
-echo -e "Numero de carreras segun el dia:" >> "${LOG_020_ESTADISTICA}"
+echo -e "\nNumero de carreras segun el dia:" >> "${LOG_020_ESTADISTICA}"
 mysql -u root --password=datos1986 -t --execute="SELECT SUM(dow_d) AS sum_d, SUM(dow_l) AS sum_l, SUM(dow_m) AS sum_m, SUM(dow_x) AS sum_x, SUM(dow_j) AS sum_j, SUM(dow_v) AS sum_v, SUM(dow_s) AS sum_s, SUM(dow_finde) AS sum_finde, SUM(dow_laborable) AS sum_laborable FROM datos_desa.tb_galgos_carreras_norm;" >> "${LOG_020_ESTADISTICA}"
 
 
@@ -90,7 +90,7 @@ echo -e "\n\n----- Analisis de GALGOS y CARRERAS -----" >> "${LOG_020_ESTADISTIC
 
 echo -e "\nNumero MEDIO de GALGOS que corren en una CARRERA:" >> "${LOG_020_ESTADISTICA}"
 mysql -u root --password=datos1986 -tN --execute="SELECT count(DISTINCT id_carrera)/count(DISTINCT galgo_nombre) FROM datos_desa.tb_galgos_historico_norm;" >> "${LOG_020_ESTADISTICA}"
-echo -e "Numero MEDIO de CARRERAS conocidas por galgo (ajustado en Constantes: semanas hacia atrás):" >> "${LOG_020_ESTADISTICA}"
+echo -e "\nNumero MEDIO de CARRERAS conocidas por galgo (ajustado en Constantes: semanas hacia atrás):" >> "${LOG_020_ESTADISTICA}"
 mysql -u root --password=datos1986 -tN --execute="SELECT AVG(num_carreras_por_galgo) AS avg_num_carreras_por_galgo FROM ( SELECT galgo_nombre, count(*) AS num_carreras_por_galgo FROM datos_desa.tb_galgos_historico_norm GROUP BY galgo_nombre ) dentro; " >> "${LOG_020_ESTADISTICA}"
 echo -e "\nGalgos con mas de un entrenador conocido:" >> "${LOG_020_ESTADISTICA}"
 mysql -u root --password=datos1986 -tN --execute="SELECT galgo_nombre, count(DISTINCT entrenador) AS num_entrenadores FROM datos_desa.tb_galgos_historico_norm GROUP BY galgo_nombre HAVING num_entrenadores >= 2;" >> "${LOG_020_ESTADISTICA}"

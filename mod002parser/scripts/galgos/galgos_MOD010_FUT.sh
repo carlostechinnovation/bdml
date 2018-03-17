@@ -3,7 +3,7 @@
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #Borrar log
-rm -f ${LOG_DESCARGA_BRUTO}
+rm -f ${LOG_010_FUT}
 
 
 echo -e $(date +"%T")" | 010_FUT | Insertar datos FUTUROS en datos brutos | INICIO" >>$LOG_070
@@ -51,7 +51,8 @@ DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_d;
 
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_d AS
 SELECT 
-INICIAL.* , C.DHE_incr AS id_carrera_artificial
+INICIAL.* ,
+CAST(CONV(C.DHE_incr,16,10) AS UNSIGNED INTEGER) AS id_carrera_artificial
 FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) INICIAL
 LEFT JOIN datos_desa.tb_cg_semillas_sportium_c C
 ON (INICIAL.DHE=C.DHE)
@@ -116,25 +117,31 @@ SELECT * FROM datos_desa.tb_clases_recientes_en_carrera_futura LIMIT 12;
 
 DROP TABLE IF EXISTS datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida;
 
+
 CREATE TABLE datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida AS
-SELECT FUERA.*
-FROM
-datos_desa.tb_clases_recientes_en_carrera_futura FUERA
-INNER JOIN
-(
-  SELECT 
-  A.id_carrera_artificial, B.contador_max
-  FROM (SELECT DISTINCT id_carrera_artificial FROM datos_desa.tb_clases_recientes_en_carrera_futura) A
-  LEFT JOIN 
-  (SELECT id_carrera_artificial, MAX(contador) AS contador_max FROM datos_desa.tb_clases_recientes_en_carrera_futura GROUP BY id_carrera_artificial) B
-  ON (A.id_carrera_artificial=B.id_carrera_artificial)
-) DENTRO
-ON (FUERA.id_carrera_artificial=DENTRO.id_carrera_artificial AND FUERA.contador=DENTRO.contador_max)
-;
+SELECT id_carrera_artificial, MAX(clase_reciente) AS clase_reciente, MAX(contador) AS contador
+FROM (
+  SELECT FUERA.*  FROM datos_desa.tb_clases_recientes_en_carrera_futura FUERA
+  INNER JOIN
+  (
+    SELECT 
+    A.id_carrera_artificial, B.contador_max
+    FROM (SELECT DISTINCT id_carrera_artificial FROM datos_desa.tb_clases_recientes_en_carrera_futura) A
+    LEFT JOIN 
+    (SELECT id_carrera_artificial, MAX(contador) AS contador_max FROM datos_desa.tb_clases_recientes_en_carrera_futura GROUP BY id_carrera_artificial) B
+    ON (A.id_carrera_artificial=B.id_carrera_artificial)
+  ) DENTRO
+  ON (FUERA.id_carrera_artificial=DENTRO.id_carrera_artificial AND FUERA.contador=DENTRO.contador_max)
+) FUERA2
+GROUP BY id_carrera_artificial;
 
 SELECT * FROM datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida LIMIT 12;
-
 EOF
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
+echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
 read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS <<- EOF
@@ -189,6 +196,11 @@ SELECT * FROM datos_desa.tb_galgos_carreras
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
+echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
 read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO <<- EOF
@@ -245,6 +257,11 @@ SELECT * FROM datos_desa.tb_galgos_historico
 WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_carreras_artificiales)
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
+
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
+echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
 read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES <<- EOF
@@ -318,25 +335,13 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
 
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
-
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
-
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
-
 echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Posiciones..." 2>&1 1>>${LOG_010_FUT}
 echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
+echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
 ##########################################
-
 echo -e $(date +"%T")" | 010 | Descarga datos brutos | FIN" >>$LOG_070
 
 

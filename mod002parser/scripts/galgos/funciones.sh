@@ -39,8 +39,8 @@ LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
 LOG_070="/home/carloslinux/Desktop/LOGS/INFORME_TIC.txt"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
-CASOS_SUFICIENTES="400"
-RENTABILIDAD_MINIMA="10"
+CASOS_SUFICIENTES="200"
+RENTABILIDAD_MINIMA="15"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
 INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
@@ -380,20 +380,6 @@ ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
 }
 
-
-
-
-function analizarScoreSobreSubgruposPRUEBA ()
-{
-
-PATH_LOG=${1}
-echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
-
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
-
-}
 
 ##########################################################################################
 

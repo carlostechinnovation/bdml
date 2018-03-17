@@ -29,20 +29,20 @@ echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>
 ${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 
 echo -e $(date +"%T")" **** Análisis de SUBGRUPOS y GRUPOS_SP ****" >>$LOG_MASTER
 resetTablaRentabilidades #Reseteando tabla de rentabilidades
-analizarScoreSobreSubgruposPRUEBA "$LOG_MASTER"
+analizarScoreSobreSubgrupos "$LOG_MASTER"
 
 echo -e $(date +"%T")" Informe de rentabilidades (usar para poner DINERO solo en los grupos_sp indicados): ${INFORME_RENTABILIDADES}" >>$LOG_MASTER
 rm -f "$INFORME_RENTABILIDADES"
@@ -61,19 +61,19 @@ then
 fi
 
 
-#echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, calculamos FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL (el modelo estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "$SUBGRUPO_GANADOR" >>$LOG_MASTER #llama a 036 y 037
-#${PATH_SCRIPTS}'galgos_MOD040.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
+echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, calculamos FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL (el modelo estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "$SUBGRUPO_GANADOR" >>$LOG_MASTER #llama a 036 y 037
+${PATH_SCRIPTS}'galgos_MOD040.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
-#echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
+echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD070.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Análisis TIC de la ejecucion" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD070.sh' >>$LOG_MASTER
 
 #echo -e $(date +"%T")" Limpieza final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 #limpieza
