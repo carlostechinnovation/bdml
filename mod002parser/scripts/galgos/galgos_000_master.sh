@@ -23,7 +23,7 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
 rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
-${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
+#${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
 
 echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
@@ -39,11 +39,12 @@ ${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" **** Análisis de SUBGRUPOS y GRUPOS_SP ****" >>$LOG_MASTER
 resetTablaRentabilidades #Reseteando tabla de rentabilidades
-echo -e $(date +"%T")" Para cada SUBGRUPO, calculamos FILTRADAS + DATASETS + INTELIGENCIA ARTIFICIAL..." >>$LOG_MASTER
 analizarScoreSobreSubgrupos "$LOG_MASTER"
+
 echo -e $(date +"%T")" Informe de rentabilidades (usar para poner DINERO solo en los grupos_sp indicados): ${INFORME_RENTABILIDADES}" >>$LOG_MASTER
-CASOS_SUFICIENTES="400"
-consultar_sobreescribirsalida "SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento > 10 AND casos > $CASOS_SUFICIENTES ORDER BY rentabilidad_porciento DESC LIMIT 10;" "${INFORME_RENTABILIDADES}" ""
+rm -f "$INFORME_RENTABILIDADES"
+mysql -u root --password=datos1986  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $CASOS_SUFICIENTES ORDER BY rentabilidad_porciento DESC LIMIT 10;" 2>&1 1>>${INFORME_RENTABILIDADES}
+
 SUBGRUPO_GANADOR=$( mysql -u root --password=datos1986  --execute="SELECT subgrupo FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento > 10 AND casos > 100 ORDER BY rentabilidad_porciento DESC LIMIT 10;" )
 echo -e $(date +"%T")" Subgrupo con más rentabilidad (y con suficientes casos: CASOS > $CASOS_SUFICIENTES ) = ${SUBGRUPO_GANADOR}" >>$LOG_MASTER
 

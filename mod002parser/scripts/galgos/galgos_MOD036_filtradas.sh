@@ -68,7 +68,7 @@ filtro_galgos="${2}"
 filtro_cg="${3}"
 sufijo="${4}"
 
-echo -e $(date +"%T")" | 036 | Filtradas (subgrupos) | INICIO" >>$LOG_070
+echo -e $(date +"%T")" | 036 | Filtradas (subgrupo: $sufijo) | INICIO" >>$LOG_070
 
 echo -e $(date +"%T")" Parametros: -->${1}-->${2}-->${3}-->${4}" 2>&1 1>>${LOG_DS}
 

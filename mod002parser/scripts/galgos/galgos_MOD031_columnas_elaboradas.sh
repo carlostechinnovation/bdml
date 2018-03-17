@@ -936,7 +936,7 @@ SELECT * FROM datos_desa.tb_elaborada_carreras_${sufijo} ORDER BY id_carrera LIM
 SELECT count(*) as num_elab_carreras FROM datos_desa.tb_elaborada_carreras_${sufijo} LIMIT 5;
 EOF
 
-echo -e "\n$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
+#echo -e "\n$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB1" >>$LOG_CE
 
 
@@ -1077,7 +1077,7 @@ SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${suf
 EOF
 
 
-echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
+#echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
 
 
