@@ -20,11 +20,11 @@ sufijo="${4}"
 
 
 ####### BLOQUE POR TAG ##########
-echo -e $(date +"%T")" TAG=${sufijo}" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" 035-TAG=${sufijo}" 2>&1 1>>${LOG_DS}
 
 echo -e $(date +"%T")" | 035 | Filtradas y datasets (subgrupo: $sufijo) | INICIO" >>$LOG_070
 
-"/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD036_filtradas.sh" "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "${sufijo}"
+"/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD036_filtradas.sh" "${filtro_carreras}" "${filtro_galgos}" "${filtro_cg}" "${sufijo}"
 
 "/root/git/bdml/mod002parser/scripts/galgos/galgos_MOD037_datasets.sh" "${sufijo}"
 ####################

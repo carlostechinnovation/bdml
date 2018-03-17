@@ -70,7 +70,7 @@ sufijo="${4}"
 
 echo -e $(date +"%T")" | 036 | Filtradas (subgrupo: $sufijo) | INICIO" >>$LOG_070
 
-echo -e $(date +"%T")" Parametros: -->${1}-->${2}-->${3}-->${4}" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")" Filtradas-Parametros: -->${1}-->${2}-->${3}-->${4}" 2>&1 1>>${LOG_DS}
 
 generarTablasFiltradas "$filtro_carreras" "$filtro_galgos" "$filtro_cg" "$sufijo"
 

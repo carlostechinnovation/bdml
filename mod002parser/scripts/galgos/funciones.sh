@@ -1,16 +1,30 @@
 #!/bin/bash
 
-
 PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
 PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
-
 PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
 PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
+
+TAG_GBGB="GBGB"
+FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
+PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
+PATH_FILE_GALGOS_INICIALES_FULL="${PATH_FILE_GALGOS_INICIALES}_full"
+PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
+PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
+PATH_LIMPIO_HISTORICO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_historico_file"
+PATH_LIMPIO_AGREGADOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_agregados_file"
+PATH_LIMPIO_GALGOS_INICIALES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_galgos_iniciales"
+PATH_LIMPIO_CARRERAS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_carreras"
+PATH_LIMPIO_POSICIONES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_posiciones"
+PATH_LIMPIO_HISTORICO_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_historico"
+PATH_LIMPIO_AGREGADOS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_agregados"
+PATH_LIMPIO_ESTADISTICAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_limpio_estadisticas"
 
 LOG_MASTER="/home/carloslinux/Desktop/LOGS/galgos_coordinador.log"
 LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto.log"
 LOG_DESCARGA_BRUTO_BB="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto_BB.log"
 FLAG_BB_DESCARGADO_OK="/home/carloslinux/Desktop/LOGS/galgos_010_BB.descargado.OK"
+LOG_010_FUT="/home/carloslinux/Desktop/LOGS/galgos_010_FUT.log"
 LOG_011="/home/carloslinux/Desktop/LOGS/galgos_011_limpieza.log"
 LOG_012="/home/carloslinux/Desktop/LOGS/galgos_012_normalizacion.log"
 LOG_020_ESTADISTICA="/home/carloslinux/Desktop/LOGS/galgos_020_stats.log"
@@ -311,24 +325,17 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_LARGA" >>$PATH_LOG
 
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <= 0.20)" "HORA_PRONTO_A"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO_A" >>$PATH_LOG
-
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.2 AND hora_norm <= 0.4)" "HORA_PRONTO_B"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO_B" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm <= 0.33)" "HORA_PRONTO"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_PRONTO" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.3 AND hora_norm <= 0.7)" "HORA_MEDIA"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_MEDIA" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.6 AND hora_norm <= 0.8)" "HORA_TARDE_A"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE_A" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.66 )" "HORA_TARDE"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE" >>$PATH_LOG
 
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE hora_norm >= 0.8)" "HORA_TARDE_B"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE_B" >>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm <= 0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_JOVENES"
@@ -372,13 +379,29 @@ echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_elaborada_galgos_pre WHERE vel_going_largas_max_norm<=0.33 ) )" "LARGA_Y_ALGUNO_LENTO"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
 }
+
+
+
+
+function analizarScoreSobreSubgruposPRUEBA ()
+{
+
+PATH_LOG=${1}
+echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
+
+}
+
 ##########################################################################################
 
 ######## MOD040 - ECONOMIA #######################################################################
 function resetTablaRentabilidades ()
 {
-echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-consultar "DROP TABLE IF EXISTS datos_desa.tb_rentabilidades\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
+consultar "DROP TABLE IF EXISTS datos_desa.tb_rentabilidades\W;" "${LOG_ML}" "-tN"
 consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, score DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4))\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 rm -f $FILELOAD_RENTABILIDADES #vacío
@@ -386,7 +409,7 @@ rm -f $FILELOAD_RENTABILIDADES #vacío
 
 function cargarTablaRentabilidades ()
 {
-echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${FILELOAD_RENTABILIDADES}' INTO TABLE datos_desa.tb_rentabilidades FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_RENTABILIDADES_WARNINGS"
 }
 
@@ -484,11 +507,9 @@ borrarTablasInnecesarias_036_037_040 "DISTANCIA_CORTA"
 borrarTablasInnecesarias_036_037_040 "DISTANCIA_MEDIA"
 borrarTablasInnecesarias_036_037_040 "DISTANCIA_LARGA"
 
-borrarTablasInnecesarias_036_037_040 "HORA_PRONTO_A"
-borrarTablasInnecesarias_036_037_040 "HORA_PRONTO_B"
+borrarTablasInnecesarias_036_037_040 "HORA_PRONTO"
 borrarTablasInnecesarias_036_037_040 "HORA_MEDIA"
-borrarTablasInnecesarias_036_037_040 "HORA_TARDE_A"
-borrarTablasInnecesarias_036_037_040 "HORA_TARDE_B"
+borrarTablasInnecesarias_036_037_040 "HORA_TARDE"
 
 borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_JOVENES"
 borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_VIEJOS"

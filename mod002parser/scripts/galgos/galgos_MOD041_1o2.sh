@@ -10,7 +10,7 @@ fi
 
 TAG="${1}"
 
-echo -e $(date +"%T")" | 041_1o2 | Modelos predictivos: 1o2 | INICIO" >>$LOG_070
+echo -e $(date +"%T")" | 041_1o2 | Modelos predictivos: 1o2 ($TAG) | INICIO" >>$LOG_070
 
 echo -e "MOD041_1o2 --> LOG = "${LOG_ML}
 
@@ -34,6 +34,8 @@ FROM (
 ) dentro,
 (SELECT @curRow := 0, @curIdCarrera := '') R;
 
+ALTER TABLE datos_desa.tb_val_1o2_score_real_${TAG} ADD INDEX tb_val_1o2_SR_${TAG}_idx(id_carrera, galgo_rowid);
+
 
 DROP TABLE IF EXISTS datos_desa.tb_val_1o2_score_predicho_${TAG};
 
@@ -47,6 +49,8 @@ FROM (
   SELECT id_carrera, rowid AS galgo_rowid, target_predicho FROM datos_desa.tb_val_${TAG} ORDER BY id_carrera ASC, target_predicho DESC 
 ) dentro,
 (SELECT @curRow := 0, @curIdCarrera := '') R;
+
+ALTER TABLE datos_desa.tb_val_1o2_score_predicho_${TAG} ADD INDEX tb_val_1o2_SP_${TAG}_idx(id_carrera, galgo_rowid);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_1o2_score_aciertos_${TAG};
@@ -69,6 +73,8 @@ LEFT JOIN datos_desa.tb_val_1o2_score_real_${TAG} B
 ON (A.id_carrera=B.id_carrera AND A.galgo_rowid=B.galgo_rowid)
 ;
 
+ALTER TABLE datos_desa.tb_1o2_score_aciertos_${TAG} ADD INDEX tb_1o2_SA_${TAG}_idx(galgo_rowid);
+
 
 DROP TABLE IF EXISTS datos_desa.tb_val_1o2_connombre_${TAG};
 
@@ -82,6 +88,8 @@ FROM (
 ) AB
 , (SELECT @rowid:=0) R;
 
+ALTER TABLE datos_desa.tb_val_1o2_connombre_${TAG} ADD INDEX tb_val_1o2_CN_${TAG}_idx(rowid);
+
 
 
 DROP TABLE IF EXISTS datos_desa.tb_val_1o2_aciertos_connombre_${TAG};
@@ -92,11 +100,11 @@ FROM datos_desa.tb_1o2_score_aciertos_${TAG} A
 LEFT JOIN datos_desa.tb_val_1o2_connombre_${TAG} B
 ON (A.galgo_rowid=B.rowid);
 
-ALTER TABLE datos_desa.tb_val_1o2_aciertos_connombre_${TAG} ADD INDEX tb_val_1o2_aciertos_connombre_${TAG}_idx(id_carrera, galgo_nombre);
+ALTER TABLE datos_desa.tb_val_1o2_aciertos_connombre_${TAG} ADD INDEX tb_val_1o2_ACN_${TAG}_idx(id_carrera, galgo_nombre);
 EOF
 
-#echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" >>$LOG_ML
+echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
 
 FILE_TEMP="./temp_numero_MOD041"
 

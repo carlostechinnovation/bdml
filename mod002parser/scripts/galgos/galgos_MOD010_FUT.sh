@@ -2,52 +2,16 @@
 
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-TAG_GBGB="GBGB"
-
-FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
-
-PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
-PATH_FILE_GALGOS_INICIALES_FULL="${PATH_FILE_GALGOS_INICIALES}_full"
-
-PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
-PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
-PATH_LIMPIO_HISTORICO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_historico_file"
-PATH_LIMPIO_AGREGADOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_agregados_file"
-
-PATH_LIMPIO_GALGOS_INICIALES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_galgos_iniciales"
-PATH_LIMPIO_CARRERAS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_carreras"
-PATH_LIMPIO_POSICIONES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_posiciones"
-PATH_LIMPIO_HISTORICO_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_historico"
-PATH_LIMPIO_AGREGADOS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_agregados"
-
-PATH_LIMPIO_ESTADISTICAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_limpio_estadisticas"
-
-echo -e $(date +"%T")" Path del log: ${LOG_DESCARGA_BRUTO}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+#Borrar log
 rm -f ${LOG_DESCARGA_BRUTO}
 
 
-echo -e $(date +"%T")" Galgos-Modulo 010 - Obtener datos en BRUTO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-echo -e "MOD010 --> LOG = "${LOG_DESCARGA_BRUTO}
-
-
-
-mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_galgos_carreras WHERE (  id_carrera <= 1000);" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_galgos_historico WHERE (  id_carrera <= 1000);" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="DELETE FROM datos_desa.tb_galgos_posiciones_en_carreras WHERE (  id_carrera <= 1000);" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-
-
-
-
-
-
-
-
-
-
+echo -e $(date +"%T")" | 010_FUT | Insertar datos FUTUROS en datos brutos | INICIO" >>$LOG_070
+echo -e "MOD010_FUT --> LOG = "${LOG_010_FUT}
 
 
 ##########################################
-echo -e "\n\n\n"$(date +"%T")"SEMILLAS (FUTURAS) - Metiendo filas artificiales con los datos conocidos de las semillas:" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Metiendo filas artificiales con los datos conocidos de las semillas:" 2>&1 1>>${LOG_010_FUT}
 
 #Pendiente descargar dato "SP" si se conoce en ese instante
 
@@ -354,26 +318,26 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
 
-echo -e "\n\n\n****************\n\n\n"$(date +"%T")" SEMILLAS (FUTURAS) - Tablas base..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
 
-echo -e "\n\n\n****************\n\n\n"$(date +"%T")" SEMILLAS (FUTURAS) - Carreras..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
 
-echo -e "\n\n\n****************\n\n\n"$(date +"%T")" SEMILLAS (FUTURAS) - Historico..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
 
-echo -e "\n\n\n****************\n\n\n"$(date +"%T")" SEMILLAS (FUTURAS) - Posiciones..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_DESCARGA_BRUTO}
-mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Posiciones..." 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
+mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
 
 
 ##########################################
 
-echo -e $(date +"%T")" Galgos-Modulo 010 - FIN" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" | 010 | Descarga datos brutos | FIN" >>$LOG_070
 
 
 
