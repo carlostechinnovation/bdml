@@ -39,8 +39,8 @@ LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
 LOG_070="/home/carloslinux/Desktop/LOGS/INFORME_TIC.txt"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
-CASOS_SUFICIENTES="200"
-RENTABILIDAD_MINIMA="15"
+CASOS_SUFICIENTES="2000"
+RENTABILIDAD_MINIMA="40"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
 INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
@@ -463,10 +463,7 @@ numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${SCORE_FINAL}|${rentabilidad}" 2>&1 1>>${LOG_ML}
 
 echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
-echo -e "ATENCION: Solo pongo DINERO en las carreras predichas $tag_prediccion y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
 
-#Cargando fichero de rentabilidades a la tabla
-cargarTablaRentabilidades
 }
 
 

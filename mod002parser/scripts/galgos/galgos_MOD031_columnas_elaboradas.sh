@@ -1086,6 +1086,13 @@ mysql -u root --password=datos1986 --execute="SELECT id_carrera, count(*) as num
 mysql -u root --password=datos1986 --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 
+
+echo -e "\n----------- Tablas de COLUMNAS ELABORADAS --------------" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_elaborada_carreras_${sufijo}" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_elaborada_galgos_${sufijo}" 2>&1 1>>${LOG_012}
+echo -e "datos_desa.tb_elaborada_carrerasgalgos_${sufijo}" 2>&1 1>>${LOG_012}
+echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_012}
+
 }
 
 
@@ -1128,6 +1135,7 @@ EOF
 
 #echo -e "\n$CONSULTA_DROP_TABLAS_INNECESARIAS" 2>&1 1>>${LOG_CE}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_INNECESARIAS" >>$LOG_CE
+
 }
 
 
@@ -1169,8 +1177,11 @@ echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear 
 generarTablasElaboradas
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-#borrarTablasInnecesarias "${sufijo}"
+borrarTablasInnecesarias "${sufijo}"
+
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
+
+
 
 

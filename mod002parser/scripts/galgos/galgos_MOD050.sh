@@ -139,8 +139,8 @@ echo -e "$CONSULTA_PREDICCIONES_FUTURAS_2" 2>&1 1>>${LOG_050}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_2"  2>&1 1>>$LOG_050
 
 
-###################### INFORME ##########################
-echo -e "MOD050 - Informe..." 2>&1 1>>${LOG_050}
+###################### INFORME FINAL ##########################
+echo -e "MOD050 - Informe FINAL..." 2>&1 1>>${LOG_050}
 
 #limpiar
 rm -f "$INFORME_PREDICCIONES"

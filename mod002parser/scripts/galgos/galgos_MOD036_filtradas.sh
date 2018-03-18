@@ -49,10 +49,11 @@ echo -e "$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 
 
-echo -e "*** TABLAS FILTRADAS ***" 2>&1 1>>${LOG_DS}
+echo -e "\n---------------- Tablas FILTRADAS --------------" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_filtrada_carreras_${sufijo}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_filtrada_galgos_${sufijo}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_filtrada_carrerasgalgos_${sufijo}" 2>&1 1>>${LOG_DS}
+echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_DS}
 }
 
 
