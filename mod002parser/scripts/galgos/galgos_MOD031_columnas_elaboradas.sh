@@ -851,8 +851,9 @@ SELECT * FROM datos_desa.tb_ids_galgos_${sufijo} LIMIT 5;
 
 DROP TABLE IF EXISTS datos_desa.tb_ids_carrerasgalgos_${sufijo};
 CREATE TABLE datos_desa.tb_ids_carrerasgalgos_${sufijo} AS
-SELECT cg, 
-substring_index(cg,"|",1) AS id_carrera, 
+SELECT 
+cg, 
+cast( substring_index(cg,"|",1)  AS unsigned integer) as id_carrera,
 substring_index(cg,"|",-1) AS galgo_nombre
 FROM (
   SELECT DISTINCT cg

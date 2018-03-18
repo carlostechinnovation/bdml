@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_d;
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_d AS
 SELECT 
 INICIAL.* ,
-CAST(CONV(C.DHE_incr,16,10) AS UNSIGNED INTEGER) AS id_carrera_artificial
+CAST(CONV(C.DHE_incr,10,0) AS UNSIGNED INTEGER) AS id_carrera_artificial
 FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) INICIAL
 LEFT JOIN datos_desa.tb_cg_semillas_sportium_c C
 ON (INICIAL.DHE=C.DHE)

@@ -2,34 +2,36 @@
 
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-#### Limpiar LOG ###
-rm -f $LOG_060_ENDTOEND
-
-echo -e $(date +"%T")" | 060 | Analisis caso concreto end-to-end | INICIO" >>$LOG_070
-echo -e "MOD060_endtoend --> LOG = "${LOG_060_ENDTOEND}
 
 ####### PARAMETROS ###
 SUBGRUPO="${1}"
 TIEMPO="${2}"
 
 
+echo -e $(date +"%T")" | 060 | Analisis caso concreto end-to-end | INICIO" >>$LOG_070
+echo -e "MOD060_endtoend --> LOG = "${LOG_060_ENDTOEND}${TIEMPO}
+
+
+#### Limpiar LOG ###
+rm -f ${LOG_060_ENDTOEND}${TIEMPO}
+
 #fichero temporal
 FILE_TEMP="./temp_id_carrera_analisis"
 rm -f ${FILE_TEMP}
 
 
-echo -e "\n#########################################################################\n" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "\n#########################################################################\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 if [[ "$TIEMPO" == "FUTURA" ]]
 then
   mysql -u root --password=datos1986 -N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_futuros_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} WHERE id_carrera<1000 GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
   id_carrera_analizada=$( cat ${FILE_TEMP})
-  echo -e "Análisis extremo-extremo de carrera FUTURA (ds FUTURO-FEATURES, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}
+  echo -e "Análisis extremo-extremo de carrera FUTURA (ds FUTURO-FEATURES, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 else
   mysql -u root --password=datos1986 -N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_pasado_validation_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
   id_carrera_analizada=$( cat ${FILE_TEMP})
-  echo -e "Análisis extremo-extremo de carrera PASADA (ds PASADO-VALIDATION, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}
+  echo -e "Análisis extremo-extremo de carrera PASADA (ds PASADO-VALIDATION, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 fi
 
 
@@ -47,9 +49,9 @@ SELECT * FROM datos_desa.tb_ds_pasado_validation_featuresytarget_${SUBGRUPO} WHE
 SELECT * FROM datos_desa.tb_ds_futuro_features_id_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
-echo -e "\n------------------- Antes de predecir ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}
-echo -e "$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "\n------------------- Antes de predecir ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+echo -e "$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 ########################################################################################################
 
@@ -58,9 +60,9 @@ SELECT id_carrera, rowid, target_real, target_predicho FROM datos_desa.tb_val_${
 SELECT id_carrera, rowid, 'DESCONOCIDO' AS target_real, target_predicho FROM datos_desa.tb_fut_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
-echo -e "\n-------------------Despues de predecir ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}
-echo -e "$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "\n-------------------Despues de predecir ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+echo -e "$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 read -d '' CONSULTA_DESPUES_DE_PREDECIR_1o2 <<- EOF
 SELECT * FROM datos_desa.tb_val_aciertos_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
@@ -70,9 +72,9 @@ SELECT * FROM datos_desa.tb_val_aciertos_connombre_${SUBGRUPO} WHERE id_carrera=
 select * FROM datos_desa.tb_val_economico_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
-echo -e "\n-------------------Prediccion de que queda PRIMERO o SEGUNDO (1o2) (Ganador o colocado) ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}
-echo -e "$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "\n-------------------Prediccion de que queda PRIMERO o SEGUNDO (1o2) (Ganador o colocado) ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+echo -e "$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 
 read -d '' CONSULTA_DESPUES_DE_PREDECIR_1st <<- EOF
@@ -83,15 +85,15 @@ select * FROM datos_desa.tb_val_1st_economico_${SUBGRUPO} WHERE id_carrera=${id_
 SELECT * FROM datos_desa.tb_fut_1st_final_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
-echo -e "\n--------------------Prediccion de que queda PRIMERO (1st) --------\n" 2>&1 1>>${LOG_060_ENDTOEND}
-echo -e "$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "\n--------------------Prediccion de que queda PRIMERO (1st) --------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+echo -e "$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 
 ########################################################################################################
 
-echo -e "\n----------------------------\n" 2>&1 1>>${LOG_060_ENDTOEND}
-echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n" 2>&1 1>>${LOG_060_ENDTOEND}
+echo -e "\n----------------------------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+echo -e "\nATENCION: debo COMPROBAR que los galgos de ENTRADA sean los mismos que los de SALIDA y que tengan precio SP !!!!!!!!!\n\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 echo -e $(date +"%T")" | 060 | Analisis caso concreto end-to-end | FIN" >>$LOG_070
 

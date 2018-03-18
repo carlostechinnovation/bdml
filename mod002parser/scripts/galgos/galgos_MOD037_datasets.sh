@@ -192,7 +192,7 @@ SELECT count(*) as num_pasado_train_targets FROM datos_desa.tb_ds_pasado_train_t
 EOF
 
 echo -e "$CONSULTA_DS_TRAIN" 2>&1 1>>${LOG_DS}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TRAIN" >>$LOG_DS
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TRAIN" 2>&1 1>>${LOG_DS}
 
 echo -e "PASADO-TRAIN --> datos_desa.tb_ds_pasado_train_features_${TAG}   datos_desa.tb_ds_pasado_train_targets_${TAG}" 2>&1 1>>${LOG_DS}
 
@@ -223,7 +223,7 @@ SELECT count(*) as num_pasado_test_targets FROM datos_desa.tb_ds_pasado_test_tar
 EOF
 
 echo -e "$CONSULTA_DS_TEST" 2>&1 1>>${LOG_DS}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TEST" >>$LOG_DS
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TEST" 2>&1 1>>${LOG_DS}
 
 echo -e "PASADO-TEST --> datos_desa.tb_ds_pasado_test_features_${TAG}   datos_desa.tb_ds_pasado_test_targets_${TAG}" 2>&1 1>>${LOG_DS}
 
@@ -259,7 +259,7 @@ SELECT count(*) as num_pasado_validation_targets FROM datos_desa.tb_ds_pasado_va
 EOF
 
 echo -e "$CONSULTA_DS_VALIDATION" 2>&1 1>>${LOG_DS}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_VALIDATION" >>$LOG_DS
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_VALIDATION" 2>&1 1>>${LOG_DS}
 
 echo -e "PASADO-VALIDATION --> datos_desa.tb_ds_pasado_validation_features_${TAG}   datos_desa.tb_ds_pasado_validation_targets_${TAG}" 2>&1 1>>${LOG_DS}
 
@@ -291,7 +291,7 @@ SELECT count(*) as num_futuro_features FROM datos_desa.tb_ds_futuro_features_${T
 EOF
 
 echo -e "$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_FUTURO_FEATURES" >>$LOG_DS
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_FUTURO_FEATURES" 2>&1 1>>${LOG_DS}
 
 echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}\n\n" 2>&1 1>>${LOG_DS}
 
