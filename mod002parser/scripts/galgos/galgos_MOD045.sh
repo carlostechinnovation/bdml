@@ -24,9 +24,8 @@ echo -e $(date +"%T")" Entrenando el modelo con DS-TTV (todo lo que conocemos de
 
 python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_ttv_pasado.py' "_${TAG}" >> "${LOG_ML}"
 
-echo -e $(date +"%T")" Modelo listo para predecir el futuro!" 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" Modelo listo para predecir el futuro! Path_modelo = "$PATH_MODELO_GANADOR 2>&1 1>>${LOG_ML}
 
-################################################
 ##############################################################
 
 echo -e $(date +"%T")" | 040 | Modelos predictivos | FIN" >>$LOG_070
