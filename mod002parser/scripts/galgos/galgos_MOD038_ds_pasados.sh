@@ -19,9 +19,9 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_ttv_features_${TAG};
 
 CREATE TABLE datos_desa.tb_ds_pasado_ttv_features_${TAG} AS 
 SELECT * FROM datos_desa.tb_ds_pasado_train_features_${TAG}
-UNION 
+UNION ALL
 SELECT * FROM datos_desa.tb_ds_pasado_test_features_${TAG}
-UNION 
+UNION ALL
 SELECT * FROM datos_desa.tb_ds_pasado_validation_features_${TAG}
 ;
 
@@ -32,9 +32,9 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_ttv_targets_${TAG};
 
 CREATE TABLE datos_desa.tb_ds_pasado_ttv_targets_${TAG} AS 
 SELECT * FROM datos_desa.tb_ds_pasado_train_targets_${TAG}
-UNION 
+UNION ALL
 SELECT * FROM datos_desa.tb_ds_pasado_test_targets_${TAG}
-UNION 
+UNION ALL
 SELECT * FROM datos_desa.tb_ds_pasado_validation_targets_${TAG}
 ;
 

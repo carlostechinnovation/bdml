@@ -5,30 +5,41 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
 if [ "$#" -ne 1 ]; then
-    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_ML}
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
 fi
 
 TAG="${1}"
 
 
-echo -e $(date +"%T")" | 045 | Modelo predictivo (subgrupo: $TAG) | INICIO" >>$LOG_070
-echo -e "MOD045 --> LOG = "${LOG_ML}
+#### Limpiar LOG ###
+rm -f $LOG_045
+
+echo -e $(date +"%T")" | 045 | Entreno con pasado-TTV (subgrupo: $TAG) | INICIO" >>$LOG_070
+echo -e "MOD045 --> LOG = "${LOG_045}
 
 PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
 rm -f $PATH_MODELO_GANADOR
 
 
 ########### Modelo predictivo REGRESION ###########
-echo -e "\n\n\n----------------------------- 045 --------------------\n\n\n" 2>&1 1>>${LOG_ML}
-echo -e $(date +"%T")" Entrenando el modelo con DS-TTV (todo lo que conocemos del pasado) para tener un modelo bien entrenado..." 2>&1 1>>${LOG_ML}
+echo -e "\n\n\n----------------------------- 045 --------------------\n\n\n" 2>&1 1>>${LOG_045}
+echo -e $(date +"%T")" Entrenando el modelo con DS-TTV (todo lo que conocemos del pasado) para tener un modelo bien entrenado..." 2>&1 1>>${LOG_045}
+python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_ttv_pasado.py' "_${TAG}" 2>&1 1>>"${LOG_045}"
 
-python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_ttv_pasado.py' "_${TAG}" >> "${LOG_ML}"
 
-echo -e $(date +"%T")" Modelo listo para predecir el futuro! Path_modelo = "$PATH_MODELO_GANADOR 2>&1 1>>${LOG_ML}
 
+echo -e "\n\n---------------------- Comprobacion de que se ha creado el modelo  ----------------------------------\n" 2>&1 1>>${LOG_050}
+num_filas_modelo=$(cat "$PATH_MODELO_GANADOR" | wc -l)
+if [ ${num_filas_modelo} -eq 0 ]
+  then
+    echo -e "ERROR El modelo generado por Python (045) NO existe o esta vacio. Salida forzada. num_filas_modelo=$num_filas_modelo"
+    exit -1
+fi
+echo -e $(date +"%T")" Modelo listo para predecir el futuro! Path_modelo = "$PATH_MODELO_GANADOR 2>&1 1>>${LOG_045}
+echo -e "\n-------------------------------------------------------------------\n" 2>&1 1>>${LOG_050}
 ##############################################################
 
-echo -e $(date +"%T")" | 040 | Modelos predictivos | FIN" >>$LOG_070
+echo -e $(date +"%T")" | 045 | Entreno con pasado-TTV (subgrupo: $TAG) | FIN" >>$LOG_070
 
 
 

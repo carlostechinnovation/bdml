@@ -34,6 +34,7 @@ LOG_DS_COLPEN="/home/carloslinux/Desktop/LOGS/galgos_037_datasets_COLUMNAS_PENDI
 LOG_038_DS_TTV="/home/carloslinux/Desktop/LOGS/galgos_038_datasets_TTV.log"
 FILELOAD_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/galgos_040_FILELOAD_RENTABILIDADES.txt"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
+LOG_045="/home/carloslinux/Desktop/LOGS/galgos_045_PRED_FUT.log"
 LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
 LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
 LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"

@@ -2,13 +2,17 @@
 
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
+######################## PARAMETROS ############
+if [ "$#" -ne 1 ]; then
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
+fi
+
 TAG="${1}"
 
 #### Limpiar LOG ###
 rm -f $LOG_050
 
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
-
 echo -e "MOD050 --> LOG = "${LOG_050}
 
 
@@ -29,6 +33,14 @@ echo -e $(date +"%T")" Path de targets FUTUROS predichos = "$PATH_FILE_FUTURO_TA
 echo -e $(date +"%T")" Ejemplo de targets FUTUROS predichos:" 2>&1 1>>${LOG_050}
 echo -e $(head -n 10 $PATH_FILE_FUTURO_TARGETS_LIMPIO) 2>&1 1>>${LOG_050}
 
+echo -e "\n\n---------------------- Comprobacion de PREDICCIONES ----------------------------------\n" 2>&1 1>>${LOG_050}
+num_targets_file=$(cat "$PATH_FILE_FUTURO_TARGETS_LIMPIO" | wc -l)
+if [ ${num_targets_file} -eq 0 ]
+  then
+    echo -e "ERROR En el fichero generado por Python (050) NO hay NINGUN target PREDICHO. Salida forzada. num_targets_file=$num_targets_file"
+    exit -1
+fi
+echo -e "\n-------------------------------------------------------------------\n" 2>&1 1>>${LOG_050}
 
 echo -e $(date +"%T")" Generando tabla de predicciones FUTURAS (subgrupo ${TAG})..." 2>&1 1>>${LOG_ML}
 
