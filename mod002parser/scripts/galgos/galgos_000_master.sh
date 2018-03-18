@@ -21,11 +21,11 @@ function analisisRentabilidadesPorSubgrupos(){
 
   echo -e $(date +"%T")" Informe de rentabilidades (usar para poner DINERO solo en los grupos_sp indicados): ${INFORME_RENTABILIDADES}" >>$LOG_MASTER
   rm -f "$INFORME_RENTABILIDADES"
-  mysql -u root --password=datos1986  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $CASOS_SUFICIENTES ORDER BY rentabilidad_porciento DESC LIMIT 10;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  mysql -u root --password=datos1986  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select 0.5*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY rentabilidad_porciento DESC LIMIT 10;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
-  SUBGRUPO_GANADOR_IN=$( mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > $CASOS_SUFICIENTES ORDER BY rentabilidad_porciento DESC LIMIT 1;" )
+  SUBGRUPO_GANADOR_IN=$( mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.*, (100*aciertos/casos) AS cobertura FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select 0.5*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura DESC ) B LIMIT 1;" )
   echo -e "------------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR_IN -----------------------" >>$LOG_MASTER
-  echo -e $(date +"%T")" Subgrupo con más rentabilidad (y con suficientes casos: CASOS > $CASOS_SUFICIENTES ) = ${SUBGRUPO_GANADOR_IN}" >>$LOG_MASTER
+  echo -e $(date +"%T")" Subgrupo con más rentabilidad (y con suficientes casos) = ${SUBGRUPO_GANADOR_IN}" >>$LOG_MASTER
 
   if [ -z $SUBGRUPO_GANADOR_IN ]
   then
@@ -37,6 +37,7 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "$SUBGRUPO_GANADOR_IN"
 }
 
+
 ############################################################################################
 echo -e $(date +"%T")" | MASTER | Coordinador | INICIO" >>$LOG_070
 
@@ -47,25 +48,25 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
 rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
-#${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
+${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
-#echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
+echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
-#SUBGRUPO_GANADOR=$(analisisRentabilidadesPorSubgrupos)
-SUBGRUPO_GANADOR="TRAINER_BUENOS_GALGOS" #####DEBUG
+echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
+SUBGRUPO_GANADOR=$(analisisRentabilidadesPorSubgrupos)
+#SUBGRUPO_GANADOR="TRAINER_BUENOS_GALGOS" #####DEBUG
 echo -e "SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR"
 
 echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
