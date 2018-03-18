@@ -299,18 +299,25 @@ echo -e "FUTURO-FEATURES --> datos_desa.tb_ds_futuro_features_${TAG}\n\n" 2>&1 1
 
 ######### Análisis del DATASET de PASADO-FEATURES (entrada) y FUTURO_FEATURES (entrada) #######################
 rm -f "${LOG_DS_COLPEN}"
+
 analizarTabla "datos_desa" "tb_ds_pasado_train_features_${TAG}" "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_pasado_train_targets_${TAG}" "${LOG_DS_COLPEN}"
+
+analizarTabla "datos_desa" "tb_ds_pasado_test_features_${TAG}" "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_pasado_test_targets_${TAG}" "${LOG_DS_COLPEN}"
+
+analizarTabla "datos_desa" "tb_ds_pasado_validation_features_${TAG}" "${LOG_DS_COLPEN}"
+analizarTabla "datos_desa" "tb_ds_pasado_validation_targets_${TAG}" "${LOG_DS_COLPEN}"
+
 analizarTabla "datos_desa" "tb_ds_futuro_features_${TAG}" "${LOG_DS_COLPEN}"
 
 
-
-echo -e "\n---------------- DATASETS --------------" 2>&1 1>>${LOG_DS}
+echo -e "\n\n\n\n---------------- DATASETS --------------" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_pasado_train_features_${TAG}  <--> datos_desa.tb_ds_pasado_train_targets_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_pasado_test_features_${TAG}  <--> datos_desa.tb_ds_pasado_test_targets_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_pasado_validation_features_${TAG}  <--> datos_desa.tb_ds_pasado_validation_targets_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_futuro_features_${TAG}  <--> TARGETS_NO (futuro)" 2>&1 1>>${LOG_DS}
 echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_DS}
-
 
 
 #####################################################################################

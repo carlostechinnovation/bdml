@@ -85,6 +85,9 @@ ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
 #limpieza
 
 ##########################################
+echo -e "Informe TIC: "$LOG_070 >>$LOG_MASTER
+##########################################
+
 echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
 
 
