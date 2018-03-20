@@ -34,6 +34,8 @@ LOG_DS_COLPEN="/home/carloslinux/Desktop/LOGS/galgos_037_datasets_COLUMNAS_PENDI
 LOG_038_DS_TTV="/home/carloslinux/Desktop/LOGS/galgos_038_datasets_TTV.log"
 FILELOAD_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/galgos_040_FILELOAD_RENTABILIDADES.txt"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
+LOG_041="/home/carloslinux/Desktop/LOGS/galgos_041_1o2.log"
+LOG_042="/home/carloslinux/Desktop/LOGS/galgos_042_1st.log"
 LOG_045="/home/carloslinux/Desktop/LOGS/galgos_045_PRED_FUT.log"
 LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
 LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
@@ -411,15 +413,16 @@ sp_max="${4}"     #Limite superior (excluido) del grupo según SP
 tag_grupo_sp="${5}"    #TAG que identifica al grupo según SP
 tag_subgrupo="${6}"    #TAG del subgrupo de analisis (calculado en modulo 035)
 dinero_gastado="${7}"	#Dinero gastado por apuesta
+log_ml_tipo="${8}"	#log concreto
 
-echo -e "ECONOMICO sobre DS-PASADO-VALIDATION -->[Prediccion|filtro_pos|sp_min|sp_max|grupo_sp|subgrupo] = [$tag_prediccion|$filtro_posicion_predicha|$sp_min|$sp_max|$tag_grupo_sp|$tag_subgrupo]" 2>&1 1>>${LOG_ML}
+echo -e "ECONOMICO sobre DS-PASADO-VALIDATION -->[Prediccion|filtro_pos|sp_min|sp_max|grupo_sp|subgrupo] = [$tag_prediccion|$filtro_posicion_predicha|$sp_min|$sp_max|$tag_grupo_sp|$tag_subgrupo]" 2>&1 1>>${log_ml_tipo}
 
 read -d '' CONSULTA_ECONOMICA <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};
 
 CREATE TABLE datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} AS
 SELECT A.*, GH.sp, ${dinero_gastado} AS gastado_${tag_prediccion}, acierto * 1 * sp AS beneficio_bruto 
-FROM datos_desa.tb_val_${tag_prediccion}_aciertos_connombre_${TAG} A 
+FROM datos_desa.tb_val_${tag_prediccion}_riesgo_${TAG} A 
 INNER JOIN datos_desa.tb_galgos_historico_norm GH 
 ON (
   A.id_carrera=GH.id_carrera 
@@ -427,6 +430,7 @@ ON (
   AND A.posicion_predicha IN ( $filtro_posicion_predicha ) 
   AND GH.sp >= ${sp_min} AND GH.sp < ${sp_max}  
 );
+
 
 SELECT 'NULOS' AS tipo, count(*) AS contador_${tag_grupo_sp} 
 FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} 
@@ -439,8 +443,8 @@ LIMIT 10;
 EOF
 
 
-echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${LOG_ML}
+echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
 
 FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
 rm -f ${FILE_TEMP_PRED}
@@ -462,7 +466,7 @@ mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_acie
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
 ####SALIDA
-MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${SCORE_FINAL}|${rentabilidad}" 2>&1 1>>${LOG_ML}
+MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${SCORE_FINAL}|${rentabilidad}" 2>&1 1>>${log_ml_tipo}
 
 echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
 
@@ -586,7 +590,7 @@ rm -f $path_temp
 
 echo -e "\n--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>&1 1>>${logsalida}
 
-echo -e "Leyenda --> campo : MAX|MIN|AVG|NO_NULOS|NULOS\n"  2>&1 1>>${logsalida}
+echo -e "Leyenda --> campo : MAX|MIN|AVG|STD|NO_NULOS|NULOS\n"  2>&1 1>>${logsalida}
 
 mysql -u root --password=datos1986 -N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
 
@@ -598,7 +602,7 @@ do
   contador=$((contador+1))
   if [[ "$contador" -ge 1 ]];then  #Quito la cabecera
     if [[ "$linea" != *"----"* ]];then #Quito las lineas horizontales
-      query_out="$query_out concat(MAX($linea),'|', MIN($linea),'|', AVG($linea),'|', COUNT($linea),'|', COUNT(*)-COUNT($linea) ) AS _$linea, "
+      query_out="$query_out concat(MAX($linea),'|', MIN($linea),'|', AVG($linea),'|', STD($linea),'|', COUNT($linea),'|', COUNT(*)-COUNT($linea) ) AS _$linea, "
     fi
   fi
 done < "$path_temp"

@@ -143,8 +143,24 @@ ON (A.galgo_rowid=B.rowid);
 ALTER TABLE datos_desa.tb_fut_1st_final_${TAG} ADD INDEX tb_fut_1st_final_${TAG}_idx(id_carrera, galgo_nombre);
 
 
-SELECT * FROM datos_desa.tb_fut_1st_final_${TAG} LIMIT 3;
-SELECT count(*) as num_fut_1st_final FROM datos_desa.tb_fut_1st_final_${TAG} LIMIT 1;
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_riesgo_${TAG};
+
+CREATE TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} AS
+select 
+A.*, 
+-- RIESGO: cuanta mas diferencia, mas efectiva sera la prediccion
+(A.target_predicho - B.target_predicho) AS dif_velocidades_ganador_y_perdedores
+FROM datos_desa.tb_fut_1st_final_TRAINER_BUENOS_GALGOS  A
+LEFT JOIN datos_desa.tb_fut_1st_final_TRAINER_BUENOS_GALGOS B
+ON (A.id_carrera=B.id_carrera)
+WHERE A.posicion_predicha=1 and B.posicion_predicha=2
+ORDER BY dif_velocidades_ganador_y_perdedores DESC
+;
+
+ALTER TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} ADD INDEX tb_fut_1st_final_riesgo_${TAG}_idx(id_carrera, galgo_nombre);
+
+SELECT * FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 3;
+SELECT count(*) as num_fut_1st_final FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 1;
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_FUTURAS_2" 2>&1 1>>${LOG_050}
@@ -160,14 +176,13 @@ rm -f "$INFORME_PREDICCIONES"
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
 B.anio,B.mes,B.dia, B.track AS estadio, B.hora,B.minuto,
-A.galgo_nombre, A.target_predicho
-FROM datos_desa.tb_fut_1st_final_${TAG} A
+A.galgo_nombre, A.target_predicho, A.dif_velocidades_ganador_y_perdedores
+FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
 WHERE A.posicion_predicha=1 
 
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
-
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}

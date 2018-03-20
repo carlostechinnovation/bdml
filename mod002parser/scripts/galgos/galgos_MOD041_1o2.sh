@@ -3,20 +3,23 @@
 source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
+#### Limpiar LOG ###
+rm -f $LOG_041
+
 ######################## PARAMETROS ############
 if [ "$#" -ne 1 ]; then
-    echo " MOD041_1o2 - Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_ML}
+    echo " MOD041_1o2 - Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_041}
 fi
 
 TAG="${1}"
 
 echo -e $(date +"%T")" | 041_1o2 | Modelos predictivos: 1o2 ($TAG) | INICIO" >>$LOG_070
 
-echo -e "MOD041_1o2 --> LOG = "${LOG_ML}
+echo -e "MOD041_1o2 --> LOG = "${LOG_041}
 
 
 ######################### CALCULO DEL SCORE ################
-echo -e $(date +"%T")" Calculando SCORE a partir del dataset de VALIDATION..." 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" Calculando SCORE a partir del dataset de VALIDATION..." 2>&1 1>>${LOG_041}
 
 #SCORE: de las predichas que hayan quedado primero o segundo, veremos si en REAL quedaron primero o segundo. Y sacamos el porcentaje de acierto.
 
@@ -101,41 +104,57 @@ LEFT JOIN datos_desa.tb_val_1o2_connombre_${TAG} B
 ON (A.galgo_rowid=B.rowid);
 
 ALTER TABLE datos_desa.tb_val_1o2_aciertos_connombre_${TAG} ADD INDEX tb_val_1o2_ACN_${TAG}_idx(id_carrera, galgo_nombre);
+
+
+DROP TABLE IF EXISTS datos_desa.tb_val_1o2_riesgo_${TAG};
+
+CREATE TABLE datos_desa.tb_val_1o2_riesgo_${TAG} AS
+select 
+A.*, 
+-- RIESGO: cuanta mas diferencia entre el 2º y el 3º, mas efectiva sera la prediccion
+(A.target_predicho - B.target_predicho) AS dif_velocidades_ganadores_y_perdedores
+FROM datos_desa.tb_val_1o2_aciertos_connombre_${TAG}  A
+LEFT JOIN datos_desa.tb_val_1o2_aciertos_connombre_${TAG} B
+ON (A.id_carrera=B.id_carrera)
+WHERE A.posicion_predicha=2 and B.posicion_predicha=3
+ORDER BY dif_velocidades_ganador_y_perdedores DESC;
+
+ALTER TABLE datos_desa.tb_val_1o2_riesgo_${TAG} ADD INDEX tb_val_1o2_riesgo_${TAG}_idx(id_carrera, galgo_nombre);
 EOF
 
-echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_ML}
+echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
+mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
 
 FILE_TEMP="./temp_numero_MOD041"
 
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1o2, pero no en las otras predichas.
-mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1o2_aciertos_connombre_${TAG} LIMIT 1;" > ${FILE_TEMP}
+mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos=$( cat ${FILE_TEMP})
 
-mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_1o2_aciertos_connombre_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
+mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_1o2_riesgo_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
 numero_predicciones_1o2=$( cat ${FILE_TEMP})
 
-echo -e "MOD041_1o2 numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_ML}
-echo -e "MOD041_1o2 numero_predicciones_1o2 = ${numero_predicciones_1o2}" 2>&1 1>>${LOG_ML}
+echo -e "MOD041_1o2 numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_041}
+echo -e "MOD041_1o2 numero_predicciones_1o2 = ${numero_predicciones_1o2}" 2>&1 1>>${LOG_041}
 
 SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1o2" | bc -l)
-echo -e "MOD041_1o2|DS_PASADO_VALIDATION|${TAG}|Cualquier_SP|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_ML}
+echo -e "MOD041_1o2|DS_PASADO_VALIDATION|${TAG}|Cualquier_SP|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_041}
 
 
-echo -e "MOD041_1o2 Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto FROM datos_desa.tb_val_1o2_aciertos_connombre_${TAG} LIMIT 3;" 2>&1 1>>${LOG_ML}
+echo -e "MOD041_1o2 Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_041}
+mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto, dif_velocidades_ganadores_y_perdedores FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_041}
 
 
 ##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################
 
 #llamadas
-calculoEconomico "1o2" "1,2" "1.00" "1.50" "SP100150" "${TAG}" "2"
-calculoEconomico "1o2" "1,2" "1.50" "2.00" "SP150200" "${TAG}" "2"
-calculoEconomico "1o2" "1,2" "2.00" "2.50" "SP200250" "${TAG}" "2"
-calculoEconomico "1o2" "1,2" "2.50" "3.00" "SP250300" "${TAG}" "2"
-calculoEconomico "1o2" "1,2" "3.00" "999.00" "SP30099900" "${TAG}" "2"
-calculoEconomico "1o2" "1,2" "1.00" "999.00" "SP10099900" "${TAG}" "2"
-calculoEconomico "1o2" "1,2" "2.00" "999.00" "SP20099900" "${TAG}" "2"
+calculoEconomico "1o2" "1,2" "1.00" "1.50" "SP100150" "${TAG}" "2" "${LOG_041}"
+calculoEconomico "1o2" "1,2" "1.50" "2.00" "SP150200" "${TAG}" "2" "${LOG_041}"
+calculoEconomico "1o2" "1,2" "2.00" "2.50" "SP200250" "${TAG}" "2" "${LOG_041}"
+calculoEconomico "1o2" "1,2" "2.50" "3.00" "SP250300" "${TAG}" "2" "${LOG_041}"
+calculoEconomico "1o2" "1,2" "3.00" "999.00" "SP30099900" "${TAG}" "2" "${LOG_041}"
+calculoEconomico "1o2" "1,2" "1.00" "999.00" "SP10099900" "${TAG}" "2" "${LOG_041}"
+calculoEconomico "1o2" "1,2" "2.00" "999.00" "SP20099900" "${TAG}" "2" "${LOG_041}"
 
 ##############################################################
 

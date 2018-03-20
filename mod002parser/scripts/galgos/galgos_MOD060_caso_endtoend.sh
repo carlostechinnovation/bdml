@@ -81,8 +81,11 @@ read -d '' CONSULTA_DESPUES_DE_PREDECIR_1st <<- EOF
 SELECT * FROM datos_desa.tb_val_1st_aciertos_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
 SELECT * FROM datos_desa.tb_fut_1st_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
 
-select * FROM datos_desa.tb_val_1st_economico_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
+select * FROM datos_desa.tb_val_1st_riesgo_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 SELECT * FROM datos_desa.tb_fut_1st_final_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
+
+select * FROM datos_desa.tb_val_1st_economico_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
+SELECT * FROM datos_desa.tb_fut_1st_final_riesgo_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
 echo -e "\n--------------------Prediccion de que queda PRIMERO (1st) --------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}

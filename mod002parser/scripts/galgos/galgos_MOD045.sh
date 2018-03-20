@@ -28,7 +28,7 @@ python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/g
 
 
 
-echo -e "\n\n---------------------- Comprobacion de que se ha creado el modelo  ----------------------------------\n" 2>&1 1>>${LOG_050}
+echo -e "\n\n---------------------- Comprobacion de que se ha creado el modelo  ----------------------------------\n" 2>&1 1>>${LOG_045}
 num_filas_modelo=$(cat "$PATH_MODELO_GANADOR" | wc -l)
 if [ ${num_filas_modelo} -eq 0 ]
   then
@@ -36,7 +36,7 @@ if [ ${num_filas_modelo} -eq 0 ]
     exit -1
 fi
 echo -e $(date +"%T")" Modelo listo para predecir el futuro! Path_modelo = "$PATH_MODELO_GANADOR 2>&1 1>>${LOG_045}
-echo -e "\n-------------------------------------------------------------------\n" 2>&1 1>>${LOG_050}
+echo -e "\n-------------------------------------------------------------------\n" 2>&1 1>>${LOG_045}
 ##############################################################
 
 echo -e $(date +"%T")" | 045 | Entreno con pasado-TTV (subgrupo: $TAG) | FIN" >>$LOG_070
