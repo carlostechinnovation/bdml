@@ -43,7 +43,6 @@ LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
 LOG_070="/home/carloslinux/Desktop/LOGS/INFORME_TIC.txt"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
-CASOS_SUFICIENTES="2000"
 RENTABILIDAD_MINIMA="30"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"

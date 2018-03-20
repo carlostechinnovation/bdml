@@ -91,7 +91,7 @@ FROM (
 ) AB
 , (SELECT @rowid:=0) R;
 
-ALTER TABLE datos_desa.tb_val_1st_connombre_${TAG} ADD INDEX tb_val_1st_CN_${TAG}_idx(galgo_rowid);
+ALTER TABLE datos_desa.tb_val_1st_connombre_${TAG} ADD INDEX tb_val_1st_CN_${TAG}_idx(rowid);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_aciertos_connombre_${TAG};
@@ -108,14 +108,16 @@ ALTER TABLE datos_desa.tb_val_1st_aciertos_connombre_${TAG} ADD INDEX tb_val_1st
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_riesgo_${TAG};
 
 CREATE TABLE datos_desa.tb_val_1st_riesgo_${TAG} AS
-select 
-A.*, 
--- RIESGO: cuanta mas diferencia entre el 1º y el 2º, mas efectiva sera la prediccion
-(A.target_predicho - B.target_predicho) AS dif_velocidades_ganador_y_perdedores
-FROM datos_desa.tb_val_1st_aciertos_connombre_${TAG}  A
-LEFT JOIN datos_desa.tb_val_1st_aciertos_connombre_${TAG} B
-ON (A.id_carrera=B.id_carrera)
-WHERE A.posicion_predicha=1 and B.posicion_predicha=2
+SELECT * FROM (
+  select 
+  A.*, 
+  -- RIESGO: cuanta mas diferencia entre el 1º y el 2º, mas efectiva sera la prediccion
+  (A.target_predicho - B.target_predicho) AS dif_velocidades_ganador_y_perdedores
+  FROM datos_desa.tb_val_1st_aciertos_connombre_${TAG}  A
+  LEFT JOIN datos_desa.tb_val_1st_aciertos_connombre_${TAG} B
+  ON (A.id_carrera=B.id_carrera)
+  WHERE A.posicion_predicha=1 and B.posicion_predicha=2
+) C
 ORDER BY dif_velocidades_ganador_y_perdedores DESC;
 
 ALTER TABLE datos_desa.tb_val_1st_riesgo_${TAG} ADD INDEX tb_val_1st_riesgo_${TAG}_idx(id_carrera, galgo_nombre);
