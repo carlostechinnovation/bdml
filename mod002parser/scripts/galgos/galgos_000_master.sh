@@ -50,25 +50,25 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
 #${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
-#echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
+echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
 SUBGRUPO_GANADOR=$(analisisRentabilidadesPorSubgrupos)
-#SUBGRUPO_GANADOR="TRAINER_BUENOS_GALGOS" #####DEBUG
-echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------" >>$LOG_MASTER
-echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------" >>$LOG_070
+#SUBGRUPO_GANADOR="TOTAL" #####DEBUG
+echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_MASTER
+echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_070
 
 echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER

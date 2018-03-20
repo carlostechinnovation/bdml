@@ -25,6 +25,7 @@ UNION ALL
 SELECT * FROM datos_desa.tb_ds_pasado_validation_features_${TAG}
 ;
 
+SELECT * FROM datos_desa.tb_ds_pasado_ttv_features_${TAG} LIMIT 3;
 SELECT count(*) as num_pasado_ttv_features FROM datos_desa.tb_ds_pasado_ttv_features_${TAG} LIMIT 1;
 
 
@@ -38,11 +39,12 @@ UNION ALL
 SELECT * FROM datos_desa.tb_ds_pasado_validation_targets_${TAG}
 ;
 
+SELECT * FROM datos_desa.tb_ds_pasado_ttv_targets_${TAG} LIMIT 3;
 SELECT count(*) as num_pasado_ttv_targets FROM datos_desa.tb_ds_pasado_ttv_targets_${TAG} LIMIT 1;
 
 EOF
 
-echo -e "$CONSULTA_DS_TTV" 2>&1 1>>${LOG_038_DS_TTV}
+echo -e "\n ----------------- $CONSULTA_DS_TTV\n ----------------- " 2>&1 1>>${LOG_038_DS_TTV}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TTV" 2>&1 1>>${LOG_038_DS_TTV}
 
 echo -e "PASADO-TRAIN --> datos_desa.tb_ds_pasado_ttv_features_${TAG}   datos_desa.tb_ds_pasado_ttv_targets_${TAG}" 2>&1 1>>${LOG_038_DS_TTV}

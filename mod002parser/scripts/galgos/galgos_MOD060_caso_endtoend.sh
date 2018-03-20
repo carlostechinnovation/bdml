@@ -65,11 +65,11 @@ echo -e "$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 read -d '' CONSULTA_DESPUES_DE_PREDECIR_1o2 <<- EOF
-SELECT * FROM datos_desa.tb_val_aciertos_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
+SELECT * FROM datos_desa.tb_val_1o2_aciertos_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
 -- NO calculamos 1o2 para FUT: ---SELECT * FROM datos_desa.tb_fut_1o2_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
 
--- Solo para PASADO (1o2), porque en MOD050 no hemos calculado la tabla economica para caso 1o2:
-select * FROM datos_desa.tb_val_economico_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
+-- Solo para PASADO (1o2), porque en MOD050 no hemos calculado la tabla economica para caso 1o2.
+select * FROM datos_desa.tb_val_1o2_economico_${SUBGRUPO}_SP10099900 WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
 echo -e "\n-------------------Prediccion de que queda PRIMERO o SEGUNDO (1o2) (Ganador o colocado) ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
@@ -84,7 +84,7 @@ SELECT * FROM datos_desa.tb_fut_1st_connombre_${SUBGRUPO} WHERE id_carrera=${id_
 select * FROM datos_desa.tb_val_1st_riesgo_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 SELECT * FROM datos_desa.tb_fut_1st_final_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 
-select * FROM datos_desa.tb_val_1st_economico_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
+select * FROM datos_desa.tb_val_1st_economico_${SUBGRUPO}_SP10099900 WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 SELECT * FROM datos_desa.tb_fut_1st_final_riesgo_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 EOF
 
