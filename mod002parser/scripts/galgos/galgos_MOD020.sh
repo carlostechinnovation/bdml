@@ -117,6 +117,12 @@ mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as co
 echo -e "Rls:" >> "${LOG_020_ESTADISTICA}"
 mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Rls%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
 
+echo -e "Baulked:" >> "${LOG_020_ESTADISTICA}"
+mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Baulked%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
+
+echo -e "Blk:" >> "${LOG_020_ESTADISTICA}"
+mysql -u root --password=datos1986 -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Blk%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
+
 echo -e "\n------------------------------------------------------\n" >> "${LOG_020_ESTADISTICA}"
 
 #####################################################################################################

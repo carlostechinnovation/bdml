@@ -12,6 +12,7 @@ rm -f $LOG_070
 
 ########################### FUNCIONES #######################################################
 function analisisRentabilidadesPorSubgrupos(){
+
   resetTablaRentabilidades #Reseteando tabla de rentabilidades
   analizarScoreSobreSubgrupos "$LOG_MASTER"
 
@@ -19,22 +20,14 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
   cargarTablaRentabilidades
 
-  echo -e $(date +"%T")" Informe de rentabilidades (usar para poner DINERO solo en los grupos_sp indicados): ${INFORME_RENTABILIDADES}" >>$LOG_MASTER
   rm -f "$INFORME_RENTABILIDADES"
-  mysql -u root --password=datos1986  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select 0.5*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY rentabilidad_porciento DESC LIMIT 10;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "******** Informe de RENTABILIDADES ********" >>${INFORME_RENTABILIDADES}
+  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables.\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
+  mysql -u root --password=datos1986 -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
-  SUBGRUPO_GANADOR_IN=$( mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.*, (100*aciertos/casos) AS cobertura FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select 0.4*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura DESC ) B LIMIT 1;" )
-  echo -e "------------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR_IN -----------------------" >>$LOG_MASTER
-  echo -e $(date +"%T")" Subgrupo con más rentabilidad (y con suficientes casos) = ${SUBGRUPO_GANADOR_IN}" >>$LOG_MASTER
+  rm -f $SUBGRUPO_GANADOR_FILE
+  mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
-  if [ -z $SUBGRUPO_GANADOR_IN ]
-  then
-    echo "No hay NINGUN subgrupo con SUFICIENTES casos y rentabilidad. Salimos con error controlado."
-    echo -e $(date +"%T")" | MASTER | Coordinador (ERROR controlador) | FIN" >>$LOG_070
-    exit -1
-  fi
-
-  echo -e "$SUBGRUPO_GANADOR_IN"
 }
 
 
@@ -53,7 +46,6 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
-
 echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
@@ -65,10 +57,33 @@ echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
-SUBGRUPO_GANADOR=$(analisisRentabilidadesPorSubgrupos)
+analisisRentabilidadesPorSubgrupos
+SUBGRUPO_GANADOR_LINEAS=$(cat "$SUBGRUPO_GANADOR_FILE" | wc -l)
+if [ "$SUBGRUPO_GANADOR_LINEAS" -ne "1" ]
+  then
+    echo "ERROR AL CALCULAR SUBGRUPO_GANADOR. Revisar fichero ( $SUBGRUPO_GANADOR_FILE ). Salimos con error controlado." >>$LOG_MASTER
+    echo -e $(date +"%T")" | MASTER | Coordinador (ERROR: filas de SUBGRUPO_GANADOR_FILE) | FIN" >>$LOG_070
+    exit -1
+fi
+
 #SUBGRUPO_GANADOR="TOTAL" #####DEBUG
+SUBGRUPO_GANADOR=$(cat $SUBGRUPO_GANADOR_FILE)
+
+if [ -z $SUBGRUPO_GANADOR ]
+  then
+    echo "No hay NINGUN subgrupo con SUFICIENTES casos y rentabilidad. Salimos con error controlado." >>$LOG_MASTER
+    echo -e $(date +"%T")" | MASTER | Coordinador (ERROR controlador: NINGUN SUBGRUPO) | FIN" >>$LOG_070
+    exit -1
+fi
+if [[ $SUBGRUPO_GANADOR = *"mysql"* ]]; then
+  echo "HAY ALGO RARO. Saliendo...\nLa cadena es:\n"$SUBGRUPO_GANADOR >>$LOG_MASTER
+  echo -e $(date +"%T")" | MASTER | Coordinador (ERROR controlador: datos raros) | FIN" >>$LOG_070
+  exit -1
+fi
+
 echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_MASTER
 echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_070
+
 
 echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER

@@ -132,20 +132,20 @@ EOF
 echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
 
-FILE_TEMP="./temp_numero_MOD041"
 
+#FILE_TEMP="./temp_numero_MOD041"
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1o2, pero no en las otras predichas.
-mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
-numero_aciertos=$( cat ${FILE_TEMP})
+#mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
+#numero_aciertos=$( cat ${FILE_TEMP})
 
-mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_1o2_riesgo_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
-numero_predicciones_1o2=$( cat ${FILE_TEMP})
+#mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_1o2_riesgo_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
+#numero_predicciones_1o2=$( cat ${FILE_TEMP})
 
-echo -e "MOD041_1o2 numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_041}
-echo -e "MOD041_1o2 numero_predicciones_1o2 = ${numero_predicciones_1o2}" 2>&1 1>>${LOG_041}
+#echo -e "MOD041_1o2 numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_041}
+#echo -e "MOD041_1o2 numero_predicciones_1o2 = ${numero_predicciones_1o2}" 2>&1 1>>${LOG_041}
 
-SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1o2" | bc -l)
-echo -e "MOD041_1o2|DS_PASADO_VALIDATION|${TAG}|Cualquier_SP|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_041}
+#SCORE_FINAL=$(echo "scale=2; $numero_aciertos / $numero_predicciones_1o2" | bc -l)
+#echo -e "MOD041_1o2|DS_PASADO_VALIDATION|${TAG}|Sin_filtro_SP|ACIERTOS=${numero_aciertos}|CASOS_1o2=${numero_predicciones_1o2}|SCORE = ${SCORE_FINAL}" 2>&1 1>>${LOG_041}
 
 
 echo -e "MOD041_1o2 Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_041}
@@ -154,14 +154,20 @@ mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, p
 
 ##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################
 
-#llamadas
-calculoEconomico "1o2" "1,2" "1.00" "1.50" "SP100150" "${TAG}" "2" "${LOG_041}"
-calculoEconomico "1o2" "1,2" "1.50" "2.00" "SP150200" "${TAG}" "2" "${LOG_041}"
-calculoEconomico "1o2" "1,2" "2.00" "2.50" "SP200250" "${TAG}" "2" "${LOG_041}"
-calculoEconomico "1o2" "1,2" "2.50" "3.00" "SP250300" "${TAG}" "2" "${LOG_041}"
-calculoEconomico "1o2" "1,2" "3.00" "999.00" "SP30099900" "${TAG}" "2" "${LOG_041}"
-calculoEconomico "1o2" "1,2" "1.00" "999.00" "SP10099900" "${TAG}" "2" "${LOG_041}"
-calculoEconomico "1o2" "1,2" "2.00" "999.00" "SP20099900" "${TAG}" "2" "${LOG_041}"
+#span=0.50
+calculoEconomicoPasado "1o2" "1,2" "1.00" "1.50" "SP100150" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "1.50" "2.00" "SP150200" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "2.00" "2.50" "SP200250" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "2.50" "3.00" "SP250300" "${TAG}" "2" "${LOG_041}"
+#span=1.00
+calculoEconomicoPasado "1o2" "1,2" "1.00" "2.00" "SP100200" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "1.50" "2.50" "SP150250" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "2.00" "3.00" "SP200300" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "2.50" "3.50" "SP250350" "${TAG}" "2" "${LOG_041}"
+#span=infinito
+calculoEconomicoPasado "1o2" "1,2" "3.00" "999.00" "SP30099900" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "1.00" "999.00" "SP10099900" "${TAG}" "2" "${LOG_041}"
+calculoEconomicoPasado "1o2" "1,2" "2.00" "999.00" "SP20099900" "${TAG}" "2" "${LOG_041}"
 
 ##############################################################
 

@@ -33,6 +33,7 @@ LOG_DS="/home/carloslinux/Desktop/LOGS/galgos_037_datasets.log"
 LOG_DS_COLPEN="/home/carloslinux/Desktop/LOGS/galgos_037_datasets_COLUMNAS_PENDIENTES.log"
 LOG_038_DS_TTV="/home/carloslinux/Desktop/LOGS/galgos_038_datasets_TTV.log"
 FILELOAD_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/galgos_040_FILELOAD_RENTABILIDADES.txt"
+SUBGRUPO_GANADOR_FILE="/home/carloslinux/Desktop/LOGS/temp_subgrupo_ganador.txt"
 LOG_ML="/home/carloslinux/Desktop/LOGS/galgos_040_ML.log"
 LOG_041="/home/carloslinux/Desktop/LOGS/galgos_041_1o2.log"
 LOG_042="/home/carloslinux/Desktop/LOGS/galgos_042_1st.log"
@@ -44,6 +45,7 @@ LOG_070="/home/carloslinux/Desktop/LOGS/INFORME_TIC.txt"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
 RENTABILIDAD_MINIMA="30"
+PORCENTAJE_SUFICIENTES_CASOS="0.2"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
 INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
@@ -257,6 +259,8 @@ insertSelectRemark 'ClearRun'
 insertSelectRemark 'Handy'
 insertSelectRemark 'RunUp'
 insertSelectRemark 'Rls'
+insertSelectRemark 'Baulked'
+insertSelectRemark 'Blk'
 
 #PENDIENTE Los acronimos Crd=Crowd=Crowded, AlwaysHandy=AHandy, ... Por tanto, debo modificar la funcion insertSelectRemark para que acepte un parametro (ej: 'Crd#Crowd#Crowded') para que filtre considerando que significa lo mismo.
 }
@@ -384,6 +388,7 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
 }
 
 
+
 ##########################################################################################
 
 ######## MOD040 - ECONOMIA #######################################################################
@@ -391,19 +396,13 @@ function resetTablaRentabilidades ()
 {
 echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
 consultar "DROP TABLE IF EXISTS datos_desa.tb_rentabilidades\W;" "${LOG_ML}" "-tN"
-consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, score DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4))\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, cobertura_sg_sp DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4))\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 rm -f $FILELOAD_RENTABILIDADES #vacío
 }
 
-function cargarTablaRentabilidades ()
-{
-echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
-consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${FILELOAD_RENTABILIDADES}' INTO TABLE datos_desa.tb_rentabilidades FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_RENTABILIDADES_WARNINGS"
-}
 
-
-function calculoEconomico ()
+function calculoEconomicoPasado ()
 {
 tag_prediccion="${1}"     #Toma los valores: '1st' ó '1o2'
 filtro_posicion_predicha="${2}" #Toma los valores: '1' ó '1,2'
@@ -433,11 +432,11 @@ ON (
 
 SELECT 'NULOS' AS tipo, count(*) AS contador_${tag_grupo_sp} 
 FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} 
-WHERE beneficio_bruto IS NULL   
+WHERE beneficio_bruto IS NULL
 UNION ALL   
 SELECT 'LLENOS' AS tipo, count(*) AS contador 
 FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} 
-WHERE beneficio_bruto IS NOT NULL 
+WHERE beneficio_bruto IS NOT NULL
 LIMIT 10;
 EOF
 
@@ -447,28 +446,36 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${
 
 FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
 rm -f ${FILE_TEMP_PRED}
-
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
 numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
 
 
 FILE_TEMP="./temp_MOD040_rentabilidad"
 rm -f ${FILE_TEMP}
-
 mysql -u root --password=datos1986 -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
 rentabilidad=$( cat ${FILE_TEMP})
 
-
 FILE_TEMP="./temp_MOD040_num_ciertos_gruposp"
-#Numeros: SOLO pongo el dinero en las que el sistema me predice 1st, pero no en las otras predichas.
+#Numeros: SOLO pongo el dinero en las que el sistema me predice 1st o 1o2, pero no en las otras predichas.
 mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
-####SALIDA
-MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${SCORE_FINAL}|${rentabilidad}" 2>&1 1>>${log_ml_tipo}
 
+COBERTURA_SUBGRUPO_GRUPOSP=$(echo "scale=2; $numero_aciertos_gruposp / $numero_predicciones_grupo_sp" | bc -l)
+
+####SALIDA
+MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${COBERTURA_SUBGRUPO_GRUPOSP}|${rentabilidad}"
+
+echo -e "${MENSAJE}" 2>&1 1>>${log_ml_tipo}
 echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
 
+}
+
+
+function cargarTablaRentabilidades ()
+{
+echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
+consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${FILELOAD_RENTABILIDADES}' INTO TABLE datos_desa.tb_rentabilidades FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_RENTABILIDADES_WARNINGS"
 }
 
 

@@ -66,7 +66,17 @@ FROM (
   DAYOFWEEK(concat(anio,'-',  LPAD(cast(mes as char), 2, '0')    ,'-',dia)) AS dlmxjvs,
   anio,
   mes, 
-  CASE WHEN (mes <=7) THEN (-1/6 + mes/6) WHEN (mes >7) THEN (5/12 - 5*mes/144) ELSE 0.5 END AS mes_norm,
+
+  CASE 
+  WHEN (mes=12 OR mes=1 OR mes=2) THEN 0
+  WHEN (mes=3 OR mes=11) THEN 0.2
+  WHEN (mes=4) THEN 0.3
+  WHEN (mes=5 OR mes=10) THEN 0.5
+  WHEN (mes=6 OR mes=9) THEN 0.8
+  WHEN (mes=7 OR mes=8) THEN 1
+  ELSE NULL
+  END AS mes_norm,
+
   dia,
   hora, 
   CASE WHEN (hora IS NULL OR @diff_hora=0) THEN NULL ELSE ((hora - @min_hora)/@diff_hora) END AS hora_norm,
