@@ -45,7 +45,7 @@ public class Constantes {
 																// derivadas)
 	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 6000;
 	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 3;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
 	public static final Integer MIN_PESO_GALGO = 15;// kg

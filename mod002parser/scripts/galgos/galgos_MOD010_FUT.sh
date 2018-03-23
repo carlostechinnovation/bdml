@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS datos_desa.tb_cg_semillas_sportium_d;
 CREATE TABLE datos_desa.tb_cg_semillas_sportium_d AS
 SELECT 
 INICIAL.* ,
-CAST(CONV(C.DHE_incr,10,0) AS UNSIGNED INTEGER) AS id_carrera_artificial
+CAST( C.DHE_incr AS DECIMAL(10,0)) AS id_carrera_artificial
 FROM ( SELECT CONCAT(dia,hora,estadio) AS DHE, dentro1.* FROM datos_desa.tb_cg_semillas_sportium dentro1) INICIAL
 LEFT JOIN datos_desa.tb_cg_semillas_sportium_c C
 ON (INICIAL.DHE=C.DHE)
@@ -138,8 +138,8 @@ GROUP BY id_carrera_artificial;
 SELECT * FROM datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida LIMIT 12;
 EOF
 
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
@@ -197,8 +197,8 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
 
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
@@ -258,8 +258,8 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
 
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
@@ -335,14 +335,14 @@ WHERE ( id_carrera >= @min_id_carreras_artificiales AND id_carrera <= @max_id_ca
 ORDER BY id_carrera ASC LIMIT 10;
 EOF
 
-echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Posiciones..." 2>&1 1>>${LOG_010_FUT}
-echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
+echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Posiciones...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 mysql -u root --password=datos1986 --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
 ##########################################
-echo -e $(date +"%T")" | 010 | Descarga datos brutos | FIN" >>$LOG_070
+echo -e $(date +"%T")" | 010_FUT | Insertar datos FUTUROS en datos brutos | FIN" >>$LOG_070
 
 
 

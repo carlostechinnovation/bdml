@@ -26,7 +26,7 @@ function analisisRentabilidadesPorSubgrupos(){
   mysql -u root --password=datos1986 -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
   rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+  mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
 }
 
