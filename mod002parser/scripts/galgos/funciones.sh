@@ -634,7 +634,7 @@ do
   contador=$((contador+1))
   if [[ "$contador" -ge 1 ]];then  #Quito la cabecera
     if [[ "$linea" != *"----"* ]];then #Quito las lineas horizontales
-      query_out="$query_out concat(MAX($linea),'|', MIN($linea),'|', AVG($linea),'|', STD($linea),'|', COUNT($linea),'|', COUNT(*)-COUNT($linea) ) AS _$linea, "
+      query_out="$query_out concat( ROUND(MAX($linea),6),'|', ROUND(MIN($linea),6),'|', ROUND(AVG($linea),6),'|', ROUND(STD($linea),6),'|', COUNT($linea),'|', COUNT(*)-COUNT($linea) ) AS _$linea, "
     fi
   fi
 done < "$path_temp"

@@ -967,7 +967,6 @@ CAST( D.vel_going_largas_mediana_norm AS DECIMAL(8,6) ) AS vel_going_largas_medi
 CAST( D.vel_going_largas_max_norm AS DECIMAL(8,6) ) AS vel_going_largas_max_norm
 
 FROM datos_desa.tb_ids_galgos_${sufijo} A
-
 LEFT JOIN datos_desa.tb_galgos_agregados_norm B ON (A.galgo_nombre=B.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x1b C ON (A.galgo_nombre=C.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x11 D ON (A.galgo_nombre=D.galgo_nombre)
@@ -1176,6 +1175,13 @@ generarTablasIndices
 
 echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear datasets)..." 2>&1 1>>${LOG_CE}
 generarTablasElaboradas
+
+
+echo -e "\n\n --- Analizando tablas (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_CE}
+analizarTabla "datos_desa" "tb_elaborada_carreras_${sufijo}" "${LOG_CE}"
+analizarTabla "datos_desa" "tb_elaborada_galgos_${sufijo}" "${LOG_CE}"
+analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE}"
+
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
 borrarTablasInnecesarias "${sufijo}"

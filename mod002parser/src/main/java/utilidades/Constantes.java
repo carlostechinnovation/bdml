@@ -41,11 +41,13 @@ public class Constantes {
 
 	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 35;
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 150; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 40; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
 																// derivadas)
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = 6000;
-	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 3;
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 200L;
+	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 100; // semillas*derivadas
+	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;// No aumentar por encima de 2, porque se generan muchos
+																// historicos, pero no cogemos suficientes
+																// posiciones-en-carrera
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 100L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
 	public static final Integer MIN_PESO_GALGO = 15;// kg
