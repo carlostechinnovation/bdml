@@ -45,7 +45,7 @@ SELECT count(*) as num_pasado_ttv_targets FROM datos_desa.tb_ds_pasado_ttv_targe
 EOF
 
 echo -e "\n ----------------- $CONSULTA_DS_TTV\n ----------------- " 2>&1 1>>${LOG_038_DS_TTV}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DS_TTV" 2>&1 1>>${LOG_038_DS_TTV}
+mysql --login-path=local -t --execute="$CONSULTA_DS_TTV" 2>&1 1>>${LOG_038_DS_TTV}
 
 echo -e "PASADO-TRAIN --> datos_desa.tb_ds_pasado_ttv_features_${TAG}   datos_desa.tb_ds_pasado_ttv_targets_${TAG}" 2>&1 1>>${LOG_038_DS_TTV}
 

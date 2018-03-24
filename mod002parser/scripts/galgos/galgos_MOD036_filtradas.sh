@@ -46,7 +46,7 @@ SELECT count(*) as num_filtrada_carrerasgalgos FROM datos_desa.tb_filtrada_carre
 EOF
 
 echo -e "$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
+mysql --login-path=local -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 
 
 echo -e "\n---------------- Tablas FILTRADAS --------------" 2>&1 1>>${LOG_DS}

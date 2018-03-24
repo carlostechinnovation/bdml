@@ -94,7 +94,7 @@ SELECT count(*) as num_ids_futuro_predichos FROM datos_desa.tb_fut_${TAG} LIMIT 
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_FUTURAS_1" 2>&1 1>>${LOG_050}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_1"  2>&1 1>>$LOG_050
+mysql --login-path=local -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_1"  2>&1 1>>$LOG_050
 
 
 echo -e "--------- Uso los resultados tras predecir ----------------" 2>&1 1>>${LOG_050}
@@ -166,7 +166,7 @@ SELECT count(*) as num_fut_1st_final FROM datos_desa.tb_fut_1st_final_riesgo_${T
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_FUTURAS_2" 2>&1 1>>${LOG_050}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_2"  2>&1 1>>$LOG_050
+mysql --login-path=local -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_2"  2>&1 1>>$LOG_050
 
 
 ###################### INFORME FINAL ##########################
@@ -189,7 +189,7 @@ ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$INFORME_PREDICCIONES
+mysql --login-path=local -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$INFORME_PREDICCIONES
 
 
 ###################### MAIL ##########################

@@ -7,21 +7,22 @@ PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
 PATH_INFORMES="/home/carloslinux/Desktop/INFORMES/"
 
 TAG_GBGB="GBGB"
-FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
-PATH_FILE_GALGOS_INICIALES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_iniciales.txt"
+FILE_SENTENCIAS_CREATE_TABLE="${PATH_LIMPIO}galgos_sentencias_create_table"
+PATH_FILE_GALGOS_INICIALES="${PATH_LIMPIO}galgos_iniciales.txt"
 PATH_FILE_GALGOS_INICIALES_FULL="${PATH_FILE_GALGOS_INICIALES}_full"
-PATH_LIMPIO_CARRERAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_carreras_file"
-PATH_LIMPIO_POSICIONES="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_posiciones_en_carreras_file"
-PATH_LIMPIO_HISTORICO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_historico_file"
-PATH_LIMPIO_AGREGADOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/tb_galgos_agregados_file"
-PATH_LIMPIO_GALGOS_INICIALES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_galgos_iniciales"
-PATH_LIMPIO_CARRERAS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_carreras"
-PATH_LIMPIO_POSICIONES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_posiciones"
-PATH_LIMPIO_HISTORICO_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_historico"
-PATH_LIMPIO_AGREGADOS_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_agregados"
-PATH_LIMPIO_ESTADISTICAS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_limpio_estadisticas"
+PATH_LIMPIO_CARRERAS="${PATH_LIMPIO}tb_galgos_carreras_file"
+PATH_LIMPIO_POSICIONES="${PATH_LIMPIO}tb_galgos_posiciones_en_carreras_file"
+PATH_LIMPIO_HISTORICO="${PATH_LIMPIO}tb_galgos_historico_file"
+PATH_LIMPIO_AGREGADOS="${PATH_LIMPIO}tb_galgos_agregados_file"
+PATH_LIMPIO_GALGOS_INICIALES_WARNINGS="${PATH_LIMPIO}warnings_galgos_iniciales"
+PATH_LIMPIO_CARRERAS_WARNINGS="${PATH_LIMPIO}warnings_carreras"
+PATH_LIMPIO_POSICIONES_WARNINGS="${PATH_LIMPIO}warnings_posiciones"
+PATH_LIMPIO_HISTORICO_WARNINGS="${PATH_LIMPIO}warnings_historico"
+PATH_LIMPIO_AGREGADOS_WARNINGS="${PATH_LIMPIO}warnings_agregados"
+PATH_LIMPIO_ESTADISTICAS="${PATH_LIMPIO}galgos_limpio_estadisticas"
 
 LOG_MASTER="/home/carloslinux/Desktop/LOGS/galgos_coordinador.log"
+PATH_BRUTO_SEMILLAS_SPORTIUM="${PATH_BRUTO}semillas_sportium"
 LOG_DESCARGA_BRUTO="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto.log"
 LOG_DESCARGA_BRUTO_BB="/home/carloslinux/Desktop/LOGS/galgos_010_descarga_bruto_BB.log"
 FLAG_BB_DESCARGADO_OK="/home/carloslinux/Desktop/LOGS/galgos_010_BB.descargado.OK"
@@ -48,7 +49,7 @@ LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
 DATASET_TEST_PORCENTAJE="0.01"
 DATASET_VALIDATION_PORCENTAJE="0.29"
-RENTABILIDAD_MINIMA="20"
+RENTABILIDAD_MINIMA="25"
 PORCENTAJE_SUFICIENTES_CASOS="0.1"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
@@ -61,14 +62,14 @@ function consultar(){
   sentencia_sql=${1}
   path_log_sql=${2}
   opciones=${3}
-  mysql -u root --password=datos1986 ${opciones} --execute="${sentencia_sql}" 2>&1 1>>${path_log_sql}
+  mysql --login-path=local ${opciones} --execute="${sentencia_sql}" 2>&1 1>>${path_log_sql}
 }
 
 function consultar_sobreescribirsalida(){
   sentencia_sql=${1}
   path_output_file=${2}
   opciones=${3}
-  mysql -u root --password=datos1986 ${opciones} --execute="${sentencia_sql}" >"$path_output_file"
+  mysql --login-path=local ${opciones} --execute="${sentencia_sql}" >"$path_output_file"
   sleep 2s
 }
 
@@ -235,7 +236,7 @@ INSERT INTO datos_desa.tb_remarks_puntos(remark,posicion,remark_puntos_norm) SEL
 EOF
 
   echo -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
-  mysql -u root --password=datos1986 --execute="$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
+  mysql --login-path=local  -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
 }
 
 
@@ -244,10 +245,10 @@ function crearTablaRemarksPuntos ()
 echo -e "La tabla de remarks_puntos indica el PESO/INFLUENCIA que tiene cada REMARK en el campo POSICION. Es una especie de 'posición normalizada mirando solo remarks'" 2>&1 1>>${LOG_CE}
 
 CONSULTA_DROP="DROP TABLE IF EXISTS datos_desa.tb_remarks_puntos;"
-mysql -u root --password=datos1986 --execute="$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
+mysql --login-path=local  -e "$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
 
 CONSULTA_CREAR="CREATE TABLE datos_desa.tb_remarks_puntos (remark varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '', posicion SMALLINT DEFAULT NULL, remark_puntos_norm decimal(20,2) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
-mysql -u root --password=datos1986 --execute="$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
+mysql --login-path=local  -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
 
 echo -e "$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
 echo -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
@@ -445,21 +446,21 @@ LIMIT 10;
 EOF
 
 echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
+mysql --login-path=local -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
 
 FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
 rm -f ${FILE_TEMP_PRED}
-mysql -u root --password=datos1986 -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
+mysql --login-path=local -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
 numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
 
 FILE_TEMP="./temp_MOD040_rentabilidad"
 rm -f ${FILE_TEMP}
-mysql -u root --password=datos1986 -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
+mysql --login-path=local -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
 rentabilidad=$( cat ${FILE_TEMP})
 
 FILE_TEMP="./temp_MOD040_num_ciertos_gruposp"
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1st o 1o2, pero no en las otras predichas.
-mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
+mysql --login-path=local -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
 
@@ -496,10 +497,10 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nDATASETS --> [TRAIN + TEST + *VALIDATION] = [100-test-validation + $DATASET_TEST_PORCENTAJE + $DATASET_VALIDATION_PORCENTAJE ]" 2>&1 1>>${INFORME_RENTABILIDADES}
   echo -e "\n* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE.\n" 2>&1 1>>${INFORME_RENTABILIDADES}
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables.\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -u root --password=datos1986 -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  mysql --login-path=local -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
   rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+  mysql --login-path=local -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
 }
 
@@ -557,7 +558,7 @@ DROP TABLE IF EXISTS datos_desa.tb_filtrada_galgos_${sufijo};
 DROP TABLE IF EXISTS datos_desa.tb_filtrada_carrerasgalgos_${sufijo};
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_036" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_036" >>$LOG_999_LIMPIEZA_FINAL
+mysql --login-path=local -t --execute="$CONSULTA_DROP_TABLAS_036" >>$LOG_999_LIMPIEZA_FINAL
 
 echo -e "Borrando tablas innecesarias de 037..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_037 <<- EOF
@@ -577,7 +578,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_targets_${TAG};
 
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_037" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
+mysql --login-path=local -t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
 
 echo -e "Borrando tablas innecesarias de 040..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_040 <<- EOF
@@ -603,7 +604,7 @@ DROP TABLE IF EXISTS datos_desa.tb_val_1st_aciertos_connombre_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG};
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_040" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
+mysql --login-path=local -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
 
 }
 
@@ -623,7 +624,7 @@ echo -e "\n--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>
 
 echo -e "Leyenda --> campo : MAX|MIN|AVG|STD|NO_NULOS|NULOS\n"  2>&1 1>>${logsalida}
 
-mysql -u root --password=datos1986 -N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
+mysql --login-path=local -N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
 
 query_out="SELECT "
 contador=0
@@ -646,7 +647,7 @@ query_out="${query_out} FROM ${schemaEntrada}.${tablaEntrada};"
 #Pintar query
 #echo -e "\n\n\n${query_out}\n\n\n" 2>&1 1>>${logsalida}
 
-mysql -u root --password=datos1986 --vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
+mysql --login-path=local --vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
 
 echo -e "-----------------------------------------------------\n"  2>&1 1>>${logsalida}
 }

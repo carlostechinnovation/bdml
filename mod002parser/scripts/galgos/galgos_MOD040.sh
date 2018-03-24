@@ -98,7 +98,7 @@ EOF
 
 
 echo -e "$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
+mysql --login-path=local -t --execute="$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
 
 
 ######################### CALCULO DEL SCORE + Rentabilidad en Predicción de target=1o2 y target=1st ################

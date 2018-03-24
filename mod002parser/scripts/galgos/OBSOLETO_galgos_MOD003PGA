@@ -30,7 +30,7 @@ rm -f "$PATH_WARNINGS_PGA"
 
 
 #PLAN B (si MySQL se atasca): MEDIANTE FICHERO DE SENTENCIAS SQL 
-#mysql -u root --password=datos1986 --show-warnings datos_desa < "./galgos_MOD003PGA_queries.txt.tmp" > "./galgos_MOD003PGA_queries_output"
+#mysql --login-path=local --show-warnings datos_desa < "./galgos_MOD003PGA_queries.txt.tmp" > "./galgos_MOD003PGA_queries_output"
 
 
 echo -e "\n---- Ejecutando el predictor para predecir el pasado y poder sacar el SCORE (porque conocemos el resultado real)..." >&1

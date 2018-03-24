@@ -130,15 +130,15 @@ ALTER TABLE datos_desa.tb_val_1o2_riesgo_${TAG} ADD INDEX tb_val_1o2_riesgo_${TA
 EOF
 
 echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
+mysql --login-path=local -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_041}
 
 
 #FILE_TEMP="./temp_numero_MOD041"
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1o2, pero no en las otras predichas.
-#mysql -u root --password=datos1986 -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
+#mysql --login-path=local -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
 #numero_aciertos=$( cat ${FILE_TEMP})
 
-#mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_1o2_riesgo_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
+#mysql --login-path=local -N --execute="SELECT count(*) as num_predicciones_1o2 FROM datos_desa.tb_val_1o2_riesgo_${TAG} WHERE predicha_1o2 = true LIMIT 1;" > ${FILE_TEMP}
 #numero_predicciones_1o2=$( cat ${FILE_TEMP})
 
 #echo -e "MOD041_1o2 numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_041}
@@ -149,7 +149,7 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_
 
 
 echo -e "MOD041_1o2 Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_041}
-mysql -u root --password=datos1986 --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto, fortaleza FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_041}
+mysql --login-path=local --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1o2, acierto, fortaleza FROM datos_desa.tb_val_1o2_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_041}
 
 
 ##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################

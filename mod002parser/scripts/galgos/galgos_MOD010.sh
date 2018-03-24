@@ -38,7 +38,7 @@ consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 
 #################### FUTURAS - SPORTIUM ######################
-PATH_BRUTO_SEMILLAS_SPORTIUM="${PATH_BRUTO}semillas_sportium"
+
 
 echo -e $(date +"%T")" Borrando las paginas BRUTAS de detalle (carreras FUTURAS)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 rm -fR "${PATH_BRUTO_SEMILLAS_SPORTIUM}_BRUTOCARRERADET*"
@@ -77,7 +77,21 @@ mostrar_tabla "GALGOS HISTORICO" "datos_desa.tb_galgos_historico" "${LOG_DESCARG
 mostrar_tabla "GALGOS AGREGADO" "datos_desa.tb_galgos_agregados" "${LOG_DESCARGA_BRUTO}"
 
 echo -e $(date +"%T")"\nNumero de galgos diferentes de los que conocemos su historico: " >>$PATH_LIMPIO_ESTADISTICAS
-mysql -u root --password=datos1986 --execute="SELECT COUNT(DISTINCT galgo_nombre) as num_galgos_diferentes FROM datos_desa.tb_galgos_historico LIMIT 1\W;">>$PATH_LIMPIO_ESTADISTICAS
+mysql --login-path=local --execute="SELECT COUNT(DISTINCT galgo_nombre) as num_galgos_diferentes FROM datos_desa.tb_galgos_historico LIMIT 1\W;">>$PATH_LIMPIO_ESTADISTICAS
+
+
+
+#################### BORRADO PARA AHORRAR ESPACIO EN DISCO (andamos justos...) ######################
+echo -e $(date +"%T")" BORRADO PARA AHORRAR ESPACIO EN DISCO (andamos justos...)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+
+brutos_gbgb="${PATH_BRUTO}galgos_${TAG_GBGB}_bruto*"
+echo -e $(date +"%T")" Borrando datos brutos GBGB: "${brutos_gbgb} 2>&1 1>>${LOG_MASTER}
+rm -f ${brutos_gbgb} 2>&1 1>>${LOG_MASTER}
+
+brutos_semillas_sportium="${PATH_BRUTO_SEMILLAS_SPORTIUM}_BRUTOCARRERADET*"
+echo -e $(date +"%T")" Borrando datos brutos: "${brutos_semillas_sportium} 2>&1 1>>${LOG_MASTER}
+rm -f ${brutos_semillas_sportium} 2>&1 1>>${LOG_MASTER}
+
 
 
 ##########################################

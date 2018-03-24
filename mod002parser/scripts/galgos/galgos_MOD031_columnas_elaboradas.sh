@@ -46,7 +46,7 @@ EOF
 
 
 #echo -e "$CONSULTA_X1" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X1" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X1" >>$LOG_CE
 }
 
 
@@ -94,7 +94,7 @@ SELECT count(*) as num_x2b FROM datos_desa.tb_ce_${sufijo}_x2b LIMIT 5;
 EOF
 
 #echo -e "$CONSULTA_X2" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X2" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X2" >>$LOG_CE
 
 }
 
@@ -136,7 +136,7 @@ SELECT count(*) as num_x3b FROM datos_desa.tb_ce_${sufijo}_x3b LIMIT 5;
 EOF
 
 #echo -e "$CONSULTA_X3" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X3" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X3" >>$LOG_CE
 
 }
 
@@ -160,7 +160,7 @@ SELECT count(*) as num_x4 FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;
 EOF
 
 #echo -e "$CONSULTA_X4" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X4" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X4" >>$LOG_CE
 }
 
 
@@ -171,11 +171,11 @@ sufijo="${1}"
 echo -e "\n"" ---- X5: [(carrera, galgo) -> (clase)]" 2>&1 1>>${LOG_CE}
 echo -e "Parametros: -->${1}" 2>&1 1>>${LOG_CE}
 
-mysql -u root --password=datos1986 --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x5;" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="CREATE TABLE datos_desa.tb_ce_${sufijo}_x5 AS SELECT id_carrera, galgo_nombre, clase FROM datos_desa.tb_galgos_historico_norm  GH;" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="ALTER TABLE datos_desa.tb_ce_${sufijo}_x5 ADD INDEX tb_ce_${sufijo}_x5_idx(id_carrera, galgo_nombre);" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="SELECT * FROM datos_desa.tb_ce_${sufijo}_x5 LIMIT 5;" >>$LOG_CE
-mysql -u root --password=datos1986 --execute="SELECT count(*) as num_x5 FROM datos_desa.tb_ce_${sufijo}_x5 LIMIT 5;" >>$LOG_CE
+mysql --login-path=local --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x5;" >>$LOG_CE
+mysql --login-path=local --execute="CREATE TABLE datos_desa.tb_ce_${sufijo}_x5 AS SELECT id_carrera, galgo_nombre, clase FROM datos_desa.tb_galgos_historico_norm  GH;" >>$LOG_CE
+mysql --login-path=local --execute="ALTER TABLE datos_desa.tb_ce_${sufijo}_x5 ADD INDEX tb_ce_${sufijo}_x5_idx(id_carrera, galgo_nombre);" >>$LOG_CE
+mysql --login-path=local --execute="SELECT * FROM datos_desa.tb_ce_${sufijo}_x5 LIMIT 5;" >>$LOG_CE
+mysql --login-path=local --execute="SELECT count(*) as num_x5 FROM datos_desa.tb_ce_${sufijo}_x5 LIMIT 5;" >>$LOG_CE
 }
 
 
@@ -205,7 +205,7 @@ SELECT count(*) as num_x6a FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X6A" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X6A" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X6A" >>$LOG_CE
 
 
 read -d '' CONSULTA_X6B <<- EOF
@@ -232,7 +232,7 @@ set @diff_posicion_media_en_clase_por_experiencia=(select CASE WHEN MIN(posicion
 EOF
 
 #echo -e "\n$CONSULTA_X6B" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X6B" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X6B" >>$LOG_CE
 
 
 read -d '' CONSULTA_X6C <<- EOF
@@ -262,7 +262,7 @@ SELECT count(*) as num_x6c FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X6C" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X6C" 2>&1 1>>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X6C" 2>&1 1>>$LOG_CE
 
 
 read -d '' CONSULTA_X6DE <<- EOF
@@ -313,7 +313,7 @@ EOF
 
 
 echo -e "\n$CONSULTA_X6DE" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X6DE" 2>&1 1>>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X6DE" 2>&1 1>>$LOG_CE
 }
 
 ##########################################################################################
@@ -386,7 +386,7 @@ SELECT count(*) as num_x7d FROM datos_desa.tb_ce_${sufijo}_x7d LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X7CD" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X7CD" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X7CD" >>$LOG_CE
 }
 
 
@@ -428,7 +428,7 @@ SELECT count(*) as num_x8a FROM datos_desa.tb_ce_${sufijo}_x8b LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X8" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X8" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X8" >>$LOG_CE
 }
 
 
@@ -462,7 +462,7 @@ SELECT count(*) as num_x9b FROM datos_desa.tb_ce_${sufijo}_x9b LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X9" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X9" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X9" >>$LOG_CE
 }
 
 
@@ -500,7 +500,7 @@ SELECT count(*) as num_x10b FROM datos_desa.tb_ce_${sufijo}_x10b LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X10" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X10" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X10" >>$LOG_CE
 }
 
 ##########################################################################################
@@ -583,7 +583,7 @@ SELECT count(*) as num_x11 FROM datos_desa.tb_ce_${sufijo}_x11 LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X11" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X11" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X11" >>$LOG_CE
 }
 
 ##########################################################################################
@@ -672,7 +672,7 @@ SELECT count(*) as num_x12b FROM datos_desa.tb_ce_${sufijo}_x12b LIMIT 5;
 EOF
 
 #echo -e "\n$CONSULTA_X12" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X12" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X12" >>$LOG_CE
 }
 
 ##########################################################################################
@@ -711,7 +711,7 @@ SELECT * FROM datos_desa.tb_gh_y_remarkspuntos_norm LIMIT 10;
 EOF
 
 echo -e "\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS2 <<- EOF
 -- Para cada columna de la izquierda, genero filas por la derecha (con los AAAAMMDD menores que el de la fila actual) 
@@ -734,7 +734,7 @@ SELECT * FROM datos_desa.tb_gh_y_remarkspuntos_norm2 LIMIT 10;
 EOF
 
 echo -e "\n\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS3 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm3;
@@ -769,7 +769,7 @@ SELECT * FROM datos_desa.tb_gh_y_remarkspuntos_norm3 LIMIT 10;
 EOF
 
 echo -e "\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
 
 ############
 
@@ -785,7 +785,7 @@ SELECT count(*) AS num_x13 FROM datos_desa.tb_ce_${sufijo}_x13 LIMIT 5;
 EOF
 
 echo -e "\n\n\n\n$CONSULTA_X13" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_X13" >>$LOG_CE
+mysql --login-path=local --execute="$CONSULTA_X13" >>$LOG_CE
 }
 
 ################ TABLAS de INDICES ####################################################################################
@@ -871,12 +871,12 @@ EOF
 
 
 #echo -e "\n$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
 
 echo -e "\n"" Comprobacion: las 3 tablas de IDs no deben tener duplicados" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="SELECT id_carrera, count(*) as num_ids_carreras FROM datos_desa.tb_ids_carreras_${sufijo} GROUP BY id_carrera HAVING num_ids_carreras>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_ids_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="SELECT id_carrera, count(*) as num_ids_carreras FROM datos_desa.tb_ids_carreras_${sufijo} GROUP BY id_carrera HAVING num_ids_carreras>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_ids_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 
 }
 
@@ -938,7 +938,7 @@ SELECT count(*) as num_elab_carreras FROM datos_desa.tb_elaborada_carreras_${suf
 EOF
 
 #echo -e "\n$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB1" >>$LOG_CE
+mysql --login-path=local -t --execute="$CONSULTA_ELAB1" >>$LOG_CE
 
 
 echo -e "\n\n ---- TABLA ELABORADA 2: [ galgo -> columnas ]" 2>&1 1>>${LOG_CE}
@@ -979,7 +979,7 @@ SELECT count(*) as num_elab_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo}
 EOF
 
 #echo -e "\n$CONSULTA_ELAB2" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB2" >>$LOG_CE
+mysql --login-path=local -t --execute="$CONSULTA_ELAB2" >>$LOG_CE
 
 
 echo -e "\n\n ---- TABLA ELABORADA 3: [ carrera+galgo -> columnas ]" 2>&1 1>>${LOG_CE}
@@ -1079,13 +1079,13 @@ EOF
 
 
 #echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
+mysql --login-path=local -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
 
 
 echo -e "\n\n Comprobacion: las 3 tablas de columnas ELABORADAS no deben tener duplicados (por clave)" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="SELECT id_carrera, count(*) as num_ids_carreras FROM datos_desa.tb_elaborada_carreras_${sufijo} GROUP BY id_carrera HAVING num_ids_carreras>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="SELECT id_carrera, count(*) as num_ids_carreras FROM datos_desa.tb_elaborada_carreras_${sufijo} GROUP BY id_carrera HAVING num_ids_carreras>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="SELECT galgo_nombre, count(*) as num_ids_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo} GROUP BY galgo_nombre HAVING num_ids_galgos>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
+mysql --login-path=local --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 
 
 echo -e "\n----------- Tablas de COLUMNAS ELABORADAS --------------" 2>&1 1>>${LOG_012}
@@ -1135,7 +1135,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x13
 EOF
 
 #echo -e "\n$CONSULTA_DROP_TABLAS_INNECESARIAS" 2>&1 1>>${LOG_CE}
-mysql -u root --password=datos1986 -t --execute="$CONSULTA_DROP_TABLAS_INNECESARIAS" >>$LOG_CE
+mysql --login-path=local -t --execute="$CONSULTA_DROP_TABLAS_INNECESARIAS" >>$LOG_CE
 
 }
 

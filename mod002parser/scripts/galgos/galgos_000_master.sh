@@ -36,7 +36,7 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
-analisisRentabilidadesPorSubgrupos
+analisisRentabilidadesPorSubgrupos >>$LOG_MASTER
 SUBGRUPO_GANADOR_LINEAS=$(cat "$SUBGRUPO_GANADOR_FILE" | wc -l)
 if [ "$SUBGRUPO_GANADOR_LINEAS" -ne "1" ]
   then
@@ -79,11 +79,11 @@ ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 
-echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
 
 
-#echo -e $(date +"%T")" Limpieza final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
+#echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 #limpieza
 
 
