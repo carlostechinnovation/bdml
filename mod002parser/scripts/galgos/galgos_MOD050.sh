@@ -128,7 +128,7 @@ FROM (
 , (SELECT @rowid:=0) R;
 
 
-SELECT * FROM datos_desa.tb_fut_1st_connombre_${TAG} LIMIT 3;
+SELECT * FROM datos_desa.tb_fut_1st_connombre_${TAG} ORDER BY id_carrera ASC LIMIT 10;
 SELECT count(*) as num_ids_futuro_connombre FROM datos_desa.tb_fut_1st_connombre_${TAG} LIMIT 1;
 
 
@@ -142,6 +142,8 @@ ON (A.galgo_rowid=B.rowid);
 
 ALTER TABLE datos_desa.tb_fut_1st_final_${TAG} ADD INDEX tb_fut_1st_final_${TAG}_idx(id_carrera, galgo_nombre);
 
+SELECT * FROM datos_desa.tb_fut_1st_final_${TAG} ORDER BY id_carrera ASC LIMIT 10;
+
 
 DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_riesgo_${TAG};
 
@@ -150,8 +152,8 @@ select
 A.*, 
 -- RIESGO: cuanta mas diferencia, mas efectiva sera la prediccion
 100*(A.target_predicho - B.target_predicho) AS fortaleza
-FROM datos_desa.tb_fut_1st_final_TRAINER_BUENOS_GALGOS  A
-LEFT JOIN datos_desa.tb_fut_1st_final_TRAINER_BUENOS_GALGOS B
+FROM datos_desa.tb_fut_1st_final_${TAG}  A
+LEFT JOIN datos_desa.tb_fut_1st_final_${TAG} B
 ON (A.id_carrera=B.id_carrera)
 WHERE A.posicion_predicha=1 and B.posicion_predicha=2
 ORDER BY fortaleza DESC

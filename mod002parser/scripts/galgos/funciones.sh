@@ -4,6 +4,7 @@ PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/galgos/"
 PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
 PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
+PATH_INFORMES="/home/carloslinux/Desktop/INFORMES/"
 
 TAG_GBGB="GBGB"
 FILE_SENTENCIAS_CREATE_TABLE="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/galgos_sentencias_create_table"
@@ -42,10 +43,13 @@ LOG_050="/home/carloslinux/Desktop/LOGS/galgos_050_prediccion.log"
 LOG_060_TABLAS="/home/carloslinux/Desktop/LOGS/galgos_060_tablas.log"
 LOG_060_ENDTOEND="/home/carloslinux/Desktop/LOGS/galgos_060_endtoend.log"
 LOG_070="/home/carloslinux/Desktop/LOGS/INFORME_TIC.txt"
+LOG_080="/home/carloslinux/Desktop/LOGS/galgos_080_guardar_info_productiva.txt"
 LOG_999_LIMPIEZA_FINAL="/home/carloslinux/Desktop/LOGS/galgos_999_limpieza.log"
 
-RENTABILIDAD_MINIMA="30"
-PORCENTAJE_SUFICIENTES_CASOS="0.2"
+DATASET_TEST_PORCENTAJE="0.01"
+DATASET_VALIDATION_PORCENTAJE="0.29"
+RENTABILIDAD_MINIMA="20"
+PORCENTAJE_SUFICIENTES_CASOS="0.1"
 
 PATH_RENTABILIDADES_WARNINGS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/warnings_rentabilidades"
 INFORME_RENTABILIDADES="/home/carloslinux/Desktop/LOGS/INFORME_RENTABILIDADES.txt"
@@ -440,7 +444,6 @@ WHERE beneficio_bruto IS NOT NULL
 LIMIT 10;
 EOF
 
-
 echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
 mysql -u root --password=datos1986 -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
 
@@ -448,7 +451,6 @@ FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
 rm -f ${FILE_TEMP_PRED}
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
 numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
-
 
 FILE_TEMP="./temp_MOD040_rentabilidad"
 rm -f ${FILE_TEMP}
@@ -474,8 +476,31 @@ echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
 
 function cargarTablaRentabilidades ()
 {
-echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
-consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${FILELOAD_RENTABILIDADES}' INTO TABLE datos_desa.tb_rentabilidades FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_RENTABILIDADES_WARNINGS"
+  echo -e $(date +"%T")" Cargando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
+  consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${FILELOAD_RENTABILIDADES}' INTO TABLE datos_desa.tb_rentabilidades FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_RENTABILIDADES_WARNINGS"
+}
+
+
+function analisisRentabilidadesPorSubgrupos(){
+
+  resetTablaRentabilidades #Reseteando tabla de rentabilidades
+  analizarScoreSobreSubgrupos "$LOG_MASTER"
+
+  #Cargando fichero de rentabilidades a la tabla
+  echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
+  cargarTablaRentabilidades
+
+  rm -f "$INFORME_RENTABILIDADES"
+  echo -e "******** Informe de RENTABILIDADES ********" >>${INFORME_RENTABILIDADES}
+
+  echo -e "\nDATASETS --> [TRAIN + TEST + *VALIDATION] = [100-test-validation + $DATASET_TEST_PORCENTAJE + $DATASET_VALIDATION_PORCENTAJE ]" 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "\n* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE.\n" 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables.\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
+  mysql -u root --password=datos1986 -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+
+  rm -f $SUBGRUPO_GANADOR_FILE
+  mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+
 }
 
 

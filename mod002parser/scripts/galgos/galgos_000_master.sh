@@ -10,27 +10,6 @@ rm -f $LOG_MASTER
 rm -f $LOG_070
 
 
-########################### FUNCIONES #######################################################
-function analisisRentabilidadesPorSubgrupos(){
-
-  resetTablaRentabilidades #Reseteando tabla de rentabilidades
-  analizarScoreSobreSubgrupos "$LOG_MASTER"
-
-  #Cargando fichero de rentabilidades a la tabla
-  echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
-  cargarTablaRentabilidades
-
-  rm -f "$INFORME_RENTABILIDADES"
-  echo -e "******** Informe de RENTABILIDADES ********" >>${INFORME_RENTABILIDADES}
-  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables.\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -u root --password=datos1986 -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
-
-  rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -u root --password=datos1986 -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
-
-}
-
-
 ############################################################################################
 echo -e $(date +"%T")" | MASTER | Coordinador | INICIO" >>$LOG_070
 
@@ -43,18 +22,18 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
 #${PATH_SCRIPTS}'galgos_MOD010.sh'  >>$LOG_MASTER #Sportium
 
-echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
+#echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
-echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
 analisisRentabilidadesPorSubgrupos
@@ -98,12 +77,15 @@ ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "FUTURA" >>$
 ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
 
 
+echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
+
+echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
+
+
 #echo -e $(date +"%T")" Limpieza final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 #limpieza
 
-##########################################
-echo -e "Informe TIC: "$LOG_070 >>$LOG_MASTER
-##########################################
 
 echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
 

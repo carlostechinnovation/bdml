@@ -82,8 +82,8 @@ mysql -u root --password=datos1986 -t --execute="$CONSULTA_IDS_PASADOS_Y_FUTUROS
 mysql -u root --password=datos1986 -N --execute="SELECT count(*) as num_ids_pasados FROM datos_desa.tb_dataset_ids_pasados_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_ids_pasados=$( cat ${FILE_TEMP})
 
-numero_pasados_test=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
-numero_pasados_validation=$(echo "0.15 * $numero_ids_pasados" | bc | cut -f1 -d".")
+numero_pasados_test=$(echo "$DATASET_TEST_PORCENTAJE * $numero_ids_pasados" | bc | cut -f1 -d".")
+numero_pasados_validation=$(echo "$DATASET_VALIDATION_PORCENTAJE * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_train=$(echo "$numero_ids_pasados-$numero_pasados_test-$numero_pasados_validation" | bc)
 echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation} >>$LOG_DS
 echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation}
