@@ -96,6 +96,8 @@ public class GalgosManager implements Serializable {
 	public void descargarYParsearSemillasSportium(String prefijoPathDatosBruto, boolean guardarEnFicheros,
 			String fileGalgosIniciales) throws InterruptedException {
 
+		MY_LOGGER.info("debug_carlos_02");
+
 		MY_LOGGER.info(
 				"SPORTIUM - Descargando carreras FUTURAS disponibles ahora en DIRECTO con sus galgos (semillas)...");
 
@@ -105,7 +107,8 @@ public class GalgosManager implements Serializable {
 		MY_LOGGER.info("Parseando el fichero bruto con la LISTA de carreras FUTURAS y sus galgos (semillas)...");
 		carrerasFuturasConSusGalgos = (new SportiumParserCarrerasFuturas()).ejecutar(prefijoPathDatosBruto);
 
-		MY_LOGGER.info("Filas parseadas (carrerasFuturasConSusGalgos): " + carrerasFuturasConSusGalgos.size());
+		MY_LOGGER.info(Constantes.ANALITICA_GLOBAL + " Filas parseadas (carrerasFuturasConSusGalgos): "
+				+ carrerasFuturasConSusGalgos.size());
 
 		if (carrerasFuturasConSusGalgos != null && !carrerasFuturasConSusGalgos.isEmpty()) {
 
@@ -211,7 +214,7 @@ public class GalgosManager implements Serializable {
 						Files.write(Paths.get(pathFull), (fila.toString()).getBytes(), StandardOpenOption.APPEND);
 					}
 				}
-				MY_LOGGER.info("Carrera-Galgo iniciales: " + carreraGalgos.size()
+				MY_LOGGER.info(Constantes.ANALITICA_GLOBAL + " Carrera-Galgo iniciales: " + carreraGalgos.size()
 						+ " (si el numero es el mismo que el de galgos semilla, es que todos los galgos solo corren 1 vez hoy, no varias)");
 
 				// ******** LIMPIAR LISTAS, porque ya he guardado a fichero **********

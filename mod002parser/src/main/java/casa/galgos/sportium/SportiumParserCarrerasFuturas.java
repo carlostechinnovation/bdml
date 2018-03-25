@@ -104,7 +104,8 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 			}
 		}
 
-		MY_LOGGER.info("Sportium - Parseadas " + listaCarreras.size() + " carreras FUTURAS");
+		MY_LOGGER.info(
+				Constantes.ANALITICA_GLOBAL + " Sportium - Parseadas " + listaCarreras.size() + " carreras FUTURAS");
 
 		// LIMITAMOS SALIDA
 		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();

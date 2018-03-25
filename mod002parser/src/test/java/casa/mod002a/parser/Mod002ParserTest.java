@@ -4,23 +4,27 @@ import org.junit.Before;
 import org.junit.Test;
 
 import junit.framework.Assert;
-import utilidadestest.PadreTest;
+import utilidades.Constantes;
 
 /**
  * @author root
  *
  */
-public class Mod002ParserTest extends PadreTest {
+public class Mod002ParserTest {
 
 	@Before
 	public void iniciar() {
 	}
 
 	@Test
-	public void algoTest() throws Exception {
+	public void reandAndSetPosibleParamConfigTest() throws Exception {
 
-		// TODO pendiente
-		Assert.assertTrue(true);
+		Mod002Parser.reandAndSetPosibleParamConfig("3&1&14&30");
+
+		Assert.assertTrue(Constantes.MAX_NUM_CARRERAS_SEMILLA.intValue() == 3);
+		Assert.assertTrue(Constantes.MAX_PROFUNDIDAD_PROCESADA.intValue() == 1);
+		Assert.assertTrue(Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES.intValue() == 14);
+		Assert.assertTrue(Constantes.MAX_NUM_CARRERAS_PROCESADAS.intValue() == 30);
 
 	}
 

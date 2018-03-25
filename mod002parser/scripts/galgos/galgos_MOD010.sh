@@ -6,6 +6,10 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f ${LOG_DESCARGA_BRUTO}
 
 
+#Parametro
+PARAM_CONFIG="${1}"
+
+
 echo -e $(date +"%T")" | 010 | Descarga datos brutos | INICIO" >>$LOG_070
 echo -e "MOD010 --> LOG = "${LOG_DESCARGA_BRUTO}
 
@@ -28,7 +32,8 @@ consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_historico\W;" "${LOG_DESCAR
 consultar "DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 sleep 4s
 
-##########################################
+
+################# SENTENCIAS SQL #########################
 echo -e $(date +"%T")" Generando fichero de SENTENCIAS SQL (varios CREATE TABLE) con prefijo="prefijoPathDatosBruto 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 rm $FILE_SENTENCIAS_CREATE_TABLE
@@ -38,13 +43,11 @@ consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 
 #################### FUTURAS - SPORTIUM ######################
-
-
 echo -e $(date +"%T")" Borrando las paginas BRUTAS de detalle (carreras FUTURAS)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 rm -fR "${PATH_BRUTO_SEMILLAS_SPORTIUM}_BRUTOCARRERADET*"
 
 echo -e $(date +"%T")" Descargando todas las carreras FUTURAS en las que PUEDO apostar y sus galgos (semillas)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-java -jar ${PATH_JAR} "GALGOS_02_SPORTIUM" "${PATH_BRUTO_SEMILLAS_SPORTIUM}" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+java -jar ${PATH_JAR} "GALGOS_02_SPORTIUM" "${PATH_BRUTO_SEMILLAS_SPORTIUM}" "${PATH_FILE_GALGOS_INICIALES}" "${PARAM_CONFIG}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 consultar_sobreescribirsalida "TRUNCATE TABLE datos_desa.tb_cg_semillas_sportium\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIALES_FULL}' INTO TABLE datos_desa.tb_cg_semillas_sportium FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
@@ -53,7 +56,7 @@ consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semilla
 
 ###################### FUTURAS - SPORTIUM - DETALLE ####################
 echo -e $(date +"%T")" GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
-java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" "${PARAM_CONFIG}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
 consultar_sobreescribirsalida "TRUNCATE TABLE datos_desa.tb_galgos_carreras\W;" "$PATH_LIMPIO_GALGOS_INICIALES_WARNINGS"
 consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_LIMPIO_CARRERAS}' INTO TABLE datos_desa.tb_galgos_carreras FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "$PATH_LIMPIO_CARRERAS_WARNINGS"

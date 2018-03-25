@@ -18,15 +18,27 @@ public class Constantes {
 	// -------------- COMUNES --------
 	public static final String SEPARADOR_CAMPO = "|";
 	public static final String SEPARADOR_FILA = "\n";
+	public static final String ANALITICA_GLOBAL = "ANALITICA_GLOBAL";
 
 	// -------------- GALGOS --------
+	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 20 * 7;// Ultimas X semanas
+	public static Integer MAX_NUM_CARRERAS_SEMILLA = 40; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
+	// derivadas)
+	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 100; // semillas*derivadas
+	public static Integer MAX_PROFUNDIDAD_PROCESADA = 2;// No aumentar por encima de 2, porque se generan muchos
+	// historicos, pero no cogemos suficientes
+	// posiciones-en-carrera
+	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 100L;
+	public static Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 10;// util para debuguear con pocos casos.
+	// Normalmente será 100000
+
 	public static final String PATH_DIR_DATOS_BRUTOS_GALGOS = "/home/carloslinux/Desktop/DATOS_BRUTO/galgos/";
 	public static final String PATH_DIR_DATOS_LIMPIOS_GALGOS = "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/";
 	public static final String GALGOS_GBGB = "http://www.gbgb.org.uk";
 	public static final String GALGOS_GBGB_CARRERAS = GALGOS_GBGB + "/Results.aspx";
 	public static final String GALGOS_GBGB_CARRERA_DETALLE_PREFIJO = GALGOS_GBGB + "/resultsRace.aspx?id=";
 	public static final String GALGOS_GBGB_HISTORICO_GALGO = GALGOS_GBGB + "/RaceCard.aspx?dogName=";
-	public static final Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 20 * 7;// Ultimas X semanas
+
 	public static final String GALGOS_SPORTIUM_PREFIJO = "https://sport-mobile.sportium.es";
 	public static final String GALGOS_FUTUROS_SPORTIUM = GALGOS_SPORTIUM_PREFIJO + "/es/s/GREY/Galgos";
 	public static final String GALGOS_BETBRIGHT_PREFIJO = "https://www.betbright.com";
@@ -36,18 +48,8 @@ public class Constantes {
 	public static final boolean GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA = false; // como me banean, lo descargo
 																						// desde fuera con un script
 
-	public static final Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 10;// util para debuguear con pocos casos.
-																				// Normalmente será 100000
-
 	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 35;
 
-	public static final Integer MAX_NUM_CARRERAS_SEMILLA = 40; // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y las
-																// derivadas)
-	public static final Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 100; // semillas*derivadas
-	public static final Integer MAX_PROFUNDIDAD_PROCESADA = 2;// No aumentar por encima de 2, porque se generan muchos
-																// historicos, pero no cogemos suficientes
-																// posiciones-en-carrera
-	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 100L;
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;
 	public static final Integer MAX_NUM_REMARKS_MEMORIZADAS = 100;
 	public static final Integer MIN_PESO_GALGO = 15;// kg

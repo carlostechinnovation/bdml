@@ -205,6 +205,16 @@ public class Mod002Parser implements Serializable {
 				&& param3 != null && !param3.isEmpty()) {
 
 			try {
+
+				if (args.length >= 4) {
+					String param4 = args[3];
+					MY_LOGGER.info("param4=" + param4);
+					reandAndSetPosibleParamConfig(param4);
+
+					MY_LOGGER.info("debug_carlos_00");
+				}
+
+				MY_LOGGER.info("debug_carlos_01");
 				GalgosManager.getInstancia().descargarYParsearSemillasSportium(param2, true, param3);
 
 			} catch (InterruptedException e) {
@@ -216,6 +226,7 @@ public class Mod002Parser implements Serializable {
 				&& param3 != null && !param3.isEmpty()) {
 
 			try {
+
 				BetbrightManager.getInstancia().descargarYParsearSemillas(param2, true, param3);
 
 			} catch (InterruptedException e) {
@@ -238,6 +249,13 @@ public class Mod002Parser implements Serializable {
 				&& !param3.isEmpty()) {
 
 			try {
+
+				if (args.length >= 4) {
+					String param4 = args[3];
+					MY_LOGGER.info("param4=" + param4);
+					reandAndSetPosibleParamConfig(param4);
+				}
+
 				GalgosManager.getInstancia().descargarYparsearCarrerasDeGalgos(param2, true, param3);
 
 			} catch (InterruptedException e) {
@@ -267,6 +285,36 @@ public class Mod002Parser implements Serializable {
 		}
 
 		MY_LOGGER.info("FIN");
+	}
+
+	/**
+	 * Si lee parametro de configuracion, sobreescribe los valores de config de este
+	 * JAR.
+	 * 
+	 * @param paramConfig
+	 */
+	public static void reandAndSetPosibleParamConfig(String paramConfig) {
+
+		MY_LOGGER.info("reandAndSetPosibleParamConfig - paramConfig=" + paramConfig);
+
+		if (paramConfig != null && !paramConfig.isEmpty()) {
+
+			String[] p = paramConfig.split("&");
+
+			Constantes.MAX_NUM_CARRERAS_SEMILLA = Integer.valueOf(p[0]);
+			Constantes.MAX_PROFUNDIDAD_PROCESADA = Integer.valueOf(p[1]);
+			Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = Integer.valueOf(p[2]);
+			Constantes.MAX_NUM_CARRERAS_PROCESADAS = Integer.valueOf(p[3]);
+
+			MY_LOGGER.info(
+					"CONFIG_JAVA.PARAMS=[MAX_NUM_CARRERAS_SEMILLA | MAX_PROFUNDIDAD_PROCESADA | GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES | MAX_NUM_CARRERAS_PROCESADAS]");
+
+			MY_LOGGER.info("CONFIG_JAVA.VALUES=[" + Constantes.MAX_NUM_CARRERAS_SEMILLA + "|"
+					+ Constantes.MAX_PROFUNDIDAD_PROCESADA + "|" + Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES
+					+ "|" + Constantes.MAX_NUM_CARRERAS_PROCESADAS + "]");
+
+		}
+
 	}
 
 }
