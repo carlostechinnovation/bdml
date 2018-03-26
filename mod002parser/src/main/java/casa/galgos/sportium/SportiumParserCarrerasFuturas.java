@@ -108,18 +108,40 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 				Constantes.ANALITICA_GLOBAL + " Sportium - Parseadas " + listaCarreras.size() + " carreras FUTURAS");
 
 		// LIMITAMOS SALIDA
-		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();
+		List<CarreraSemillaSportium> lista1 = new ArrayList<CarreraSemillaSportium>();
 		int anhadidas = 0;
 		for (CarreraSemillaSportium item : listaCarreras) {
 
-			out.add(item);
+			lista1.add(item);
 			anhadidas++;
 
 			if (anhadidas >= Constantes.MAX_NUM_CARRERAS_SEMILLA) {
 				break;
 			}
 		}
+
+		// ************** Tabla con carreras futuras *********************
+		List<CarreraSemillaSportium> listaExpander = parsearTablaExpander(in);
+
+		// ------------------- Juntamos las dos listas ------------------
+		List<String> urlsDetalleSinDuplicados = new ArrayList<String>();
+		List<CarreraSemillaSportium> out = new ArrayList<CarreraSemillaSportium>();
+
+		out.addAll(lista1);
+		for (CarreraSemillaSportium css1 : lista1) {
+			urlsDetalleSinDuplicados.add(css1.urlDetalle);
+		}
+
+		// Evito meter URLs duplicadas que ya haya encontrado en lista1
+		for (CarreraSemillaSportium css2 : listaExpander) {
+			if (!urlsDetalleSinDuplicados.contains(css2.urlDetalle)) {
+				out.add(css2);
+			}
+		}
+		// ------------------------------------------------------------------
+
 		return out;
+
 	}
 
 	/**
@@ -222,6 +244,29 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 
 		return out;
 
+	}
+
+	/**
+	 * Extrae info de carreras futuras, que aparecen en la parte de abajo, en un
+	 * expander para crear el cupón.
+	 * 
+	 * @param in
+	 *            Contenido de la página HTML en bruto.
+	 * @return Lista de carreras parseadas.
+	 */
+	public static List<CarreraSemillaSportium> parsearTablaExpander(String in) {
+
+		Document doc = Jsoup.parse(in);
+		Elements tablaCuponCarrerasFuturas = doc.getElementsByClass("event-coupon-builder-for-sport");
+
+		if (tablaCuponCarrerasFuturas != null) {
+
+			// TODO Pendiente
+		}
+
+		List<CarreraSemillaSportium> lista2 = new ArrayList<CarreraSemillaSportium>();
+
+		return lista2;
 	}
 
 }

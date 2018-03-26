@@ -19,6 +19,10 @@ rm -f "$PATH_BRUTO*"
 rm -f "$PATH_LIMPIO*"
 rm -f "${PATH_FILE_GALGOS_INICIALES}"
 rm -f "${PATH_FILE_GALGOS_INICIALES_FULL}"
+rm -f "${PATH_LIMPIO_CARRERAS}"
+rm -f "${PATH_LIMPIO_POSICIONES}"
+rm -f "${PATH_LIMPIO_HISTORICO}"
+rm -f "${PATH_LIMPIO_AGREGADOS}"
 
 
 ##########################################
@@ -55,6 +59,8 @@ consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semilla
 
 
 ###################### FUTURAS - SPORTIUM - DETALLE ####################
+
+
 echo -e $(date +"%T")" GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 java -jar ${PATH_JAR} "GALGOS_03" "${PATH_BRUTO}galgos_${TAG_GBGB}_bruto" "${PATH_FILE_GALGOS_INICIALES}" "${PARAM_CONFIG}" 2>&1 1>>${LOG_DESCARGA_BRUTO}
 

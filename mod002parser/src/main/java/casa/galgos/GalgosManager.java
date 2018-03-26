@@ -41,6 +41,8 @@ public class GalgosManager implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	static Logger MY_LOGGER = Logger.getLogger(GalgosManager.class);
 
 	public static final Integer DISTANCIA_CORTA = 1; // distancia<400m
@@ -632,6 +634,9 @@ public class GalgosManager implements Serializable {
 	 *            Prefijo de ficheros brutos
 	 * @param gpgh
 	 *            Parser de historicos
+	 * @param profundidadParaNuevasCarreras
+	 *            Profundidad que se asignará a las nuevas carreras descubiertas
+	 *            (para acumularlas sólo si son procesables).
 	 */
 	public Boolean descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh,
 			Integer profundidadParaNuevasCarreras) {
@@ -644,7 +649,8 @@ public class GalgosManager implements Serializable {
 
 		Calendar fechaUmbralAnterior = getFechaUmbralAnterior();
 
-		int numCarrerasDescubiertas = 0;
+		int numCarrerasDescubiertasAcumulables = 0;
+		int numCarrerasDescubiertasNoAcumulables = 0;
 
 		int numHistoricosAnalizados = 0;
 
@@ -725,13 +731,14 @@ public class GalgosManager implements Serializable {
 									MY_LOGGER.debug(
 											"descargarTodosLosHistoricos - Carrera RECIENTE descubierta! Apuntada como pendiente (no estaba en pendientes ni en ya-procesadas): "
 													+ clave);
-									numCarrerasDescubiertas++;
+									numCarrerasDescubiertasAcumulables++;
 								}
 							} else {
-								MY_LOGGER.warn("Carrera RECIENTE descubierta = " + clave
+								MY_LOGGER.debug("Carrera RECIENTE descubierta = " + clave
 										+ " No la guardo = [profundidadCorrecta | historicoEsInsertable | cabeEnListaPendientes] = [ "
 										+ profundidadCorrecta + " | " + historicoEsInsertable + " | "
 										+ cabeEnListaPendientes + "]");
+								numCarrerasDescubiertasNoAcumulables++;
 							}
 						}
 
@@ -745,18 +752,15 @@ public class GalgosManager implements Serializable {
 
 		} // FIN de FOR
 
-		MY_LOGGER.info("descargarTodosLosHistoricos - Historicos procesados (galgos)=" + numHistoricosAnalizados
-				+ " (de " + urlsHistoricoGalgos.size()
-				+ " URLs procesables). Carreras DESCUBIERTAS en historicos (sin repetidas ni conocidas)="
-				+ numCarrerasDescubiertas);
+		MY_LOGGER.info("Historicos procesados =" + numHistoricosAnalizados + " (de " + urlsHistoricoGalgos.size()
+				+ " URLs procesables). Carreras DESCUBIERTAS=[ACUMULABLES|NO_ACUMULABLES]=["
+				+ numCarrerasDescubiertasAcumulables + "|" + numCarrerasDescubiertasNoAcumulables + "]");
 
 		Boolean out = (urlsHistoricoGalgos.size() == numHistoricosAnalizados);
 
 		MY_LOGGER.debug(
 				"descargarTodosLosHistoricos- Limpiando lista de URLs de historicos (ya los hemos descargado)...\n");
 		urlsHistoricoGalgos.clear();
-
-		MY_LOGGER.debug("Descargando HISTORICOS: FIN");
 
 		return out;
 	}
@@ -806,7 +810,7 @@ public class GalgosManager implements Serializable {
 		Calendar fechaUmbralAnterior = Calendar.getInstance();
 		fechaUmbralAnterior.add(Calendar.DAY_OF_MONTH, -1 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 		MY_LOGGER.debug("fechaUmbralAnterior = " + sdf.format(fechaUmbralAnterior.getTime()));
 
 		return fechaUmbralAnterior;
@@ -821,7 +825,6 @@ public class GalgosManager implements Serializable {
 	 */
 	public boolean isHistoricoInsertable(GbgbGalgoHistoricoCarrera fila, Calendar fechaUmbralAnterior) {
 
-		Boolean out = false;
 		String clave = fila.id_carrera + "-" + fila.id_campeonato;
 		Calendar hoy = Calendar.getInstance();
 
@@ -844,12 +847,15 @@ public class GalgosManager implements Serializable {
 			yaHaSidoProcesada = true;
 		}
 
-		// -----------------------
+		// ------- RESULTADO ----------------
+		Boolean out = false;
 		if (fila.fecha != null && fila.fecha.before(fechaUmbralAnterior)) {
-			MY_LOGGER.debug("Carrera descubierta, pero con FECHA ANTERIOR AL UMBRAL");
+			MY_LOGGER.debug(
+					"Carrera descubierta, pero con FECHA ANTERIOR AL UMBRAL: " + SDF.format(fila.fecha.getTime()));
 
 		} else if (fila.fecha != null && fila.fecha.after(hoy)) {
-			MY_LOGGER.debug("Carrera descubierta, pero con FECHA FUTURA (despues a hoy)");
+			MY_LOGGER.debug(
+					"Carrera descubierta, pero con FECHA FUTURA (despues a hoy): " + SDF.format(fila.fecha.getTime()));
 
 		} else if (yaHaSidoProcesada) {
 			MY_LOGGER.debug("Carrera descubierta, pero YA la hemos PROCESADO");

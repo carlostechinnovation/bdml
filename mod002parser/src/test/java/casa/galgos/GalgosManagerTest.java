@@ -17,6 +17,8 @@ import utilidades.Constantes;
 
 public class GalgosManagerTest {
 
+	SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	@Before
 	public void iniciar() {
 	}
@@ -97,6 +99,7 @@ public class GalgosManagerTest {
 		GbgbGalgoHistoricoCarrera filaFutura = new GbgbGalgoHistoricoCarrera(101L, 201L, fechaFutura, null, null, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outFutura = instancia.isHistoricoInsertable(filaFutura, fechaUmbralAnterior);
+		System.out.println("isHistoricoInsertableTest-->filaFutura = " + SDF.format(filaFutura.fecha.getTime()));
 		Assert.assertTrue(outFutura == false);
 
 		Calendar fechaBien = Calendar.getInstance();
@@ -104,6 +107,7 @@ public class GalgosManagerTest {
 		GbgbGalgoHistoricoCarrera filaBien = new GbgbGalgoHistoricoCarrera(102L, 202L, fechaBien, null, null, null, "6",
 				null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outBien = instancia.isHistoricoInsertable(filaBien, fechaUmbralAnterior);
+		System.out.println("isHistoricoInsertableTest-->filaBien = " + SDF.format(filaBien.fecha.getTime()));
 		Assert.assertTrue(outBien);
 
 		Calendar fechaMuyAntigua = Calendar.getInstance();
@@ -111,6 +115,8 @@ public class GalgosManagerTest {
 		GbgbGalgoHistoricoCarrera filaMuyAntigua = new GbgbGalgoHistoricoCarrera(103L, 203L, fechaMuyAntigua, null,
 				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outMuyAntigua = instancia.isHistoricoInsertable(filaMuyAntigua, fechaUmbralAnterior);
+		System.out
+				.println("isHistoricoInsertableTest-->filaMuyAntigua = " + SDF.format(filaMuyAntigua.fecha.getTime()));
 		Assert.assertTrue(outMuyAntigua == false);
 	}
 
@@ -119,8 +125,9 @@ public class GalgosManagerTest {
 
 		Calendar fechaUmbralAnterior = Calendar.getInstance();
 		fechaUmbralAnterior.add(Calendar.DAY_OF_MONTH, -1 * Constantes.GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-		System.out.println("-->fechaUmbralAnterior = " + sdf.format(fechaUmbralAnterior.getTime()));
+
+		System.out.println(
+				"getFechaUmbralAnteriorTest-->fechaUmbralAnterior = " + SDF.format(fechaUmbralAnterior.getTime()));
 
 		Long a = Calendar.getInstance().getTimeInMillis();
 		Long b = fechaUmbralAnterior.getTimeInMillis();

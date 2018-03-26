@@ -21,7 +21,11 @@ public class SportiumParserCarrerasFuturasTest {
 	}
 
 	@Rule
-	public ResourceFile res = new ResourceFile("/" + "carreras_futuras.html");
+	public ResourceFile res = new ResourceFile("/" + "sportium_carreras_futuras.html");
+
+	// @Rule
+	// public ResourceFile res = new ResourceFile("/" +
+	// "sportium_carreras_futuras_2.html");
 
 	@Test
 	public void parsearTest() throws Exception {
