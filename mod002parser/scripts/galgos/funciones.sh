@@ -269,6 +269,8 @@ insertSelectRemark 'RunUp'
 insertSelectRemark 'Rls'
 insertSelectRemark 'Baulked'
 insertSelectRemark 'Blk'
+insertSelectRemark 'Mid'
+insertSelectRemark 'SAw'
 
 #PENDIENTE Los acronimos Crd=Crowd=Crowded, AlwaysHandy=AHandy, ... Por tanto, debo modificar la funcion insertSelectRemark para que acepte un parametro (ej: 'Crd#Crowd#Crowded') para que filtre considerando que significa lo mismo.
 }

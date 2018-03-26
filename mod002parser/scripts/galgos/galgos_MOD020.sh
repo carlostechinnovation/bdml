@@ -123,6 +123,16 @@ mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FRO
 echo -e "Blk:" >> "${LOG_020_ESTADISTICA}"
 mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Blk%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
 
+echo -e "ClearRun:" >> "${LOG_020_ESTADISTICA}"
+mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%ClearRun%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
+
+echo -e "Mid:" >> "${LOG_020_ESTADISTICA}"
+mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Mid%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
+
+echo -e "SAw:" >> "${LOG_020_ESTADISTICA}"
+mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%SAw%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
+
+
 echo -e "\n------------------------------------------------------\n" >> "${LOG_020_ESTADISTICA}"
 
 #####################################################################################################

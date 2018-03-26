@@ -297,8 +297,10 @@ public class GalgosManager implements Serializable {
 							guardablePosicionesEnCarreras.add(posicion);
 						}
 
+						Integer siguienteProfundidad = profundidadCarreraAProcesar + 1;
+
 						Boolean descargaCorrecta = descargarTodosLosHistoricos(prefijoPathDatosBruto, gpgh,
-								profundidadCarreraAProcesar + 1);
+								siguienteProfundidad);
 
 						if (descargaCorrecta == false) {
 							MY_LOGGER.warn(
@@ -712,11 +714,12 @@ public class GalgosManager implements Serializable {
 
 							String clave = fila.id_carrera + "-" + fila.id_campeonato;
 
-							if (isHistoricoInsertable(fila, fechaUmbralAnterior) ||
+							boolean profundidadCorrecta = profundidadParaNuevasCarreras
+									.intValue() <= Constantes.MAX_PROFUNDIDAD_PROCESADA.intValue();
+							boolean historicoEsInsertable = isHistoricoInsertable(fila, fechaUmbralAnterior);
+							boolean cabeEnListaPendientes = contarCarrerasPendientes() <= Constantes.MAX_NUM_CARRERAS_PROCESADAS;
 
-							// Si he llegado al maximo deseado, no sigo acumulando mas (para ahorrar
-							// memoria)
-									contarCarrerasPendientes() >= Constantes.MAX_NUM_CARRERAS_PROCESADAS) {
+							if (profundidadCorrecta && historicoEsInsertable && cabeEnListaPendientes) {
 
 								if (anhadirCarreraAPendientes(profundidadParaNuevasCarreras, clave)) {
 									MY_LOGGER.debug(
@@ -724,6 +727,11 @@ public class GalgosManager implements Serializable {
 													+ clave);
 									numCarrerasDescubiertas++;
 								}
+							} else {
+								MY_LOGGER.warn("Carrera RECIENTE descubierta = " + clave
+										+ " No la guardo = [profundidadCorrecta | historicoEsInsertable | cabeEnListaPendientes] = [ "
+										+ profundidadCorrecta + " | " + historicoEsInsertable + " | "
+										+ cabeEnListaPendientes + "]");
 							}
 						}
 
