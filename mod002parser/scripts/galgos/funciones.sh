@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DATASET_TEST_PORCENTAJE="0.01"
-DATASET_VALIDATION_PORCENTAJE="0.29"
+DATASET_TEST_PORCENTAJE="0.10"
+DATASET_VALIDATION_PORCENTAJE="0.20"
 RENTABILIDAD_MINIMA="25"
 PORCENTAJE_SUFICIENTES_CASOS="0.1"
 
@@ -11,6 +11,7 @@ PATH_BRUTO="/home/carloslinux/Desktop/DATOS_BRUTO/galgos/"
 PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
 PATH_INFORMES="/home/carloslinux/Desktop/INFORMES/"
 PATH_LOGS="/home/carloslinux/Desktop/LOGS/"
+PATH_EXTERNAL_DATA="/media/sf_VM_SHARED_NOBORRAR/"
 
 TAG_GBGB="GBGB"
 FILE_SENTENCIAS_CREATE_TABLE="${PATH_LIMPIO}galgos_sentencias_create_table"
@@ -36,6 +37,7 @@ FLAG_BB_DESCARGADO_OK="${PATH_LOGS}galgos_010_BB.descargado.OK"
 LOG_010_FUT="${PATH_LOGS}galgos_010_FUT.log"
 LOG_011="${PATH_LOGS}galgos_011_limpieza.log"
 LOG_012="${PATH_LOGS}galgos_012_normalizacion.log"
+LOG_019_EXPORT="${PATH_LOGS}galgos_019_export.log"
 LOG_020_ESTADISTICA="${PATH_LOGS}galgos_020_stats.log"
 LOG_CE="${PATH_LOGS}galgos_031_columnas_elaboradas.log"
 LOG_DS="${PATH_LOGS}galgos_037_datasets.log"
@@ -58,6 +60,11 @@ PATH_RENTABILIDADES_WARNINGS="${PATH_LIMPIO}warnings_rentabilidades"
 INFORME_CONFIG_010="${PATH_LOGS}INFORME_CONFIG_010.txt"
 INFORME_RENTABILIDADES="${PATH_LOGS}INFORME_RENTABILIDADES.txt"
 INFORME_PREDICCIONES="${PATH_LOGS}INFORME_PREDICCIONES.txt"
+
+EXTERNAL_010_BRUTO="${PATH_EXTERNAL_DATA}010_BRUTOS/"
+EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
+EXTERNAL_037_DATASETS="${PATH_EXTERNAL_DATA}037_DATASETS/"
+EXTERNAL_050_FUTURO="${PATH_EXTERNAL_DATA}050_FUTURO/"
 
 #########################################################################
 
@@ -328,17 +335,17 @@ ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "DOW_FIN" >>$PATH_LOG
 
 
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm <=0.33)" "DISTANCIA_CORTA"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_CORTA" >>$PATH_LOG
+#echo -e $(date +"%T")" --------" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm <=0.33)" "DISTANCIA_CORTA"
+#${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_CORTA" >>$PATH_LOG
 
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE (distancia_norm >0.33 AND  distancia_norm <=0.66))" "DISTANCIA_MEDIA"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_MEDIA" >>$PATH_LOG
+#echo -e $(date +"%T")" --------" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE (distancia_norm >0.33 AND  distancia_norm <=0.66))" "DISTANCIA_MEDIA"
+#${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_MEDIA" >>$PATH_LOG
 
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66)" "DISTANCIA_LARGA"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_LARGA" >>$PATH_LOG
+#echo -e $(date +"%T")" --------" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66)" "DISTANCIA_LARGA"
+#${PATH_SCRIPTS}'galgos_MOD040.sh' "DISTANCIA_LARGA" >>$PATH_LOG
 
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
@@ -361,7 +368,6 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "CON_5_GALGOS_JOVENES" >>$PATH_LOG
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE edad_en_dias_norm <= 0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_VIEJOS"
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "CON_5_GALGOS_VIEJOS" >>$PATH_LOG
-
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE experiencia_en_clase is NULL OR experiencia_en_clase<=0.33 GROUP BY id_carrera HAVING count(*)>=5 )" "POCA_EXPER_EN_CLASE"
@@ -392,9 +398,9 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" >>$PATH_LOG
 
 #----Criterios COMPLEJOS ---
 
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_elaborada_galgos_pre WHERE vel_going_largas_max_norm<=0.33 ) )" "LARGA_Y_ALGUNO_LENTO"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
+#echo -e $(date +"%T")" --------" >>$PATH_LOG
+#${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_elaborada_galgos_pre WHERE vel_going_largas_max_norm<=0.33 ) )" "LARGA_Y_ALGUNO_LENTO"
+#${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" >>$PATH_LOG
 }
 
 
@@ -501,7 +507,9 @@ function analisisRentabilidadesPorSubgrupos(){
 
   echo -e "\nDATASETS --> [TRAIN + TEST + *VALIDATION] = [100-test-validation + $DATASET_TEST_PORCENTAJE + $DATASET_VALIDATION_PORCENTAJE ]" 2>&1 1>>${INFORME_RENTABILIDADES}
   echo -e "\n* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE.\n" 2>&1 1>>${INFORME_RENTABILIDADES}
-  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables.\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
+  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
+  echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
+  echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
   mysql --login-path=local -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
   rm -f $SUBGRUPO_GANADOR_FILE
@@ -655,6 +663,37 @@ query_out="${query_out} FROM ${schemaEntrada}.${tablaEntrada};"
 mysql --login-path=local --vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
 
 echo -e "-----------------------------------------------------\n"  2>&1 1>>${logsalida}
+}
+
+##########################################################################################
+
+########## EXPORTAR TABLA A FICHERO EXTERNO (para estudiar con KNIME) #########
+function exportarTablaAFichero(){
+  TEMP_DATA="/var/lib/mysql-files/data.txt"
+  SCHEMA="${1}"
+  TABLA="${2}"
+  PATH_OUTPUT="${3}"
+  PATH_LOG="${4}"
+  PATH_OUTPUT_EXTERNO="${5}"
+
+  echo -e "Exportando $SCHEMA.$TABLA ---" >> "${PATH_LOG}"
+
+  #Limpieza
+  rm -f "$TEMP_DATA"
+  rm -f "$PATH_OUTPUT"
+  rm -f "${PATH_OUTPUT_EXTERNO}"
+
+  #headers
+  mysql --login-path=local -e "SELECT GROUP_CONCAT(COLUMN_NAME SEPARATOR '|') FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='$SCHEMA' and table_name='$TABLA' INTO OUTFILE '$PATH_OUTPUT' FIELDS TERMINATED BY '|' OPTIONALLY ENCLOSED BY '' ESCAPED BY '' LINES TERMINATED BY '\n';" 2>&1 1>> "${PATH_LOG}"
+
+  #data
+  mysql --login-path=local -e "SELECT * FROM $SCHEMA.$TABLA INTO OUTFILE '$TEMP_DATA' FIELDS TERMINATED BY '|' OPTIONALLY ENCLOSED BY '' LINES TERMINATED BY '\n';" 2>&1 1>> "${PATH_LOG}"
+
+  #headers+data
+  cat "$TEMP_DATA" >> "$PATH_OUTPUT"
+
+  #Copiar a tabla externa
+  cp "$PATH_OUTPUT" "${PATH_OUTPUT_EXTERNO}"
 }
 
 ##########################################################################################

@@ -48,7 +48,7 @@ ALTER TABLE datos_desa.tb_dataset_con_ids_${TAG} ADD INDEX tb_dscids_idx(id_carr
 SELECT count(*) as num_dataset_con_ids FROM datos_desa.tb_dataset_con_ids_${TAG} LIMIT 5;
 EOF
 
-echo -e $(date +"%T")"$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
 mysql --login-path=local -t --execute="$CONSULTA_CON_IDs" >>$LOG_DS
 
 echo -e "PASADO y FUTURO (con boolean e IDs) --> datos_desa.tb_dataset_con_ids_${TAG}" 2>&1 1>>${LOG_DS}
@@ -74,17 +74,32 @@ ALTER TABLE datos_desa.tb_dataset_ids_futuros_${TAG} ADD INDEX tb_dscids_f_idx(i
 SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;
 EOF
 
-echo -e $(date +"%T")"$CONSULTA_IDS_PASADOS_Y_FUTUROS" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_IDS_PASADOS_Y_FUTUROS" 2>&1 1>>${LOG_DS}
 mysql --login-path=local -t --execute="$CONSULTA_IDS_PASADOS_Y_FUTUROS" >>$LOG_DS
 
 
-#Numeros
+########## Numeros ##########
 mysql --login-path=local -N --execute="SELECT count(*) as num_ids_pasados FROM datos_desa.tb_dataset_ids_pasados_${TAG} LIMIT 1;" > ${FILE_TEMP}
 numero_ids_pasados=$( cat ${FILE_TEMP})
 
 numero_pasados_test=$(echo "$DATASET_TEST_PORCENTAJE * $numero_ids_pasados" | bc | cut -f1 -d".")
 numero_pasados_validation=$(echo "$DATASET_VALIDATION_PORCENTAJE * $numero_ids_pasados" | bc | cut -f1 -d".")
+
+if [ -z "$numero_ids_pasados" ]
+then
+  numero_ids_pasados=0
+fi
+if [ -z "$numero_pasados_test" ]
+then
+  numero_pasados_test=0
+fi
+if [ -z "$numero_pasados_validation" ]
+then
+  numero_pasados_validation=0
+fi
+
 numero_pasados_train=$(echo "$numero_ids_pasados-$numero_pasados_test-$numero_pasados_validation" | bc)
+
 echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation} >>$LOG_DS
 echo -e "${TAG}|DS-Pasados = "${numero_ids_pasados}" --> [TRAIN + TEST + *VALIDATION] = "${numero_pasados_train}" + "${numero_pasados_test}" + *"${numero_pasados_validation}
 echo -e "* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE." >>$LOG_DS
@@ -133,7 +148,7 @@ ORDER BY rowid;
 SELECT count(*) AS num_carreras_validation_CONOCIDAS_COMPLETAS FROM datos_desa.tb_dataset_ids_pasado_validation_${TAG} LIMIT 1;
 EOF
 
-#echo -e $(date +"%T")"$CONSULTA_4_LISTAS_IDS" 2>&1 1>>${LOG_DS}
+echo -e "$CONSULTA_4_LISTAS_IDS" 2>&1 1>>${LOG_DS}
 mysql --login-path=local -t --execute="$CONSULTA_4_LISTAS_IDS" >>$LOG_DS
 
 echo -e "PASADO_IDs -> TRAIN = datos_desa.tb_dataset_ids_pasado_train_${TAG}" 2>&1 1>>${LOG_DS}
@@ -164,7 +179,7 @@ EOF
 #PASADO-VALIDATION-FEATURES, PASADO-VALIDATION-TARGET
 #FUTURO-FEATURES
 #####################################################################################
-echo -e "\n\n ATENCION!!! Por cada id_carrera (CADA fila de tb_dataset_ids), deberiamos tenemos unos 6 galgos, que serán 6 filas en las tablas FINALES de features y targets!! (aunque hay muchas carreras incompletas, que nos serviran para entrenar el modelo, pero no para calcular el SCORE)" 2>&1 1>>${LOG_DS}
+echo -e "\n\nATENCION!!! Por cada id_carrera (CADA fila de tb_dataset_ids), deberiamos tenemos unos 6 galgos, que serán 6 filas en las tablas FINALES de features y targets!! (aunque hay muchas carreras incompletas, que nos serviran para entrenar el modelo, pero no para calcular el SCORE)" 2>&1 1>>${LOG_DS}
 #####################################################################################
 echo -e $(date +"%T")" PASADO-TRAIN..." 2>&1 1>>${LOG_DS}
 

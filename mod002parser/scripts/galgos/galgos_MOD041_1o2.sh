@@ -15,7 +15,7 @@ TAG="${1}"
 
 echo -e $(date +"%T")" | 041_1o2 | Modelos predictivos: 1o2 ($TAG) | INICIO" >>$LOG_070
 
-echo -e "MOD041_1o2 --> LOG = "${LOG_041}
+echo -e "MOD041_1o2 ($TAG) --> LOG = "${LOG_041}
 
 
 ######################### CALCULO DEL SCORE ################

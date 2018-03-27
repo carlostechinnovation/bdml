@@ -14,7 +14,7 @@ TAG="${1}"
 
 
 echo -e $(date +"%T")" | 040 | Modelo predictivo (subgrupo: $TAG) | INICIO" >>$LOG_070
-echo -e "MOD040 --> LOG = "${LOG_ML}
+echo -e "MOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
 PATH_MODELO_GANADOR='/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
 rm -f $PATH_MODELO_GANADOR
@@ -42,7 +42,7 @@ SELECT A.*, @rowid:=@rowid+1 as rowid FROM datos_desa.tb_ds_pasado_validation_ta
 
 
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux3;
-CREATE TABLE datos_desa.tb_val_${TAG}_aux3 (TARGET decimal(8,6) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE datos_desa.tb_val_${TAG}_aux3 (TARGET decimal(15,13) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 LOAD DATA LOCAL INFILE '$PATH_FILE_VALIDATION_TARGETS_PREDICHOS' INTO TABLE datos_desa.tb_val_${TAG}_aux3;
 
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux4;
