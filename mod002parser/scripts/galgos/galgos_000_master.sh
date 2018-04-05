@@ -34,15 +34,15 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
 
 
-echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
 analisisRentabilidadesPorSubgrupos >>$LOG_MASTER

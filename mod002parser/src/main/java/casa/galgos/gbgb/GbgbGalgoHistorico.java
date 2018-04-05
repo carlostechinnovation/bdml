@@ -13,9 +13,11 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 
 	public static final SimpleDateFormat FORMATO = new SimpleDateFormat("yyyyMMddhhmm");
 
-	public String galgo_nombre = "\\N";
-	public String entrenador = "\\N";
-	public String padre_madre_nacimiento = "\\N";
+	public String galgo_nombre;
+	public String entrenador;
+	public String padre;
+	public String madre;
+	public Integer nacimiento;
 
 	public List<GbgbGalgoHistoricoCarrera> carrerasHistorico;
 
@@ -37,18 +39,21 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 		this.error_causa = error_causa;
 	}
 
-	public GbgbGalgoHistorico(String galgo_nombre, String entrenador, String padre_madre_nacimiento) {
+	public GbgbGalgoHistorico(String galgo_nombre, String entrenador, String padre, String madre, Integer nacimiento) {
 		super();
 		this.galgo_nombre = galgo_nombre;
 		this.entrenador = entrenador;
-		this.padre_madre_nacimiento = padre_madre_nacimiento;
+		this.padre = padre;
+		this.madre = madre;
+		this.nacimiento = nacimiento;
 		carrerasHistorico = new ArrayList<GbgbGalgoHistoricoCarrera>();
 	}
 
 	@Override
 	public String generarSqlCreateTable(String sufijo) {
 		return "CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_historico" + sufijo + " ("
-				+ "galgo_nombre varchar(30) NOT NULL, entrenador varchar(30), "
+				+ "galgo_nombre varchar(30) NOT NULL, entrenador varchar(30), " + "padre varchar(40),"
+				+ "madre varchar(40)," + "nacimiento varchar(10),"
 				+ GbgbGalgoHistoricoCarrera.generarCamposSqlCreateTableDeDetalle() + ");";
 	}
 
@@ -67,6 +72,14 @@ public class GbgbGalgoHistorico implements Serializable, GalgosGuardable {
 			out += SEP;
 			out += (entrenadorLimpio != null) ? entrenadorLimpio : "\\N";
 			out += SEP;
+
+			out += (padre != null && !"".equals(padre)) ? padre : "\\N";
+			out += SEP;
+			out += (madre != null && !"".equals(madre)) ? madre : "\\N";
+			out += SEP;
+			out += (nacimiento != null) ? nacimiento.toString() : "\\N";
+			out += SEP;
+
 			out += fila.generarDatosParaExportarSql() + Constantes.SEPARADOR_FILA;
 		}
 

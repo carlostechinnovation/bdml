@@ -136,6 +136,18 @@ FROM (
 GROUP BY id_carrera_artificial;
 
 SELECT * FROM datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida LIMIT 12;
+
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_nacimientos;
+
+CREATE TABLE datos_desa.tb_galgos_nacimientos AS
+SELECT galgo_nombre, MAX(nacimiento) AS nacimiento, MAX(galgo_padre) AS galgo_padre, MAX(galgo_madre) AS galgo_madre
+FROM datos_desa.tb_galgos_posiciones_en_carreras 
+GROUP BY galgo_nombre;
+
+SELECT count(*) FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
+SELECT * FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
+
 EOF
 
 echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
@@ -218,6 +230,9 @@ INSERT INTO datos_desa.tb_galgos_historico
 SELECT 
 A.galgo_nombre AS galgo_nombre,
 B.entrenador AS entrenador,
+D.galgo_padre AS padre,
+D.galgo_madre AS madre,
+D.nacimiento AS nacimiento,
 A.id_carrera_artificial AS id_carrera,
 0 AS id_campeonato,
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
@@ -238,7 +253,8 @@ C.clase_reciente AS clase,
 NULL AS calculated_time,
 NULL AS velocidad_real,
 NULL AS velocidad_con_going,
-NULL AS scoring_remarks
+NULL AS scoring_remarks,
+DATEDIFF(dia, D.nacimiento) AS edad_en_dias
 FROM datos_desa.tb_cg_semillas_sportium_d A
 
 LEFT JOIN datos_desa.tb_galgo_y_su_entrenador B
@@ -246,6 +262,8 @@ ON (A.galgo_nombre=B.galgo_nombre)
 
 LEFT JOIN datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida C 
 ON (A.id_carrera_artificial=C.id_carrera_artificial)
+
+LEFT JOIN datos_desa.tb_galgos_nacimientos D ON (A.galgo_nombre=D.galgo_nombre)
 ;
 
 
@@ -268,17 +286,6 @@ read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES <<- EOF
 
 set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
-
-
-DROP TABLE IF EXISTS datos_desa.tb_galgos_nacimientos;
-
-CREATE TABLE datos_desa.tb_galgos_nacimientos AS
-SELECT galgo_nombre, MAX(nacimiento) AS nacimiento, MAX(galgo_padre) AS galgo_padre, MAX(galgo_madre) AS galgo_madre
-FROM datos_desa.tb_galgos_posiciones_en_carreras 
-GROUP BY galgo_nombre;
-
-SELECT count(*) FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
-SELECT * FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
 
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_peso_mas_reciente;

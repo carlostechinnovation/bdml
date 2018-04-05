@@ -21,22 +21,22 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 
 	public Calendar fecha; // Solo dia, pero no hora
 	public Integer distancia;
-	public String trap = "\\N";
-	public String stmHcp = "\\N"; // Equivale a "Time/Sec."
-	public String posicion = "\\N";
-	public String by = "\\N"; // NO equivale a SP
-	public String galgo_primero_o_segundo = "\\N"; // Si el galgo de esta carrera quedo primero, este campo es el nombre
-													// del
-													// segundo. Si quedo segundo, es el nombre del primero. Si quedo 3o
-													// o
-													// siguientes, es el nombre del primero.
-	public String venue = "\\N"; // Pista fisica donde se celebro
-	public String remarks = "\\N"; // Equivale a comment (para ese galgo y esa carrera)
-	public String winTime = "\\N"; // Tiempo que hizo el galgo que gano la carrera
-	public String going = "\\N";
+	public String trap;
+	public String stmHcp; // Equivale a "Time/Sec."
+	public String posicion;
+	public String by; // NO equivale a SP
+	public String galgo_primero_o_segundo; // Si el galgo de esta carrera quedo primero, este campo es el nombre
+											// del
+											// segundo. Si quedo segundo, es el nombre del primero. Si quedo 3o
+											// o
+											// siguientes, es el nombre del primero.
+	public String venue; // Pista fisica donde se celebro
+	public String remarks; // Equivale a comment (para ese galgo y esa carrera)
+	public String winTime; // Tiempo que hizo el galgo que gano la carrera
+	public String going;
 	public Float sp;// Starting Price (APUESTAS, odds)
-	public String clase = "\\N";// Tipo de carrera
-	public String calculatedTime = "\\N";// Tiempo de este galgo en la carrera (no del que gano)
+	public String clase;// Tipo de carrera
+	public String calculatedTime;// Tiempo de este galgo en la carrera (no del que gano)
 
 	// VELOCIDADES en m/s (es mejor ver la velocidad que el tiempo, porque cada
 	// carrera puede tener una longitud diferente)
@@ -46,10 +46,13 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 	// SCORINGs extra
 	public Float scoringRemarks;
 
+	// Edad del galgo el dia de la carrera
+	public Integer edadEnDias;
+
 	public GbgbGalgoHistoricoCarrera(Long id_carrera, Long id_campeonato, Calendar fecha, Integer distancia,
 			String trap, String stmHcp, String posicion, String by, String galgo_primero_o_segundo, String venue,
 			String remarks, String winTime, String going, Float sp, String clase, String calculatedTime,
-			Float velocidadReal, Float velocidadConGoing, Float scoringRemarks) {
+			Float velocidadReal, Float velocidadConGoing, Float scoringRemarks, Integer edadEnDias) {
 		super();
 		this.id_carrera = id_carrera;
 		this.id_campeonato = id_campeonato;
@@ -70,6 +73,7 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		this.velocidadReal = velocidadReal;
 		this.velocidadConGoing = velocidadConGoing;
 		this.scoringRemarks = scoringRemarks;
+		this.edadEnDias = edadEnDias;
 	}
 
 	/**
@@ -83,7 +87,8 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += "posicion varchar(1), by_dato varchar(15), galgo_primero_o_segundo varchar(30), ";
 		out += "venue varchar(20), remarks varchar(30), win_time decimal(6,2), ";
 		out += "going varchar(5), sp decimal(8,4), clase varchar(5), calculated_time decimal(6,2), ";
-		out += "velocidad_real decimal(6,4), velocidad_con_going decimal(6,4)," + "scoring_remarks decimal(4,2)";
+		out += "velocidad_real decimal(6,4), velocidad_con_going decimal(6,4)," + "scoring_remarks decimal(4,2),";
+		out += "edad_en_dias INT";
 
 		return out;
 	}
@@ -135,6 +140,9 @@ public class GbgbGalgoHistoricoCarrera implements Serializable {
 		out += velocidadConGoing != null ? Constantes.round2(velocidadConGoing, 4) : "\\N";
 		out += SEP;
 		out += (scoringRemarks != null) ? scoringRemarks : "\\N";
+
+		out += SEP;
+		out += (edadEnDias != null) ? edadEnDias : "\\N";
 
 		return out;
 

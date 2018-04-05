@@ -478,7 +478,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x10a;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x10a AS 
 SELECT id_carrera, galgo_nombre, edad_en_dias
-FROM datos_desa.tb_galgos_posiciones_en_carreras_norm;
+FROM datos_desa.tb_galgos_historico_norm;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x10a LIMIT 5;
 SELECT count(*) as num_x10a FROM datos_desa.tb_ce_${sufijo}_x10a LIMIT 5;
@@ -499,7 +499,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x10b LIMIT 5;
 SELECT count(*) as num_x10b FROM datos_desa.tb_ce_${sufijo}_x10b LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X10" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X10" 2>&1 1>>${LOG_CE}
 mysql --login-path=local --execute="$CONSULTA_X10" >>$LOG_CE
 }
 
@@ -883,7 +883,7 @@ mysql --login-path=local --execute="SELECT cg, count(*) as num_ids_cg FROM datos
 
 ################ TABLAS PREPARADAS (con columnas elaboradas) ####################################################################################
 ### ATENCION: MySQL no soporta FULL OUTER JOIN, asi que tenemos 2 opciones:
-# - Opcion 1: hacer LEFT OJ + RIGHT OJ
+# - Opcion 1: hacer LEFT OJ + RIGHT OJ, sin null por la izquierda
 # - Opcion 2: crear tablas auxiliares de indices (carreras ó galgos ó carrera+galgo), hacer DISTINCT. Luego usar esas tablas haciendo solo LEFT JOINs.
 
 function generarTablasElaboradas ()
@@ -893,7 +893,6 @@ echo -e "\n\n ---- TABLA ELABORADA 1: [ carrera -> columnas ]" 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_ELAB1 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carreras_${sufijo};
-
 
 CREATE TABLE datos_desa.tb_elaborada_carreras_${sufijo} AS 
 SELECT 
@@ -924,7 +923,7 @@ FROM (
   CAST( IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS DECIMAL(8,6) ) AS tc_pounds_norm
 
   FROM datos_desa.tb_ids_carreras_${sufijo} A
-  LEFT JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
+  LEFT OUTER JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
   LEFT JOIN datos_desa.tb_ce_${sufijo}_x12b C ON (A.id_carrera=C.id_carrera)
 ) dentro
 
@@ -977,33 +976,66 @@ SELECT * FROM datos_desa.tb_elaborada_galgos_${sufijo} ORDER BY galgo_nombre LIM
 SELECT count(*) as num_elab_galgos FROM datos_desa.tb_elaborada_galgos_${sufijo} LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_ELAB2" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_ELAB2" 2>&1 1>>${LOG_CE}
 mysql --login-path=local -t --execute="$CONSULTA_ELAB2" >>$LOG_CE
 
 
 echo -e "\n\n ---- TABLA ELABORADA 3: [ carrera+galgo -> columnas ]" 2>&1 1>>${LOG_CE}
 read -d '' CONSULTA_ELAB3 <<- EOF
+
+-- SIMULAMOS FULL OUTER JOIN mediante LEFT y RIGHT-connullizda (alternativa porque MYSQL no soporta FULL)
+DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_fullouterjoin1;
+
+CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_fullouterjoin1 AS
+SELECT 
+B.id_carrera,B.galgo_nombre,
+B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
+C.distancia_norm,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real_norm, C.velocidad_con_going_norm,
+IFNULL(B.posicion,C.posicion) AS posicion,
+IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
+IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
+IFNULL(B.trap, C.trap) AS trap,
+IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
+C.anio,C.mes,C.dia,
+IFNULL(B.entrenador_nombre, C.entrenador) AS entrenador
+FROM datos_desa.tb_galgos_posiciones_en_carreras_norm B
+LEFT JOIN datos_desa.tb_galgos_historico_norm C ON (B.id_carrera=C.id_carrera AND B.galgo_nombre=C.galgo_nombre)
+
+UNION ALL
+
+SELECT 
+B.id_carrera,B.galgo_nombre,
+B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
+C.distancia_norm,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real_norm, C.velocidad_con_going_norm,
+IFNULL(B.posicion,C.posicion) AS posicion,
+IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
+IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
+IFNULL(B.trap, C.trap) AS trap,
+IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
+C.anio,C.mes,C.dia,
+IFNULL(B.entrenador_nombre, C.entrenador) AS entrenador
+FROM datos_desa.tb_galgos_posiciones_en_carreras_norm B
+RIGHT JOIN datos_desa.tb_galgos_historico_norm C ON (B.id_carrera=C.id_carrera AND B.galgo_nombre=C.galgo_nombre)
+WHERE (B.id_carrera IS NULL AND B.galgo_nombre IS NULL)
+;
+
+
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1;
 
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 AS
 SELECT 
   A.*,
   B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
-  C.distancia_norm,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real_norm, C.velocidad_con_going_norm,
+  B.distancia_norm,  B.stmhcp, B.by_dato, B.galgo_primero_o_segundo, B.venue, B.remarks, B.win_time, B.going, B.clase, B.calculated_time, B.velocidad_real_norm, B.velocidad_con_going_norm,
   D.experiencia,
-  IFNULL(B.posicion,C.posicion) AS posicion,
-  IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
-  IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
-  IFNULL(B.trap, C.trap) AS trap,
-  IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
-  IFNULL(C.anio, D.anio) AS anio,
-  IFNULL(C.mes, D.mes) AS mes,
-  IFNULL(C.dia, D.dia) AS dia,
-  IFNULL(B.entrenador_nombre, C.entrenador) AS entrenador
+  B.posicion, B.sp_norm, B.id_campeonato, B.trap, B.trap_norm,
+  IFNULL(B.anio, D.anio) AS anio,
+  IFNULL(B.mes, D.mes) AS mes,
+  IFNULL(B.dia, D.dia) AS dia,
+  B.entrenador
 
   FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} A
-  LEFT JOIN datos_desa.tb_galgos_posiciones_en_carreras_norm B ON (A.id_carrera=B.id_carrera AND A.galgo_nombre=B.galgo_nombre)
-  LEFT JOIN datos_desa.tb_galgos_historico_norm C ON (A.id_carrera=C.id_carrera AND A.galgo_nombre=C.galgo_nombre)
+  LEFT JOIN datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_fullouterjoin1 B ON (A.id_carrera=B.id_carrera AND A.galgo_nombre=B.galgo_nombre)
   LEFT JOIN datos_desa.tb_ce_${sufijo}_x2b D ON (A.id_carrera=D.id_carrera AND A.galgo_nombre=D.galgo_nombre)
 ;
 
@@ -1027,7 +1059,6 @@ CAST( dentro.peso_galgo_norm AS DECIMAL(8,6) ) AS peso_galgo_norm,
 dentro.galgo_padre, 
 dentro.galgo_madre, 
 dentro.comment, 
-CAST( dentro.edad_en_dias_norm AS DECIMAL(8,6) ) AS edad_en_dias_norm, 
 dentro.stmhcp, 
 dentro.by_dato, 
 dentro.galgo_primero_o_segundo, 
@@ -1048,7 +1079,7 @@ H.posicion_media_en_clase_por_experiencia,
 I.distancia_centenas, 
 CAST( I.dif_peso AS DECIMAL(8,6) ) AS dif_peso,
 CAST( J.entrenador_posicion_norm AS DECIMAL(8,6) ) AS entrenador_posicion_norm,
-K.eed_norm,
+CAST( IFNULL(dentro.edad_en_dias_norm,K.eed_norm) AS DECIMAL(8,6) ) AS eed_norm, -- Me fio mas de la pagina de posiciones en carreras que del historico
 dentro.trap_norm,
 IFNULL(dentro.mes, H.mes) AS mes,
 CAST( IFNULL(dentro.sp_norm,F.sp_norm) AS DECIMAL(8,6) ) AS sp_norm,
@@ -1077,7 +1108,7 @@ SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${suf
 EOF
 
 
-#echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_CE}
 mysql --login-path=local -t --execute="$CONSULTA_ELAB3" >>$LOG_CE
 
 
@@ -1087,11 +1118,11 @@ mysql --login-path=local --execute="SELECT galgo_nombre, count(*) as num_ids_gal
 mysql --login-path=local --execute="SELECT cg, count(*) as num_ids_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} GROUP BY cg HAVING num_ids_cg>=2 LIMIT 5;" 2>&1 1>>${LOG_CE}
 
 
-echo -e "\n----------- Tablas de COLUMNAS ELABORADAS --------------" 2>&1 1>>${LOG_012}
-echo -e "datos_desa.tb_elaborada_carreras_${sufijo}" 2>&1 1>>${LOG_012}
-echo -e "datos_desa.tb_elaborada_galgos_${sufijo}" 2>&1 1>>${LOG_012}
-echo -e "datos_desa.tb_elaborada_carrerasgalgos_${sufijo}" 2>&1 1>>${LOG_012}
-echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_012}
+echo -e "\n----------- | 031 | Tablas de COLUMNAS ELABORADAS --------------" 2>&1 1>>${LOG_CE}
+echo -e "datos_desa.tb_elaborada_carreras_${sufijo}" 2>&1 1>>${LOG_CE}
+echo -e "datos_desa.tb_elaborada_galgos_${sufijo}" 2>&1 1>>${LOG_CE}
+echo -e "datos_desa.tb_elaborada_carrerasgalgos_${sufijo}" 2>&1 1>>${LOG_CE}
+echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_CE}
 
 }
 
@@ -1177,14 +1208,14 @@ echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear 
 generarTablasElaboradas
 
 
-echo -e "\n\n --- Analizando tablas (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_CE}
+echo -e "\n\n | 031 | --- Analizando tablas (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_CE}
 analizarTabla "datos_desa" "tb_elaborada_carreras_${sufijo}" "${LOG_CE}"
 analizarTabla "datos_desa" "tb_elaborada_galgos_${sufijo}" "${LOG_CE}"
 analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE}"
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-borrarTablasInnecesarias "${sufijo}"
+#borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}

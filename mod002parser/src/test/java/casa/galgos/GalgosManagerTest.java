@@ -97,7 +97,7 @@ public class GalgosManagerTest {
 		Calendar fechaFutura = Calendar.getInstance();
 		fechaFutura.set(Calendar.YEAR, 2050);
 		GbgbGalgoHistoricoCarrera filaFutura = new GbgbGalgoHistoricoCarrera(101L, 201L, fechaFutura, null, null, null,
-				null, null, null, null, null, null, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outFutura = instancia.isHistoricoInsertable(filaFutura, fechaUmbralAnterior);
 		System.out.println("isHistoricoInsertableTest-->filaFutura = " + SDF.format(filaFutura.fecha.getTime()));
 		Assert.assertTrue(outFutura == false);
@@ -105,7 +105,7 @@ public class GalgosManagerTest {
 		Calendar fechaBien = Calendar.getInstance();
 		fechaBien.set(Calendar.YEAR, 2017);
 		GbgbGalgoHistoricoCarrera filaBien = new GbgbGalgoHistoricoCarrera(102L, 202L, fechaBien, null, null, null, "6",
-				null, null, null, null, null, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outBien = instancia.isHistoricoInsertable(filaBien, fechaUmbralAnterior);
 		System.out.println("isHistoricoInsertableTest-->filaBien = " + SDF.format(filaBien.fecha.getTime()));
 		Assert.assertTrue(outBien);
@@ -113,7 +113,7 @@ public class GalgosManagerTest {
 		Calendar fechaMuyAntigua = Calendar.getInstance();
 		fechaMuyAntigua.set(Calendar.YEAR, 2010);
 		GbgbGalgoHistoricoCarrera filaMuyAntigua = new GbgbGalgoHistoricoCarrera(103L, 203L, fechaMuyAntigua, null,
-				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+				null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		boolean outMuyAntigua = instancia.isHistoricoInsertable(filaMuyAntigua, fechaUmbralAnterior);
 		System.out
 				.println("isHistoricoInsertableTest-->filaMuyAntigua = " + SDF.format(filaMuyAntigua.fecha.getTime()));

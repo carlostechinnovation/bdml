@@ -158,7 +158,7 @@ galgo_padre,
 galgo_madre,
 comment,
 edad_en_dias, 
-CASE WHEN (edad_en_dias IS NULL OR @diff_eed=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1 ELSE (edad_en_dias/1600) END AS edad_en_dias_norm
+CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1 ELSE (edad_en_dias/1600) END AS edad_en_dias_norm
 
 FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM;
 
@@ -185,12 +185,15 @@ set @diff_velocidad_real=(select CASE WHEN MIN(velocidad_real)=0 THEN MAX(veloci
 set @min_velocidad_con_going=(select MIN(velocidad_con_going) FROM datos_desa.tb_galgos_historico_LIM);
 set @diff_velocidad_con_going=(select CASE WHEN MIN(velocidad_con_going)=0 THEN MAX(velocidad_con_going) ELSE MAX(velocidad_con_going)-MIN(velocidad_con_going) END FROM datos_desa.tb_galgos_historico_LIM);
 
+set @diff_edad_en_dias_gh=(select CASE WHEN MIN(edad_en_dias)=0 THEN MAX(edad_en_dias) ELSE MAX(edad_en_dias)-MIN(edad_en_dias) END FROM datos_desa.tb_galgos_historico_LIM);
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_norm;
 
 CREATE TABLE datos_desa.tb_galgos_historico_norm AS 
 SELECT 
-galgo_nombre, entrenador, id_carrera, id_campeonato, anio,
+galgo_nombre, entrenador,
+padre,madre,nacimiento,
+id_carrera, id_campeonato, anio,
 mes, CASE WHEN (mes <=7) THEN (-1/6 + mes/6) WHEN (mes >7) THEN (5/12 - 5*mes/144) ELSE 0.5 END AS mes_norm,
 dia,
 distancia, 
@@ -216,7 +219,9 @@ CASE WHEN (calculated_time IS NULL OR @diff_calculated_time=0) THEN NULL ELSE RO
 velocidad_real, 
 CASE WHEN (velocidad_real IS NULL OR @diff_velocidad_real=0) THEN NULL ELSE ROUND( ((velocidad_real - @min_velocidad_real)/@diff_velocidad_real) ,6) END AS velocidad_real_norm,
 velocidad_con_going, 
-CASE WHEN (velocidad_con_going IS NULL OR @diff_velocidad_con_going=0) THEN NULL ELSE ROUND( ((velocidad_con_going - @min_velocidad_con_going)/@diff_velocidad_con_going) ,6) END AS velocidad_con_going_norm
+CASE WHEN (velocidad_con_going IS NULL OR @diff_velocidad_con_going=0) THEN NULL ELSE ROUND( ((velocidad_con_going - @min_velocidad_con_going)/@diff_velocidad_con_going) ,6) END AS velocidad_con_going_norm,
+edad_en_dias, 
+CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias_gh=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1 ELSE (edad_en_dias/1600) END AS edad_en_dias_norm
 FROM datos_desa.tb_galgos_historico_LIM;
 
 ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx1(id_carrera, galgo_nombre);

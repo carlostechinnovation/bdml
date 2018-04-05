@@ -16,14 +16,15 @@ import utilidades.ResourceFile;
  */
 public class GbgbParserGalgoHistoricoTest {
 
-	String galgo_nombre = "Awesome Thing";
+	String galgo_nombre = "Awesome_Thing";
 
 	@Before
 	public void iniciar() {
 	}
 
 	@Rule
-	public ResourceFile res = new ResourceFile("/" + "galgos_20171024_GBGB_bruto_galgohistorico_" + galgo_nombre);
+	public ResourceFile res = new ResourceFile(
+			"/" + "galgos_20171024_GBGB_bruto_galgohistorico_" + galgo_nombre + ".html");
 	// public ResourceFile res = new ResourceFile("/" +
 	// "historico_no_encontrado.html");
 	// public ResourceFile res = new ResourceFile("/" + "historico_sin_filas.html");
@@ -36,7 +37,9 @@ public class GbgbParserGalgoHistoricoTest {
 
 		Assert.assertTrue(out != null);
 		Assert.assertTrue(out.galgo_nombre.equals(galgo_nombre));
-		Assert.assertTrue(out.padre_madre_nacimiento.equals("wbk b Daves Mentor - Time Flies Dec-2013"));
+		Assert.assertTrue(out.padre.equals("Daves Mentor"));
+		Assert.assertTrue(out.madre.equals("Time Flies"));
+		Assert.assertTrue(out.nacimiento.toString().equals("20131201"));
 		Assert.assertTrue(out.entrenador.equals("S MAVRIAS"));
 
 		Assert.assertTrue(!out.carrerasHistorico.isEmpty());
@@ -61,6 +64,7 @@ public class GbgbParserGalgoHistoricoTest {
 		Assert.assertTrue(hc.trap.equals("1"));
 		Assert.assertTrue(hc.venue.equals("Central Park"));
 		Assert.assertTrue(hc.winTime.equals("16.70"));
+		Assert.assertTrue(hc.edadEnDias.toString().equals("1391"));
 	}
 
 	@Test

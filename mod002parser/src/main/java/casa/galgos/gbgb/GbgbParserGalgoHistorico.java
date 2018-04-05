@@ -41,6 +41,8 @@ public class GbgbParserGalgoHistorico implements Serializable {
 	}
 
 	/**
+	 * padre_madre_nacimiento
+	 * 
 	 * @param pathIn
 	 * @param pathOut
 	 * @param borrarSiExiste
@@ -110,7 +112,11 @@ public class GbgbParserGalgoHistorico implements Serializable {
 			String entrenador = ((TextNode) cabecera.get(1).childNode(0)).text().split(":")[1].trim();
 			String padre_madre_nacimiento = ((TextNode) cabecera.get(3).childNode(0)).text().trim();
 
-			out = new GbgbGalgoHistorico(galgo_nombre, entrenador, padre_madre_nacimiento);
+			String padre = GbgbParserCarreraDetalle.extraerPadre(padre_madre_nacimiento);
+			String madre = GbgbParserCarreraDetalle.extraerMadre(padre_madre_nacimiento);
+			Integer nacimiento = GbgbParserCarreraDetalle.extraerFechaNacimiento(padre_madre_nacimiento);
+
+			out = new GbgbGalgoHistorico(galgo_nombre, entrenador, padre, madre, nacimiento);
 
 			List<Node> filas = null;
 
@@ -144,6 +150,7 @@ public class GbgbParserGalgoHistorico implements Serializable {
 		Long id_carrera = Long.valueOf(((Element) fila.childNode(15).childNode(0)).attr("href").split("=")[1]);
 		Long id_campeonato = Long.valueOf(((Element) fila.childNode(16).childNode(0)).attr("href").split("=")[1]);
 
+		// FECHA DE LA CARRERA
 		String[] fechaStr = ((TextNode) fila.childNode(1).childNode(0)).text().split("/");
 		Calendar fecha = Constantes.parsearFecha(fechaStr, true);
 
@@ -180,9 +187,12 @@ public class GbgbParserGalgoHistorico implements Serializable {
 			}
 		}
 
+		// EDAD EN DIAS (suponemos que el modelo tiene fecha de nacimiento rellena)
+		Integer edadEnDias = GbgbPosicionEnCarrera.calcularEdadGalgoEnDias(modelo.nacimiento, fecha);
+
 		GbgbGalgoHistoricoCarrera filaModelo = new GbgbGalgoHistoricoCarrera(id_carrera, id_campeonato, fecha,
 				distancia, trap, stmHcp, posicion, by, galgo_primero_o_segundo, venue, remarks, winTime, going, sp,
-				clase, calculatedTime, velocidadReal, velocidadConGoing, scoringRemarks);
+				clase, calculatedTime, velocidadReal, velocidadConGoing, scoringRemarks, edadEnDias);
 
 		if (posicion == null || posicion.isEmpty()) {
 			MY_LOGGER.warn("Historico de galgo='" + galgo_nombre + "' con posicion nula o vacia. No cogemos esa fila.");

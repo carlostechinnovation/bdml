@@ -25,7 +25,7 @@ FROM (
 
 A.id_carrera, A.galgo_nombre, A.futuro,
 
-A.peso_galgo_norm, A.edad_en_dias_norm, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, 
+A.peso_galgo_norm, A.eed_norm, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, 
 -- A.dif_peso, 
 A.entrenador_posicion_norm, A.trap_norm, A.remarks_puntos_historico, A.remarks_puntos_historico_10d, A.remarks_puntos_historico_20d, A.remarks_puntos_historico_50d,
 
@@ -161,7 +161,7 @@ echo -e "FUTURO_IDs -> datos_desa.tb_dataset_ids_futuros_${TAG}" 2>&1 1>>${LOG_D
 #4º Columnas usadas (FEATURES), sin IDs ni target.
 ######################################################################
 read -d '' FEATURES_COMUNES <<- EOF
-peso_galgo_norm, edad_en_dias_norm, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, 
+peso_galgo_norm, eed_norm, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, 
 -- dif_peso, 
 entrenador_posicion_norm, trap_norm,  remarks_puntos_historico, remarks_puntos_historico_10d, remarks_puntos_historico_20d, remarks_puntos_historico_50d,
 
@@ -327,7 +327,7 @@ analizarTabla "datos_desa" "tb_ds_pasado_validation_targets_${TAG}" "${LOG_DS_CO
 analizarTabla "datos_desa" "tb_ds_futuro_features_${TAG}" "${LOG_DS_COLPEN}"
 
 
-echo -e "\n\n\n\n---------------- DATASETS --------------" 2>&1 1>>${LOG_DS}
+echo -e "\n\n\n\n---------------- | 037 | DATASETS --------------" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_pasado_train_features_${TAG}  <--> datos_desa.tb_ds_pasado_train_targets_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_pasado_test_features_${TAG}  <--> datos_desa.tb_ds_pasado_test_targets_${TAG}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_ds_pasado_validation_features_${TAG}  <--> datos_desa.tb_ds_pasado_validation_targets_${TAG}" 2>&1 1>>${LOG_DS}

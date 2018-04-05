@@ -7,7 +7,7 @@ source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 function generarTablasFiltradas ()
 {
 
-echo -e "\n"$(date +"%T")" \n---- TABLAS FILTRADAS ---" 2>&1 1>>${LOG_DS}
+echo -e "\n"$(date +"%T")" ---- TABLAS FILTRADAS ---" 2>&1 1>>${LOG_DS}
 
 filtro_carreras="${1}"
 filtro_galgos="${2}"
@@ -49,11 +49,15 @@ echo -e "$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
 mysql --login-path=local -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 
 
-echo -e "\n---------------- Tablas FILTRADAS --------------" 2>&1 1>>${LOG_DS}
+echo -e "\n---------------- | 036 | Tablas FILTRADAS --------------" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_filtrada_carreras_${sufijo}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_filtrada_galgos_${sufijo}" 2>&1 1>>${LOG_DS}
 echo -e "datos_desa.tb_filtrada_carrerasgalgos_${sufijo}" 2>&1 1>>${LOG_DS}
 echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_DS}
+
+analizarTabla "datos_desa" "tb_filtrada_carreras_${sufijo}" "${LOG_DS}"
+analizarTabla "datos_desa" "tb_filtrada_galgos_${sufijo}" "${LOG_DS}"
+analizarTabla "datos_desa" "tb_filtrada_carrerasgalgos_${sufijo}" "${LOG_DS}"
 }
 
 
