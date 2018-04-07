@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DATASET_TEST_PORCENTAJE="0.10"
-DATASET_VALIDATION_PORCENTAJE="0.20"
+DATASET_VALIDATION_PORCENTAJE="0.40"
 RENTABILIDAD_MINIMA="25"
 PORCENTAJE_SUFICIENTES_CASOS="0.1"
 
@@ -223,14 +223,12 @@ echo -e " Descarga de Betbright: OK" >> "${FLAG_BB_DESCARGADO_OK}"
 }
 
 
-
-
 ########################### REMARKS-PUNTOS #################################
 function insertSelectRemark ()
 {
   remark_in="${1}"
 
-echo -e "Calculando peso del remark='${remark_in}'..." 2>&1 1>>${LOG_CE}
+  echo -e "Calculando peso del remark='${remark_in}'..." 2>&1 1>>${LOG_CE}
 
 read -d '' CONSULTA_REMARKS_PUNTOS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_remark_puntos_1;
@@ -278,6 +276,7 @@ insertSelectRemark 'Baulked'
 insertSelectRemark 'Blk'
 insertSelectRemark 'Mid'
 insertSelectRemark 'SAw'
+insertSelectRemark 'Bmp'
 
 #PENDIENTE Los acronimos Crd=Crowd=Crowded, AlwaysHandy=AHandy, ... Por tanto, debo modificar la funcion insertSelectRemark para que acepte un parametro (ej: 'Crd#Crowd#Crowded') para que filtre considerando que significa lo mismo.
 }

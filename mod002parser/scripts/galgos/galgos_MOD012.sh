@@ -62,7 +62,23 @@ FROM (
   id_carrera,
   id_campeonato,
   track,
-  clase,
+  
+  CASE 
+    WHEN clase='A1' OR clase='A2' OR clase='A3' THEN 'A123'
+    WHEN clase='A4' OR clase='A5' OR clase='A6' THEN 'A456'
+    WHEN clase='A7' OR clase='A8' OR clase='A9' OR clase='A10' OR clase='A11' THEN 'A7a11'
+    WHEN clase='B1' OR clase='B2' OR clase='B3' OR clase='B4' OR clase='B5' OR clase='B6' THEN 'A7a11'
+    WHEN clase='D1' OR clase='D2' OR clase='D3' THEN 'D123'
+    WHEN clase='D4' OR clase='D5' THEN 'D45'
+    WHEN clase='E1' OR clase='E2' OR clase='E3' THEN 'E123'
+    WHEN clase='H1' OR clase='H2' OR clase='H3' THEN 'H123'
+    WHEN clase='M1' OR clase='M2' THEN 'M'
+    WHEN clase='P1' OR clase='P2' OR clase='P3' OR clase='P4' OR clase='P5' THEN 'P'
+    WHEN clase='S1' OR clase='S2' OR clase='S3' THEN 'S123'
+    WHEN clase='S4' OR clase='S5' OR clase='S6' THEN 'S456'
+    ELSE clase
+  END as clase,
+
   DAYOFWEEK(concat(anio,'-',  LPAD(cast(mes as char), 2, '0')    ,'-',dia)) AS dlmxjvs,
   anio,
   mes, 
@@ -213,7 +229,23 @@ CASE WHEN (win_time IS NULL OR @diff_win_time=0) THEN NULL ELSE ROUND( ((win_tim
 going,
 sp, 
 CASE WHEN sp<=1 THEN 0 WHEN (sp>1 AND sp<=5) THEN ((sp-1)/5) WHEN (sp>5 AND sp<=8) THEN ((sp+7)/15) WHEN sp>8 THEN 1 ELSE NULL END AS sp_norm,
-clase,
+
+CASE 
+    WHEN clase='A1' OR clase='A2' OR clase='A3' THEN 'A123'
+    WHEN clase='A4' OR clase='A5' OR clase='A6' THEN 'A456'
+    WHEN clase='A7' OR clase='A8' OR clase='A9' OR clase='A10' OR clase='A11' THEN 'A7a11'
+    WHEN clase='B1' OR clase='B2' OR clase='B3' OR clase='B4' OR clase='B5' OR clase='B6' THEN 'A7a11'
+    WHEN clase='D1' OR clase='D2' OR clase='D3' THEN 'D123'
+    WHEN clase='D4' OR clase='D5' THEN 'D45'
+    WHEN clase='E1' OR clase='E2' OR clase='E3' THEN 'E123'
+    WHEN clase='H1' OR clase='H2' OR clase='H3' THEN 'H123'
+    WHEN clase='M1' OR clase='M2' THEN 'M'
+    WHEN clase='P1' OR clase='P2' OR clase='P3' OR clase='P4' OR clase='P5' THEN 'P'
+    WHEN clase='S1' OR clase='S2' OR clase='S3' THEN 'S123'
+    WHEN clase='S4' OR clase='S5' OR clase='S6' THEN 'S456'
+    ELSE clase
+END as clase,
+
 calculated_time, 
 CASE WHEN (calculated_time IS NULL OR @diff_calculated_time=0) THEN NULL ELSE ROUND( ((calculated_time - @min_calculated_time)/@diff_calculated_time) ,6) END AS calculated_time_norm,
 velocidad_real, 

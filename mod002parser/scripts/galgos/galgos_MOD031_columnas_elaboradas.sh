@@ -198,7 +198,7 @@ clase,
 COUNT(posicion) AS experiencia_en_clase, 
 AVG(posicion) AS posicion_media_en_clase
 FROM datos_desa.tb_galgos_historico_norm  
-GROUP BY galgo_nombre,clase;
+GROUP BY galgo_nombre, clase;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
 SELECT count(*) as num_x6a FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
@@ -680,7 +680,7 @@ function calcularVariableX13 ()
 {
 sufijo="${1}"
 echo -e "\n ---- X13: [(carrera, galgo) -> (scoring_remarks de los ultimos 10/20/50/TODOS los dias anteriores)]" 2>&1 1>>${LOG_CE}
-echo -e " Media de SCORING_REMARKS considerando las ultimas [1,3,5,7] CARRERAS" 2>&1 1>>${LOG_CE}
+echo -e " Media de SCORING_REMARKS considerando las carreras de los 10/20/50 dias anteriores" 2>&1 1>>${LOG_CE}
 echo -e " Parametros: -->${1}" 2>&1 1>>${LOG_CE}
 
 
@@ -713,6 +713,7 @@ EOF
 echo -e "\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
 mysql --login-path=local --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS1" 2>&1 1>>${LOG_CE}
 
+
 read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS2 <<- EOF
 -- Para cada columna de la izquierda, genero filas por la derecha (con los AAAAMMDD menores que el de la fila actual) 
 DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm2;
@@ -735,6 +736,7 @@ EOF
 
 echo -e "\n\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
 mysql --login-path=local --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS2" 2>&1 1>>${LOG_CE}
+
 
 read -d '' CONSULTA_GH_CRUCE_REMARKS_PUNTOS3 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm3;

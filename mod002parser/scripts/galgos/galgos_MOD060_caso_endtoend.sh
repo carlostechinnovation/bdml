@@ -29,6 +29,7 @@ then
   echo -e "Análisis extremo-extremo de carrera FUTURA (ds FUTURO-FEATURES, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 else
+  #PASADA
   mysql --login-path=local -N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_pasado_validation_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} WHERE id_carrera>100000 GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
   id_carrera_analizada=$( cat ${FILE_TEMP})
   echo -e "Análisis extremo-extremo de carrera PASADA (ds PASADO-VALIDATION, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}

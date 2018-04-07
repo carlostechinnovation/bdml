@@ -132,6 +132,8 @@ mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FRO
 echo -e "SAw:" >> "${LOG_020_ESTADISTICA}"
 mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%SAw%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
 
+echo -e "Bmp:" >> "${LOG_020_ESTADISTICA}"
+mysql --login-path=local -t --execute="SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%Bmp%' GROUP BY posicion ORDER BY posicion ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
 
 echo -e "\n------------------------------------------------------\n" >> "${LOG_020_ESTADISTICA}"
 
