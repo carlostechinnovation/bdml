@@ -456,21 +456,21 @@ LIMIT 10;
 EOF
 
 echo -e "$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
-mysql-t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
+mysql -t --execute="$CONSULTA_ECONOMICA" 2>&1 1>>${log_ml_tipo}
 
 FILE_TEMP_PRED="./temp_MOD040_num_predicciones"
 rm -f ${FILE_TEMP_PRED}
-mysql-N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
+mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} WHERE beneficio_bruto IS NOT NULL LIMIT 10;" > ${FILE_TEMP_PRED}
 numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
 
 FILE_TEMP="./temp_MOD040_rentabilidad"
 rm -f ${FILE_TEMP}
-mysql-N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
+mysql -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
 rentabilidad=$( cat ${FILE_TEMP})
 
 FILE_TEMP="./temp_MOD040_num_ciertos_gruposp"
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1st o 1o2, pero no en las otras predichas.
-mysql-N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
+mysql -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
 
@@ -509,10 +509,10 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql-t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
   rm -f $SUBGRUPO_GANADOR_FILE
-  mysql-N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
 }
 
@@ -570,7 +570,7 @@ DROP TABLE IF EXISTS datos_desa.tb_filtrada_galgos_${sufijo};
 DROP TABLE IF EXISTS datos_desa.tb_filtrada_carrerasgalgos_${sufijo};
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_036" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql-t --execute="$CONSULTA_DROP_TABLAS_036" >>$LOG_999_LIMPIEZA_FINAL
+mysql -t --execute="$CONSULTA_DROP_TABLAS_036" >>$LOG_999_LIMPIEZA_FINAL
 
 echo -e "Borrando tablas innecesarias de 037..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_037 <<- EOF
@@ -590,7 +590,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_targets_${TAG};
 
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_037" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql-t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
+mysql -t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
 
 echo -e "Borrando tablas innecesarias de 040..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_040 <<- EOF
@@ -616,7 +616,7 @@ DROP TABLE IF EXISTS datos_desa.tb_val_1st_aciertos_connombre_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG};
 EOF
 #echo -e "\n$CONSULTA_DROP_TABLAS_040" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql-t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
+mysql -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
 
 }
 
@@ -636,7 +636,7 @@ echo -e "\n--------- TABLA: ${schemaEntrada}"."${tablaEntrada} ----------\n"  2>
 
 echo -e "Leyenda --> campo : MAX|MIN|AVG|STD|NO_NULOS|NULOS\n"  2>&1 1>>${logsalida}
 
-mysql-N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
+mysql -N --execute="SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = '${schemaEntrada}' AND TABLE_NAME = '${tablaEntrada}';" >>$path_temp
 
 query_out="SELECT "
 contador=0
@@ -659,7 +659,7 @@ query_out="${query_out} FROM ${schemaEntrada}.${tablaEntrada};"
 #Pintar query
 #echo -e "\n\n\n${query_out}\n\n\n" 2>&1 1>>${logsalida}
 
-mysql--vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
+mysql --vertical --execute="${query_out}\G" 2>&1 1>>${logsalida}
 
 echo -e "-----------------------------------------------------\n"  2>&1 1>>${logsalida}
 }
@@ -668,7 +668,7 @@ echo -e "-----------------------------------------------------\n"  2>&1 1>>${log
 
 ########## EXPORTAR TABLA A FICHERO EXTERNO (para estudiar con KNIME) #########
 function exportarTablaAFichero(){
-  TEMP_DATA="/var/lib/mysql-files/data.txt"
+  TEMP_DATA="/var/lib/mysql -files/data.txt"
   SCHEMA="${1}"
   TABLA="${2}"
   PATH_OUTPUT="${3}"
@@ -683,10 +683,10 @@ function exportarTablaAFichero(){
   rm -f "${PATH_OUTPUT_EXTERNO}"
 
   #headers
-  mysql-e "SELECT GROUP_CONCAT(COLUMN_NAME SEPARATOR '|') FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='$SCHEMA' and table_name='$TABLA' INTO OUTFILE '$PATH_OUTPUT' FIELDS TERMINATED BY '|' OPTIONALLY ENCLOSED BY '' ESCAPED BY '' LINES TERMINATED BY '\n';" 2>&1 1>> "${PATH_LOG}"
+  mysql -e "SELECT GROUP_CONCAT(COLUMN_NAME SEPARATOR '|') FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='$SCHEMA' and table_name='$TABLA' INTO OUTFILE '$PATH_OUTPUT' FIELDS TERMINATED BY '|' OPTIONALLY ENCLOSED BY '' ESCAPED BY '' LINES TERMINATED BY '\n';" 2>&1 1>> "${PATH_LOG}"
 
   #data
-  mysql-e "SELECT * FROM $SCHEMA.$TABLA INTO OUTFILE '$TEMP_DATA' FIELDS TERMINATED BY '|' OPTIONALLY ENCLOSED BY '' LINES TERMINATED BY '\n';" 2>&1 1>> "${PATH_LOG}"
+  mysql -e "SELECT * FROM $SCHEMA.$TABLA INTO OUTFILE '$TEMP_DATA' FIELDS TERMINATED BY '|' OPTIONALLY ENCLOSED BY '' LINES TERMINATED BY '\n';" 2>&1 1>> "${PATH_LOG}"
 
   #headers+data
   cat "$TEMP_DATA" >> "$PATH_OUTPUT"

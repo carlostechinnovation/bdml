@@ -334,7 +334,7 @@ echo -e "datos_desa.tb_galgos_historico_norm" 2>&1 1>>${LOG_012}
 echo -e "datos_desa.tb_galgos_agregados_norm" 2>&1 1>>${LOG_012}
 echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_012}
 
-mysql--execute="$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_012}
+mysql --execute="$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_012}
 
 
 ##########################################

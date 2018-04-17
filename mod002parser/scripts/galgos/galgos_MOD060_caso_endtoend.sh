@@ -24,13 +24,13 @@ echo -e "\n#####################################################################
 
 if [[ "$TIEMPO" == "FUTURA" ]]
 then
-  mysql-N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_futuros_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} WHERE id_carrera<1000 GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
+  mysql -N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_futuros_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} WHERE id_carrera<1000 GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
   id_carrera_analizada=$( cat ${FILE_TEMP})
   echo -e "Análisis extremo-extremo de carrera FUTURA (ds FUTURO-FEATURES, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 else
   #PASADA
-  mysql-N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_pasado_validation_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} WHERE id_carrera>100000 GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
+  mysql -N --execute="SELECT A.id_carrera FROM datos_desa.tb_dataset_ids_pasado_validation_${SUBGRUPO} A LEFT JOIN (SELECT id_carrera FROM datos_desa.tb_filtrada_carrerasgalgos_${SUBGRUPO} WHERE id_carrera>100000 GROUP BY id_carrera HAVING count(*)=6) B ON (A.id_carrera=B.id_carrera) ORDER BY rand() LIMIT 1;" >> ${FILE_TEMP}
   id_carrera_analizada=$( cat ${FILE_TEMP})
   echo -e "Análisis extremo-extremo de carrera PASADA (ds PASADO-VALIDATION, con 6 galgos): "$id_carrera_analizada 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 fi
@@ -52,7 +52,7 @@ EOF
 
 echo -e "\n------------------- Antes de predecir ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 echo -e "$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
-mysql-t --execute="$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -t --execute="$CONSULTA_ANTES_DE_PREDECIR" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 ########################################################################################################
 
@@ -63,7 +63,7 @@ EOF
 
 echo -e "\n-------------------Despues de predecir ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 echo -e "$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
-mysql-t --execute="$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_0" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 read -d '' CONSULTA_DESPUES_DE_PREDECIR_1o2 <<- EOF
 SELECT * FROM datos_desa.tb_val_1o2_aciertos_connombre_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 6;
@@ -75,7 +75,7 @@ EOF
 
 echo -e "\n-------------------Prediccion de que queda PRIMERO o SEGUNDO (1o2) (Ganador o colocado) ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 echo -e "$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
-mysql-t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1o2" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 
 read -d '' CONSULTA_DESPUES_DE_PREDECIR_1st <<- EOF
@@ -91,7 +91,7 @@ EOF
 
 echo -e "\n--------------------Prediccion de que queda PRIMERO (1st) --------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 echo -e "$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
-mysql-t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -t --execute="$CONSULTA_DESPUES_DE_PREDECIR_1st" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
 
 
 ########################################################################################################

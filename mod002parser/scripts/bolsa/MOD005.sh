@@ -70,7 +70,7 @@ mysql -e "${CONSULTA}"
 sleep 2s
 
 #D. Informe FINAL
-mysql-t --execute="SELECT descripcion, id_periodo, ticker, CASE WHEN flag_subida=1 THEN 'alcista' ELSE 'bajista' END as tendencia_ibex, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_001_b WHERE diferencia_porcentaje > 8 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_001}
+mysql -t --execute="SELECT descripcion, id_periodo, ticker, CASE WHEN flag_subida=1 THEN 'alcista' ELSE 'bajista' END as tendencia_ibex, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_001_b WHERE diferencia_porcentaje > 8 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_001}
 
 
 #######################################################################################################################
@@ -139,7 +139,7 @@ mysql -e "${CONSULTA}"
 sleep 2s
 
 #D. Informe FINAL
-mysql-t --execute="SELECT id_periodo, ticker, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_002_b WHERE diferencia_porcentaje > 3 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_002}
+mysql -t --execute="SELECT id_periodo, ticker, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_002_b WHERE diferencia_porcentaje > 3 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_002}
 
 
 
