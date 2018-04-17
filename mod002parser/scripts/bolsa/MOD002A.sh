@@ -6,8 +6,8 @@ echo -e "Modulo 002A - Parsear datos"
 
 PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
 PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/"
-PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
-PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/bolsa/"
+PATH_JAR="/home/carloslinux/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/bolsa/"
 
 TAG_BOE="BOE"
 TAG_GF="GOOGLEFINANCE"
@@ -42,7 +42,7 @@ rm $FILE_SENTENCIAS_CREATE_TABLE
 java -jar ${PATH_JAR} "02" "$FILE_SENTENCIAS_CREATE_TABLE"
 SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 echo -e ${SENTENCIAS_CREATE_TABLE}
-mysql --login-path=local  -e "$SENTENCIAS_CREATE_TABLE" >&1
+mysql -e "$SENTENCIAS_CREATE_TABLE" >&1
 
 
 ######## PREPROCESAR DATOS DE UN DIA ##############
@@ -52,21 +52,21 @@ java -jar ${PATH_JAR} "03" ${DIA}
 
 for GFindice in {1..6}
 do
-   mysql --login-path=local  -e "DELETE FROM datos_desa.tb_gf0${GFindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_GOOGLEFINANCE_0${GFindice}_OUT' INTO TABLE datos_desa.tb_gf0${GFindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
+   mysql -e "DELETE FROM datos_desa.tb_gf0${GFindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_GOOGLEFINANCE_0${GFindice}_OUT' INTO TABLE datos_desa.tb_gf0${GFindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 done
 
 
 for BMindice in {1..6}
 do
-   mysql --login-path=local  -e "DELETE FROM datos_desa.tb_bm0${BMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_BOLSAMADRID_0${BMindice}_OUT' INTO TABLE datos_desa.tb_bm0${BMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
+   mysql -e "DELETE FROM datos_desa.tb_bm0${BMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_BOLSAMADRID_0${BMindice}_OUT' INTO TABLE datos_desa.tb_bm0${BMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 done
 
 
-mysql --login-path=local  -e "DELETE FROM datos_desa.tb_ine WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_INE_01_OUT' INTO TABLE datos_desa.tb_ine FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
+mysql -e "DELETE FROM datos_desa.tb_ine WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_INE_01_OUT' INTO TABLE datos_desa.tb_ine FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 
 for DMindice in 0{1..9} {10..15}
 do
-   mysql --login-path=local  -e "DELETE FROM datos_desa.tb_dm${DMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_DATOSMACRO_${DMFindice}_OUT' INTO TABLE datos_desa.tb_dm${DMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
+   mysql -e "DELETE FROM datos_desa.tb_dm${DMindice} WHERE tag_dia=${dia}; LOAD DATA LOCAL INFILE '/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/${dia}_DATOSMACRO_${DMFindice}_OUT' INTO TABLE datos_desa.tb_dm${DMindice} FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES\W;" >&1
 done
 
 
@@ -100,38 +100,38 @@ fi
 
 
 ########### Periodos de crisis y de bonanza (identificados por mi mirando el IBEX) ####
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_stg_periodos;"
-mysql --login-path=local  -e "CREATE TABLE datos_desa.tb_stg_periodos (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT, flag_subida BOOLEAN, descripcion varchar(30));"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20060901-20070601', 20060901, 20070601, 1,'burbuja_inmo_0607');"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20080602-20090202',20080602, 20090202, 0,'crisis_financiera_0809');"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20110201-20120502',20110201, 20120502, 0,'crisis_deuda_publica_1112');"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20130603-20150202', 20130603, 20150202, 1, 'bonanza_1315');"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20150803-20160201', 20150803, 20160201, 0, 'crisis_15');"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20160701-20170502', 20160701, 20170502, 1, 'bonanza_1617');"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20170601-20171004', 20170601, 20171004, 0, 'crisis_17');"
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_periodos;"
-mysql --login-path=local  -e "CREATE TABLE datos_desa.tb_periodos AS SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, SP.flag_subida, SP.descripcion, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos SP LIMIT 20;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_stg_periodos;"
+mysql -e "CREATE TABLE datos_desa.tb_stg_periodos (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT, flag_subida BOOLEAN, descripcion varchar(30));"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20060901-20070601', 20060901, 20070601, 1,'burbuja_inmo_0607');"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20080602-20090202',20080602, 20090202, 0,'crisis_financiera_0809');"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20110201-20120502',20110201, 20120502, 0,'crisis_deuda_publica_1112');"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20130603-20150202', 20130603, 20150202, 1, 'bonanza_1315');"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20150803-20160201', 20150803, 20160201, 0, 'crisis_15');"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20160701-20170502', 20160701, 20170502, 1, 'bonanza_1617');"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos (id_periodo,fecha_inicio,fecha_fin,flag_subida,descripcion) VALUES ('20170601-20171004', 20170601, 20171004, 0, 'crisis_17');"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_periodos;"
+mysql -e "CREATE TABLE datos_desa.tb_periodos AS SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, SP.flag_subida, SP.descripcion, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos SP LIMIT 20;"
 
 ########### Periodos cortos de FUERTES caidas en el IBEX ####
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_stg_periodos_fuertes_caidas_ibex;"
-mysql --login-path=local  -e "CREATE TABLE datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20080515-20080615',20080515,20080615);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20081001-20081030',20081001,20081030);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20100415-20100515',20100415,20100515);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20110715-20110830',20110715,20110830);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20120401-20120530',20120401,20120530);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20150801-20150930',20150801,20150930);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20151215-20160209',20151215,20160209);"
-mysql --login-path=local  -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20170715-20170901',20170715,20170901);"
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_periodos_fuertes_caidas_ibex;"
-mysql --login-path=local  -e "CREATE TABLE datos_desa.tb_periodos_fuertes_caidas_ibex AS SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos_fuertes_caidas_ibex SP LIMIT 20;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_stg_periodos_fuertes_caidas_ibex;"
+mysql -e "CREATE TABLE datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo varchar(20), fecha_inicio INT, fecha_fin INT);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20080515-20080615',20080515,20080615);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20081001-20081030',20081001,20081030);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20100415-20100515',20100415,20100515);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20110715-20110830',20110715,20110830);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20120401-20120530',20120401,20120530);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20150801-20150930',20150801,20150930);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20151215-20160209',20151215,20160209);"
+mysql -e "INSERT INTO datos_desa.tb_stg_periodos_fuertes_caidas_ibex (id_periodo,fecha_inicio,fecha_fin) VALUES ('20170715-20170901',20170715,20170901);"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_periodos_fuertes_caidas_ibex;"
+mysql -e "CREATE TABLE datos_desa.tb_periodos_fuertes_caidas_ibex AS SELECT SP.id_periodo, SP.fecha_inicio, SP.fecha_fin, DATEDIFF(SP.fecha_fin,SP.fecha_inicio) AS dias_dif FROM datos_desa.tb_stg_periodos_fuertes_caidas_ibex SP LIMIT 20;"
 
 
 #################### Empresas de Google Finance #########
-mysql --login-path=local  -e "SELECT distinct ticker FROM datos_desa.tb_gf01 WHERE ticker NOT LIKE '%.%' ORDER BY ticker;" > empresas_bme.out
+mysql -e "SELECT distinct ticker FROM datos_desa.tb_gf01 WHERE ticker NOT LIKE '%.%' ORDER BY ticker;" > empresas_bme.out
 
 #################### Empresas de Yahoo Finance #########
-mysql --login-path=local  -e "SELECT CONCAT(tabla.ticker,'.MC') FROM ( SELECT distinct ticker FROM datos_desa.tb_gf01 WHERE ticker NOT LIKE '%.%' ORDER BY ticker ) tabla;" > "/root/git/bdml/mod002parser/scripts/bolsa/empresas_yahoo_finance.in"
+mysql -e "SELECT CONCAT(tabla.ticker,'.MC') FROM ( SELECT distinct ticker FROM datos_desa.tb_gf01 WHERE ticker NOT LIKE '%.%' ORDER BY ticker ) tabla;" > "/home/carloslinux/git/bdml/mod002parser/scripts/bolsa/empresas_yahoo_finance.in"
 
 
 

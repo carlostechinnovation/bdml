@@ -14,8 +14,8 @@ echo "Empresas que más crecieron (>8% BRUTO) en ciertos periodos de CRISIS o BO
 
 
 #A.Limpieza
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_001_a\W;"
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_001_b\W;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_001_a\W;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_001_b\W;"
 
 
 #B.Marcamos sólo los inicios y finales de periodos.
@@ -42,7 +42,7 @@ WHERE marca IS NOT NULL;
 EOM
 
 echo -e $CONSULTA
-mysql --login-path=local  -e "${CONSULTA}"
+mysql -e "${CONSULTA}"
 sleep 2s
 
 #C. Para cada periodo, guardamos la lista de valores ordenados por la diferencia DESC
@@ -66,11 +66,11 @@ ORDER BY id_periodo ASC, diferencia_porcentaje DESC\W;
 EOM
 
 echo -e $CONSULTA
-mysql --login-path=local  -e "${CONSULTA}"
+mysql -e "${CONSULTA}"
 sleep 2s
 
 #D. Informe FINAL
-mysql --login-path=local -t --execute="SELECT descripcion, id_periodo, ticker, CASE WHEN flag_subida=1 THEN 'alcista' ELSE 'bajista' END as tendencia_ibex, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_001_b WHERE diferencia_porcentaje > 8 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_001}
+mysql-t --execute="SELECT descripcion, id_periodo, ticker, CASE WHEN flag_subida=1 THEN 'alcista' ELSE 'bajista' END as tendencia_ibex, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_001_b WHERE diferencia_porcentaje > 8 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_001}
 
 
 #######################################################################################################################
@@ -82,8 +82,8 @@ echo "En ciertos periodos cortos de CAIDAS más fuertes del IBEX (es decir, caí
 
 
 #A.Limpieza
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_002_a\W;"
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_002_b\W;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_002_a\W;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_mod005_002_b\W;"
 
 
 #B.Marcamos sólo los inicios y finales de periodos.
@@ -110,7 +110,7 @@ WHERE marca IS NOT NULL\W;
 EOM
 
 echo -e $CONSULTA
-mysql --login-path=local  -e "${CONSULTA}"
+mysql -e "${CONSULTA}"
 sleep 2s
 
 #C. Para cada periodo, guardamos la lista de valores ordenados por la diferencia DESC
@@ -135,11 +135,11 @@ ORDER BY id_periodo ASC, diferencia_porcentaje DESC\W;
 EOM
 
 echo -e $CONSULTA
-mysql --login-path=local  -e "${CONSULTA}"
+mysql -e "${CONSULTA}"
 sleep 2s
 
 #D. Informe FINAL
-mysql --login-path=local -t --execute="SELECT id_periodo, ticker, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_002_b WHERE diferencia_porcentaje > 3 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_002}
+mysql-t --execute="SELECT id_periodo, ticker, precio_inicio, precio_fin, diferencia_porcentaje FROM datos_desa.tb_mod005_002_b WHERE diferencia_porcentaje > 3 ORDER BY id_periodo DESC, diferencia_porcentaje DESC\W;" >> ${PATH_INFORME_002}
 
 
 

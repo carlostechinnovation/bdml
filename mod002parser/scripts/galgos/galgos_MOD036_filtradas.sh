@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
 ################ TABLAS FILTRADAS (a partir de tablas elaboradas) ####################################################################################
@@ -46,7 +46,7 @@ SELECT count(*) as num_filtrada_carrerasgalgos FROM datos_desa.tb_filtrada_carre
 EOF
 
 echo -e "$CONSULTA_FILTRADAS" 2>&1 1>>${LOG_DS}
-mysql --login-path=local -t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
+mysql-t --execute="$CONSULTA_FILTRADAS" >>$LOG_DS
 
 
 echo -e "\n---------------- | 036 | Tablas FILTRADAS --------------" 2>&1 1>>${LOG_DS}

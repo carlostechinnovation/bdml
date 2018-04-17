@@ -1,12 +1,12 @@
 #!/bin/bash
 
 PATH_LOG="/home/carloslinux/Desktop/LOGS/descarga_bruto.log"
-PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/bolsa/"
+PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/bolsa/"
 
 echo "Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${PATH_LOG}
 
 PATH_CARPETA="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
-PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_JAR="/home/carloslinux/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 
 
 
@@ -37,8 +37,8 @@ echo -e "Modulo 002A - Parsear datos"
 
 PATH_DIR_IN="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
 PATH_DIR_OUT="/home/carloslinux/Desktop/DATOS_LIMPIO/bolsa/"
-PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
-PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/bolsa/"
+PATH_JAR="/home/carloslinux/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/bolsa/"
 
 
 ###### YAHOO FINANCE (Solo ejecuto los lunes, porque realmente son datos historicos) (se podria ejecutar cada dia...) #########

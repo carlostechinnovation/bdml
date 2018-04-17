@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #### Limpiar LOG ###
 rm -f $LOG_ML
@@ -98,7 +98,7 @@ EOF
 
 
 echo -e "$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
-mysql --login-path=local -t --execute="$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
+mysql-t --execute="$CONSULTA_VALIDACION" 2>&1 1>>${LOG_ML}
 
 
 ######################### CALCULO DEL SCORE + Rentabilidad en Predicción de target=1o2 y target=1st ################

@@ -1,12 +1,12 @@
 #!/bin/bash
 
 PATH_LOG="/home/carloslinux/Desktop/LOGS/descarga_bruto.log"
-PATH_SCRIPTS="/root/git/bdml/mod002parser/scripts/bolsa/"
+PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/bolsa/"
 
 echo "Modulo 001A - Obtener datos en BRUTO" 2>&1 1>>${PATH_LOG}
 
 PATH_CARPETA="/home/carloslinux/Desktop/DATOS_BRUTO/bolsa/"
-PATH_JAR="/root/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
+PATH_JAR="/home/carloslinux/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
 
 
 ######## BOE - DIA ##################################

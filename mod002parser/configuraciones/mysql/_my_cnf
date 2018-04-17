@@ -1,0 +1,6 @@
+[client]
+host     = localhost
+user     = root
+password = datos1986
+socket   = /var/run/mysqld/mysqld.sock
+#database = mysql

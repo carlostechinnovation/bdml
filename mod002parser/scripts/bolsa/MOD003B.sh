@@ -7,8 +7,8 @@ echo -e "Modulo 003B - Generador de datasets"
 ########### Datasets del i003 ###########
 #############################################################################
 #Tabla de tickers distintos
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_i003_tickers;"
-mysql --login-path=local  -e "CREATE TABLE datos_desa.tb_i003_tickers AS SELECT DISTINCT ticker FROM datos_desa.tb_yf01 ORDER BY ticker ASC;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_i003_tickers;"
+mysql -e "CREATE TABLE datos_desa.tb_i003_tickers AS SELECT DISTINCT ticker FROM datos_desa.tb_yf01 ORDER BY ticker ASC;"
 
 # Array (en bash) de tickers distintos
 array_tickers=()
@@ -73,17 +73,17 @@ JUNTOS.date_concat LIKE '%,%,%' --Grupos de tres elementos. quitamos los que no 
 EOF
 
 #Tabla FINAL
-mysql --login-path=local  -e "DROP TABLE IF EXISTS datos_desa.tb_i003_dataset;"
-mysql --login-path=local  -e "CREATE TABLE datos_desa.tb_i003_dataset;"
+mysql -e "DROP TABLE IF EXISTS datos_desa.tb_i003_dataset;"
+mysql -e "CREATE TABLE datos_desa.tb_i003_dataset;"
 
 
 # Para cada elemento del array (ticker), asigno ID1, ID2, ID3 por grupos de 3, moviendo ventana
 
 for item in array_tickers
 do
-    mysql --login-path=local  -e "TRUNCATE datos_desa.tb_i003_temp1; SET @rank1=0; SET @rank2=0; SET @rank3=0;"
-    mysql --login-path=local  -e "INSERT INTO datos_desa.tb_i003_temp1 SELECT @rank1:=@rank1+1 AS rank1, @rank2:=@rank2+2 AS rank2, @rank3:=@rank3+3 AS rank3, ticker, date, gap_diario, open, close, volumen FROM datos_desa.tb_yf01 WHERE ticker=$item ORDER BY date ASC;"
-    mysql --login-path=local  -e "$CONSULTA"
+    mysql -e "TRUNCATE datos_desa.tb_i003_temp1; SET @rank1=0; SET @rank2=0; SET @rank3=0;"
+    mysql -e "INSERT INTO datos_desa.tb_i003_temp1 SELECT @rank1:=@rank1+1 AS rank1, @rank2:=@rank2+2 AS rank2, @rank3:=@rank3+3 AS rank3, ticker, date, gap_diario, open, close, volumen FROM datos_desa.tb_yf01 WHERE ticker=$item ORDER BY date ASC;"
+    mysql -e "$CONSULTA"
 
 done
 

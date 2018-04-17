@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #Borrar log
 rm -f ${LOG_010_FUT}
@@ -152,7 +152,7 @@ EOF
 
 echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE\n********************************\n" 2>&1 1>>${LOG_010_FUT}
-mysql --login-path=local --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
+mysql--execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
@@ -211,7 +211,7 @@ EOF
 
 echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Carreras...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS\n********************************\n" 2>&1 1>>${LOG_010_FUT}
-mysql --login-path=local --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
+mysql--execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
@@ -278,7 +278,7 @@ EOF
 
 echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Historico...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO\n********************************\n" 2>&1 1>>${LOG_010_FUT}
-mysql --login-path=local --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
+mysql--execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_HISTORICO" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 
@@ -344,7 +344,7 @@ EOF
 
 echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Posiciones...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES\n********************************\n" 2>&1 1>>${LOG_010_FUT}
-mysql --login-path=local --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
+mysql--execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_POSICIONES" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
 
 

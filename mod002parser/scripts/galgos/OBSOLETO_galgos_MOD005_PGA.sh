@@ -10,7 +10,7 @@ echo -e $(date +"%T")"SALIDA: tabla de predicciones (galgo_nombre + target-punto
 
 
 #ENTRADA: Carreras futuras a predecir (Sportium)
-mysql --login-path=local --execute="SELECT COUNT(*) as num_galgos_iniciales_SPORTIUM FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" 2>&1 1>>${PATH_LOG}
+mysql--execute="SELECT COUNT(*) as num_galgos_iniciales_SPORTIUM FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" 2>&1 1>>${PATH_LOG}
 
 
 

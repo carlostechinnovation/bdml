@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #Borrar log
 rm -f ${LOG_012}
@@ -334,7 +334,7 @@ echo -e "datos_desa.tb_galgos_historico_norm" 2>&1 1>>${LOG_012}
 echo -e "datos_desa.tb_galgos_agregados_norm" 2>&1 1>>${LOG_012}
 echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${LOG_012}
 
-mysql --login-path=local --execute="$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_012}
+mysql--execute="$CONSULTA_NORMALIZACIONES" 2>&1 1>>${LOG_012}
 
 
 ##########################################

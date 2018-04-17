@@ -22,9 +22,9 @@ public class Constantes {
 
 	// -------------- GALGOS --------
 	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 11 * 7;// Ultimas X semanas
-	public static Integer MAX_NUM_CARRERAS_SEMILLA = 100;// TODO 100 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
-															// las derivadas)
-	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 100; //
+	public static Integer MAX_NUM_CARRERAS_SEMILLA = 1;// TODO 100 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
+														// las derivadas)
+	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 10;// TODO MAX*100 //
 																						// semillas*derivadas
 	public static Integer MAX_PROFUNDIDAD_PROCESADA = 2;// No aumentar por encima de 2, porque se generan muchos
 	// historicos, pero no cogemos suficientes posiciones-en-carrera
@@ -84,8 +84,7 @@ public class Constantes {
 
 	/**
 	 * @param in
-	 * @param tipo
-	 *            1-String, 2-Decimal
+	 * @param tipo 1-String, 2-Decimal
 	 * @return
 	 */
 	public static String tratar(String in, int tipo) {
@@ -100,10 +99,8 @@ public class Constantes {
 	}
 
 	/**
-	 * @param fechaSrt
-	 *            22/10/17
-	 * @param horaStr
-	 *            19:54
+	 * @param fechaSrt 22/10/17
+	 * @param horaStr  19:54
 	 * @return
 	 */
 	public static Calendar parsearFechaHora(String fechaStr, String horaStr, boolean anioIncompleto) {
@@ -153,7 +150,7 @@ public class Constantes {
 		String aux = (in != null) ? in.trim() : null;
 
 		String out = null;
-		if (aux != null && aux != "unknown") {
+		if (aux != null && !aux.isEmpty() && aux != "unknown") {
 			out = aux.toUpperCase();
 		}
 		return out;
@@ -161,8 +158,7 @@ public class Constantes {
 
 	/**
 	 * @param val
-	 * @param decimales
-	 *            Numero de decimales
+	 * @param decimales Numero de decimales
 	 * @return
 	 */
 	public static Float round2(Float val, int decimales) {

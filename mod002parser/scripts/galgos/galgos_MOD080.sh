@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
 if [ "$#" -ne 1 ]; then
@@ -25,20 +25,20 @@ echo -e "ID_EJECUCION="$ID_EJECUCION
 PREFIJO="PRO_"$ID_EJECUCION"_"
 
 echo -e "Guardando SEMILLAS con ID_EJECUCION..." >>$LOG_080
-mysql --login-path=local --execute="CREATE TABLE datos_desa.${PREFIJO}tb_cg_semillas_sportium AS SELECT * FROM datos_desa.tb_cg_semillas_sportium;" 2>&1 1>>${LOG_080}
+mysql--execute="CREATE TABLE datos_desa.${PREFIJO}tb_cg_semillas_sportium AS SELECT * FROM datos_desa.tb_cg_semillas_sportium;" 2>&1 1>>${LOG_080}
 
 #pendiente (Semillas Betbright)
 
 
 echo -e "Guardando TABLAS BRUTAS con ID_EJECUCION..." >>$LOG_080
-mysql --login-path=local --execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_carreras AS SELECT * FROM datos_desa.tb_galgos_carreras;" 2>&1 1>>${LOG_080}
-mysql --login-path=local --execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_posiciones_en_carreras AS SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras;" 2>&1 1>>${LOG_080}
-mysql --login-path=local --execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_historico AS SELECT * FROM datos_desa.tb_galgos_historico;" 2>&1 1>>${LOG_080}
-mysql --login-path=local --execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_agregados AS SELECT * FROM datos_desa.tb_galgos_agregados;" 2>&1 1>>${LOG_080}
+mysql--execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_carreras AS SELECT * FROM datos_desa.tb_galgos_carreras;" 2>&1 1>>${LOG_080}
+mysql--execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_posiciones_en_carreras AS SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras;" 2>&1 1>>${LOG_080}
+mysql--execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_historico AS SELECT * FROM datos_desa.tb_galgos_historico;" 2>&1 1>>${LOG_080}
+mysql--execute="CREATE TABLE datos_desa.${PREFIJO}tb_galgos_agregados AS SELECT * FROM datos_desa.tb_galgos_agregados;" 2>&1 1>>${LOG_080}
 
 
 echo -e "Guardando TABLAS ECONOMICAS con ID_EJECUCION..." >>$LOG_080
-mysql --login-path=local --execute="CREATE TABLE datos_desa.${PREFIJO}datos_desa.tb_rentabilidades AS SELECT * FROM datos_desa.datos_desa.tb_rentabilidades;" 2>&1 1>>${LOG_080}
+mysql--execute="CREATE TABLE datos_desa.${PREFIJO}datos_desa.tb_rentabilidades AS SELECT * FROM datos_desa.datos_desa.tb_rentabilidades;" 2>&1 1>>${LOG_080}
 
 
 echo -e "Guardando INFORMES con ID_EJECUCION..." >>$LOG_080

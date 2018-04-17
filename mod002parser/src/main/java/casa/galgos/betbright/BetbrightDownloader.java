@@ -38,7 +38,7 @@ public class BetbrightDownloader {
 		System.out.println("INICIO - Prueba local...");
 
 		String urlCarrera = "https://www.betbright.com/greyhound-racing/tomorrow";
-		String pathOut = "/root/git/bdml/mod002parser/src/test/resources/bb_temp";
+		String pathOut = "/home/carloslinux/git/bdml/mod002parser/src/test/resources/bb_temp";
 		Boolean borrarSiExiste = true;
 
 		BetbrightDownloader instancia = new BetbrightDownloader();
@@ -62,14 +62,11 @@ public class BetbrightDownloader {
 	 * 
 	 * Utiliza este hack: https://github.com/abiyani/automate-save-page-as
 	 * 
-	 * @param urlCarrera
-	 *            URL de la página web a descargar
-	 * @param pathOut
-	 *            Path absoluto del FICHERO (no carpeta) donde se van a GUARDAR los
-	 *            DATOS BRUTOS.
-	 * @param borrarSiExiste
-	 *            BOOLEAN que indica si se quiere BORRAR el FICHERO (no la carpeta)
-	 *            de donde se van a guardar los DATOS BRUTOS.
+	 * @param urlCarrera     URL de la página web a descargar
+	 * @param pathOut        Path absoluto del FICHERO (no carpeta) donde se van a
+	 *                       GUARDAR los DATOS BRUTOS.
+	 * @param borrarSiExiste BOOLEAN que indica si se quiere BORRAR el FICHERO (no
+	 *                       la carpeta) de donde se van a guardar los DATOS BRUTOS.
 	 */
 	public void descargarDeURLsAFicheros(String urlCarrera, String pathOut, Boolean borrarSiExiste) {
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/root/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
 #### Limpiar LOG ###
@@ -125,15 +125,15 @@ ALTER TABLE datos_desa.tb_val_1st_riesgo_${TAG} ADD INDEX tb_val_1st_riesgo_${TA
 EOF
 
 echo -e "$CONSULTA_SCORE" 2>&1 1>>${LOG_042}
-mysql --login-path=local -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_042}
+mysql-t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_042}
 
 
 #FILE_TEMP="./temp_numero_MOD042"
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1st, pero no en las otras predichas.
-#mysql --login-path=local -N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1st_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
+#mysql-N --execute="SELECT SUM(acierto) as num_aciertos FROM datos_desa.tb_val_1st_riesgo_${TAG} LIMIT 1;" > ${FILE_TEMP}
 #numero_aciertos=$(cat ${FILE_TEMP})
 
-#mysql --login-path=local -N --execute="SELECT count(*) as num_predicciones_1st FROM datos_desa.tb_val_1st_riesgo_${TAG} WHERE predicha_1st = true LIMIT 1;" > ${FILE_TEMP}
+#mysql-N --execute="SELECT count(*) as num_predicciones_1st FROM datos_desa.tb_val_1st_riesgo_${TAG} WHERE predicha_1st = true LIMIT 1;" > ${FILE_TEMP}
 #numero_predicciones_1st=$(cat ${FILE_TEMP})
 
 #echo -e "MOD042_1st numero_aciertos = ${numero_aciertos}" 2>&1 1>>${LOG_042}
@@ -144,7 +144,7 @@ mysql --login-path=local -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_042}
 
 
 echo -e "MOD042_1st Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_042}
-mysql --login-path=local --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1st, acierto, fortaleza FROM datos_desa.tb_val_1st_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_042}
+mysql--execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1st, acierto, fortaleza FROM datos_desa.tb_val_1st_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_042}
 
 
 ##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################
