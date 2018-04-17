@@ -4,6 +4,7 @@
 package casa.mod002a.ine;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import junit.framework.Assert;
@@ -14,6 +15,7 @@ import utilidadestest.PadreTest;
  * @author root
  *
  */
+@Ignore
 public class IneParserTest extends PadreTest {
 
 	IneParser instancia;

@@ -4,6 +4,7 @@
 package casa.mod002a.datosmacro;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import junit.framework.Assert;
@@ -14,6 +15,7 @@ import utilidadestest.PadreTest;
  * @author root
  *
  */
+@Ignore
 public class DM14ParserTest extends PadreTest {
 
 	DM14Parser instancia;
