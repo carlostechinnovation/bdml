@@ -146,7 +146,7 @@ mysql -t --execute="SELECT id_periodo, ticker, precio_inicio, precio_fin, difere
 #######################################################################################################################
 ################# Análisis MOD005_003: Modelo predictivo SVC
 
-#python3 '/home/carloslinux/Desktop/GIT_REPO_PYTHON_POC_ML/python_poc_ml/informe_003/informe_003.py'
+#python3 '/home/carloslinux/Desktop/WORKSPACES/wksp_pycharm/python_poc_ml/informe_003/informe_003.py'
 
 
 

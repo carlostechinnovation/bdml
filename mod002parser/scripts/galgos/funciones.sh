@@ -12,6 +12,7 @@ PATH_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/"
 PATH_INFORMES="/home/carloslinux/Desktop/INFORMES/"
 PATH_LOGS="/home/carloslinux/Desktop/LOGS/"
 PATH_EXTERNAL_DATA="/home/carloslinux/Desktop/EXTERNAL/"
+PATH_MYSQL_PRIV_SECURE="/var/lib/mysql-files/"
 
 TAG_GBGB="GBGB"
 FILE_SENTENCIAS_CREATE_TABLE="${PATH_LIMPIO}galgos_sentencias_create_table"
@@ -52,6 +53,7 @@ LOG_045="${PATH_LOGS}galgos_045_PRED_FUT.log"
 LOG_050="${PATH_LOGS}galgos_050_prediccion.log"
 LOG_060_TABLAS="${PATH_LOGS}galgos_060_tablas.log"
 LOG_060_ENDTOEND="${PATH_LOGS}galgos_060_endtoend.log"
+LOG_061="${PATH_LOGS}galgos_061_export.log"
 LOG_070="${PATH_LOGS}INFORME_TIC.txt"
 LOG_080="${PATH_LOGS}galgos_080_guardar_info_productiva.txt"
 LOG_999_LIMPIEZA_FINAL="${PATH_LOGS}galgos_999_limpieza.log"
@@ -63,8 +65,8 @@ INFORME_PREDICCIONES="${PATH_LOGS}INFORME_PREDICCIONES.txt"
 
 EXTERNAL_010_BRUTO="${PATH_EXTERNAL_DATA}010_BRUTOS/"
 EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
-EXTERNAL_037_DATASETS="${PATH_EXTERNAL_DATA}037_DATASETS/"
-EXTERNAL_050_FUTURO="${PATH_EXTERNAL_DATA}050_FUTURO/"
+EXTERNAL_038_DS_PASADOS="${PATH_EXTERNAL_DATA}038_DS_PASADOS/"
+EXTERNAL_050_DS_FUTUROS="${PATH_EXTERNAL_DATA}050_DS_FUTUROS/"
 
 #########################################################################
 
@@ -668,7 +670,7 @@ echo -e "-----------------------------------------------------\n"  2>&1 1>>${log
 
 ########## EXPORTAR TABLA A FICHERO EXTERNO (para estudiar con KNIME) #########
 function exportarTablaAFichero(){
-  TEMP_DATA="/var/lib/mysql -files/data.txt"
+  TEMP_DATA="${PATH_MYSQL_PRIV_SECURE}data.txt"
   SCHEMA="${1}"
   TABLA="${2}"
   PATH_OUTPUT="${3}"
