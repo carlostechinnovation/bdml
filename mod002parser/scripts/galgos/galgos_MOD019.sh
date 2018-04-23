@@ -32,10 +32,10 @@ exportarTablaAFichero "datos_desa" "tb_galgos_agregados" "${PATH_MYSQL_PRIV_SECU
 
 ##012
 echo -e "TABLAS LIMNOR (pasadas + futuras)" >> "${LOG_019_EXPORT}"
-exportarTablaAFichero "datos_desa" "tb_galgos_carreras_norm" "${PATH_MYSQL_PRIV_SECURE}010_carreras_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_010_BRUTO}010_carreras_norm.txt"
-exportarTablaAFichero "datos_desa" "tb_galgos_posiciones_en_carreras_norm" "${PATH_MYSQL_PRIV_SECURE}010_galgos_en_carreras_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_010_BRUTO}010_galgos_en_carreras_norm.txt"
-exportarTablaAFichero "datos_desa" "tb_galgos_historico_norm" "${PATH_MYSQL_PRIV_SECURE}010_historico_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_010_BRUTO}010_historico_norm.txt"
-exportarTablaAFichero "datos_desa" "tb_galgos_agregados_norm" "${PATH_MYSQL_PRIV_SECURE}010_agregados_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_010_BRUTO}010_agregados_norm.txt"
+exportarTablaAFichero "datos_desa" "tb_galgos_carreras_norm" "${PATH_MYSQL_PRIV_SECURE}010_carreras_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_012_LIMNOR}010_carreras_norm.txt"
+exportarTablaAFichero "datos_desa" "tb_galgos_posiciones_en_carreras_norm" "${PATH_MYSQL_PRIV_SECURE}010_galgos_en_carreras_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_012_LIMNOR}010_galgos_en_carreras_norm.txt"
+exportarTablaAFichero "datos_desa" "tb_galgos_historico_norm" "${PATH_MYSQL_PRIV_SECURE}010_historico_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_012_LIMNOR}010_historico_norm.txt"
+exportarTablaAFichero "datos_desa" "tb_galgos_agregados_norm" "${PATH_MYSQL_PRIV_SECURE}010_agregados_norm.txt" "${LOG_019_EXPORT}" "${EXTERNAL_012_LIMNOR}010_agregados_norm.txt"
 
 
 #####################################################################################################
