@@ -87,6 +87,8 @@ ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
 
+
+
 echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 
 #echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
@@ -96,6 +98,8 @@ echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 #echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 #limpieza
 
+echo -e $(date +"%T")" POSTERIORI: ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
+echo -e ${PATH_SCRIPTS}'galgos_MOD099.sh' "$INFORME_PREDICCIONES_COMANDOS" >>$LOG_MASTER
 
 echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
 

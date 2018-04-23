@@ -172,9 +172,11 @@ mysql -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_2"  2>&1 1>>$LOG_050
 ###################### INFORME FINAL ##########################
 echo -e "MOD050 - Informe FINAL..." 2>&1 1>>${LOG_050}
 echo -e "Ruta: "$INFORME_PREDICCIONES 2>&1 1>>${LOG_050}
+echo -e "Ruta-comandos: "$INFORME_PREDICCIONES_COMANDOS 2>&1 1>>${LOG_050}
 
 #limpiar
 rm -f "$INFORME_PREDICCIONES"
+rm -f "$INFORME_PREDICCIONES_COMANDOS"
 
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
@@ -184,12 +186,27 @@ FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
 WHERE A.posicion_predicha=1 
-
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
 
-echo -e "$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
+
+read -d '' CONSULTA_PREDICCIONES_INFORME_COMANDOS <<- EOF
+SELECT
+concat('curl \\\\\\'http://www.gbgb.org.uk/Racecard.aspx?dogName=', replace(A.galgo_nombre,' ','%20'), '\\\\\\' | grep \\\\\\'',lpad(B.dia,2,'0'),'/',lpad(B.mes,2,'0'),'/',SUBSTRING(B.anio,3,2),'\\\\\\' >> ${INFORME_BRUTO_POSTERIORI}') as comando_futuro
+FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
+LEFT JOIN  datos_desa.tb_galgos_carreras B
+ON (A.id_carrera=B.id_carrera)
+WHERE A.posicion_predicha=1 
+ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
+EOF
+
+echo -e "\n$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
 mysql -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$INFORME_PREDICCIONES
+echo -e "\n$CONSULTA_PREDICCIONES_INFORME_COMANDOS" # 2>&1 1>>${LOG_050}
+mysql -sN --execute="$CONSULTA_PREDICCIONES_INFORME_COMANDOS"  2>&1 1>>$INFORME_PREDICCIONES_COMANDOS
+
+#Permiso de ejecucion
+chmod 777 $INFORME_PREDICCIONES_COMANDOS
 
 
 ###################### MAIL ##########################
