@@ -31,6 +31,7 @@ exportarTablaAFichero "datos_desa" "tb_ds_pasado_test_features_${TAG}" "${PATH_M
 exportarTablaAFichero "datos_desa" "tb_ds_pasado_test_targets_${TAG}" "${PATH_MYSQL_PRIV_SECURE}037_ds_pasado_test_t.txt" "${LOG_061}" "${EXTERNAL_037_DS_PASADOS_SPLIT}037_ds_pasado_test_t.txt"
 exportarTablaAFichero "datos_desa" "tb_ds_pasado_validation_features_${TAG}" "${PATH_MYSQL_PRIV_SECURE}037_ds_pasado_val_f.txt" "${LOG_061}" "${EXTERNAL_037_DS_PASADOS_SPLIT}037_ds_pasado_val_f.txt"
 exportarTablaAFichero "datos_desa" "tb_ds_pasado_validation_targets_${TAG}" "${PATH_MYSQL_PRIV_SECURE}037_ds_pasado_val_t.txt" "${LOG_061}" "${EXTERNAL_037_DS_PASADOS_SPLIT}037_ds_pasado_val_t.txt"
+exportarTablaAFichero "datos_desa" "tb_val_${TAG}" "${PATH_MYSQL_PRIV_SECURE}037_ds_pasado_val_tptr.txt" "${LOG_061}" "${EXTERNAL_037_DS_PASADOS_SPLIT}037_ds_pasado_val_tptr.txt" #target predicho y real
 
 ##PASADO: 038
 echo -e "Datasets pasados" >> "${LOG_061}"

@@ -38,11 +38,11 @@ echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
 
 
-#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
 analisisRentabilidadesPorSubgrupos >>$LOG_MASTER
@@ -84,9 +84,7 @@ echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "FUTURA" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
-
-
+${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
 
 
 echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
@@ -99,7 +97,7 @@ echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 #limpieza
 
 echo -e $(date +"%T")" POSTERIORI: ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
-echo -e ${PATH_SCRIPTS}'galgos_MOD099.sh' "$INFORME_PREDICCIONES_COMANDOS" >>$LOG_MASTER
+echo -e ${PATH_SCRIPTS}'galgos_MOD099.sh' "$INFORME_PREDICCIONES_COMANDOS" "$SUBGRUPO_GANADOR" >>$LOG_MASTER #EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
 
 echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
 

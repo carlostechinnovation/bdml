@@ -8,36 +8,141 @@ rm -f "${LOG_099}"
 
 ####### PARAMETROS ###
 INFORME_COMANDOS_INPUT="${1}"
+TAG="${2}"
 
 
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | INICIO" >>$LOG_070
 echo -e "MOD099 --> LOG = "${LOG_099}
 
-#Limpiar informe
-rm -f "${LOG_099}"
-rm -f "${INFORME_BRUTO_POSTERIORI}"
-rm -f "${INFORME_LIMPIO_POSTERIORI}"
 
-
-########## EJECUTANDO COMANDOS #################
+########## EJECUTANDO COMANDOS (calculados previamente en el script 050) #################
 echo -e "Input (comandos): "$INFORME_COMANDOS_INPUT 2>&1 1>>${LOG_099}
-$INFORME_COMANDOS_INPUT
+#rm -f "${INFORME_BRUTO_POSTERIORI}"
+#$INFORME_COMANDOS_INPUT
 echo -e "\nOutput (HTML bruto leido): "$INFORME_BRUTO_POSTERIORI 2>&1 1>>${LOG_099}
 
 
 ########## BUCLE Limpieza #################
 echo -e "Limpieza POSTERIORI..." 2>&1 1>>${LOG_099}
-
-echo -e "|Date|Distancia|TP|STmHcp|Fin|By|WinnerOr2nd|Venue|Remarks|WinTime|Going|SP|Class|CalcTm|Race|Meeting" >>$INFORME_LIMPIO_POSTERIORI
+rm -f "${INFORME_LIMPIO_POSTERIORI}"
+echo -e "|Date|Distancia|TP|STmHcp|Fin|By|WinnerOr2nd|Venue|Remarks|WinTime|Going|SP|Class|CalcTm|Race|Meeting" >>${LOG_099}
 
 sed 's/\t//g' ${INFORME_BRUTO_POSTERIORI} | sed 's/center//g' | sed 's/resultsRace.aspx?id=//g' | sed 's/<\/td>//g' | sed 's/<\/a>//g' | sed 's/align=\"\"//g' | sed 's/ title=\"Race\"//g' | sed 's/a title=\"Meeting\" href=\"//g' | sed 's/<td/|/g' | sed 's/<//g' | sed 's/>//g' | sed 's/a href=\"//g' | sed 's/\"Race//g' | sed 's/resultsMeeting\.aspx//g' | sed 's/\"Meeting//g' | sed 's/\?id=//g' | sed 's/&nbsp;//g' 2>&1 1>>${INFORME_LIMPIO_POSTERIORI}
 
 echo -e "\n\nOutput (HTML limpio leido): "$INFORME_LIMPIO_POSTERIORI 2>&1 1>>${LOG_099}
 
 
+######### Tabla sobre esos datos REALES ######
+read -d '' CONSULTA_TABLA_LIMPIA_POSTERIORI <<- EOF
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_real;
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_real (
+real_vacio varchar(5), 
+real_fecha varchar(10), 
+real_distancia INT, 
+real_trap SMALLINT, 
+real_stmhcp varchar(10), 
+real_posicion SMALLINT, 
+real_by_espacio varchar(10), 
+real_winneror2nd varchar(30), 
+real_venue varchar(30), 
+real_remarks varchar(30), 
+real_wintime decimal(6,4), 
+real_going varchar(10), 
+real_sp varchar(10), 
+real_class varchar(5), 
+real_calc_time varchar(10), 
+real_id_carrera BIGINT, 
+real_id_campeonato BIGINT);
+EOF
+
+echo -e "\n$CONSULTA_TABLA_LIMPIA_POSTERIORI" 2>&1 1>>${LOG_099}
+mysql -t --execute="$CONSULTA_TABLA_LIMPIA_POSTERIORI"  2>&1 1>>${LOG_099}
+
+consultar "TRUNCATE TABLE datos_desa.tb_galgos_fut_real\W;" "${LOG_099}"
+consultar "LOAD DATA LOCAL INFILE '${INFORME_LIMPIO_POSTERIORI}' INTO TABLE datos_desa.tb_galgos_fut_real FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "${LOG_099}"
+
+
+###################################################################################################
+##Tablas enriquecidas con los features que conociamos a priori y el target predicho a priori
+#Cuando quería predecir las carreras futuras, no conocía el id_carrera, asi que me inventé 1,2,3...
+#Ahora en el resultado real sí veo el id_carrera.
+#identifico las carreras simplemente porque vienen en el orden que puse en el dataset (ordenado por id_carrera inventado). 
+
+echo -e "\nDebo comprobar que tengo exactamente el mismo número de filas en fut_predicha y en fut_real" 2>&1 1>>${LOG_099}
+
+
+
+read -d '' CONSULTA_PASADO_Y_FUTURO <<- EOF
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_predicha;
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_predicha 
+AS 
+SELECT id_carrera AS id_carrera, MAX(target_predicho) as target_predicho_1st 
+FROM (
+    SELECT id_carrera, target_predicho FROM datos_desa.tb_fut_${TAG}
+    GROUP BY id_carrera, target_predicho ORDER BY id_carrera ASC, target_predicho DESC
+) t 
+GROUP BY id_carrera ORDER BY id_carrera ASC;
+
+SELECT count(*) AS num_fut_predicha FROM datos_desa.tb_galgos_fut_predicha LIMIT 1;
+
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_predicha2;
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_predicha2 
+AS 
+SELECT A.* 
+FROM datos_desa.tb_fut_${TAG} A
+INNER JOIN datos_desa.tb_galgos_fut_predicha B
+ON (A.id_carrera=B.id_carrera AND A.target_predicho=B.target_predicho_1st) ;
+
+SELECT count(*) AS num_fut_predicha2 FROM datos_desa.tb_galgos_fut_predicha2 LIMIT 1;
+SELECT count(*) AS num_fut_real FROM datos_desa.tb_galgos_fut_real LIMIT 1;
+
+
+
+-- Combinacion por columna (cbind)
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_combinada;
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_combinada 
+AS 
+
+SELECT a.*,b.*
+FROM
+( SELECT @row1 := @row1 + 1 AS numero1, A1.*
+  FROM   datos_desa.tb_galgos_fut_predicha2 A1, (SELECT @row1 := 0) r
+) a
+INNER JOIN
+( SELECT @row2 := @row2 + 1 AS numero2, B1.*
+  FROM   datos_desa.tb_galgos_fut_real B1, (SELECT @row2 := 0) r
+) b 
+ON a.numero1 = b.numero2;
+
+SELECT count(*) AS num_fut_combinada FROM datos_desa.tb_galgos_fut_combinada;
+SELECT * FROM datos_desa.tb_galgos_fut_combinada LIMIT 5;
+EOF
+
+echo -e "\n$CONSULTA_PASADO_Y_FUTURO" 2>&1 1>>${LOG_099}
+mysql -t --execute="$CONSULTA_PASADO_Y_FUTURO"  2>&1 1>>${LOG_099}
+
+
+
+################################## Extraccion a dataset para analisis ###########
+echo -e "Datasets futuro (predicho y real)" >> "${LOG_099}"
+exportarTablaAFichero "datos_desa" "tb_galgos_fut_combinada" "${PATH_MYSQL_PRIV_SECURE}099_ds_futuro_frfp.txt" "${LOG_099}" "${EXTERNAL_050_DS_FUTUROS}099_ds_futuro_frfp.txt"
+
+
+
 #####################################################################################################
 
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | FIN" >>$LOG_070
+
+
+
 
 
 
