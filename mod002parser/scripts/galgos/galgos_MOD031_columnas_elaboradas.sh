@@ -1021,6 +1021,8 @@ RIGHT JOIN datos_desa.tb_galgos_historico_norm C ON (B.id_carrera=C.id_carrera A
 WHERE (B.id_carrera IS NULL AND B.galgo_nombre IS NULL)
 ;
 
+ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_fullouterjoin1 ADD INDEX tb_ecg_${sufijo}_foj1ids_idx(id_carrera,galgo_nombre);
+
 
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1;
 
@@ -1217,7 +1219,7 @@ analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE}"
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-#borrarTablasInnecesarias "${sufijo}"
+borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
