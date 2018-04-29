@@ -158,7 +158,7 @@ calculoEconomicoPasado "1st" "1" "2.50" "3.00" "SP250300" "${TAG}" "1" "${LOG_04
 calculoEconomicoPasado "1st" "1" "1.00" "2.00" "SP100200" "${TAG}" "1" "${LOG_042}"
 calculoEconomicoPasado "1st" "1" "1.50" "2.50" "SP150250" "${TAG}" "1" "${LOG_042}"
 calculoEconomicoPasado "1st" "1" "2.00" "3.00" "SP200300" "${TAG}" "1" "${LOG_042}"
-calculoEconomicoPasado "1st" "1" "2.50" "3.50" "SP200300" "${TAG}" "1" "${LOG_042}"
+calculoEconomicoPasado "1st" "1" "2.50" "3.50" "SP250350" "${TAG}" "1" "${LOG_042}"
 #span=infinito
 calculoEconomicoPasado "1st" "1" "3.00" "999.00" "SP30099900" "${TAG}" "1" "${LOG_042}"
 calculoEconomicoPasado "1st" "1" "1.00" "999.00" "SP10099900" "${TAG}" "1" "${LOG_042}"

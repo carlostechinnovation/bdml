@@ -17,8 +17,8 @@ echo -e "MOD099 --> LOG = "${LOG_099}
 
 ########## EJECUTANDO COMANDOS (calculados previamente en el script 050) #################
 echo -e "Input (comandos): "$INFORME_COMANDOS_INPUT 2>&1 1>>${LOG_099}
-#rm -f "${INFORME_BRUTO_POSTERIORI}"
-#$INFORME_COMANDOS_INPUT
+rm -f "${INFORME_BRUTO_POSTERIORI}"
+$INFORME_COMANDOS_INPUT
 echo -e "\nOutput (HTML bruto leido): "$INFORME_BRUTO_POSTERIORI 2>&1 1>>${LOG_099}
 
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_predicha
 AS 
 SELECT id_carrera AS id_carrera, MAX(target_predicho) as target_predicho_1st 
 FROM (
-    SELECT id_carrera, target_predicho FROM datos_desa.tb_fut_${TAG}
+    SELECT id_carrera, target_predicho FROM datos_desa.tb_fut_1st_final_riesgo_${TAG}
     GROUP BY id_carrera, target_predicho ORDER BY id_carrera ASC, target_predicho DESC
 ) t 
 GROUP BY id_carrera ORDER BY id_carrera ASC;
@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_predicha2;
 CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_predicha2 
 AS 
 SELECT A.* 
-FROM datos_desa.tb_fut_${TAG} A
+FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 INNER JOIN datos_desa.tb_galgos_fut_predicha B
 ON (A.id_carrera=B.id_carrera AND A.target_predicho=B.target_predicho_1st) ;
 
@@ -134,6 +134,36 @@ mysql -t --execute="$CONSULTA_PASADO_Y_FUTURO"  2>&1 1>>${LOG_099}
 ################################## Extraccion a dataset para analisis ###########
 echo -e "Datasets futuro (predicho y real)" >> "${LOG_099}"
 exportarTablaAFichero "datos_desa" "tb_galgos_fut_combinada" "${PATH_MYSQL_PRIV_SECURE}099_ds_futuro_frfp.txt" "${LOG_099}" "${EXTERNAL_050_DS_FUTUROS}099_ds_futuro_frfp.txt"
+
+
+################### Rentabilidad a posteriori (tras 2 días) #######
+
+echo -e "Rentabilidad a posteriori (tras 2 días)..." 2>&1 1>>${LOG_099}
+rm -f "${INFORME_RENTABILIDAD_POSTERIORI}"
+
+
+FILE_TEMP_PRED="./temp_MOD099_num_predicciones_posteriori"
+rm -f ${FILE_TEMP_PRED}
+mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_galgos_fut_combinada;" > ${FILE_TEMP_PRED}
+numero_predicciones_posteriori=$(cat ${FILE_TEMP_PRED})
+
+
+FILE_TEMP="./temp_MOD099_rentabilidad_posteriori"
+rm -f ${FILE_TEMP}
+mysql -N --execute="SELECT ROUND( 100.0 * SUM(ganado)/SUM(gastado) , 2) AS rentabilidad FROM ( SELECT numero1, fortaleza, 1 AS gastado, CASE WHEN real_posicion=1 THEN cast(numerador AS decimal(2,0)) / cast(denominador AS decimal(2,0)) ELSE 0 END AS ganado FROM ( SELECT numero1, fortaleza, real_posicion, real_sp, substring_index(real_sp,'/',1) as numerador, substring_index(real_sp,'/',-1) as denominador FROM datos_desa.tb_galgos_fut_combinada ) d ) fuera;" > ${FILE_TEMP}
+rentabilidad_posteriori=$( cat ${FILE_TEMP})
+
+
+FILE_TEMP="./temp_MOD099_num_aciertos_posteriori"
+mysql -N --execute="SELECT count(*) FROM datos_desa.tb_galgos_fut_combinada WHERE real_posicion=1" > ${FILE_TEMP}
+numero_aciertos_posteriori=$( cat ${FILE_TEMP})
+
+
+COBERTURA_posteriori=$(echo "scale=2; $numero_aciertos_posteriori / $numero_predicciones_posteriori" | bc -l)
+
+####SALIDA
+MENSAJE="FUTURO_POSTERIORI --> TAG=${TAG}  cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
+echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
 
 

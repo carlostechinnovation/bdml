@@ -1,9 +1,11 @@
 #!/bin/bash
 
 DATASET_TEST_PORCENTAJE="0.10"
-DATASET_VALIDATION_PORCENTAJE="0.40"
-RENTABILIDAD_MINIMA="25"
+DATASET_VALIDATION_PORCENTAJE="0.30"
+RENTABILIDAD_MINIMA="120"
+COBERTURA_MINIMA="0.35"
 PORCENTAJE_SUFICIENTES_CASOS="0.1"
+CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
 PATH_JAR="/home/carloslinux/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
@@ -66,6 +68,7 @@ INFORME_PREDICCIONES="${PATH_LOGS}INFORME_PREDICCIONES.txt"
 INFORME_PREDICCIONES_COMANDOS="${PATH_LOGS}INFORME_PREDICCIONES_COMANDOS.sh"
 INFORME_BRUTO_POSTERIORI="${PATH_LOGS}INFORME_BRUTO_POSTERIORI.txt"
 INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}INFORME_LIMPIO_POSTERIORI.txt"
+INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}INFORME_RENTABILIDAD_POSTERIORI.txt"
 
 EXTERNAL_010_BRUTO="${PATH_EXTERNAL_DATA}010_BRUTOS/"
 EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
@@ -411,6 +414,22 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" >>$PATH_LOG
 
 
 
+function analizarScoreSobreSubgruposBORRAR ()
+{
+
+PATH_LOG=${1}
+echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
+
+#filtro_carreras filtro_galgos filtro_cg sufijo
+
+#----Criterios simples ---
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
+${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
+
+}
+
+
 ##########################################################################################
 
 ######## MOD040 - ECONOMIA #######################################################################
@@ -472,7 +491,7 @@ numero_predicciones_grupo_sp=$(cat ${FILE_TEMP_PRED})
 
 FILE_TEMP="./temp_MOD040_rentabilidad"
 rm -f ${FILE_TEMP}
-mysql -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto - gastado_${tag_prediccion} )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
+mysql -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
 rentabilidad=$( cat ${FILE_TEMP})
 
 FILE_TEMP="./temp_MOD040_num_ciertos_gruposp"
@@ -516,10 +535,37 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+
 
   rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY cobertura_sg_sp DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+
+}
+
+
+
+function analisisRentabilidadesPorSubgruposBORRAR(){
+
+  resetTablaRentabilidades #Reseteando tabla de rentabilidades
+  analizarScoreSobreSubgruposBORRAR "$LOG_MASTER"
+
+  #Cargando fichero de rentabilidades a la tabla
+  echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
+  cargarTablaRentabilidades
+
+  rm -f "$INFORME_RENTABILIDADES"
+  echo -e "******** Informe de RENTABILIDADES ********" >>${INFORME_RENTABILIDADES}
+
+  echo -e "\nDATASETS --> [TRAIN + TEST + *VALIDATION] = [100-test-validation + $DATASET_TEST_PORCENTAJE + $DATASET_VALIDATION_PORCENTAJE ]" 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "\n* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE.\n" 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
+  echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
+  echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
+  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+
+  rm -f $SUBGRUPO_GANADOR_FILE
+  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
 }
 
@@ -527,40 +573,41 @@ function analisisRentabilidadesPorSubgrupos(){
 ##################### LIMPIEZA ############################################
 function limpieza ()
 {
-sufijo="${1}"
+
+TAG_EXCLUIDO="${1}" #para evitar limpiar las tablas de TAG que ha ganado
 
 echo -e $(date +"%T")"------- LIMPIEZA ------" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 
-borrarTablasInnecesarias_036_037_040 "TOTAL"
+borrarTablasInnecesarias_036_037_040 "pre" "TOTAL" "$TAG_EXCLUIDO"
 
-borrarTablasInnecesarias_036_037_040 "DOW_L"
-borrarTablasInnecesarias_036_037_040 "DOW_M"
-borrarTablasInnecesarias_036_037_040 "DOW_X"
-borrarTablasInnecesarias_036_037_040 "DOW_J"
-borrarTablasInnecesarias_036_037_040 "DOW_V"
-borrarTablasInnecesarias_036_037_040 "DOW_S"
-borrarTablasInnecesarias_036_037_040 "DOW_D"
-borrarTablasInnecesarias_036_037_040 "DOW_LAB"
-borrarTablasInnecesarias_036_037_040 "DOW_FIN" 
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_L" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_M" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_X" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_J" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_V" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_S" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_D" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_LAB" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DOW_FIN" "$TAG_EXCLUIDO"
 
-borrarTablasInnecesarias_036_037_040 "DISTANCIA_CORTA"
-borrarTablasInnecesarias_036_037_040 "DISTANCIA_MEDIA"
-borrarTablasInnecesarias_036_037_040 "DISTANCIA_LARGA"
+borrarTablasInnecesarias_036_037_040 "pre" "DISTANCIA_CORTA" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DISTANCIA_MEDIA" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "DISTANCIA_LARGA" "$TAG_EXCLUIDO"
 
-borrarTablasInnecesarias_036_037_040 "HORA_PRONTO"
-borrarTablasInnecesarias_036_037_040 "HORA_MEDIA"
-borrarTablasInnecesarias_036_037_040 "HORA_TARDE"
+borrarTablasInnecesarias_036_037_040 "pre" "HORA_PRONTO" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "HORA_MEDIA" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "HORA_TARDE" "$TAG_EXCLUIDO"
 
-borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_JOVENES"
-borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_VIEJOS"
-borrarTablasInnecesarias_036_037_040 "POCA_EXPER_EN_CLASE"
-borrarTablasInnecesarias_036_037_040 "MUCHA_EXPER_EN_CLASE"
-borrarTablasInnecesarias_036_037_040 "CON_5_GALGOS_DELGADOS"
-borrarTablasInnecesarias_036_037_040 "CON_3_GALGOS_PESADOS"
-borrarTablasInnecesarias_036_037_040 "TRAINER_BUENOS_GALGOS"
-borrarTablasInnecesarias_036_037_040 "TRAINER_MALOS_GALGOS"
+borrarTablasInnecesarias_036_037_040 "pre" "CON_5_GALGOS_JOVENES" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "CON_5_GALGOS_VIEJOS" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "POCA_EXPER_EN_CLASE" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "MUCHA_EXPER_EN_CLASE" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "CON_5_GALGOS_DELGADOS" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "CON_3_GALGOS_PESADOS" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "TRAINER_BUENOS_GALGOS" "$TAG_EXCLUIDO"
+borrarTablasInnecesarias_036_037_040 "pre" "TRAINER_MALOS_GALGOS" "$TAG_EXCLUIDO"
 
-borrarTablasInnecesarias_036_037_040 "LARGA_Y_ALGUNO_LENTO" 
+borrarTablasInnecesarias_036_037_040 "pre" "LARGA_Y_ALGUNO_LENTO" "$TAG_EXCLUIDO"
 
 }
 
@@ -568,21 +615,28 @@ borrarTablasInnecesarias_036_037_040 "LARGA_Y_ALGUNO_LENTO"
 function borrarTablasInnecesarias_036_037_040 ()
 {
 sufijo="${1}"
-TAG="${1}"
+TAG="${2}"
+TAG_EXCLUIDO="${3}" #para evitar limpiar las tablas de TAG que ha ganado
 
-echo -e "Borrando tablas innecesarias de 036..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+
+if [[ "$TAG_EXCLUIDO" != "$TAG" ]]; then
+    echo -e "Borrando tablas intermedias de $TAG ..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+
+  echo -e "Borrando tablas innecesarias de 036..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_036 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_filtrada_carreras_${sufijo};
 DROP TABLE IF EXISTS datos_desa.tb_filtrada_galgos_${sufijo};
 DROP TABLE IF EXISTS datos_desa.tb_filtrada_carrerasgalgos_${sufijo};
 EOF
-#echo -e "\n$CONSULTA_DROP_TABLAS_036" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql -t --execute="$CONSULTA_DROP_TABLAS_036" >>$LOG_999_LIMPIEZA_FINAL
+
+  #echo -e "\n$CONSULTA_DROP_TABLAS_036" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+  mysql -t --execute="$CONSULTA_DROP_TABLAS_036" >>${LOG_999_LIMPIEZA_FINAL}
 
 echo -e "Borrando tablas innecesarias de 037..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_037 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_dataset_con_ids_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasados_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_futuros_${TAG};
 
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_train_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_dataset_ids_pasado_test_${TAG};
@@ -594,12 +648,18 @@ DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_test_targets_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_featuresytarget_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_features_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_validation_targets_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_futuro_features_${TAG};
+
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_ttv_features_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_ds_pasado_ttv_targets_${TAG};
+
 
 EOF
-#echo -e "\n$CONSULTA_DROP_TABLAS_037" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql -t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
 
-echo -e "Borrando tablas innecesarias de 040..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+  #echo -e "\n$CONSULTA_DROP_TABLAS_037" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+  mysql -t --execute="$CONSULTA_DROP_TABLAS_037" >>$LOG_999_LIMPIEZA_FINAL
+
+  echo -e "Borrando tablas innecesarias de 040..." 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
 read -d '' CONSULTA_DROP_TABLAS_040 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux1;
 DROP TABLE IF EXISTS datos_desa.tb_val_${TAG}_aux2;
@@ -621,9 +681,34 @@ DROP TABLE IF EXISTS datos_desa.tb_1st_score_aciertos_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_connombre_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_aciertos_connombre_${TAG};
 DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG};
+
+
+
+-- Tablas economicas finales con tag y rango_sp
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP100150;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP150200;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP200250;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP250300;
+
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP100200;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP150250;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP200300;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP250350;
+
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP30099900;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP10099900;
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_economico_${TAG}_SP20099900;
+
+
+-- otras tablas
+DROP TABLE IF EXISTS datos_desa.tb_val_1st_riesgo_${TAG};
 EOF
-#echo -e "\n$CONSULTA_DROP_TABLAS_040" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
-mysql -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
+  
+  #echo -e "\n$CONSULTA_DROP_TABLAS_040" 2>&1 1>>${LOG_999_LIMPIEZA_FINAL}
+  mysql -t --execute="$CONSULTA_DROP_TABLAS_040" >>$LOG_999_LIMPIEZA_FINAL
+
+
+fi
 
 }
 
