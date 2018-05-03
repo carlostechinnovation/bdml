@@ -4,6 +4,10 @@ source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #Script principal COORDINADOR de todas las tareas. Lo que no quiera ejecutar, lo comento.
 
+ID_EJECUCION=$( date '+%Y%m%d%H%M%S' )
+echo -e "ID_EJECUCION = "$ID_EJECUCION
+
+
 #limpiar logs
 rm -f "/home/carloslinux/Desktop/LOGS/log4j-application.log"
 rm -f $LOG_MASTER
@@ -22,10 +26,10 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 #${PATH_SCRIPTS}'galgos_MOD010_ANALISIS_PARAMS.sh'  >>$LOG_MASTER #Sportium-CONFIG
 
 
-echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
+#echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
 #rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
-${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER #Sportium
+#${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER #Sportium
 
 echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
@@ -80,11 +84,19 @@ ${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
+
+echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
+COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_PREDICCIONES_COMANDOS $SUBGRUPO_GANADOR $ID_EJECUCION"
+echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_MASTER
+echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_070
+#${COMANDO_099} >>$LOG_MASTER #EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
+
+
 echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "FUTURA" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
+${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" "$ID_EJECUCION" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
 
 
 echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
@@ -92,11 +104,6 @@ echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 #echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
 
-
-echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
-COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_PREDICCIONES_COMANDOS $SUBGRUPO_GANADOR"
-echo -e ${COMANDO_099} >>$LOG_MASTER
-${COMANDO_099} >>$LOG_MASTER #EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
 
 
 #echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER

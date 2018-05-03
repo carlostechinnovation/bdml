@@ -6,13 +6,20 @@ source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f "${LOG_099}"
 
 
+#limpiar logs GENERALES
+rm -f $LOG_070
+
 ####### PARAMETROS ###
 INFORME_COMANDOS_INPUT="${1}"
 TAG="${2}"
+ID_EJECUCION="${3}"
 
 
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | INICIO" >>$LOG_070
 echo -e "MOD099 --> LOG = "${LOG_099}
+
+#Directorio de salida (informes y datasets)
+PATH_DIR_OUT="${PATH_EXTERNAL_DATA}${ID_EJECUCION}/"
 
 
 ########## EJECUTANDO COMANDOS (calculados previamente en el script 050) #################
@@ -133,7 +140,7 @@ mysql -t --execute="$CONSULTA_PASADO_Y_FUTURO"  2>&1 1>>${LOG_099}
 
 ################################## Extraccion a dataset para analisis ###########
 echo -e "Datasets futuro (predicho y real)" >> "${LOG_099}"
-exportarTablaAFichero "datos_desa" "tb_galgos_fut_combinada" "${PATH_MYSQL_PRIV_SECURE}099_ds_futuro_frfp.txt" "${LOG_099}" "${EXTERNAL_050_DS_FUTUROS}099_ds_futuro_frfp.txt"
+exportarTablaAFichero "datos_desa" "tb_galgos_fut_combinada" "${PATH_MYSQL_PRIV_SECURE}099_ds_futuro_frfp.txt" "${LOG_099}" "${PATH_DIR_OUT}099_ds_futuro_frfp.txt"
 
 
 ################### Rentabilidad a posteriori (tras 2 días) #######
@@ -165,6 +172,17 @@ COBERTURA_posteriori=$(echo "scale=2; $numero_aciertos_posteriori / $numero_pred
 MENSAJE="FUTURO_POSTERIORI --> TAG=${TAG}  cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
 echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
+
+
+################################# INFORMES (POSTERIORI) ###############################################
+echo -e "Informes (posteriori) en: ${PATH_DIR_OUT}" >> "${LOG_099}"
+
+#Limpiar por si acaso relanzo varias veces a posteriori sobre el mismo ID_EJECUCION
+rm -rF "${PATH_DIR_OUT}posteriori*"
+
+cp "$LOG_070" "${PATH_DIR_OUT}posteriori_tic.txt" #Informe TIC. En su ultima linea aparece el COMANDO que debo lanzar a POSTERIORI
+cp "$INFORME_LIMPIO_POSTERIORI" "${PATH_DIR_OUT}posteriori_limpio.txt"
+cp "$INFORME_RENTABILIDAD_POSTERIORI" "${PATH_DIR_OUT}posteriori_rentabilidad.txt"
 
 
 #####################################################################################################
