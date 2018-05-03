@@ -18,6 +18,7 @@ rm -f "${LOG_061}"
 
 ########## SUBCARPETAS #################
 PATH_DIR_OUT="${PATH_EXTERNAL_DATA}${ID_EJECUCION}/"
+rm -rf "${PATH_DIR_OUT}" #Por si reejecutamos a mano 
 mkdir "${PATH_DIR_OUT}"
 
 ############### EXPORTACION A CARPETA EXTERNA #####################
@@ -33,9 +34,9 @@ mkdir "${PATH_DIR_OUT}"
 #exportarTablaAFichero "datos_desa" "tb_val_${TAG}" "${PATH_MYSQL_PRIV_SECURE}037_ds_pasado_val_tptr.txt" "${LOG_061}" "${PATH_DIR_OUT}037_ds_pasado_val_tptr.txt" #target predicho y real
 
 ##PASADO: 038
-#echo -e "Datasets pasados" >> "${LOG_061}"
-#exportarTablaAFichero "datos_desa" "tb_ds_pasado_ttv_features_${TAG}" "${PATH_MYSQL_PRIV_SECURE}038_ds_pasado_f.txt" "${LOG_061}" "${PATH_DIR_OUT}038_ds_pasado_f.txt"
-#exportarTablaAFichero "datos_desa" "tb_ds_pasado_ttv_targets_${TAG}" "${PATH_MYSQL_PRIV_SECURE}038_ds_pasado_t.txt" "${LOG_061}" "${PATH_DIR_OUT}038_ds_pasado_t.txt"
+echo -e "Datasets pasados" >> "${LOG_061}"
+exportarTablaAFichero "datos_desa" "tb_ds_pasado_ttv_features_${TAG}" "${PATH_MYSQL_PRIV_SECURE}038_ds_pasado_f.txt" "${LOG_061}" "${PATH_DIR_OUT}038_ds_pasado_f.txt"
+exportarTablaAFichero "datos_desa" "tb_ds_pasado_ttv_targets_${TAG}" "${PATH_MYSQL_PRIV_SECURE}038_ds_pasado_t.txt" "${LOG_061}" "${PATH_DIR_OUT}038_ds_pasado_t.txt"
 
 ##FUTURO: 037+050
 echo -e "Datasets futuros" >> "${LOG_061}"
@@ -51,6 +52,10 @@ cp "$INFORME_PREDICCIONES_COMANDOS" "${PATH_DIR_OUT}priori_predicciones_comandos
 
 #Posteriori --> Ver script 099
 
+
+
+##################### Permisos ########################################################################
+chmod -R 777 "${PATH_DIR_OUT}"
 #####################################################################################################
 
 echo -e $(date +"%T")" | 061 | Export de datasets pasados y futuros | FIN" >>$LOG_070

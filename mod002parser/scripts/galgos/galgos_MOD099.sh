@@ -185,6 +185,8 @@ cp "$INFORME_LIMPIO_POSTERIORI" "${PATH_DIR_OUT}posteriori_limpio.txt"
 cp "$INFORME_RENTABILIDAD_POSTERIORI" "${PATH_DIR_OUT}posteriori_rentabilidad.txt"
 
 
+##################### Permisos ########################################################################
+chmod -R 777 "${PATH_DIR_OUT}"
 #####################################################################################################
 
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | FIN" >>$LOG_070
