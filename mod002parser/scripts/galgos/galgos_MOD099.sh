@@ -178,7 +178,7 @@ echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 echo -e "Informes (posteriori) en: ${PATH_DIR_OUT}" >> "${LOG_099}"
 
 #Limpiar por si acaso relanzo varias veces a posteriori sobre el mismo ID_EJECUCION
-rm -rF "${PATH_DIR_OUT}posteriori*"
+rm -rf "${PATH_DIR_OUT}posteriori*"
 
 cp "$LOG_070" "${PATH_DIR_OUT}posteriori_tic.txt" #Informe TIC. En su ultima linea aparece el COMANDO que debo lanzar a POSTERIORI
 cp "$INFORME_LIMPIO_POSTERIORI" "${PATH_DIR_OUT}posteriori_limpio.txt"
