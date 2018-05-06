@@ -79,8 +79,6 @@ consultar "LOAD DATA LOCAL INFILE '${INFORME_LIMPIO_POSTERIORI}' INTO TABLE dato
 
 echo -e "\nDebo comprobar que tengo exactamente el mismo número de filas en fut_predicha y en fut_real" 2>&1 1>>${LOG_099}
 
-
-
 read -d '' CONSULTA_PASADO_Y_FUTURO <<- EOF
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_predicha;
@@ -141,6 +139,59 @@ mysql -t --execute="$CONSULTA_PASADO_Y_FUTURO"  2>&1 1>>${LOG_099}
 ################################## Extraccion a dataset para analisis ###########
 echo -e "Datasets futuro (predicho y real)" >> "${LOG_099}"
 exportarTablaAFichero "datos_desa" "tb_galgos_fut_combinada" "${PATH_MYSQL_PRIV_SECURE}099_ds_futuro_frfp.txt" "${LOG_099}" "${PATH_DIR_OUT}099_ds_futuro_frfp.txt"
+
+
+############ Extracción en un acumulado de futuros, para analizar muchas ejecuciones ya hechas #########
+
+
+echo -e "\nInserto los datos futuros conocidos en la tabla de futuros acumulados. Asi podré estudiar esa tabla tras muchas ejecuciones..." 2>&1 1>>${LOG_099}
+
+read -d '' CONSULTA_ACUMULAR_FUT_COMBINADA <<- EOF
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_combinada_acum (
+  id_ejecucion varchar(14) NOT NULL,
+  subgrupo_ganador varchar(50) NOT NULL,
+  numero1 double NOT NULL,
+  id_carrera bigint(21) unsigned DEFAULT NULL,
+  galgo_rowid double DEFAULT NULL,
+  target_predicho decimal(10,8) DEFAULT NULL,
+  posicion_predicha double DEFAULT NULL,
+  galgo_nombre varchar(51) DEFAULT NULL,
+  fortaleza decimal(14,8) DEFAULT NULL,
+  numero2 double DEFAULT NULL,
+  real_vacio varchar(5) DEFAULT NULL,
+  real_fecha varchar(10) DEFAULT NULL,
+  real_distancia int(11) DEFAULT NULL,
+  real_trap smallint(6) DEFAULT NULL,
+  real_stmhcp varchar(10) DEFAULT NULL,
+  real_posicion smallint(6) DEFAULT NULL,
+  real_by_espacio varchar(10) DEFAULT NULL,
+  real_winneror2nd varchar(30) DEFAULT NULL,
+  real_venue varchar(30) DEFAULT NULL,
+  real_remarks varchar(30) DEFAULT NULL,
+  real_wintime decimal(6,4) DEFAULT NULL,
+  real_going varchar(10) DEFAULT NULL,
+  real_sp varchar(10) DEFAULT NULL,
+  real_class varchar(5) DEFAULT NULL,
+  real_calc_time varchar(10) DEFAULT NULL,
+  real_id_carrera bigint(20) DEFAULT NULL,
+  real_id_campeonato bigint(20) DEFAULT NULL,
+  PRIMARY KEY(id_ejecucion,numero1)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+DELETE FROM datos_desa.tb_galgos_fut_combinada_acum WHERE id_ejecucion='${ID_EJECUCION}';
+
+INSERT INTO datos_desa.tb_galgos_fut_combinada_acum
+  SELECT 
+  '${ID_EJECUCION}' AS id_ejecucion, '${TAG}' AS subgrupo_ganador,
+  numero1, id_carrera, galgo_rowid, target_predicho, posicion_predicha, galgo_nombre, fortaleza, numero2, real_vacio, real_fecha, real_distancia, real_trap, real_stmhcp, real_posicion, real_by_espacio, real_winneror2nd, real_venue, real_remarks, real_wintime, real_going, real_sp, real_class, real_calc_time, real_id_carrera, real_id_campeonato
+  FROM datos_desa.tb_galgos_fut_combinada;
+
+EOF
+
+echo -e "\n$CONSULTA_ACUMULAR_FUT_COMBINADA" 2>&1 1>>${LOG_099}
+mysql -t --execute="$CONSULTA_ACUMULAR_FUT_COMBINADA"  2>&1 1>>${LOG_099}
+
 
 
 ################### Rentabilidad a posteriori (tras 2 días) #######
