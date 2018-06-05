@@ -21,8 +21,8 @@ public class Constantes {
 	public static final String ANALITICA_GLOBAL = "ANALITICA_GLOBAL";
 
 	// -------------- GALGOS --------
-	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 11 * 7;// Ultimas X semanas
-	public static Integer MAX_NUM_CARRERAS_SEMILLA = 100;// TODO 100 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
+	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 8 * 7;// Ultimas X semanas
+	public static Integer MAX_NUM_CARRERAS_SEMILLA = 300;// TODO 100 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
 															// las derivadas)
 	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 100;// TODO MAX*100 //
 																						// semillas*derivadas

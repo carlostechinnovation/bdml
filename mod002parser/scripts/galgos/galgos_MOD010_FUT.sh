@@ -145,7 +145,7 @@ SELECT galgo_nombre, MAX(nacimiento) AS nacimiento, MAX(galgo_padre) AS galgo_pa
 FROM datos_desa.tb_galgos_posiciones_en_carreras 
 GROUP BY galgo_nombre;
 
-SELECT count(*) FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
+SELECT count(*) AS num_filas_nacimientos FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
 SELECT * FROM datos_desa.tb_galgos_nacimientos LIMIT 5;
 
 EOF
@@ -154,6 +154,68 @@ echo -e $(date +"%T")" SEMILLAS (FUTURAS) - Tablas base...\n********************
 echo -e "$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE\n********************************\n" 2>&1 1>>${LOG_010_FUT}
 mysql --execute="$CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_TABLASBASE" 2>&1 1>>${LOG_010_FUT}
 echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
+
+
+#CARRERAS FUTURAS cuya DISTANCIA la ADIVINO sacando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren
+read -d '' CONSULTA_DISTANCIA_DE_CARRERAS_FUTURAS <<- EOF
+
+set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
+set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_distancia_mas_reciente;
+
+CREATE TABLE datos_desa.tb_galgos_distancia_mas_reciente AS
+SELECT 
+A.id_carrera AS id_carrera,
+A.galgo_nombre AS galgo_nombre, 
+A.distancia AS distancia_reciente
+FROM  datos_desa.tb_galgos_historico A 
+
+INNER JOIN (
+  SELECT galgo_nombre, MAX(id_carrera) AS id_carrera_mas_reciente
+  FROM datos_desa.tb_galgos_historico GH 
+  GROUP BY galgo_nombre
+) B
+ON (A.galgo_nombre=B.galgo_nombre AND A.id_carrera=B.id_carrera_mas_reciente);
+
+SELECT * FROM datos_desa.tb_galgos_distancia_mas_reciente LIMIT 5;
+SELECT count(*) AS num_filas_distancia_mas_reciente FROM datos_desa.tb_galgos_distancia_mas_reciente LIMIT 5;
+
+
+
+DROP TABLE IF EXISTS datos_desa.tb_galgos_carrera_con_distancia_mas_reciente;
+
+CREATE TABLE datos_desa.tb_galgos_carrera_con_distancia_mas_reciente AS
+
+SELECT A.id_carrera_artificial, A.galgo_nombre, B.distancia_reciente
+ FROM datos_desa.tb_cg_semillas_sportium_d A
+LEFT JOIN datos_desa.tb_galgos_distancia_mas_reciente B
+ON (A.galgo_nombre=B.galgo_nombre)
+ORDER BY A.id_carrera_artificial ASC;
+
+
+SELECT * FROM datos_desa.tb_galgos_carrera_con_distancia_mas_reciente LIMIT 5;
+SELECT count(*) AS num_filas_carrera_distancia_mas_reciente FROM datos_desa.tb_galgos_carrera_con_distancia_mas_reciente LIMIT 5;
+
+
+DROP TABLE IF EXISTS datos_desa.tb_carreras_futuras_con_distancia;
+
+CREATE TABLE datos_desa.tb_carreras_futuras_con_distancia AS
+SELECT id_carrera_artificial, AVG(distancia_reciente) as distancia 
+FROM datos_desa.tb_galgos_carrera_con_distancia_mas_reciente T
+GROUP BY id_carrera_artificial ORDER BY id_carrera_artificial;
+
+SELECT * FROM datos_desa.tb_carreras_futuras_con_distancia LIMIT 5;
+SELECT count(*) AS num_carreras_futuras_con_distancia FROM datos_desa.tb_carreras_futuras_con_distancia LIMIT 5;
+
+EOF
+
+
+echo -e $(date +"%T")" Calculo de la DISTANCIA de las carreras FUTURAS...\n********************************\n" 2>&1 1>>${LOG_010_FUT}
+echo -e "$CONSULTA_DISTANCIA_DE_CARRERAS_FUTURAS\n********************************\n" 2>&1 1>>${LOG_010_FUT}
+mysql --execute="$CONSULTA_DISTANCIA_DE_CARRERAS_FUTURAS" 2>&1 1>>${LOG_010_FUT}
+echo -e "\n-------------------------------------" 2>&1 1>>${LOG_010_FUT}
+
 
 
 read -d '' CONSULTA_SEMILLAS_FILAS_ARTIFICIALES_CARRERAS <<- EOF
@@ -171,7 +233,7 @@ SELECT
 DENTRO.id_carrera, DENTRO.id_campeonato, DENTRO.track, 
 FUERA.clase_reciente AS clase,
 DENTRO.anio, DENTRO.mes, DENTRO.dia, DENTRO.hora, DENTRO.minuto, 
-DENTRO.distancia,
+FUERA2.distancia,
 DENTRO.num_galgos,
 DENTRO.premio_primero, DENTRO.premio_segundo, DENTRO.premio_otros ,  DENTRO.premio_total_carrera ,  DENTRO.going_allowance_segundos ,
 DENTRO.fc_1 ,  DENTRO.fc_2 ,  DENTRO.fc_pounds ,
@@ -197,6 +259,9 @@ FROM (
 ) DENTRO
 LEFT JOIN datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida FUERA 
 ON (DENTRO.id_carrera=FUERA.id_carrera_artificial)
+
+LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia FUERA2 
+ON (DENTRO.id_carrera=FUERA2.id_carrera_artificial)
 ;
 
 
@@ -238,7 +303,7 @@ A.id_carrera_artificial AS id_carrera,
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 5,2), UNSIGNED INTEGER) AS mes, 
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 7,2), UNSIGNED INTEGER) AS dia, 
-NULL AS distancia,
+E.distancia AS distancia,
 trap AS trap,
 NULL AS stmhcp,
 NULL AS posicion,
@@ -264,6 +329,9 @@ LEFT JOIN datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida C
 ON (A.id_carrera_artificial=C.id_carrera_artificial)
 
 LEFT JOIN datos_desa.tb_galgos_nacimientos D ON (A.galgo_nombre=D.galgo_nombre)
+
+LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia E 
+ON (A.id_carrera=E.id_carrera_artificial)
 ;
 
 

@@ -66,7 +66,7 @@ INFORME_CONFIG_010="${PATH_LOGS}INFORME_CONFIG_010.txt"
 INFORME_RENTABILIDADES="${PATH_LOGS}INFORME_RENTABILIDADES.txt"
 INFORME_PREDICCIONES="${PATH_LOGS}INFORME_PREDICCIONES.txt"
 INFORME_PREDICCIONES_COMANDOS="${PATH_LOGS}INFORME_PREDICCIONES_COMANDOS.sh"
-INFORME_BRUTO_POSTERIORI="${PATH_LOGS}INFORME_BRUTO_POSTERIORI.txt"
+INFORME_BRUTO_POSTERIORI="${PATH_LOGS}temp_INFORME_BRUTO_POSTERIORI.txt"
 INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}INFORME_LIMPIO_POSTERIORI.txt"
 INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}INFORME_RENTABILIDAD_POSTERIORI.txt"
 
@@ -414,22 +414,6 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" >>$PATH_LOG
 
 
 
-function analizarScoreSobreSubgruposBORRAR ()
-{
-
-PATH_LOG=${1}
-echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
-
-#filtro_carreras filtro_galgos filtro_cg sufijo
-
-#----Criterios simples ---
-echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL"
-${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" >>$PATH_LOG
-
-}
-
-
 ##########################################################################################
 
 ######## MOD040 - ECONOMIA #######################################################################
@@ -543,31 +527,6 @@ function analisisRentabilidadesPorSubgrupos(){
 
 }
 
-
-
-function analisisRentabilidadesPorSubgruposBORRAR(){
-
-  resetTablaRentabilidades #Reseteando tabla de rentabilidades
-  analizarScoreSobreSubgruposBORRAR "$LOG_MASTER"
-
-  #Cargando fichero de rentabilidades a la tabla
-  echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
-  cargarTablaRentabilidades
-
-  rm -f "$INFORME_RENTABILIDADES"
-  echo -e "******** Informe de RENTABILIDADES ********" >>${INFORME_RENTABILIDADES}
-
-  echo -e "\nDATASETS --> [TRAIN + TEST + *VALIDATION] = [100-test-validation + $DATASET_TEST_PORCENTAJE + $DATASET_VALIDATION_PORCENTAJE ]" 2>&1 1>>${INFORME_RENTABILIDADES}
-  echo -e "\n* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE.\n" 2>&1 1>>${INFORME_RENTABILIDADES}
-  echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
-  echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
-  echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
-
-  rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
-
-}
 
 
 ##################### LIMPIEZA ############################################
