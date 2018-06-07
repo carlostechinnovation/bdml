@@ -933,7 +933,7 @@ IFNULL(dentro.clase, GH.clase) AS clase,
 IFNULL(dentro.distancia_norm, GH.distancia_norm) AS distancia_norm,
 dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
 num_galgos_norm, mes_norm,hora_norm,premio_primero_norm,premio_segundo_norm,premio_otros_norm,premio_total_carrera_norm,going_allowance_segundos_norm,
-fc_1_norm,fc_2_norm,fc_pounds_norm,tc_1_norm,tc_2_norm,tc_3_norm,tc_pounds_norm
+fc_1_norm,fc_2_norm,fc_pounds_norm,tc_1_norm,tc_2_norm,tc_3_norm,tc_pounds_norm,
 
 CAST( D.venue_going_std AS DECIMAL(8,6) ) AS venue_going_std,
 CAST( D.venue_going_avg AS DECIMAL(8,6) ) AS venue_going_avg
@@ -967,7 +967,7 @@ FROM (
 ) dentro
 
 LEFT JOIN (
-  SELECT id_carrera, MAX(id_campeonato) AS id_campeonato, MAX(venue) AS track, MAX(clase) AS clase, MAX(distancia_norm) AS distancia_norm,
+  SELECT id_carrera, MAX(id_campeonato) AS id_campeonato, MAX(venue) AS track, MAX(clase) AS clase, MAX(distancia_norm) AS distancia_norm
   FROM datos_desa.tb_galgos_historico_norm GROUP BY id_carrera
 ) GH
 ON (dentro.id_carrera=GH.id_carrera)
@@ -982,7 +982,7 @@ SELECT * FROM datos_desa.tb_elaborada_carreras_${sufijo} ORDER BY id_carrera LIM
 SELECT count(*) as num_elab_carreras FROM datos_desa.tb_elaborada_carreras_${sufijo} LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_ELAB1" 2>&1 1>>${LOG_CE}
 mysql -t --execute="$CONSULTA_ELAB1" >>$LOG_CE
 
 
@@ -1235,22 +1235,22 @@ echo -e " Creando tabla de REMARKS-PUNTOS (util para variable 13)..." 2>&1 1>>${
 crearTablaRemarksPuntos
 
 echo -e "\n\n---- Variables: X1, X2..." 2>&1 1>>${LOG_CE}
-calcularVariableX1 "${sufijo}"
-calcularVariableX2 "${sufijo}"
-calcularVariableX3 "${sufijo}"
-calcularVariableX4 "${sufijo}"
-calcularVariableX5 "${sufijo}"
-calcularVariableX6 "${sufijo}"
-calcularVariableX7 "${sufijo}"
-calcularVariableX8 "${sufijo}"
-calcularVariableX9 "${sufijo}"
-calcularVariableX10 "${sufijo}"
-calcularVariableX11 "${sufijo}"
-calcularVariableX12 "${sufijo}"
-calcularVariableX13 "${sufijo}"
+#calcularVariableX1 "${sufijo}"
+#calcularVariableX2 "${sufijo}"
+#calcularVariableX3 "${sufijo}"
+#calcularVariableX4 "${sufijo}"
+#calcularVariableX5 "${sufijo}"
+#calcularVariableX6 "${sufijo}"
+#calcularVariableX7 "${sufijo}"
+#calcularVariableX8 "${sufijo}"
+#calcularVariableX9 "${sufijo}"
+#calcularVariableX10 "${sufijo}"
+#calcularVariableX11 "${sufijo}"
+#calcularVariableX12 "${sufijo}"
+#calcularVariableX13 "${sufijo}"
 
 echo -e "\n\n ---- Tablas MAESTRAS de INDICES..." 2>&1 1>>${LOG_CE}
-generarTablasIndices
+#generarTablasIndices
 
 echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear datasets)..." 2>&1 1>>${LOG_CE}
 generarTablasElaboradas
