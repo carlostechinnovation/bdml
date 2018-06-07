@@ -27,7 +27,8 @@ A.id_carrera, A.galgo_nombre, A.futuro,
 
 A.peso_galgo_norm, A.eed_norm, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.trap_norm, A.remarks_puntos_historico, A.remarks_puntos_historico_10d, A.remarks_puntos_historico_20d, A.remarks_puntos_historico_50d,
 
-B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, B.vel_real_cortas_mediana_norm, B.vel_real_cortas_max_norm, B.vel_going_cortas_mediana_norm, B.vel_going_cortas_max_norm, B.vel_real_longmedias_mediana_norm, B.vel_real_longmedias_max_norm, B.vel_going_longmedias_mediana_norm, B.vel_going_longmedias_max_norm, B.vel_real_largas_mediana_norm, B.vel_real_largas_max_norm, B.vel_going_largas_mediana_norm, B.vel_going_largas_max_norm,
+-- B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, 
+B.vel_real_cortas_mediana_norm, B.vel_real_cortas_max_norm, B.vel_going_cortas_mediana_norm, B.vel_going_cortas_max_norm, B.vel_real_longmedias_mediana_norm, B.vel_real_longmedias_max_norm, B.vel_going_longmedias_mediana_norm, B.vel_going_longmedias_max_norm, B.vel_real_largas_mediana_norm, B.vel_real_largas_max_norm, B.vel_going_largas_mediana_norm, B.vel_going_largas_max_norm,
 
 C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.venue_going_std, C.venue_going_avg, C.dow_d, C.dow_l, C.dow_m, C.dow_x, C.dow_j, C.dow_v, C.dow_s, C.dow_finde, C.dow_laborable,
 
@@ -160,7 +161,8 @@ echo -e "FUTURO_IDs -> datos_desa.tb_dataset_ids_futuros_${TAG}" 2>&1 1>>${LOG_D
 read -d '' FEATURES_COMUNES <<- EOF
 peso_galgo_norm, eed_norm, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, dif_peso, entrenador_posicion_norm, trap_norm,  remarks_puntos_historico, remarks_puntos_historico_10d, remarks_puntos_historico_20d, remarks_puntos_historico_50d,
 
-vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
+-- vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, 
+vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
 
 distancia_norm, num_galgos_norm, mes_norm, hora_norm, venue_going_std, venue_going_avg, dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable
 EOF

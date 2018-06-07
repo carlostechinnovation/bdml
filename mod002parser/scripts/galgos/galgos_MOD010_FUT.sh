@@ -117,7 +117,6 @@ SELECT * FROM datos_desa.tb_clases_recientes_en_carrera_futura LIMIT 12;
 
 DROP TABLE IF EXISTS datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida;
 
-
 CREATE TABLE datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida AS
 SELECT id_carrera_artificial, MAX(clase_reciente) AS clase_reciente, MAX(contador) AS contador
 FROM (
@@ -162,15 +161,14 @@ read -d '' CONSULTA_DISTANCIA_DE_CARRERAS_FUTURAS <<- EOF
 set @min_id_carreras_artificiales=(select MIN(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 set @max_id_carreras_artificiales=(select MAX(id_carrera_artificial) FROM datos_desa.tb_cg_semillas_sportium_d);
 
+
 DROP TABLE IF EXISTS datos_desa.tb_galgos_distancia_mas_reciente;
 
 CREATE TABLE datos_desa.tb_galgos_distancia_mas_reciente AS
 SELECT 
-A.id_carrera AS id_carrera,
 A.galgo_nombre AS galgo_nombre, 
 A.distancia AS distancia_reciente
 FROM  datos_desa.tb_galgos_historico A 
-
 INNER JOIN (
   SELECT galgo_nombre, MAX(id_carrera) AS id_carrera_mas_reciente
   FROM datos_desa.tb_galgos_historico GH 
@@ -179,34 +177,49 @@ INNER JOIN (
 ON (A.galgo_nombre=B.galgo_nombre AND A.id_carrera=B.id_carrera_mas_reciente);
 
 SELECT * FROM datos_desa.tb_galgos_distancia_mas_reciente LIMIT 5;
-SELECT count(*) AS num_filas_distancia_mas_reciente FROM datos_desa.tb_galgos_distancia_mas_reciente LIMIT 5;
 
 
+DROP TABLE IF EXISTS datos_desa.tb_galgos_y_carrera_distancia_mas_reciente;
 
-DROP TABLE IF EXISTS datos_desa.tb_galgos_carrera_con_distancia_mas_reciente;
+CREATE TABLE datos_desa.tb_galgos_y_carrera_distancia_mas_reciente AS
+SELECT A.galgo_nombre, A.id_carrera_artificial, B.distancia_reciente
+FROM datos_desa.tb_cg_semillas_sportium_d A
+LEFT JOIN datos_desa.tb_galgos_distancia_mas_reciente B ON (A.galgo_nombre=B.galgo_nombre);
 
-CREATE TABLE datos_desa.tb_galgos_carrera_con_distancia_mas_reciente AS
-
-SELECT A.id_carrera_artificial, A.galgo_nombre, B.distancia_reciente
- FROM datos_desa.tb_cg_semillas_sportium_d A
-LEFT JOIN datos_desa.tb_galgos_distancia_mas_reciente B
-ON (A.galgo_nombre=B.galgo_nombre)
-ORDER BY A.id_carrera_artificial ASC;
+SELECT * FROM datos_desa.tb_galgos_y_carrera_distancia_mas_reciente LIMIT 12;
 
 
-SELECT * FROM datos_desa.tb_galgos_carrera_con_distancia_mas_reciente LIMIT 5;
-SELECT count(*) AS num_filas_carrera_distancia_mas_reciente FROM datos_desa.tb_galgos_carrera_con_distancia_mas_reciente LIMIT 5;
+DROP TABLE IF EXISTS datos_desa.tb_distancias_recientes_en_carrera_futura;
+
+CREATE TABLE datos_desa.tb_distancias_recientes_en_carrera_futura AS
+SELECT id_carrera_artificial, distancia_reciente, count(*) AS contador
+  FROM datos_desa.tb_galgos_y_carrera_distancia_mas_reciente
+  GROUP BY id_carrera_artificial, distancia_reciente
+  ORDER BY id_carrera_artificial ASC, contador DESC;
+  
+SELECT * FROM datos_desa.tb_distancias_recientes_en_carrera_futura LIMIT 12;
 
 
-DROP TABLE IF EXISTS datos_desa.tb_carreras_futuras_con_distancia;
+DROP TABLE IF EXISTS datos_desa.tb_carreras_futuras_con_distancia_reciente_mas_repetida;
 
-CREATE TABLE datos_desa.tb_carreras_futuras_con_distancia AS
-SELECT id_carrera_artificial, AVG(distancia_reciente) as distancia 
-FROM datos_desa.tb_galgos_carrera_con_distancia_mas_reciente T
-GROUP BY id_carrera_artificial ORDER BY id_carrera_artificial;
+CREATE TABLE datos_desa.tb_carreras_futuras_con_distancia_reciente_mas_repetida AS
+SELECT id_carrera_artificial, MAX(distancia_reciente) AS distancia_reciente, MAX(contador) AS contador
+FROM (
+  SELECT FUERA.*  FROM datos_desa.tb_distancias_recientes_en_carrera_futura FUERA
+  INNER JOIN
+  (
+    SELECT 
+    A.id_carrera_artificial, B.contador_max
+    FROM (SELECT DISTINCT id_carrera_artificial FROM datos_desa.tb_distancias_recientes_en_carrera_futura) A
+    LEFT JOIN 
+    (SELECT id_carrera_artificial, MAX(contador) AS contador_max FROM datos_desa.tb_distancias_recientes_en_carrera_futura GROUP BY id_carrera_artificial) B
+    ON (A.id_carrera_artificial=B.id_carrera_artificial)
+  ) DENTRO
+  ON (FUERA.id_carrera_artificial=DENTRO.id_carrera_artificial AND FUERA.contador=DENTRO.contador_max)
+) FUERA2
+GROUP BY id_carrera_artificial;
 
-SELECT * FROM datos_desa.tb_carreras_futuras_con_distancia LIMIT 5;
-SELECT count(*) AS num_carreras_futuras_con_distancia FROM datos_desa.tb_carreras_futuras_con_distancia LIMIT 5;
+SELECT * FROM datos_desa.tb_carreras_futuras_con_distancia_reciente_mas_repetida LIMIT 12;
 
 EOF
 
@@ -233,7 +246,7 @@ SELECT
 DENTRO.id_carrera, DENTRO.id_campeonato, DENTRO.track, 
 FUERA.clase_reciente AS clase,
 DENTRO.anio, DENTRO.mes, DENTRO.dia, DENTRO.hora, DENTRO.minuto, 
-FUERA2.distancia,
+FUERA2.distancia_reciente AS distancia,
 DENTRO.num_galgos,
 DENTRO.premio_primero, DENTRO.premio_segundo, DENTRO.premio_otros ,  DENTRO.premio_total_carrera ,  DENTRO.going_allowance_segundos ,
 DENTRO.fc_1 ,  DENTRO.fc_2 ,  DENTRO.fc_pounds ,
@@ -260,7 +273,7 @@ FROM (
 LEFT JOIN datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida FUERA 
 ON (DENTRO.id_carrera=FUERA.id_carrera_artificial)
 
-LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia FUERA2 
+LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia_reciente_mas_repetida FUERA2 
 ON (DENTRO.id_carrera=FUERA2.id_carrera_artificial)
 ;
 
@@ -303,7 +316,7 @@ A.id_carrera_artificial AS id_carrera,
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 1,4), UNSIGNED INTEGER) AS anio, 
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 5,2), UNSIGNED INTEGER) AS mes, 
 CONVERT(SUBSTRING( CAST(dia AS CHAR(8)), 7,2), UNSIGNED INTEGER) AS dia, 
-E.distancia AS distancia,
+E.distancia_reciente AS distancia,
 trap AS trap,
 NULL AS stmhcp,
 NULL AS posicion,
@@ -330,8 +343,8 @@ ON (A.id_carrera_artificial=C.id_carrera_artificial)
 
 LEFT JOIN datos_desa.tb_galgos_nacimientos D ON (A.galgo_nombre=D.galgo_nombre)
 
-LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia E 
-ON (A.id_carrera=E.id_carrera_artificial)
+LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia_reciente_mas_repetida E 
+ON (A.id_carrera_artificial=E.id_carrera_artificial)
 ;
 
 

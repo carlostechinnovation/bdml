@@ -204,7 +204,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
 SELECT count(*) as num_x6a FROM datos_desa.tb_ce_${sufijo}_x6a LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X6A" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X6A" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6A" >>$LOG_CE
 
 
@@ -228,10 +228,13 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 5;
 SELECT count(*) as num_x6b FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 5;
 
 set @min_posicion_media_en_clase_por_experiencia=(select MIN(posicion_media_en_clase_por_experiencia) FROM datos_desa.tb_ce_${sufijo}_x6b);
-set @diff_posicion_media_en_clase_por_experiencia=(select CASE WHEN MIN(posicion_media_en_clase_por_experiencia)=0 THEN MAX(posicion_media_en_clase_por_experiencia) ELSE MAX(posicion_media_en_clase_por_experiencia)-MIN(posicion_media_en_clase_por_experiencia) END FROM datos_desa.tb_ce_${sufijo}_x6b);
+
+set @diff_posicion_media_en_clase_por_experiencia=(select CASE WHEN MIN(posicion_media_en_clase_por_experiencia)=0 THEN MAX(posicion_media_en_clase_por_experiencia) ELSE MAX(posicion_media_en_clase_por_experiencia) - MIN(posicion_media_en_clase_por_experiencia) END FROM datos_desa.tb_ce_${sufijo}_x6b);
+
+SELECT @min_posicion_media_en_clase_por_experiencia AS c1, @diff_posicion_media_en_clase_por_experiencia AS c2 FROM datos_desa.tb_ce_${sufijo}_x6b LIMIT 10;
 EOF
 
-#echo -e "\n$CONSULTA_X6B" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X6B" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6B" >>$LOG_CE
 
 
@@ -243,6 +246,11 @@ SELECT GH.galgo_nombre, GH.id_carrera, GH.anio*10000+GH.mes*100+GH.dia AS amd, G
 FROM datos_desa.tb_galgos_historico_norm GH
 LEFT JOIN datos_desa.tb_galgos_historico_norm GH2 ON (GH.galgo_nombre=GH2.galgo_nombre AND GH.clase=GH2.clase)
 ;
+
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x6c0 ADD INDEX tb_ce_${sufijo}_x6c0_idx1(amd);
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x6c0 ADD INDEX tb_ce_${sufijo}_x6c0_idx2(amd2);
+ALTER TABLE datos_desa.tb_ce_${sufijo}_x6c0 ADD INDEX tb_ce_${sufijo}_x6c0_idx3(amd,amd2);
+
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c;
 
@@ -261,11 +269,11 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
 SELECT count(*) as num_x6c FROM datos_desa.tb_ce_${sufijo}_x6c LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X6C" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X6C" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6C" 2>&1 1>>$LOG_CE
 
 
-read -d '' CONSULTA_X6DE <<- EOF
+read -d '' CONSULTA_X6D <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e_aux1;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 AS 
@@ -283,25 +291,44 @@ SELECT GH.anio, GH.mes, GH.dia, GH.id_carrera, GH.galgo_nombre, GH.clase,
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx1(galgo_nombre, clase);
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x6e_aux1 ADD INDEX tb_ce_${sufijo}_x6e_aux1_idx2(clase, experiencia_cualitativo);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 LIMIT 5;
-SELECT count(*) as num_x6e FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 LIMIT 5;
+SELECT count(*) as num_x6e_aux1 FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 LIMIT 5;
 
-set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) AS min_eec FROM datos_desa.tb_ce_${sufijo}_x6c);
-set @diff_experiencia_en_clase=(select CASE WHEN MIN(experiencia_en_clase)=0 THEN MAX(experiencia_en_clase) ELSE MAX(experiencia_en_clase)-MIN(experiencia_en_clase) END AS dif_eec FROM datos_desa.tb_ce_${sufijo}_x6c);
+EOF
+
+
+echo -e "\n$CONSULTA_X6D" 2>&1 1>>${LOG_CE}
+mysql --execute="$CONSULTA_X6D" 2>&1 1>>${LOG_CE}
+
+
+read -d '' CONSULTA_X6E <<- EOF
+set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) AS min_eec FROM datos_desa.tb_ce_${sufijo}_x6e_aux1);
+
+set @diff_experiencia_en_clase=(select CASE WHEN MIN(experiencia_en_clase)=0 THEN MAX(experiencia_en_clase) ELSE MAX(experiencia_en_clase) - MIN(experiencia_en_clase) END AS dif_eec FROM datos_desa.tb_ce_${sufijo}_x6e_aux1);
+
+set @min_posicion_media_en_clase_por_experiencia=(select MIN(posicion_media_en_clase_por_experiencia) FROM datos_desa.tb_ce_${sufijo}_x6b);
+
+set @diff_posicion_media_en_clase_por_experiencia=(select CASE WHEN MIN(posicion_media_en_clase_por_experiencia)=0 THEN MAX(posicion_media_en_clase_por_experiencia) ELSE MAX(posicion_media_en_clase_por_experiencia) - MIN(posicion_media_en_clase_por_experiencia) END FROM datos_desa.tb_ce_${sufijo}_x6b);
 
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x6e AS 
 SELECT
+
+cruce1.experiencia_en_clase AS c1,
+@diff_experiencia_en_clase AS c2,
+@min_experiencia_en_clase AS c3,
+X6B.posicion_media_en_clase_por_experiencia AS c4,
+@diff_posicion_media_en_clase_por_experiencia AS c5,
+@min_posicion_media_en_clase_por_experiencia AS c6,
+
 cruce1.id_carrera,
 cruce1.galgo_nombre,
 cruce1.clase,
 CASE WHEN (cruce1.experiencia_en_clase IS NULL OR @diff_experiencia_en_clase=0) THEN NULL ELSE ((cruce1.experiencia_en_clase - @min_experiencia_en_clase)/@diff_experiencia_en_clase) END AS experiencia_en_clase,
 cruce1.experiencia_cualitativo,
 CASE WHEN (X6B.posicion_media_en_clase_por_experiencia IS NULL OR @diff_posicion_media_en_clase_por_experiencia=0) THEN NULL ELSE ((X6B.posicion_media_en_clase_por_experiencia - @min_posicion_media_en_clase_por_experiencia)/@diff_posicion_media_en_clase_por_experiencia) END AS posicion_media_en_clase_por_experiencia,
-
 anio, mes, dia
-
 FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 cruce1
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x6b X6B ON (cruce1.clase=X6B.clase AND cruce1.experiencia_cualitativo=X6B.experiencia_cualitativo)
 ;
@@ -312,8 +339,9 @@ SELECT count(*) as num_x6e FROM datos_desa.tb_ce_${sufijo}_x6e LIMIT 5;
 EOF
 
 
-echo -e "\n$CONSULTA_X6DE" 2>&1 1>>${LOG_CE}
-mysql --execute="$CONSULTA_X6DE" 2>&1 1>>$LOG_CE
+echo -e "\n-----------------------------------------\n" 2>&1 1>>${LOG_CE}
+echo -e "\n${CONSULTA_X6E}" 2>&1 1>>${LOG_CE}
+mysql --execute="${CONSULTA_X6E}" 2>&1 1>>${LOG_CE}
 }
 
 ##########################################################################################
@@ -898,9 +926,18 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carreras_${sufijo};
 
 CREATE TABLE datos_desa.tb_elaborada_carreras_${sufijo} AS 
 SELECT 
-dentro.*, 
+IFNULL(dentro.id_carrera, GH.id_carrera) AS id_carrera,
+IFNULL(dentro.id_campeonato, GH.id_campeonato) AS id_campeonato,
+IFNULL(dentro.track, GH.track) AS track,
+IFNULL(dentro.clase, GH.clase) AS clase,
+IFNULL(dentro.distancia_norm, GH.distancia_norm) AS distancia_norm,
+dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
+num_galgos_norm, mes_norm,hora_norm,premio_primero_norm,premio_segundo_norm,premio_otros_norm,premio_total_carrera_norm,going_allowance_segundos_norm,
+fc_1_norm,fc_2_norm,fc_pounds_norm,tc_1_norm,tc_2_norm,tc_3_norm,tc_pounds_norm
+
 CAST( D.venue_going_std AS DECIMAL(8,6) ) AS venue_going_std,
 CAST( D.venue_going_avg AS DECIMAL(8,6) ) AS venue_going_avg
+
 FROM (
   SELECT 
   A.id_carrera,
@@ -929,7 +966,14 @@ FROM (
   LEFT JOIN datos_desa.tb_ce_${sufijo}_x12b C ON (A.id_carrera=C.id_carrera)
 ) dentro
 
-LEFT JOIN datos_desa.tb_ce_${sufijo}_x8b D ON (dentro.track=D.track)
+LEFT JOIN (
+  SELECT id_carrera, MAX(id_campeonato) AS id_campeonato, MAX(venue) AS track, MAX(clase) AS clase, MAX(distancia_norm) AS distancia_norm,
+  FROM datos_desa.tb_galgos_historico_norm GROUP BY id_carrera
+) GH
+ON (dentro.id_carrera=GH.id_carrera)
+
+LEFT JOIN datos_desa.tb_ce_${sufijo}_x8b D 
+ON (dentro.track=D.track)
 ;
 
 
@@ -950,9 +994,9 @@ CREATE TABLE datos_desa.tb_elaborada_galgos_${sufijo} AS
 SELECT 
 A.*,
 
-CAST( C.vgcortas_max_norm AS DECIMAL(8,6) ) AS vgcortas_max_norm, 
-CAST( C.vgmedias_max_norm AS DECIMAL(8,6) ) AS vgmedias_max_norm, 
-CAST( C.vglargas_max_norm AS DECIMAL(8,6) ) AS vglargas_max_norm,
+-- CAST( C.vgcortas_max_norm AS DECIMAL(8,6) ) AS vgcortas_max_norm, 
+-- CAST( C.vgmedias_max_norm AS DECIMAL(8,6) ) AS vgmedias_max_norm, 
+-- CAST( C.vglargas_max_norm AS DECIMAL(8,6) ) AS vglargas_max_norm,
 
 CAST( D.vel_real_cortas_mediana_norm AS DECIMAL(8,6) ) AS vel_real_cortas_mediana_norm, 
 CAST( D.vel_real_cortas_max_norm AS DECIMAL(8,6) ) AS vel_real_cortas_max_norm, 
@@ -1213,13 +1257,14 @@ generarTablasElaboradas
 
 
 echo -e "\n\n | 031 | --- Analizando tablas (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_CE}
-analizarTabla "datos_desa" "tb_elaborada_carreras_${sufijo}" "${LOG_CE}"
-analizarTabla "datos_desa" "tb_elaborada_galgos_${sufijo}" "${LOG_CE}"
-analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE}"
+rm -f "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_elaborada_carreras_${sufijo}" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_elaborada_galgos_${sufijo}" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE_STATS}"
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-borrarTablasInnecesarias "${sufijo}"
+#borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
