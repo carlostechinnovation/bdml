@@ -24,6 +24,10 @@ rm -f "${PATH_LIMPIO_POSICIONES}"
 rm -f "${PATH_LIMPIO_HISTORICO}"
 rm -f "${PATH_LIMPIO_AGREGADOS}"
 
+echo -e $(date +"%T")" Creando carpetas vacias (si no existen ya)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
+mkdir -p "$PATH_BRUTO"
+mkdir -p "$PATH_LIMPIO"
+
 
 ##########################################
 echo -e $(date +"%T")" Borrando tablas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
