@@ -1235,22 +1235,22 @@ echo -e " Creando tabla de REMARKS-PUNTOS (util para variable 13)..." 2>&1 1>>${
 crearTablaRemarksPuntos
 
 echo -e "\n\n---- Variables: X1, X2..." 2>&1 1>>${LOG_CE}
-#calcularVariableX1 "${sufijo}"
-#calcularVariableX2 "${sufijo}"
-#calcularVariableX3 "${sufijo}"
-#calcularVariableX4 "${sufijo}"
-#calcularVariableX5 "${sufijo}"
-#calcularVariableX6 "${sufijo}"
-#calcularVariableX7 "${sufijo}"
-#calcularVariableX8 "${sufijo}"
-#calcularVariableX9 "${sufijo}"
-#calcularVariableX10 "${sufijo}"
-#calcularVariableX11 "${sufijo}"
-#calcularVariableX12 "${sufijo}"
-#calcularVariableX13 "${sufijo}"
+calcularVariableX1 "${sufijo}"
+calcularVariableX2 "${sufijo}"
+calcularVariableX3 "${sufijo}"
+calcularVariableX4 "${sufijo}"
+calcularVariableX5 "${sufijo}"
+calcularVariableX6 "${sufijo}"
+calcularVariableX7 "${sufijo}"
+calcularVariableX8 "${sufijo}"
+calcularVariableX9 "${sufijo}"
+calcularVariableX10 "${sufijo}"
+calcularVariableX11 "${sufijo}"
+calcularVariableX12 "${sufijo}"
+calcularVariableX13 "${sufijo}"
 
 echo -e "\n\n ---- Tablas MAESTRAS de INDICES..." 2>&1 1>>${LOG_CE}
-#generarTablasIndices
+generarTablasIndices
 
 echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear datasets)..." 2>&1 1>>${LOG_CE}
 generarTablasElaboradas
@@ -1264,7 +1264,7 @@ analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE_STA
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-#borrarTablasInnecesarias "${sufijo}"
+borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}

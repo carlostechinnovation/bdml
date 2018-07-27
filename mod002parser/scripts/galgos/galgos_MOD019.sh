@@ -12,8 +12,9 @@ echo -e "MOD019 --> LOG = "${LOG_019_EXPORT}
 rm -f "${LOG_019_EXPORT}"
 
 ########## SUBCARPETAS #################
-mkdir $EXTERNAL_010_BRUTO
-mkdir $EXTERNAL_012_LIMNOR
+echo -e $(date +"%T")" Creando carpetas vacias (si no existen ya)..." 2>&1 1>>${LOG_019_EXPORT}
+mkdir -p "$EXTERNAL_010_BRUTO"
+mkdir -p "$EXTERNAL_012_LIMNOR"
 
 
 ############### EXPORTACION A CARPETA EXTERNA #####################
