@@ -41,7 +41,7 @@ echo -e "\n\n---------------------- Comprobacion de PREDICCIONES ---------------
 num_targets_file=$(cat "$PATH_FILE_FUTURO_TARGETS_LIMPIO" | wc -l)
 if [ ${num_targets_file} -eq 0 ]
   then
-    echo -e "ERROR En el fichero generado por Python (050) NO hay NINGUN target PREDICHO. Salida forzada. num_targets_file=$num_targets_file"
+    echo -e "ERROR En el fichero generado por modulo 050. NO hay NINGUN target PREDICHO. Salida forzada. num_targets_file=$num_targets_file"
     exit -1
 fi
 echo -e "\n-------------------------------------------------------------------\n" 2>&1 1>>${LOG_050}
@@ -118,6 +118,22 @@ FROM (
 (SELECT @curRow := 0, @curIdCarrera := '') R;
 
 
+-- Solo coger carreras de cuyos galgos (TODOS) conocia el HISTORICO para esa distancia. 
+-- Para ellos el target predicho sera NULL.
+-- Si no, marcar esas carreras como 'con historico desconocido'.
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG};
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG}  AS
+SELECT A.id_carrera,
+CASE WHEN (num_target_predichos_no_nulos < num_galgos AND num_galgos > 0) THEN 1 ELSE 0 END AS con_historico_desconocido
+ FROM  
+( SELECT id_carrera, count(target_predicho) AS num_target_predichos_no_nulos,
+count(*) AS num_galgos 
+FROM datos_desa.tb_fut_1st_predicho_${TAG} GROUP BY id_carrera )  A;
+
+SELECT count(*) FROM datos_desa.tb_fut_1st_predicho_completo_${TAG}; 
+SELECT * FROM datos_desa.tb_fut_1st_predicho_completo_${TAG} ORDER BY id_carrera;
+
 
 DROP TABLE IF EXISTS datos_desa.tb_fut_1st_connombre_${TAG};
 
@@ -140,7 +156,7 @@ DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_${TAG};
 
 CREATE TABLE datos_desa.tb_fut_1st_final_${TAG} AS
 SELECT A.*, B.galgo_nombre
-FROM datos_desa.tb_fut_1st_predicho_${TAG} A
+FROM datos_desa.tb_fut_1st_predicho_completo_${TAG} A
 LEFT JOIN datos_desa.tb_fut_1st_connombre_${TAG} B
 ON (A.galgo_rowid=B.rowid);
 
@@ -154,7 +170,7 @@ DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_riesgo_${TAG};
 CREATE TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} AS
 select 
 A.*, 
--- RIESGO: cuanta mas diferencia, mas efectiva sera la prediccion
+-- RIESGO: cuanta mas diferencia entre primero y segundo, mas efectiva sera la prediccion
 100*(A.target_predicho - B.target_predicho) AS fortaleza
 FROM datos_desa.tb_fut_1st_final_${TAG}  A
 LEFT JOIN datos_desa.tb_fut_1st_final_${TAG} B
@@ -185,7 +201,7 @@ rm -f "$INFORME_PREDICCIONES_COMANDOS"
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
 B.anio,B.mes,B.dia, B.track AS estadio, B.hora,B.minuto,
-A.galgo_nombre, A.target_predicho, A.fortaleza
+A.galgo_nombre, A.target_predicho, A.fortaleza, A.con_historico_desconocido
 FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)

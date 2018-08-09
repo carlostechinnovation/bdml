@@ -34,7 +34,7 @@ echo -e $(date +"%T")" Entrenando el modelo con DS-TTV (todo lo que conocemos de
 
 
 ########### R: Modelo predictivo REGRESION ###########
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_regresion_ttv_pasado.R' "${TAG}" "10000" 2>&1 1>>"${LOG_045}"
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_regresion_ttv_pasado.R' "2" "${TAG}" "1000000" 2>&1 1>>"${LOG_045}"
 
 
 ##############################################################

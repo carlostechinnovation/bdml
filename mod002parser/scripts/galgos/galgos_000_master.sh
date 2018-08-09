@@ -76,14 +76,14 @@ echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$L
 echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_070
 
 
-#echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
+echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
 ############################################################################################
 
-#echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
+echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
 
 ############################################################################################
 
@@ -109,7 +109,7 @@ echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 
 
 #echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
-#limpieza "$SUBGRUPO_GANADOR"
+limpieza "$SUBGRUPO_GANADOR"
 
 
 echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
