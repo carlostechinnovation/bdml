@@ -3,7 +3,7 @@
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #### Limpiar LOG ###
-rm -f $LOG_ML
+#rm -f $LOG_ML
 
 ######################## PARAMETROS ############
 if [ "$#" -ne 1 ]; then
@@ -16,15 +16,23 @@ TAG="${1}"
 echo -e $(date +"%T")" | 040 | Modelo predictivo (subgrupo: $TAG) | INICIO" >>$LOG_070
 echo -e "MOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
-PATH_MODELO_GANADOR='/home/carloslinux/Desktop/WORKSPACES/wksp_pycharm/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
-rm -f $PATH_MODELO_GANADOR
 
+#------------------------------------------------ PYTHON ----------------------------------------------------
+#PATH_PYTHON_MODELO_GANADOR='/home/carloslinux/Desktop/WORKSPACES/wksp_pycharm/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
+#rm -f $PATH_PYTHON_MODELO_GANADOR
 
-########### Modelo predictivo REGRESION ###########
-echo -e $(date +"%T")" Entrenando el modelo (train) y sacando score (test)..." 2>&1 1>>${LOG_ML}
-python3 '/home/carloslinux/Desktop/WORKSPACES/wksp_pycharm/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" >> "${LOG_ML}"
+# Modelo predictivo REGRESION
+#echo -e $(date +"%T")" Entrenando el modelo (train) y sacando score (test)..." 2>&1 1>>${LOG_ML}
+#python3 '/home/carloslinux/Desktop/WORKSPACES/wksp_pycharm/python_poc_ml/galgos/galgos_regresion_train_test.py' "_${TAG}" >> "${LOG_ML}"
 
-cat "${LOG_ML}" | grep 'Gana modelo'  >&1
+#cat "${LOG_ML}" | grep 'Gana modelo'  >&1
+
+#------------------------------------------------ R ----------------------------------------------------
+# Modelo predictivo REGRESION
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_regresion_train_test.R' "1" "${TAG}" "10000" >> "${LOG_ML}"
+
+#---------------------------------------------------------------------------------------------------------------
+
 
 echo -e $(date +"%T")" Generando tabla de validacion..." 2>&1 1>>${LOG_ML}
 

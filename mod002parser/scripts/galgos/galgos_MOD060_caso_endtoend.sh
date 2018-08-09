@@ -38,6 +38,24 @@ fi
 
 ########################################################################################################
 
+read -d '' CONSULTA_DATOS_BRUTOS <<- EOF
+select * from datos_desa.tb_galgos_carreras WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
+
+select * from datos_desa.tb_galgos_posiciones_en_carreras WHERE id_carrera=${id_carrera_analizada} ORDER BY posicion ASC LIMIT 10;
+
+select * from datos_desa.tb_galgos_historico WHERE id_carrera=${id_carrera_analizada} ORDER BY posicion ASC LIMIT 10;
+
+select * from datos_desa.tb_galgos_agregados A WHERE A.galgo_nombre IN 
+(SELECT galgo_nombre FROM datos_desa.tb_galgos_posiciones_en_carreras WHERE id_carrera=${id_carrera_analizada})
+LIMIT 10;
+EOF
+
+echo -e "\n------------------- Datos brutos ---------\n" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+echo -e "$CONSULTA_DATOS_BRUTOS" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+mysql -t --execute="$CONSULTA_DATOS_BRUTOS" 2>&1 1>>${LOG_060_ENDTOEND}${TIEMPO}
+
+########################################################################################################
+
 read -d '' CONSULTA_ANTES_DE_PREDECIR <<- EOF
 SELECT id_carrera FROM datos_desa.tb_filtrada_carreras_${SUBGRUPO} WHERE id_carrera=${id_carrera_analizada} LIMIT 10;
 

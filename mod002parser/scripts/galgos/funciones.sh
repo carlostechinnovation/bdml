@@ -479,7 +479,7 @@ rm -f ${FILE_TEMP}
 mysql -N --execute="SELECT ROUND( 100.0 * SUM( beneficio_bruto )/SUM(gastado_${tag_prediccion}) , 2) AS rentabilidad FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp};" > ${FILE_TEMP}
 rentabilidad=$( cat ${FILE_TEMP})
 
-FILE_TEMP="./temp_MOD040_num_ciertos_gruposp"
+FILE_TEMP="./temp_MOD040_num_aciertos_gruposp"
 #Numeros: SOLO pongo el dinero en las que el sistema me predice 1st o 1o2, pero no en las otras predichas.
 mysql -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
@@ -507,6 +507,9 @@ function analisisRentabilidadesPorSubgrupos(){
 
   resetTablaRentabilidades #Reseteando tabla de rentabilidades
   analizarScoreSobreSubgrupos "$LOG_MASTER"
+
+  #### Limpiar LOG dela capa 040, que contendra la acumulacion de las iteraciones ###
+  rm -f $LOG_ML
 
   #Cargando fichero de rentabilidades a la tabla
   echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
