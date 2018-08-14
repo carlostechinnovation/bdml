@@ -28,7 +28,7 @@ PATH_FILE_FUTURO_TARGETS_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/F
 #cat "${PATH_FILE_FUTURO_TARGETS}" | tr -d '[' | tr ']' ' ' > "${PATH_FILE_FUTURO_TARGETS_LIMPIO}"
 
 # ------------------------------------------------ R -----------------------------------
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_regresion_predictor.R' "3" "${TAG}" "10000" 2>&1 1>>${LOG_050}
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_050_predictor_futuro.R' "3" "${TAG}" "10000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" 0.88 12 2>&1 1>>${LOG_050}
 
 # -------------------------------------------------------------------------------
 

@@ -108,7 +108,7 @@ echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 
 
 
-#echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 limpieza "$SUBGRUPO_GANADOR"
 
 

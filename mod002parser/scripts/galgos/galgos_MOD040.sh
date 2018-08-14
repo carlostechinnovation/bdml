@@ -29,7 +29,7 @@ echo -e "MOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
 #------------------------------------------------ R ----------------------------------------------------
 # Modelo predictivo REGRESION
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_inteligencia.R' "1" "${TAG}" "10000" 2>&1 1>>"${LOG_ML}"
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "10000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" 0.88 12 2>&1 1>>"${LOG_ML}"
 
 #---------------------------------------------------------------------------------------------------------------
 
