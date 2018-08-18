@@ -17,6 +17,10 @@ echo -e $(date +"%T")" | 040 | Modelo predictivo (subgrupo: $TAG) | INICIO" >>$L
 echo -e "MOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
 
+PATH_FILE_VALIDATION_TARGETS_PREDICHOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pasado_validation_targets_predichos_"${TAG}".txt"
+echo -e "MOD040 - Se calcularan los pasado_validation_targets_predichos para $TAG . Borramos posible fichero antiguo... " 2>&1 1>>${LOG_ML}
+rm -f $PATH_FILE_VALIDATION_TARGETS_PREDICHOS
+
 #------------------------------------------------ PYTHON ----------------------------------------------------
 #PATH_PYTHON_MODELO_GANADOR='/home/carloslinux/Desktop/WORKSPACES/wksp_pycharm/python_poc_ml/galgos/galgos_regresion_MEJOR_MODELO.pkl'
 #rm -f $PATH_PYTHON_MODELO_GANADOR 2>&1 1>>"${LOG_ML}"
@@ -29,14 +33,20 @@ echo -e "MOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
 #------------------------------------------------ R ----------------------------------------------------
 # Modelo predictivo REGRESION
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "10000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" 0.88 12 2>&1 1>>"${LOG_ML}"
+echo -e "MOD040 - Prediciendo con R..." 2>&1 1>>${LOG_ML}
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "30000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" $PCA_UMBRAL_VARIANZA_ACUM $TSNE_NUM_F_OUT 2>&1 1>>"${LOG_ML}"
 
 #---------------------------------------------------------------------------------------------------------------
 
 
-echo -e $(date +"%T")" Generando tabla de validacion..." 2>&1 1>>${LOG_ML}
 
-PATH_FILE_VALIDATION_TARGETS_PREDICHOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pasado_validation_targets_predichos_"${TAG}".txt"
+
+if [ -f "$PATH_FILE_VALIDATION_TARGETS_PREDICHOS" ]
+then
+	
+
+############## dentro del IF
+echo -e $(date +"%T")" Generando tabla de validacion..." 2>&1 1>>${LOG_ML}
 
 read -d '' CONSULTA_VALIDACION <<- EOF
 
@@ -115,6 +125,16 @@ echo -e "MOD040 - Analisis economico por grupos de SP: sirve para ELEGIR en qué
 ${PATH_SCRIPTS}galgos_MOD042_1st.sh "${TAG}" 2>&1 1>>${LOG_ML}
 
 #Combinacion ganadora
+
+
+
+############## fin del primer IF
+
+else
+	echo "$PATH_FILE_VALIDATION_TARGETS_PREDICHOS no encontrado!! ERROR!!"
+fi
+
+
 
 
 ################################################

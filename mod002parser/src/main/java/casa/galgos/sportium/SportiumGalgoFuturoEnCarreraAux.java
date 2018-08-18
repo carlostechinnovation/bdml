@@ -17,4 +17,9 @@ public class SportiumGalgoFuturoEnCarreraAux implements Serializable {
 		this.sp = sp;
 	}
 
+	@Override
+	public String toString() {
+		return "SportiumGalgoFuturoEnCarreraAux [trap=" + trap + ", galgoNombre=" + galgoNombre + ", sp=" + sp + "]";
+	}
+
 }

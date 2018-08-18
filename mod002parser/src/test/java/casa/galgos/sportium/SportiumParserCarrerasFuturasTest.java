@@ -39,6 +39,9 @@ public class SportiumParserCarrerasFuturasTest {
 		Assert.assertTrue(!out.isEmpty());
 
 		for (CarreraSemillaSportium fila : out) {
+			Assert.assertTrue(fila.dia != null);
+			Assert.assertTrue(fila.estadio != null && !fila.estadio.isEmpty());
+			Assert.assertTrue(fila.hora != null);
 			Assert.assertTrue(fila.urlDetalle != null && !fila.urlDetalle.isEmpty());
 		}
 

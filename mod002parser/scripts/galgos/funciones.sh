@@ -2,10 +2,13 @@
 
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
-RENTABILIDAD_MINIMA="120"
+RENTABILIDAD_MINIMA="100"
 COBERTURA_MINIMA="0.35"
-PORCENTAJE_SUFICIENTES_CASOS="0.1"
+SUFICIENTES_CASOS="50"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
+PCA_UMBRAL_VARIANZA_ACUM=0.75
+TSNE_NUM_F_OUT=12
+
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
 PATH_JAR="/home/carloslinux/git/bdml/mod002parser/target/mod002parser-jar-with-dependencies.jar"
@@ -76,6 +79,7 @@ EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
 EXTERNAL_037_DS_PASADOS_SPLIT="${PATH_EXTERNAL_DATA}037_DS_PASADOS_SPLIT/"
 EXTERNAL_038_DS_PASADOS="${PATH_EXTERNAL_DATA}038_DS_PASADOS/"
 EXTERNAL_050_DS_FUTUROS="${PATH_EXTERNAL_DATA}050_DS_FUTUROS/"
+
 
 #########################################################################
 
@@ -505,11 +509,12 @@ function cargarTablaRentabilidades ()
 
 function analisisRentabilidadesPorSubgrupos(){
 
+  #### Limpiar LOG de la capa 040, que contendra la acumulacion de las iteraciones ###
+  rm -f $LOG_ML
+
+
   resetTablaRentabilidades #Reseteando tabla de rentabilidades
   analizarScoreSobreSubgrupos "$LOG_MASTER"
-
-  #### Limpiar LOG dela capa 040, que contendra la acumulacion de las iteraciones ###
-  rm -f $LOG_ML
 
   #Cargando fichero de rentabilidades a la tabla
   echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}
@@ -523,11 +528,12 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
 
+  # Borro el fichero e intento escribirlo:
   rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > (select $PORCENTAJE_SUFICIENTES_CASOS*(count(*)/6) AS casos_suficientes FROM datos_desa.tb_galgos_posiciones_en_carreras_norm WHERE id_carrera >10000 LIMIT 1) ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
 }
 

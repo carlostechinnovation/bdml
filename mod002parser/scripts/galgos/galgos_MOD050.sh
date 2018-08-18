@@ -15,7 +15,7 @@ rm -f $LOG_050
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
 echo -e "MOD050 --> LOG = "${LOG_050}
 
-echo -e $(date +"%T")" Ejecutando modelo (ya entrenado) sobre DS-FUTURO..." 2>&1 1>>${LOG_050}
+echo -e $(date +"%T")" Ejecutando modelo (ya entrenado) sobre DS-FUTURO (del subgrupo ganador, no de todo el futuro!!)..." 2>&1 1>>${LOG_050}
 
 #PATH_FILE_FUTURO_TARGETS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/FILELOAD_ds_futuro_targets_${TAG}.txt"
 PATH_FILE_FUTURO_TARGETS_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/FILELOAD_ds_futuro_targets_2_${TAG}.txt"
@@ -28,7 +28,7 @@ PATH_FILE_FUTURO_TARGETS_LIMPIO="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/F
 #cat "${PATH_FILE_FUTURO_TARGETS}" | tr -d '[' | tr ']' ' ' > "${PATH_FILE_FUTURO_TARGETS_LIMPIO}"
 
 # ------------------------------------------------ R -----------------------------------
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_050_predictor_futuro.R' "3" "${TAG}" "10000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" 0.88 12 2>&1 1>>${LOG_050}
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_050_predictor_futuro.R' "3" "${TAG}" "10000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" $PCA_UMBRAL_VARIANZA_ACUM $TSNE_NUM_F_OUT 2>&1 1>>${LOG_050}
 
 # -------------------------------------------------------------------------------
 
@@ -118,12 +118,16 @@ FROM (
 (SELECT @curRow := 0, @curIdCarrera := '') R;
 
 
+SELECT * FROM datos_desa.tb_fut_1st_predicho_${TAG} ORDER BY id_carrera ASC LIMIT 10;
+SELECT count(*) as num_ids_futuro_predicho FROM datos_desa.tb_fut_1st_predicho_${TAG} LIMIT 1;
+
+
 -- Solo coger carreras de cuyos galgos (TODOS) conocia el HISTORICO para esa distancia. 
 -- Para ellos el target predicho sera NULL.
 -- Si no, marcar esas carreras como 'con historico desconocido'.
-DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_completo_aux_${TAG};
 
-CREATE TABLE IF NOT EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG}  AS
+CREATE TABLE IF NOT EXISTS datos_desa.tb_fut_1st_predicho_completo_aux_${TAG}  AS
 SELECT A.id_carrera,
 CASE WHEN (num_target_predichos_no_nulos < num_galgos AND num_galgos > 0) THEN 1 ELSE 0 END AS con_historico_desconocido
  FROM  
@@ -131,8 +135,23 @@ CASE WHEN (num_target_predichos_no_nulos < num_galgos AND num_galgos > 0) THEN 1
 count(*) AS num_galgos 
 FROM datos_desa.tb_fut_1st_predicho_${TAG} GROUP BY id_carrera )  A;
 
+SELECT count(*) FROM datos_desa.tb_fut_1st_predicho_completo_aux_${TAG}; 
+SELECT * FROM datos_desa.tb_fut_1st_predicho_completo_aux_${TAG} ORDER BY id_carrera LIMIT 3;
+
+
+
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG};
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG}  AS
+SELECT A.*, B.con_historico_desconocido
+FROM datos_desa.tb_fut_1st_predicho_${TAG} A
+LEFT JOIN datos_desa.tb_fut_1st_predicho_completo_aux_${TAG} B
+ON (A.id_carrera = B.id_carrera);
+
+
 SELECT count(*) FROM datos_desa.tb_fut_1st_predicho_completo_${TAG}; 
-SELECT * FROM datos_desa.tb_fut_1st_predicho_completo_${TAG} ORDER BY id_carrera;
+SELECT * FROM datos_desa.tb_fut_1st_predicho_completo_${TAG} ORDER BY id_carrera LIMIT 3;
+
 
 
 DROP TABLE IF EXISTS datos_desa.tb_fut_1st_connombre_${TAG};
@@ -155,10 +174,11 @@ SELECT count(*) as num_ids_futuro_connombre FROM datos_desa.tb_fut_1st_connombre
 DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_${TAG};
 
 CREATE TABLE datos_desa.tb_fut_1st_final_${TAG} AS
-SELECT A.*, B.galgo_nombre
-FROM datos_desa.tb_fut_1st_predicho_completo_${TAG} A
-LEFT JOIN datos_desa.tb_fut_1st_connombre_${TAG} B
-ON (A.galgo_rowid=B.rowid);
+SELECT A.*, B.con_historico_desconocido, B.target_predicho, B.posicion_predicha
+FROM datos_desa.tb_fut_1st_connombre_${TAG} A
+LEFT JOIN datos_desa.tb_fut_1st_predicho_completo_${TAG} B
+ON (A.rowid=B.galgo_rowid)
+; -- WHERE con_historico_desconocido=0;  -- Que se conozca el historico de todos los galgos que corren
 
 ALTER TABLE datos_desa.tb_fut_1st_final_${TAG} ADD INDEX tb_fut_1st_final_${TAG}_idx(id_carrera, galgo_nombre);
 
@@ -201,7 +221,7 @@ rm -f "$INFORME_PREDICCIONES_COMANDOS"
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
 B.anio,B.mes,B.dia, B.track AS estadio, B.hora,B.minuto,
-A.galgo_nombre, A.target_predicho, A.fortaleza, A.con_historico_desconocido
+A.galgo_nombre, A.target_predicho, A.fortaleza, A.con_historico_desconocido, '${TAG}' AS subgrupo
 FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)

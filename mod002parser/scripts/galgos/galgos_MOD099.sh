@@ -7,7 +7,7 @@ rm -f "${LOG_099}"
 
 
 #limpiar logs GENERALES
-rm -f $LOG_070
+#rm -f $LOG_070
 
 ####### PARAMETROS ###
 INFORME_COMANDOS_INPUT="${1}"
@@ -184,7 +184,7 @@ DELETE FROM datos_desa.tb_galgos_fut_combinada_acum WHERE id_ejecucion='${ID_EJE
 INSERT INTO datos_desa.tb_galgos_fut_combinada_acum
   SELECT 
   '${ID_EJECUCION}' AS id_ejecucion, '${TAG}' AS subgrupo_ganador,
-  numero1, id_carrera, galgo_rowid, target_predicho, posicion_predicha, galgo_nombre, fortaleza, numero2, real_vacio, real_fecha, real_distancia, real_trap, real_stmhcp, real_posicion, real_by_espacio, real_winneror2nd, real_venue, real_remarks, real_wintime, real_going, real_sp, real_class, real_calc_time, real_id_carrera, real_id_campeonato
+  numero1, id_carrera, rowid, target_predicho, posicion_predicha, galgo_nombre, fortaleza, numero2, real_vacio, real_fecha, real_distancia, real_trap, real_stmhcp, real_posicion, real_by_espacio, real_winneror2nd, real_venue, real_remarks, real_wintime, real_going, real_sp, real_class, real_calc_time, real_id_carrera, real_id_campeonato
   FROM datos_desa.tb_galgos_fut_combinada;
 
 EOF

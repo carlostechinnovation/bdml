@@ -88,11 +88,9 @@ public class GalgosManager implements Serializable {
 	}
 
 	/**
-	 * @param prefijoPathDatosBruto
-	 *            Prefijo del PATH BRUTO de los datos
+	 * @param prefijoPathDatosBruto Prefijo del PATH BRUTO de los datos
 	 * @param guardarEnFicheros
-	 * @param fileGalgosIniciales
-	 *            SALIDA
+	 * @param fileGalgosIniciales   SALIDA
 	 * @throws InterruptedException
 	 */
 	public void descargarYParsearSemillasSportium(String prefijoPathDatosBruto, boolean guardarEnFicheros,
@@ -154,6 +152,7 @@ public class GalgosManager implements Serializable {
 
 			String carreraPrefijo = carrera.estadio + "#" + carrera.dia + "#" + carrera.hora;
 			MY_LOGGER.info("------ CARRERA = " + carreraPrefijo + " ---------");
+			MY_LOGGER.debug("carrera.trapGalgonombreSp = " + carrera.trapGalgonombreSp);
 
 			if (carrera.trapGalgonombreSp != null && !carrera.trapGalgonombreSp.isEmpty()) {
 
@@ -586,8 +585,7 @@ public class GalgosManager implements Serializable {
 	/**
 	 * @param idCarrera
 	 * @param idCampeonato
-	 * @param param3
-	 *            Prefijo de ficheros brutos
+	 * @param param3       Prefijo de ficheros brutos
 	 */
 	public GbgbCarrera descargarYProcesarCarreraYAcumularUrlsHistoricos(Long idCarrera, Long idCampeonato,
 			String param3) {
@@ -630,13 +628,11 @@ public class GalgosManager implements Serializable {
 	 * guardableHistoricosGalgos (que luego se guardaran en ficheros). Ademas,
 	 * apunta las carreras recientes que aparezcan en ese historico.
 	 * 
-	 * @param param3
-	 *            Prefijo de ficheros brutos
-	 * @param gpgh
-	 *            Parser de historicos
-	 * @param profundidadParaNuevasCarreras
-	 *            Profundidad que se asignará a las nuevas carreras descubiertas
-	 *            (para acumularlas sólo si son procesables).
+	 * @param param3                        Prefijo de ficheros brutos
+	 * @param gpgh                          Parser de historicos
+	 * @param profundidadParaNuevasCarreras Profundidad que se asignará a las nuevas
+	 *                                      carreras descubiertas (para acumularlas
+	 *                                      sólo si son procesables).
 	 */
 	public Boolean descargarTodosLosHistoricos(String param3, GbgbParserGalgoHistorico gpgh,
 			Integer profundidadParaNuevasCarreras) {
@@ -818,9 +814,8 @@ public class GalgosManager implements Serializable {
 
 	/**
 	 * @param fila
-	 * @param fechaUmbralAnterior
-	 *            Fecha umbral en el pasado. No cogeremos nada anterior a esa fecha
-	 *            porque es demasiado antiguo.
+	 * @param fechaUmbralAnterior Fecha umbral en el pasado. No cogeremos nada
+	 *                            anterior a esa fecha porque es demasiado antiguo.
 	 * @return
 	 */
 	public boolean isHistoricoInsertable(GbgbGalgoHistoricoCarrera fila, Calendar fechaUmbralAnterior) {
@@ -876,8 +871,7 @@ public class GalgosManager implements Serializable {
 	 * Analiza el historico para calcular los AGREGADOS y GUARDARLOS en una lista
 	 * guardable.
 	 * 
-	 * @param historico
-	 *            Historico de carreras de UN galgo.
+	 * @param historico Historico de carreras de UN galgo.
 	 */
 	public void calcularAgregados(GbgbGalgoHistorico historico) {
 

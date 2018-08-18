@@ -36,9 +36,8 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	}
 
 	/**
-	 * @param pathIn
-	 *            Path absoluto al fichero HTML de la pagina del BOE almacenado en
-	 *            sistema de ficheros local.
+	 * @param pathIn         Path absoluto al fichero HTML de la pagina del BOE
+	 *                       almacenado en sistema de ficheros local.
 	 * @param pathOut
 	 * @param borrarSiExiste
 	 */
@@ -181,7 +180,9 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 
 		if (in != null && !in.isEmpty()) {
 
-			if (in.equalsIgnoreCase("hoy")) {
+			if (in.equalsIgnoreCase("ayer")) {
+				out = anio * 10000L + mes * 100 + dia - 1;
+			} else if (in.equalsIgnoreCase("hoy")) {
 				out = anio * 10000L + mes * 100 + dia;
 			} else if (in.contains("ana")) { // mañana
 				out = anio * 10000L + mes * 100 + dia + 1;
@@ -250,8 +251,7 @@ public class SportiumParserCarrerasFuturas implements Serializable {
 	 * Extrae info de carreras futuras, que aparecen en la parte de abajo, en un
 	 * expander para crear el cupón.
 	 * 
-	 * @param in
-	 *            Contenido de la página HTML en bruto.
+	 * @param in Contenido de la página HTML en bruto.
 	 * @return Lista de carreras parseadas.
 	 */
 	public static List<CarreraSemillaSportium> parsearTablaExpander(String in) {
