@@ -2,12 +2,13 @@
 
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
-RENTABILIDAD_MINIMA="101"
-COBERTURA_MINIMA="0.35"
-SUFICIENTES_CASOS="10"
+RENTABILIDAD_MINIMA="110"
+COBERTURA_MINIMA="0.50"
+SUFICIENTES_CASOS="20"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM=0.75
+PCA_UMBRAL_VARIANZA_ACUM=0.85
 TSNE_NUM_F_OUT=12
+MIN_CG_FUT_SUBGRUPO=1
 
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
@@ -426,7 +427,7 @@ function resetTablaRentabilidades ()
 {
 echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
 consultar "DROP TABLE IF EXISTS datos_desa.tb_rentabilidades\W;" "${LOG_ML}" "-tN"
-consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, cobertura_sg_sp DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4))\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, cobertura_sg_sp DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4), num_cg_fut_subgrupo INT)\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 rm -f $FILELOAD_RENTABILIDADES #vacío
 }
@@ -488,11 +489,16 @@ FILE_TEMP="./temp_MOD040_num_aciertos_gruposp"
 mysql -N --execute="SELECT SUM(acierto) as num_aciertos_gruposp FROM datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} LIMIT 1;" > ${FILE_TEMP}
 numero_aciertos_gruposp=$( cat ${FILE_TEMP})
 
+FILE_TEMP="./temp_MOD040_num_cg_fut_subgrupo"
+rm -f ${FILE_TEMP}
+mysql -N --execute="SELECT count(*) AS num_cg_fut_subgrupo FROM datos_desa.tb_ds_futuro_features_${TAG};" > ${FILE_TEMP}
+num_cg_fut_subgrupo=$( cat ${FILE_TEMP})
+
 
 COBERTURA_SUBGRUPO_GRUPOSP=$(echo "scale=2; $numero_aciertos_gruposp / $numero_predicciones_grupo_sp" | bc -l)
 
 ####SALIDA
-MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${COBERTURA_SUBGRUPO_GRUPOSP}|${rentabilidad}"
+MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_aciertos_gruposp}|${numero_predicciones_grupo_sp}|${COBERTURA_SUBGRUPO_GRUPOSP}|${rentabilidad}|${num_cg_fut_subgrupo}"
 
 echo -e "${MENSAJE}" 2>&1 1>>${log_ml_tipo}
 echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
@@ -530,12 +536,12 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
+  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS AND num_cg_fut_subgrupo > $MIN_CG_FUT_SUBGRUPO ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
 
   # Borro el fichero e intento escribirlo:
   rm -f $SUBGRUPO_GANADOR_FILE
-  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
+  mysql -N --execute="SELECT subgrupo FROM ( SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS AND num_cg_fut_subgrupo > $MIN_CG_FUT_SUBGRUPO ORDER BY $CRITERIO_ORDEN DESC ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
 
 }
 

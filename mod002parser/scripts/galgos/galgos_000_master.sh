@@ -29,8 +29,8 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
 #rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
-${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER #Sportium
 
+${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER #Sportium
 echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
@@ -38,8 +38,8 @@ echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Bet
 ${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
@@ -91,14 +91,14 @@ echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 09
 COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_PREDICCIONES_COMANDOS $SUBGRUPO_GANADOR $ID_EJECUCION"
 echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_MASTER
 echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_070
-#${COMANDO_099} >>$LOG_MASTER #EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
+#${COMANDO_099} >>$LOG_MASTER # (solo se puede hacer si son datos de hace unos dias) EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
 
 
 echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "FUTURA" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" "$ID_EJECUCION" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
+${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" "$ID_EJECUCION" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
 
 
 echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
