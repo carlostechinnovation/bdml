@@ -12,6 +12,11 @@ TAG="${1}"
 #### Limpiar LOG ###
 rm -f $LOG_050
 
+#### Limpiar INFORMES resultado ####
+rm -f "$INFORME_PREDICCIONES"
+rm -f "$INFORME_PREDICCIONES_COMANDOS"
+
+
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
 echo -e "MOD050 --> LOG = "${LOG_050}
 
@@ -214,9 +219,7 @@ echo -e "MOD050 - Informe FINAL..." 2>&1 1>>${LOG_050}
 echo -e "Ruta: "$INFORME_PREDICCIONES 2>&1 1>>${LOG_050}
 echo -e "Ruta-comandos: "$INFORME_PREDICCIONES_COMANDOS 2>&1 1>>${LOG_050}
 
-#limpiar
-rm -f "$INFORME_PREDICCIONES"
-rm -f "$INFORME_PREDICCIONES_COMANDOS"
+
 
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 

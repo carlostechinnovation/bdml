@@ -2,9 +2,9 @@
 
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
-RENTABILIDAD_MINIMA="100"
+RENTABILIDAD_MINIMA="101"
 COBERTURA_MINIMA="0.35"
-SUFICIENTES_CASOS="50"
+SUFICIENTES_CASOS="10"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
 PCA_UMBRAL_VARIANZA_ACUM=0.75
 TSNE_NUM_F_OUT=12
@@ -509,9 +509,11 @@ function cargarTablaRentabilidades ()
 
 function analisisRentabilidadesPorSubgrupos(){
 
-  #### Limpiar LOG de la capa 040, que contendra la acumulacion de las iteraciones ###
-  rm -f $LOG_ML
+  #### Limpiar LOG de la capa 037 que contiene las columnas PENDIENTES de los datasets de todos los subgrupos ###
+  rm -f "${LOG_DS_COLPEN}"
 
+  #### Limpiar LOG de la capa 040, que contendra el log 040 de todos los subgrupos ###
+  rm -f $LOG_ML
 
   resetTablaRentabilidades #Reseteando tabla de rentabilidades
   analizarScoreSobreSubgrupos "$LOG_MASTER"
