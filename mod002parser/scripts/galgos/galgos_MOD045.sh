@@ -3,14 +3,19 @@
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
 fi
 
 TAG="${1}"
+MODO_SIN_BUCLE="${2}" #S ó N
 
 #### Limpiar LOG ###
-rm -f $LOG_045
+if [ "${MODO_SIN_BUCLE}" == "S" ]
+then
+    rm -f "${LOG_045}"
+fi
+
 
 echo -e $(date +"%T")" | 045 | Entreno con pasado-TTV (subgrupo: $TAG) | INICIO" >>$LOG_070
 echo -e "MOD045 --> LOG = "${LOG_045}

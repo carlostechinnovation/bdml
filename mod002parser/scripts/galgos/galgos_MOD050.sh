@@ -3,19 +3,46 @@
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
 fi
 
 TAG="${1}"
+MODO_SIN_BUCLE="${2}" #S ó N
 
 #### Limpiar LOG ###
-rm -f $LOG_050
+if [ "${MODO_SIN_BUCLE}" == "S" ]
+then
+    rm -f "${LOG_050}"
+fi
+
 
 #### Limpiar INFORMES resultado ####
-rm -f "$INFORME_PREDICCIONES"
-rm -f "$INFORME_PREDICCIONES_COMANDOS"
+COMUN_I_PRED=""
+COMUN_I_PRED_CON_PERD=""
+COMUN_I_PRED_COMANDOS=""
 
+if [ "${MODO_SIN_BUCLE}" == "S" ]
+then
+    COMUN_I_PRED=$INFORME_PREDICCIONES
+    COMUN_I_PRED_CON_PERD=$INFORME_PREDICCIONES_CON_PERDEDORES
+    COMUN_I_PRED_COMANDOS=$INFORME_PREDICCIONES_COMANDOS
+
+    rm -f "$COMUN_I_PRED"
+    rm -f "$COMUN_I_PRED_CON_PERD"
+    rm -f "$COMUN_I_PRED_COMANDOS"
+
+else
+    COMUN_I_PRED=$INFORME_BUCLE_PREDICCIONES
+    COMUN_I_PRED_CON_PERD=$INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES
+    COMUN_I_PRED_COMANDOS=$INFORME_BUCLE_PREDICCIONES_COMANDOS
+fi
+
+#####################################################################
+echo -e "Ruta: "$COMUN_I_PRED 2>&1 1>>${LOG_050}
+echo -e "Ruta-conperdedores: "$COMUN_I_PRED_CON_PERD 2>&1 1>>${LOG_050}
+echo -e "Ruta-comandos: "$COMUN_I_PRED_COMANDOS 2>&1 1>>${LOG_050}
+#####################################################################
 
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
 echo -e "MOD050 --> LOG = "${LOG_050}
@@ -216,10 +243,6 @@ mysql -t --execute="$CONSULTA_PREDICCIONES_FUTURAS_2"  2>&1 1>>$LOG_050
 
 ###################### INFORME FINAL ##########################
 echo -e "MOD050 - Informe FINAL..." 2>&1 1>>${LOG_050}
-echo -e "Ruta: "$INFORME_PREDICCIONES 2>&1 1>>${LOG_050}
-echo -e "Ruta-comandos: "$INFORME_PREDICCIONES_COMANDOS 2>&1 1>>${LOG_050}
-
-
 
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
@@ -232,6 +255,21 @@ WHERE A.posicion_predicha=1
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
 
+echo -e "\n$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
+mysql -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$COMUN_I_PRED
+
+
+read -d '' CONSULTA_PREDICCIONES_CON_PERDEDORES <<- EOF
+SELECT A.*, '${TAG}' AS subgrupo
+FROM datos_desa.tb_fut_1st_final_${TAG} A
+LEFT JOIN  datos_desa.tb_galgos_carreras B
+ON (A.id_carrera=B.id_carrera)
+ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC, A.posicion_predicha ASC;
+EOF
+
+echo -e "\n$CONSULTA_PREDICCIONES_CON_PERDEDORES" 2>&1 1>>${LOG_050}
+mysql -t --execute="$CONSULTA_PREDICCIONES_CON_PERDEDORES"  2>&1 1>>$COMUN_I_PRED_CON_PERD
+
 
 read -d '' CONSULTA_PREDICCIONES_INFORME_COMANDOS <<- EOF
 SELECT
@@ -243,13 +281,12 @@ WHERE A.posicion_predicha=1
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
 
-echo -e "\n$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
-mysql -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$INFORME_PREDICCIONES
 echo -e "\n$CONSULTA_PREDICCIONES_INFORME_COMANDOS" # 2>&1 1>>${LOG_050}
-mysql -sN --execute="$CONSULTA_PREDICCIONES_INFORME_COMANDOS"  2>&1 1>>$INFORME_PREDICCIONES_COMANDOS
+mysql -sN --execute="$CONSULTA_PREDICCIONES_INFORME_COMANDOS"  2>&1 1>>$COMUN_I_PRED_COMANDOS
+
 
 #Permiso de ejecucion
-chmod 777 $INFORME_PREDICCIONES_COMANDOS
+chmod 777 $COMUN_I_PRED_COMANDOS
 
 
 ###################### MAIL ##########################

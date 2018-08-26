@@ -2,17 +2,18 @@
 
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-#Borrar log
-rm -f "${LOG_099}"
+######################## PARAMETROS ############
+if [ "$#" -ne 3 ]; then
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
+fi
 
-
-#limpiar logs GENERALES
-#rm -f $LOG_070
-
-####### PARAMETROS ###
 INFORME_COMANDOS_INPUT="${1}"
 TAG="${2}"
 ID_EJECUCION="${3}"
+
+
+#Borrar log
+rm -f "${LOG_099}"
 
 
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | INICIO" >>$LOG_070
@@ -22,11 +23,14 @@ echo -e "MOD099 --> LOG = "${LOG_099}
 PATH_DIR_OUT="${PATH_EXTERNAL_DATA}${ID_EJECUCION}/"
 
 
+echo -e "\nOutput (HTML bruto leido): "$INFORME_BRUTO_POSTERIORI 2>&1 1>>${LOG_099}
+echo -e "Borrando fichero bruto output..." 2>&1 1>>${LOG_099}
+rm -f "${INFORME_BRUTO_POSTERIORI}"
+
+
 ########## EJECUTANDO COMANDOS (calculados previamente en el script 050) #################
 echo -e "Input (comandos): "$INFORME_COMANDOS_INPUT 2>&1 1>>${LOG_099}
-rm -f "${INFORME_BRUTO_POSTERIORI}"
-$INFORME_COMANDOS_INPUT
-echo -e "\nOutput (HTML bruto leido): "$INFORME_BRUTO_POSTERIORI 2>&1 1>>${LOG_099}
+$INFORME_COMANDOS_INPUT  #Ejecuta el fichero con todos los comandos!!!!!!
 
 
 ########## BUCLE Limpieza #################
@@ -141,7 +145,7 @@ echo -e "Datasets futuro (predicho y real)" >> "${LOG_099}"
 exportarTablaAFichero "datos_desa" "tb_galgos_fut_combinada" "${PATH_MYSQL_PRIV_SECURE}099_ds_futuro_frfp.txt" "${LOG_099}" "${PATH_DIR_OUT}099_ds_futuro_frfp.txt"
 
 
-############ Extracción en un acumulado de futuros, para analizar muchas ejecuciones ya hechas #########
+############ Extracción en un ACUMULADO de futuros, para analizar muchas ejecuciones ya hechas #########
 
 
 echo -e "\nInserto los datos futuros conocidos en la tabla de futuros acumulados. Asi podré estudiar esa tabla tras muchas ejecuciones..." 2>&1 1>>${LOG_099}
@@ -222,6 +226,8 @@ COBERTURA_posteriori=$(echo "scale=2; $numero_aciertos_posteriori / $numero_pred
 ####SALIDA
 MENSAJE="FUTURO_POSTERIORI --> TAG=${TAG}  cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
 echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+echo -e "\n\n Tabla completa (PREDICHO y REAL):\n\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+mysql -t --execute="SELECT * FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}';"  2>&1 1>>${LOG_099}
 
 
 

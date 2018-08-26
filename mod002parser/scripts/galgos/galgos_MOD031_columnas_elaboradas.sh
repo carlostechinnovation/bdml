@@ -773,8 +773,23 @@ CREATE TABLE datos_desa.tb_gh_y_remarkspuntos_norm3 AS
 
 SELECT 
 T_todos.galgo_nombre, T_todos.id_carrera, T_todos.fecha, T_todos.remarks_puntos_historico,
-T10D.remarks_puntos_historico_10d,
-T20D.remarks_puntos_historico_20d,
+
+-- En caso de valores NULL, cojo el valor medio mas cercano usando el historico
+-- T10D.remarks_puntos_historico_10d,
+-- T20D.remarks_puntos_historico_20d,
+-- T50D.remarks_puntos_historico_50d
+
+CASE WHEN (T10D.remarks_puntos_historico_10d IS NOT NULL) THEN T10D.remarks_puntos_historico_10d 
+WHEN (T20D.remarks_puntos_historico_20d IS NOT NULL) THEN T20D.remarks_puntos_historico_20d 
+WHEN (T50D.remarks_puntos_historico_50d IS NOT NULL) THEN T50D.remarks_puntos_historico_50d
+ELSE NULL
+END AS  remarks_puntos_historico_10d,
+
+CASE WHEN (T20D.remarks_puntos_historico_20d IS NOT NULL) THEN T20D.remarks_puntos_historico_20d 
+WHEN(T50D.remarks_puntos_historico_50d IS NOT NULL) THEN T50D.remarks_puntos_historico_50d
+ELSE NULL
+END AS  remarks_puntos_historico_20d,
+
 T50D.remarks_puntos_historico_50d
 
 FROM 
@@ -1264,7 +1279,7 @@ analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE_STA
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-borrarTablasInnecesarias "${sufijo}"
+#borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}

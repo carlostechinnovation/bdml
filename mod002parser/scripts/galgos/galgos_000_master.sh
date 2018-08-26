@@ -15,22 +15,21 @@ rm -f $LOG_070
 
 
 ############################################################################################
+
 echo -e $(date +"%T")" | MASTER | Coordinador | INICIO" >>$LOG_070
 
 echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos ------------" >>$LOG_MASTER
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${LOG_MASTER}
 
-
 #echo -e $(date +"%T")" ANALISIS de CONFIG para Descarga de datos BRUTOS (puntualmente, no siempre)" >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD010_ANALISIS_PARAMS.sh'  >>$LOG_MASTER #Sportium-CONFIG
-
 
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
 #rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 #${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
 
-${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER #Sportium
+#${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos)
 echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
 
@@ -47,6 +46,9 @@ ${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
+
+################## Bucle para obtener SUBGRUPO GANADOR (y SUBGRUPOS GANADORES secundarios) ############################################################
+
 echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
 analisisRentabilidadesPorSubgrupos >>$LOG_MASTER
 SUBGRUPO_GANADOR_LINEAS=$(cat "$SUBGRUPO_GANADOR_FILE" | wc -l)
@@ -57,7 +59,6 @@ if [ "$SUBGRUPO_GANADOR_LINEAS" -ne "1" ]
     exit -1
 fi
 
-#SUBGRUPO_GANADOR="TOTAL" #####DEBUG
 SUBGRUPO_GANADOR=$(cat $SUBGRUPO_GANADOR_FILE)
 
 if [ -z $SUBGRUPO_GANADOR ]
@@ -75,17 +76,18 @@ fi
 echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_MASTER
 echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$LOG_070
 
+echo -e "\n\n -------- SUBGRUPOS_GANADORES_FILE=$SUBGRUPOS_GANADORES_FILE ------------\n\n" >>$LOG_MASTER
+echo -e "\n\n -------- SUBGRUPOS_GANADORES_FILE=$SUBGRUPOS_GANADORES_FILE ------------\n\n" >>$LOG_070
+
+
+################## SUBGRUPO GANADOR: entrenar modelo grande y predecir futuro. Informes. ####################################################################
 
 echo -e $(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)..." >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
-
-############################################################################################
+${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
 
 echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" >>$LOG_MASTER
-
-############################################################################################
+${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
 
 echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
 COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_PREDICCIONES_COMANDOS $SUBGRUPO_GANADOR $ID_EJECUCION"
@@ -93,24 +95,64 @@ echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_MASTER
 echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_070
 #${COMANDO_099} >>$LOG_MASTER # (solo se puede hacer si son datos de hace unos dias) EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
 
-
 echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "FUTURA" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUBGRUPO_GANADOR" "$ID_EJECUCION" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
 
-
 echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
 
 
+################## SUBGRUPOS GANADORES: para cada uno, entrenar modelo grande y predecir futuro. Informes CONJUNTOS. ####################################################################
+
+echo -e $(date +"%T")" \n\n\n\n\n **************** Para CADA uno de los SUGRUPOS GANADORES, repetimos el bucle, escribiendo a otros informes aparte..." >>$LOG_MASTER
+
+rm -f "$INFORME_BUCLE_PREDICCIONES" #Capa 050
+rm -f "$INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES" #Capa 050
+rm -f "$INFORME_BUCLE_PREDICCIONES_COMANDOS" #Capa 050
+
+while IFS="" read -r SUB_GAN || [ -n "${SUB_GAN}" ]
+do
+    echo -e "\n\n ---------- SUB_GAN = ${SUB_GAN} ---------- \n"
+  
+    ${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUB_GAN" "N" >>$LOG_MASTER
+    ${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUB_GAN" "N" >>$LOG_MASTER
+
+    echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el SUB_GAN = ${SUB_GAN}" >>$LOG_MASTER
+    ${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUB_GAN" "N" >>$LOG_MASTER
+
+    #echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
+    #COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_BUCLE_PREDICCIONES_COMANDOS $SUB_GAN $ID_EJECUCION"
+    #echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_MASTER
+    #echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_070
+    ### #${COMANDO_099} >>$LOG_MASTER # (solo se puede hacer si son datos de hace unos dias) EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
+
+    #echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
+    #${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUB_GAN" "" >>$LOG_MASTER
+    #${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUB_GAN" "FUTURA" >>$LOG_MASTER
+    #${PATH_SCRIPTS}'galgos_MOD060_tablas.sh' >>$LOG_MASTER
+    #${PATH_SCRIPTS}'galgos_MOD061.sh' "$SUB_GAN" "$ID_EJECUCION" >>$LOG_MASTER #Exportacion a ficheros EXTERNAL
+
+    #echo -e $(date +"%T")"Informe TIC: "$LOG_070 >>$LOG_MASTER
+
+    #echo -e $(date +"%T")" Guardando datos PRODUCTIVOS: semillas, tablas brutas, tablas economicas, informes..." >>$LOG_MASTER
+    #${PATH_SCRIPTS}'galgos_MOD080.sh' >>$LOG_MASTER
+
+done < ${SUBGRUPOS_GANADORES_FILE}
+
+echo -e "\n\n ************************** FIN DE BUCLE de subgrupos ganadores **********************************\n\n" >>$LOG_MASTER
+
+
+##################################################################################################################
 
 echo -e $(date +"%T")" Limpieza MASIVA final (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 limpieza "$SUBGRUPO_GANADOR"
 
+##################################################################################################################
 
 echo -e $(date +"%T")" | MASTER | Coordinador | FIN" >>$LOG_070
 

@@ -2,11 +2,20 @@
 
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
-#### Limpiar LOG ###
-rm -f "${LOG_038_DS_TTV}"
+######################## PARAMETROS ############
+if [ "$#" -ne 2 ]; then
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_038_DS_TTV}
+fi
 
-#Parametro
 TAG="${1}"
+MODO_SIN_BUCLE="${2}" #S ó N
+
+#### Limpiar LOG ###
+if [ "${MODO_SIN_BUCLE}" == "S" ]
+then
+    rm -f "${LOG_038_DS_TTV}"
+fi
+
 
 echo -e $(date +"%T")" | 038 | Datasets pasados: TRAIN+TEST+VAL (subgrupo: $TAG) | INICIO" >>$LOG_070
 echo -e $(date +"%T")" Creo un gran DS-PASADO-TTV" 2>&1 1>>${LOG_038_DS_TTV}
