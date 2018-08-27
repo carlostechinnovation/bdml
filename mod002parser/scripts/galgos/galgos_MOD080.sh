@@ -3,21 +3,25 @@
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ne 2 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_080}
 fi
 
-TAG="${1}"
+ID_EJECUCION="${1}"
+MODO_SIN_BUCLE="${2}" #S ó N
 
 #### Limpiar LOG ###
-rm -f $LOG_080
+if [ "${MODO_SIN_BUCLE}" == "S" ]
+then
+    rm -f "${LOG_080}"
+fi
+
 
 echo -e $(date +"%T")" | 080 | Guardar info PRODUCTIVA | INICIO" >>$LOG_070
 echo -e "MOD080 --> LOG = "${LOG_080}
 
 ####################################################
 
-ID_EJECUCION=$(date +%Y%m%d%H%M%S)
 echo -e "Generando el IDENTIFICADOR UNICO de esta ejecucion..." >>$LOG_080
 echo -e "ID_EJECUCION="$ID_EJECUCION >>$LOG_080
 echo -e "ID_EJECUCION="$ID_EJECUCION
@@ -42,13 +46,23 @@ PREFIJO="PRO_"$ID_EJECUCION"_"
 
 
 echo -e "Guardando INFORMES con ID_EJECUCION..." >>$LOG_080
-#cp "${PATH_LOGS}INFORME_CONFIG_010.txt" "${PATH_INFORMES}${PREFIJO}INFORME_CONFIG_010.txt" 2>&1 1>>${LOG_080}
-cp "${PATH_LOGS}INFORME_PREDICCIONES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_PREDICCIONES.txt" 2>&1 1>>${LOG_080}
-cp "${PATH_LOGS}INFORME_PREDICCIONES_CON_PERDEDORES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_PREDICCIONES_CON_PERDEDORES.txt" 2>&1 1>>${LOG_080}
-cp "${PATH_LOGS}INFORME_PREDICCIONES_COMANDOS.sh" "${PATH_INFORMES}${PREFIJO}INFORME_PREDICCIONES_COMANDOS.sh" 2>&1 1>>${LOG_080}
+
+if [ "${MODO_SIN_BUCLE}" == "S" ]
+then
+    cp "${PATH_LOGS}INFORME_PREDICCIONES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_PREDICCIONES.txt" 2>&1 1>>${LOG_080}
+    cp "${PATH_LOGS}INFORME_PREDICCIONES_CON_PERDEDORES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_PREDICCIONES_CON_PERDEDORES.txt" 2>&1 1>>${LOG_080}
+    cp "${PATH_LOGS}INFORME_PREDICCIONES_COMANDOS.sh" "${PATH_INFORMES}${PREFIJO}INFORME_PREDICCIONES_COMANDOS.sh" 2>&1 1>>${LOG_080}
+else
+    cp "${PATH_LOGS}INFORME_BUCLE_PREDICCIONES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_BUCLE_PREDICCIONES.txt" 2>&1 1>>${LOG_080}
+    cp "${PATH_LOGS}INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES.txt" 2>&1 1>>${LOG_080}
+    cp "${PATH_LOGS}INFORME_BUCLE_PREDICCIONES_COMANDOS.sh" "${PATH_INFORMES}${PREFIJO}INFORME_BUCLE_PREDICCIONES_COMANDOS.sh" 2>&1 1>>${LOG_080}
+
+fi
+
+
+#Comunes (el acumulado pisa al anterior)
 cp "${PATH_LOGS}INFORME_RENTABILIDADES.txt" "${PATH_INFORMES}${PREFIJO}INFORME_RENTABILIDADES.txt" 2>&1 1>>${LOG_080}
 cp "${PATH_LOGS}INFORME_TIC.txt" "${PATH_INFORMES}${PREFIJO}INFORME_TIC.txt" 2>&1 1>>${LOG_080}
-
 
 
 ##################################################

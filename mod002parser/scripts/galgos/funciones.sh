@@ -3,7 +3,7 @@
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
 RENTABILIDAD_MINIMA="110"
-COBERTURA_MINIMA="0.55" #recall
+COBERTURA_MINIMA="0.55"
 SUFICIENTES_CASOS="30"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
 PCA_UMBRAL_VARIANZA_ACUM=0.85
@@ -551,10 +551,10 @@ function analisisRentabilidadesPorSubgrupos(){
   rm -f $SUBGRUPO_GANADOR_FILE
   rm -f $SUBGRUPOS_GANADORES_FILE
 
-  SUBQUERY_RENT_GANADORES= "SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento > $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS AND num_cg_fut_subgrupo > $MIN_CG_FUT_SUBGRUPO ORDER BY $CRITERIO_ORDEN DESC"
+  SUBQUERY_RENT_GANADORES="SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= ${COBERTURA_MINIMA} AND rentabilidad_porciento > ${RENTABILIDAD_MINIMA} AND casos > ${SUFICIENTES_CASOS} AND num_cg_fut_subgrupo > ${MIN_CG_FUT_SUBGRUPO} ORDER BY ${CRITERIO_ORDEN} DESC"
 
   mysql -N --execute="SELECT subgrupo FROM ( $SUBQUERY_RENT_GANADORES ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
-  mysql -N --execute="SELECT subgrupo, GROUP_CONCAT(grupo_sp SEPARATOR '#') FROM ( $SUBQUERY_RENT_GANADORES ) GROUP BY subgrupo;"  1>>${SUBGRUPOS_GANADORES_FILE} 2>>$LOG_MASTER
+  mysql -N --execute="SELECT subgrupo, GROUP_CONCAT(grupo_sp SEPARATOR '#') FROM ( $SUBQUERY_RENT_GANADORES ) B GROUP BY subgrupo;"  | tr '\t' '|' 1>>${SUBGRUPOS_GANADORES_FILE} 2>>$LOG_MASTER
 
 }
 

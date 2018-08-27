@@ -6,7 +6,11 @@ source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f "${LOG_061}"
 
 
-####### PARAMETROS ###
+######################## PARAMETROS ############
+if [ "$#" -ne 2 ]; then
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_061}
+fi
+
 TAG="${1}"
 ID_EJECUCION="${2}"
 

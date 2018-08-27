@@ -4,7 +4,7 @@ source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
 if [ "$#" -ne 2 ]; then
-    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_050}
 fi
 
 TAG="${1}"
@@ -24,18 +24,18 @@ COMUN_I_PRED_COMANDOS=""
 
 if [ "${MODO_SIN_BUCLE}" == "S" ]
 then
-    COMUN_I_PRED=$INFORME_PREDICCIONES
-    COMUN_I_PRED_CON_PERD=$INFORME_PREDICCIONES_CON_PERDEDORES
-    COMUN_I_PRED_COMANDOS=$INFORME_PREDICCIONES_COMANDOS
+    COMUN_I_PRED="$INFORME_PREDICCIONES"
+    COMUN_I_PRED_CON_PERD="$INFORME_PREDICCIONES_CON_PERDEDORES"
+    COMUN_I_PRED_COMANDOS="$INFORME_PREDICCIONES_COMANDOS"
 
     rm -f "$COMUN_I_PRED"
     rm -f "$COMUN_I_PRED_CON_PERD"
     rm -f "$COMUN_I_PRED_COMANDOS"
 
 else
-    COMUN_I_PRED=$INFORME_BUCLE_PREDICCIONES
-    COMUN_I_PRED_CON_PERD=$INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES
-    COMUN_I_PRED_COMANDOS=$INFORME_BUCLE_PREDICCIONES_COMANDOS
+    COMUN_I_PRED="$INFORME_BUCLE_PREDICCIONES"
+    COMUN_I_PRED_CON_PERD="$INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES"
+    COMUN_I_PRED_COMANDOS="$INFORME_BUCLE_PREDICCIONES_COMANDOS"
 fi
 
 #####################################################################
@@ -247,11 +247,11 @@ echo -e "MOD050 - Informe FINAL..." 2>&1 1>>${LOG_050}
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
 B.anio,B.mes,B.dia, B.track AS estadio, B.hora,B.minuto,
-A.galgo_nombre, A.target_predicho, A.fortaleza, A.con_historico_desconocido, '${TAG}' AS subgrupo
+A.galgo_nombre, A.target_predicho, A.fortaleza, '${TAG}' AS subgrupo
 FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
-WHERE A.posicion_predicha=1 
+WHERE A.posicion_predicha=1 AND A.con_historico_desconocido=0 AND A.target_predicho IS NOT NULL
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
 
@@ -264,6 +264,7 @@ SELECT A.*, '${TAG}' AS subgrupo
 FROM datos_desa.tb_fut_1st_final_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
+WHERE A.con_historico_desconocido=0 AND A.target_predicho IS NOT NULL
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC, A.posicion_predicha ASC;
 EOF
 
@@ -277,7 +278,7 @@ concat('curl \\\\\\'http://www.gbgb.org.uk/Racecard.aspx?dogName=', replace(A.ga
 FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
-WHERE A.posicion_predicha=1 
+WHERE A.posicion_predicha=1 AND A.con_historico_desconocido=0 AND A.target_predicho IS NOT NULL
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
 

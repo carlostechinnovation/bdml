@@ -3,7 +3,11 @@
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 
-####### PARAMETROS ###
+######################## PARAMETROS ############
+if [ "$#" -ne 2 ]; then
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_060_ENDTOEND}
+fi
+
 SUBGRUPO="${1}"
 TIEMPO="${2}"
 
