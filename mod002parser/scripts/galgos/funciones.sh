@@ -310,7 +310,11 @@ insertSelectRemark 'Bmp'
 function analizarScoreSobreSubgrupos ()
 {
 
+
+
 PATH_LOG=${1}
+
+echo -e $(date +"%T")" ------- analizarScoreSobreSubgrupos -------" 2>&1 1>>${PATH_LOG}
 echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 
 #filtro_carreras filtro_galgos filtro_cg sufijo
@@ -424,6 +428,7 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" 2>&1 1>>$PATH_LOG
 #echo -e $(date +"%T")" --------" >>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carreras_pre WHERE distancia_norm >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_elaborada_carrerasgalgos_pre WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_elaborada_galgos_pre WHERE vel_going_largas_max_norm<=0.33 ) )" "LARGA_Y_ALGUNO_LENTO" 2>&1 1>>$PATH_LOG
 #${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" 2>&1 1>>$PATH_LOG
+
 }
 
 
@@ -433,10 +438,14 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" 2>&1 1>>$PATH_LOG
 ######## MOD040 - ECONOMIA #######################################################################
 function resetTablaRentabilidades ()
 {
-echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" ------- resetTablaRentabilidades -------" 2>&1 1>>${LOG_ML}
+echo -e $(date +"%T")" Borrando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
 consultar "DROP TABLE IF EXISTS datos_desa.tb_rentabilidades\W;" "${LOG_ML}" "-tN"
+
+echo -e $(date +"%T")" Creando tabla de rentabilidades..." 2>&1 1>>${LOG_ML}
 consultar "CREATE TABLE IF NOT EXISTS datos_desa.tb_rentabilidades (tipo_prediccion varchar(10) NOT NULL, dataset_probado varchar(50) NOT NULL, subgrupo varchar(200) NOT NULL, grupo_sp varchar(15) NOT NULL, aciertos INT, casos INT, cobertura_sg_sp DECIMAL(10,4), rentabilidad_porciento DECIMAL(10,4), num_cg_fut_subgrupo INT)\W;" "${LOG_DESCARGA_BRUTO}" "-tN"
 
+echo -e $(date +"%T")" Borrando fichero: $FILELOAD_RENTABILIDADES" 2>&1 1>>${LOG_ML}
 rm -f $FILELOAD_RENTABILIDADES #vacío
 }
 
@@ -510,6 +519,10 @@ MENSAJE="${tag_prediccion}|DS_PASADO_VALIDATION|${TAG}|${tag_grupo_sp}|${numero_
 
 echo -e "${MENSAJE}" 2>&1 1>>${log_ml_tipo}
 echo -e "${MENSAJE}" 2>&1 1>>${FILELOAD_RENTABILIDADES}
+
+######## LIMPIEZA
+echo -e "Borrando la tabla: datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp}" 2>&1 1>>${log_ml_tipo}
+mysql -N --execute="DROP TABLE datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp}" 2>&1 1>>${log_ml_tipo}
 
 }
 

@@ -22,7 +22,6 @@ echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos -------
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${LOG_MASTER}
 
-##########
 ##########echo -e $(date +"%T")" ANALISIS de CONFIG para Descarga de datos BRUTOS (puntualmente, no siempre)" >>$LOG_MASTER
 ##########${PATH_SCRIPTS}'galgos_MOD010_ANALISIS_PARAMS.sh'  >>$LOG_MASTER #Sportium-CONFIG
 
@@ -44,13 +43,22 @@ ${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
 echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
+
+echo -e "Borrando tablas LIMPIAS para ahorrar espacio..." >> "${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM;" 2>&1 1>>"${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM;" 2>&1 1>>"${LOG_MASTER}"
+
+
 echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 
 ################## Bucle para obtener SUBGRUPO GANADOR (y SUBGRUPOS GANADORES secundarios) ############################################################
 
-echo -e $(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************" >>$LOG_MASTER
+echo -e "\n"$(date +"%T")" ANALISIS de cada SUBGRUPO y sus GRUPOS_SP ************************\n" >>$LOG_MASTER
+
 analisisRentabilidadesPorSubgrupos >>$LOG_MASTER
 
 SUBGRUPO_GANADOR_LINEAS=$(cat "$SUBGRUPO_GANADOR_FILE" | wc -l)
@@ -82,11 +90,12 @@ echo -e "\n\n -------- SUBGRUPO_GANADOR=$SUBGRUPO_GANADOR ------------\n\n" >>$L
 ################## SUBGRUPO GANADOR: entrenar modelo grande y predecir futuro. Informes. ####################################################################
 
 echo -e "\n\n\n"$(date +"%T")" Para el SUBGRUPO GANADOR, reentrenamos el modelo con un gran DS-TTV, con TODO el PASADO conocido (IMPORTANTE: el MODELO estará preparado sólo para el SUBGRUPO GANADOR)...\n" >>$LOG_MASTER
+
 ${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
 
 echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" "S" "" >>$LOG_MASTER
 
 echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
 COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_PREDICCIONES_COMANDOS $SUBGRUPO_GANADOR $ID_EJECUCION"
@@ -128,7 +137,7 @@ do
     ${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUB_GAN" "N" >>$LOG_MASTER
 
     echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el SUB_GAN = ${SUB_GAN}" >>$LOG_MASTER
-    ${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUB_GAN" "N" >>$LOG_MASTER
+    ${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUB_GAN" "N" "${SUB_GAN_AUX}" >>$LOG_MASTER
 
     echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
     COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_BUCLE_PREDICCIONES_COMANDOS $SUB_GAN $ID_EJECUCION"

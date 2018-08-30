@@ -80,6 +80,10 @@ echo -e "\n\ntb_galgos_agregados_norm --> No deberia haber ningun galgo_agregado
 mysql -t --execute="SELECT galgo_nombre, count(*) AS contador FROM datos_desa.tb_galgos_agregados_norm GROUP BY galgo_nombre HAVING contador>=2 LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
 
 
+echo -e "\n\tb_galgos_posiciones_en_carreras_norm --> No deberia haber ningun galgo duplicado en  una misma carrera. Esta consulta debe devolver 0 resultados:" >> "${LOG_020_ESTADISTICA}"
+mysql -t --execute="SELECT id_carrera, galgo_nombre, count(*) AS contador FROM datos_desa.tb_galgos_posiciones_en_carreras_norm GROUP BY id_carrera, galgo_nombre HAVING contador>=2 ORDER BY id_carrera, galgo_nombre ASC LIMIT 10;" >> "${LOG_020_ESTADISTICA}"
+
+
 echo -e "\n\n----- Analisis de CARRERAS -----" >> "${LOG_020_ESTADISTICA}"
 
 echo -e "\nNumero de carreras segun el dia:" >> "${LOG_020_ESTADISTICA}"

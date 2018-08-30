@@ -22,7 +22,7 @@ public class Constantes {
 
 	// -------------- GALGOS --------
 	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 8 * 7;// Ultimas X semanas
-	public static Integer MAX_NUM_CARRERAS_SEMILLA = 200;// TODO 200 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
+	public static Integer MAX_NUM_CARRERAS_SEMILLA = 300;// TODO 200 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
 															// las derivadas)
 	public static Integer MAX_NUM_CARRERAS_PROCESADAS = 6000;// TODO MAX_NUM_CARRERAS_SEMILLA * 40 //
 																// semillas*derivadas

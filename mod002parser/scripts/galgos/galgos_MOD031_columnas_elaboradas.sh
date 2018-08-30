@@ -45,7 +45,7 @@ SELECT count(*) as num_x1b FROM datos_desa.tb_ce_${sufijo}_x1b LIMIT 5;
 EOF
 
 
-#echo -e "$CONSULTA_X1" 2>&1 1>>${LOG_CE}
+echo -e "$CONSULTA_X1" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X1" >>$LOG_CE
 }
 
@@ -93,7 +93,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x2b LIMIT 5;
 SELECT count(*) as num_x2b FROM datos_desa.tb_ce_${sufijo}_x2b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X2" 2>&1 1>>${LOG_CE}
+echo -e "$CONSULTA_X2" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X2" >>$LOG_CE
 
 }
@@ -135,7 +135,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x3b LIMIT 5;
 SELECT count(*) as num_x3b FROM datos_desa.tb_ce_${sufijo}_x3b LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X3" 2>&1 1>>${LOG_CE}
+echo -e "$CONSULTA_X3" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X3" >>$LOG_CE
 
 }
@@ -159,7 +159,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;
 SELECT count(*) as num_x4 FROM datos_desa.tb_ce_${sufijo}_x4 LIMIT 5;
 EOF
 
-#echo -e "$CONSULTA_X4" 2>&1 1>>${LOG_CE}
+echo -e "$CONSULTA_X4" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X4" >>$LOG_CE
 }
 
@@ -206,7 +206,7 @@ EOF
 
 echo -e "\n$CONSULTA_X6A" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6A" >>$LOG_CE
-
+sleep 2s
 
 read -d '' CONSULTA_X6B <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6b;
@@ -236,7 +236,7 @@ EOF
 
 echo -e "\n$CONSULTA_X6B" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6B" >>$LOG_CE
-
+sleep 2s
 
 read -d '' CONSULTA_X6C <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c0;
@@ -271,7 +271,7 @@ EOF
 
 echo -e "\n$CONSULTA_X6C" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6C" 2>&1 1>>$LOG_CE
-
+sleep 2s
 
 read -d '' CONSULTA_X6D <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e_aux1;
@@ -298,7 +298,7 @@ EOF
 
 echo -e "\n$CONSULTA_X6D" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X6D" 2>&1 1>>${LOG_CE}
-
+sleep 2s
 
 read -d '' CONSULTA_X6E <<- EOF
 set @min_experiencia_en_clase=(select MIN(experiencia_en_clase) AS min_eec FROM datos_desa.tb_ce_${sufijo}_x6e_aux1);
@@ -342,6 +342,13 @@ EOF
 echo -e "\n-----------------------------------------\n" 2>&1 1>>${LOG_CE}
 echo -e "\n${CONSULTA_X6E}" 2>&1 1>>${LOG_CE}
 mysql --execute="${CONSULTA_X6E}" 2>&1 1>>${LOG_CE}
+
+# Limpieza
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6a;" 2>&1 1>>${LOG_CE}
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6b;" 2>&1 1>>${LOG_CE}
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c0;" 2>&1 1>>${LOG_CE}
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c;" 2>&1 1>>${LOG_CE}
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e_aux1;" 2>&1 1>>${LOG_CE}
 }
 
 ##########################################################################################
@@ -353,7 +360,7 @@ echo -e "\n ---- X7: diferencia relativa de peso del galgo respecto al PESO MEDI
 echo -e " X7: [(carrera, galgo) -> (diferencia respecto al peso medio en esa distancia_centenas)]" 2>&1 1>>${LOG_CE}
 echo -e " Parametros: -->${1}" 2>&1 1>>${LOG_CE}
 
-read -d '' CONSULTA_X7CD <<- EOF
+read -d '' CONSULTA_X7A <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7a;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x7a AS 
@@ -364,8 +371,13 @@ ON PO.id_carrera=GH.id_carrera WHERE PO.posicion IN (1,2) ORDER BY PO.id_carrera
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x7a LIMIT 5;
 SELECT count(*) as num_x7a FROM datos_desa.tb_ce_${sufijo}_x7a LIMIT 5;
+EOF
 
+echo -e "\n$CONSULTA_X7A" 2>&1 1>>${LOG_CE}
+mysql --execute="$CONSULTA_X7A" >>$LOG_CE
+sleep 2s
 
+read -d '' CONSULTA_X7B <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x7b AS 
@@ -374,7 +386,13 @@ FROM datos_desa.tb_ce_${sufijo}_x7a GROUP BY distancia_centenas ORDER BY distanc
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x7b LIMIT 5;
 SELECT count(*) as num_x7b FROM datos_desa.tb_ce_${sufijo}_x7b LIMIT 5;
+EOF
 
+echo -e "\n$CONSULTA_X7B" 2>&1 1>>${LOG_CE}
+mysql --execute="$CONSULTA_X7B" >>$LOG_CE
+sleep 2s
+
+read -d '' CONSULTA_X7C <<- EOF
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7c;
 
@@ -393,12 +411,19 @@ ORDER BY id_carrera, galgo_nombre;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x7c LIMIT 5;
 SELECT count(*) as num_x7c FROM datos_desa.tb_ce_${sufijo}_x7c LIMIT 5;
+EOF
 
+echo -e "\n$CONSULTA_X7C" 2>&1 1>>${LOG_CE}
+mysql --execute="$CONSULTA_X7C" >>$LOG_CE
+sleep 2s
+
+read -d '' CONSULTA_X7D <<- EOF
 
 set @min_dif_peso=(select MIN(dif_peso) FROM datos_desa.tb_ce_${sufijo}_x7c);
 set @diff_dif_peso=(select CASE WHEN MIN(dif_peso)=0 THEN MAX(dif_peso) ELSE MAX(dif_peso)-MIN(dif_peso) END FROM datos_desa.tb_ce_${sufijo}_x7c);
 set @min_distancia=(select MIN(distancia) FROM datos_desa.tb_ce_${sufijo}_x7c);
 set @diff_distancia=(select CASE WHEN MIN(distancia)=0 THEN MAX(distancia) ELSE MAX(distancia)-MIN(distancia) END FROM datos_desa.tb_ce_${sufijo}_x7c);
+
 
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7d;
 
@@ -413,8 +438,9 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x7d LIMIT 5;
 SELECT count(*) as num_x7d FROM datos_desa.tb_ce_${sufijo}_x7d LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X7CD" 2>&1 1>>${LOG_CE}
-mysql --execute="$CONSULTA_X7CD" >>$LOG_CE
+echo -e "\n$CONSULTA_X7D" 2>&1 1>>${LOG_CE}
+mysql --execute="$CONSULTA_X7D" >>$LOG_CE
+sleep 2s
 }
 
 
@@ -455,7 +481,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x8b LIMIT 5;
 SELECT count(*) as num_x8a FROM datos_desa.tb_ce_${sufijo}_x8b LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X8" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X8" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X8" >>$LOG_CE
 }
 
@@ -489,7 +515,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x9b LIMIT 5;
 SELECT count(*) as num_x9b FROM datos_desa.tb_ce_${sufijo}_x9b LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X9" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X9" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X9" >>$LOG_CE
 }
 
@@ -610,7 +636,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x11 LIMIT 5;
 SELECT count(*) as num_x11 FROM datos_desa.tb_ce_${sufijo}_x11 LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X11" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X11" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X11" >>$LOG_CE
 }
 
@@ -699,7 +725,7 @@ SELECT * FROM datos_desa.tb_ce_${sufijo}_x12b LIMIT 5;
 SELECT count(*) as num_x12b FROM datos_desa.tb_ce_${sufijo}_x12b LIMIT 5;
 EOF
 
-#echo -e "\n$CONSULTA_X12" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_X12" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_X12" >>$LOG_CE
 }
 
@@ -816,6 +842,11 @@ EOF
 echo -e "\n\n\n$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_GH_CRUCE_REMARKS_PUNTOS3" 2>&1 1>>${LOG_CE}
 
+# Limpieza
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm1;" 2>&1 1>>${LOG_CE}
+mysql --execute="DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm2;" 2>&1 1>>${LOG_CE}
+
+
 ############
 
 read -d '' CONSULTA_X13 <<- EOF
@@ -915,7 +946,7 @@ SELECT * FROM datos_desa.tb_ids_carrerasgalgos_${sufijo} LIMIT 5;
 EOF
 
 
-#echo -e "\n$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
 mysql --execute="$CONSULTA_IDS" 2>&1 1>>${LOG_CE}
 
 echo -e "\n"" Comprobacion: las 3 tablas de IDs no deben tener duplicados" 2>&1 1>>${LOG_CE}
@@ -1103,6 +1134,7 @@ SELECT
 ;
 
 
+
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 ADD INDEX tb_elaborada_carrerasgalgos_${sufijo}_aux1_idx1(trap);
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 ADD INDEX tb_elaborada_carrerasgalgos_${sufijo}_aux1_idx2(id_carrera, galgo_nombre);
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1 ADD INDEX tb_elaborada_carrerasgalgos_${sufijo}_aux1_idx3(id_carrera, galgo_nombre, clase);
@@ -1168,6 +1200,7 @@ LEFT JOIN datos_desa.tb_ce_${sufijo}_x13 L ON (dentro.id_carrera=L.id_carrera AN
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_${sufijo} ADD INDEX tb_elaborada_carrerasgalgos_${sufijo}_idx(id_carrera,galgo_nombre);
 SELECT * FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} ORDER BY cg LIMIT 5;
 SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos_${sufijo} LIMIT 5;
+
 EOF
 
 
@@ -1205,11 +1238,6 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x3a;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x3b;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x4;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x5;
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6a;
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6b;
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c0;
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6c;
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e_aux1;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x6e;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7a;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7b;
@@ -1224,10 +1252,14 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x10b;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x11;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x12a;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x12b;
-DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x13
+DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm3;
+DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x13;
+
+DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_fullouterjoin1;
+DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_${sufijo}_aux1;
 EOF
 
-#echo -e "\n$CONSULTA_DROP_TABLAS_INNECESARIAS" 2>&1 1>>${LOG_CE}
+echo -e "\n$CONSULTA_DROP_TABLAS_INNECESARIAS" 2>&1 1>>${LOG_CE}
 mysql -t --execute="$CONSULTA_DROP_TABLAS_INNECESARIAS" >>$LOG_CE
 
 }
@@ -1270,20 +1302,45 @@ generarTablasIndices
 echo -e "\n\n --- Tablas finales con COLUMNAS ELABORADAS (se usarán para crear datasets)..." 2>&1 1>>${LOG_CE}
 generarTablasElaboradas
 
-
+####################################################################
 echo -e "\n\n | 031 | --- Analizando tablas (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_CE}
 rm -f "${LOG_CE_STATS}"
-analizarTabla "datos_desa" "tb_elaborada_carreras_${sufijo}" "${LOG_CE_STATS}"
-analizarTabla "datos_desa" "tb_elaborada_galgos_${sufijo}" "${LOG_CE_STATS}"
-analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE_STATS}"
+
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x1a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x1b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x2a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x2b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x3a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x3b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x4" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x5" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x6e" "${0}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x7a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x7b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x7c" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x7d" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x8a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x8b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x9a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x9b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x10a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x10b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x11" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x12a" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x12b" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_gh_y_remarkspuntos_norm3" "${LOG_CE_STATS}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x13" "${LOG_CE_STATS}"
+
+analizarTabla "datos_desa" "tb_elaborada_carreras_${sufijo}" "${LOG_CE_STATS}"  #BUENA
+analizarTabla "datos_desa" "tb_elaborada_galgos_${sufijo}" "${LOG_CE_STATS}"	#BUENA
+analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE_STATS}"	#BUENA
+####################################################################
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-#borrarTablasInnecesarias "${sufijo}"
+borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
-
-
 
 

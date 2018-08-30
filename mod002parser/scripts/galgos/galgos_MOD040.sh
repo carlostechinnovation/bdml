@@ -108,10 +108,22 @@ LEFT JOIN datos_desa.tb_val_${TAG}_aux4 T4 ON (T1.rowid=T4.rowid)
 LEFT JOIN datos_desa.tb_val_${TAG}_aux5 T5 ON (T1.rowid=T5.rowid)
 ;
 
+
+DROP TABLE datos_desa.tb_val_${TAG}_aux1;
+DROP TABLE datos_desa.tb_val_${TAG}_aux2;
+DROP TABLE datos_desa.tb_val_${TAG}_aux3;
+DROP TABLE datos_desa.tb_val_${TAG}_aux4;
+DROP TABLE datos_desa.tb_val_${TAG}_aux5;
+
+
 SELECT * FROM datos_desa.tb_val_${TAG} LIMIT 3;
 SELECT count(*) as num_ids_validation_predichos FROM datos_desa.tb_val_${TAG} LIMIT 1;
 
 SELECT id_carrera, count(*) AS contador  FROM datos_desa.tb_val_${TAG}  GROUP BY id_carrera ORDER BY contador DESC LIMIT 10;
+
+
+
+
 EOF
 
 

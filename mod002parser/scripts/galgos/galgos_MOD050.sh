@@ -3,12 +3,13 @@
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 ######################## PARAMETROS ############
-if [ "$#" -ne 2 ]; then
+if [ "$#" -ne 3 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_050}
 fi
 
 TAG="${1}"
 MODO_SIN_BUCLE="${2}" #S ó N
+TAG_Y_GRUPOSP="${3}"
 
 #### Limpiar LOG ###
 if [ "${MODO_SIN_BUCLE}" == "S" ]
@@ -127,6 +128,14 @@ LEFT JOIN datos_desa.tb_fut_${TAG}_aux5 T5 ON (T1.rowid=T5.rowid)
 
 SELECT * FROM datos_desa.tb_fut_${TAG} LIMIT 3;
 SELECT count(*) as num_ids_futuro_predichos FROM datos_desa.tb_fut_${TAG} LIMIT 1;
+
+
+-- Limpieza
+DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux1;
+DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux3;
+DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux4;
+DROP TABLE IF EXISTS datos_desa.tb_fut_${TAG}_aux5;
+
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_FUTURAS_1" 2>&1 1>>${LOG_050}
@@ -235,6 +244,14 @@ ALTER TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} ADD INDEX tb_fut_1st_final
 
 SELECT * FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 3;
 SELECT count(*) as num_fut_1st_final FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 1;
+
+
+-- Limpieza
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_completo_aux_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_predicho_completo_${TAG};
+DROP TABLE IF EXISTS datos_desa.tb_fut_1st_connombre_${TAG};
+
 EOF
 
 echo -e "$CONSULTA_PREDICCIONES_FUTURAS_2" 2>&1 1>>${LOG_050}
@@ -254,6 +271,8 @@ ON (A.id_carrera=B.id_carrera)
 WHERE A.posicion_predicha=1 AND A.con_historico_desconocido=0 AND A.target_predicho IS NOT NULL
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;
 EOF
+
+echo -e "\nTAG_Y_GRUPOSP donde SOLO puedo poner dinero: \n${TAG_Y_GRUPOSP}\n" 2>&1 1>>${LOG_050}
 
 echo -e "\n$CONSULTA_PREDICCIONES_INFORME" 2>&1 1>>${LOG_050}
 mysql -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$COMUN_I_PRED

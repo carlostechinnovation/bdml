@@ -8,7 +8,7 @@ rm -f $LOG_DS
 
 echo -e "MOD035 --> LOG = "${LOG_DS}
 
-
+################## PARAMETROS #################
 if [ "$#" -ne 4 ]; then
     echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_DS}
 fi
@@ -27,6 +27,16 @@ echo -e $(date +"%T")" | 035 | Filtradas y datasets (subgrupo: $sufijo) | INICIO
 "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/galgos_MOD036_filtradas.sh" "${filtro_carreras}" "${filtro_galgos}" "${filtro_cg}" "${sufijo}"
 
 "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/galgos_MOD037_datasets.sh" "${sufijo}"
+
+
+
+#################### AHORRAR ESPACIO EN DISCO #######
+echo -e $(date +"%T")" Borrando tablas innecesarias (filtradas) de TAG=${sufijo}" 2>&1 1>>${LOG_DS}
+
+mysql -t --execute="DROP TABLE datos_desa.tb_filtrada_carreras_${sufijo}" >>$LOG_CE
+mysql -t --execute="DROP TABLE datos_desa.tb_filtrada_galgos_${sufijo}" >>$LOG_CE
+mysql -t --execute="DROP TABLE datos_desa.tb_filtrada_carrerasgalgos_${sufijo}" >>$LOG_CE
+
 ####################
 
 
