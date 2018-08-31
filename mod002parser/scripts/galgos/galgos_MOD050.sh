@@ -48,6 +48,12 @@ echo -e "Ruta-comandos: "$COMUN_I_PRED_COMANDOS 2>&1 1>>${LOG_050}
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
 echo -e "MOD050 --> LOG = "${LOG_050}
 
+echo -e "Parametros-MOD050:" 2>&1 1>>${LOG_050}
+echo -e "TAG=$TAG" 2>&1 1>>${LOG_050}
+echo -e "MODO_SIN_BUCLE=$MODO_SIN_BUCLE" 2>&1 1>>${LOG_050}
+echo -e "TAG_Y_GRUPOSP=$TAG_Y_GRUPOSP" 2>&1 1>>${LOG_050}
+
+
 echo -e $(date +"%T")" Ejecutando modelo (ya entrenado) sobre DS-FUTURO (del subgrupo ganador, no de todo el futuro!!)..." 2>&1 1>>${LOG_050}
 
 #PATH_FILE_FUTURO_TARGETS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/FILELOAD_ds_futuro_targets_${TAG}.txt"
@@ -244,6 +250,16 @@ ALTER TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} ADD INDEX tb_fut_1st_final
 
 SELECT * FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 3;
 SELECT count(*) as num_fut_1st_final FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 1;
+
+
+-- Util para posteriori (099): a la capa 050 solo llegan ganadores. Asi que todos son ganadores
+CREATE TABLE IF NOT EXISTS datos_desa.tb_fut_1st_final_riesgo AS SELECT 'a123456789a123456789a123456789a123456789' AS subgrupo, TRUE AS es_ganador, A.* FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A LIMIT 0;
+
+DELETE FROM datos_desa.tb_fut_1st_final_riesgo WHERE subgrupo='${TAG}';
+
+INSERT INTO datos_desa.tb_fut_1st_final_riesgo SELECT '${TAG}' AS subgrupo, TRUE AS es_ganador, A.* FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A;
+
+SELECT count(*) as num_f1fr FROM datos_desa.tb_fut_1st_final_riesgo;
 
 
 -- Limpieza

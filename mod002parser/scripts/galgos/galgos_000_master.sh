@@ -95,6 +95,7 @@ ${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MAST
 ${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUBGRUPO_GANADOR" "S" >>$LOG_MASTER
 
 echo -e $(date +"%T")" PREDICCION SOBRE EL FUTURO (resultados) sobre dataset FUTURO de sólo el subgrupo ganador" >>$LOG_MASTER
+mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_riesgo;"  2>&1 1>>$LOG_050 #Capa 050
 ${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUBGRUPO_GANADOR" "S" "" >>$LOG_MASTER
 
 echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
@@ -126,6 +127,8 @@ echo -e "\n\n -------- SUBGRUPOS_GANADORES_FILE=$SUBGRUPOS_GANADORES_FILE ------
 rm -f "$INFORME_BUCLE_PREDICCIONES" #Capa 050
 rm -f "$INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES" #Capa 050
 rm -f "$INFORME_BUCLE_PREDICCIONES_COMANDOS" #Capa 050
+mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_fut_1st_final_riesgo;"  2>&1 1>>$LOG_050 #Capa 050
+
 
 while IFS="" read -r SUB_GAN_AUX || [ -n "${SUB_GAN_AUX}" ]
 do
@@ -140,7 +143,7 @@ do
     ${PATH_SCRIPTS}'galgos_MOD050.sh' "$SUB_GAN" "N" "${SUB_GAN_AUX}" >>$LOG_MASTER
 
     echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 099 indicando el nombre del informe con comandos." >>$LOG_MASTER
-    COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_BUCLE_PREDICCIONES_COMANDOS $SUB_GAN $ID_EJECUCION"
+    COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_BUCLE_PREDICCIONES_COMANDOS 'BUCLE' $ID_EJECUCION"
     echo -e "\n"${COMANDO_099}"\n" >>$LOG_MASTER
     echo -e "\n"${COMANDO_099}"\n" >>$LOG_070
     #######${COMANDO_099} >>$LOG_MASTER # (solo se puede hacer si son datos de hace unos dias) EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)

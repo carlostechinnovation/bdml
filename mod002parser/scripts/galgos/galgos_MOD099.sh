@@ -83,6 +83,16 @@ consultar "LOAD DATA LOCAL INFILE '${INFORME_LIMPIO_POSTERIORI}' INTO TABLE dato
 
 echo -e "\nDebo comprobar que tengo exactamente el mismo número de filas en fut_predicha y en fut_real" 2>&1 1>>${LOG_099}
 
+
+##########################
+if [ "$TAG" == "BUCLE" ]
+then
+    SELECCIONAR_TAG=''
+else
+    SELECCIONAR_TAG="WHERE A.subgrupo='${TAG}'"
+fi
+##########################
+
 read -d '' CONSULTA_PASADO_Y_FUTURO <<- EOF
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_predicha;
@@ -91,7 +101,7 @@ CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_predicha
 AS 
 SELECT id_carrera AS id_carrera, MAX(target_predicho) as target_predicho_1st 
 FROM (
-    SELECT id_carrera, target_predicho FROM datos_desa.tb_fut_1st_final_riesgo_${TAG}
+    SELECT id_carrera, target_predicho FROM datos_desa.tb_fut_1st_final_riesgo A ${SELECCIONAR_TAG}
     GROUP BY id_carrera, target_predicho ORDER BY id_carrera ASC, target_predicho DESC
 ) t 
 GROUP BY id_carrera ORDER BY id_carrera ASC;
@@ -104,9 +114,10 @@ DROP TABLE IF EXISTS datos_desa.tb_galgos_fut_predicha2;
 CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_predicha2 
 AS 
 SELECT A.* 
-FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
+FROM datos_desa.tb_fut_1st_final_riesgo A
 INNER JOIN datos_desa.tb_galgos_fut_predicha B
-ON (A.id_carrera=B.id_carrera AND A.target_predicho=B.target_predicho_1st) ;
+ON (A.id_carrera=B.id_carrera AND A.target_predicho=B.target_predicho_1st) 
+${SELECCIONAR_TAG};
 
 SELECT count(*) AS num_fut_predicha2 FROM datos_desa.tb_galgos_fut_predicha2 LIMIT 1;
 SELECT count(*) AS num_fut_real FROM datos_desa.tb_galgos_fut_real LIMIT 1;
@@ -183,13 +194,15 @@ CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_combinada_acum (
   PRIMARY KEY(id_ejecucion,numero1)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-DELETE FROM datos_desa.tb_galgos_fut_combinada_acum WHERE id_ejecucion='${ID_EJECUCION}';
+DELETE FROM datos_desa.tb_galgos_fut_combinada_acum WHERE id_ejecucion='${ID_EJECUCION}' AND subgrupo_ganador='${TAG}';
 
 INSERT INTO datos_desa.tb_galgos_fut_combinada_acum
   SELECT 
   '${ID_EJECUCION}' AS id_ejecucion, '${TAG}' AS subgrupo_ganador,
   numero1, id_carrera, rowid, target_predicho, posicion_predicha, galgo_nombre, fortaleza, numero2, real_vacio, real_fecha, real_distancia, real_trap, real_stmhcp, real_posicion, real_by_espacio, real_winneror2nd, real_venue, real_remarks, real_wintime, real_going, real_sp, real_class, real_calc_time, real_id_carrera, real_id_campeonato
-  FROM datos_desa.tb_galgos_fut_combinada;
+  FROM datos_desa.tb_galgos_fut_combinada
+  
+  WHERE con_historico_desconocido = 0;
 
 EOF
 
@@ -206,25 +219,25 @@ rm -f "${INFORME_RENTABILIDAD_POSTERIORI}"
 
 FILE_TEMP_PRED="./temp_MOD099_num_predicciones_posteriori"
 rm -f ${FILE_TEMP_PRED}
-mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_galgos_fut_combinada;" > ${FILE_TEMP_PRED}
+mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}';" > ${FILE_TEMP_PRED}
 numero_predicciones_posteriori=$(cat ${FILE_TEMP_PRED})
 
 
 FILE_TEMP="./temp_MOD099_rentabilidad_posteriori"
 rm -f ${FILE_TEMP}
-mysql -N --execute="SELECT ROUND( 100.0 * SUM(ganado)/SUM(gastado) , 2) AS rentabilidad FROM ( SELECT numero1, fortaleza, 1 AS gastado, CASE WHEN real_posicion=1 THEN cast(numerador AS decimal(2,0)) / cast(denominador AS decimal(2,0)) ELSE 0 END AS ganado FROM ( SELECT numero1, fortaleza, real_posicion, real_sp, substring_index(real_sp,'/',1) as numerador, substring_index(real_sp,'/',-1) as denominador FROM datos_desa.tb_galgos_fut_combinada ) d ) fuera;" > ${FILE_TEMP}
+mysql -N --execute="SELECT ROUND( 100.0 * SUM(ganado)/SUM(gastado) , 2) AS rentabilidad FROM ( SELECT numero1, fortaleza, 1 AS gastado, CASE WHEN real_posicion=1 THEN cast(numerador AS decimal(2,0)) / cast(denominador AS decimal(2,0)) ELSE 0 END AS ganado FROM ( SELECT numero1, fortaleza, real_posicion, real_sp, substring_index(real_sp,'/',1) as numerador, substring_index(real_sp,'/',-1) as denominador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}' ) d ) fuera;" > ${FILE_TEMP}
 rentabilidad_posteriori=$( cat ${FILE_TEMP})
 
 
 FILE_TEMP="./temp_MOD099_num_aciertos_posteriori"
-mysql -N --execute="SELECT count(*) FROM datos_desa.tb_galgos_fut_combinada WHERE real_posicion=1" > ${FILE_TEMP}
+mysql -N --execute="SELECT count(*) FROM datos_desa.tb_galgos_fut_combinada_acum WHERE real_posicion=1 AND subgrupo_ganador='${TAG}'" > ${FILE_TEMP}
 numero_aciertos_posteriori=$( cat ${FILE_TEMP})
 
 
 COBERTURA_posteriori=$(echo "scale=2; $numero_aciertos_posteriori / $numero_predicciones_posteriori" | bc -l)
 
 ####SALIDA
-MENSAJE="FUTURO_POSTERIORI --> TAG=${TAG}  cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
+MENSAJE="FUTURO_POSTERIORI --> Analisis del TAG=${TAG}  cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
 echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 echo -e "\n\n Tabla completa (PREDICHO y REAL):\n\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 mysql -t --execute="SELECT * FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}';"  2>&1 1>>${LOG_099}
@@ -237,9 +250,9 @@ echo -e "Informes (posteriori) en: ${PATH_DIR_OUT}" >> "${LOG_099}"
 #Limpiar por si acaso relanzo varias veces a posteriori sobre el mismo ID_EJECUCION
 rm -rf "${PATH_DIR_OUT}posteriori*"
 
-cp "$LOG_070" "${PATH_DIR_OUT}posteriori_tic.txt" #Informe TIC. En su ultima linea aparece el COMANDO que debo lanzar a POSTERIORI
-cp "$INFORME_LIMPIO_POSTERIORI" "${PATH_DIR_OUT}posteriori_limpio.txt"
-cp "$INFORME_RENTABILIDAD_POSTERIORI" "${PATH_DIR_OUT}posteriori_rentabilidad.txt"
+cp "$LOG_070" "${PATH_DIR_OUT}posteriori_${TAG}_tic.txt" #Informe TIC. En su ultima linea aparece el COMANDO que debo lanzar a POSTERIORI
+cp "$INFORME_LIMPIO_POSTERIORI" "${PATH_DIR_OUT}posteriori_${TAG}_limpio.txt"
+cp "$INFORME_RENTABILIDAD_POSTERIORI" "${PATH_DIR_OUT}posteriori_${TAG}_rentabilidad.txt"
 
 
 ##################### Permisos ########################################################################
