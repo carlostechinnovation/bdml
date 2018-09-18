@@ -159,8 +159,8 @@ echo -e "\n\n ************************** FIN DE BUCLE de subgrupos ganadores ***
 
 ##################################################################################################################
 
-echo -e $(date +"%T")" Limpieza MASIVA final de las tablas que son el subgrupo ganador (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
-limpieza "$SUBGRUPO_GANADOR"
+#echo -e $(date +"%T")" Limpieza MASIVA final de las tablas que NO son el subgrupo ganador (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
+#limpieza "$SUBGRUPO_GANADOR"
 
 ##################################################################################################################
 

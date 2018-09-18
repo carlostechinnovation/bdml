@@ -1314,7 +1314,7 @@ analizarTabla "datos_desa" "tb_ce_${sufijo}_x3a" "${LOG_CE_STATS}"
 analizarTabla "datos_desa" "tb_ce_${sufijo}_x3b" "${LOG_CE_STATS}"
 analizarTabla "datos_desa" "tb_ce_${sufijo}_x4" "${LOG_CE_STATS}"
 analizarTabla "datos_desa" "tb_ce_${sufijo}_x5" "${LOG_CE_STATS}"
-analizarTabla "datos_desa" "tb_ce_${sufijo}_x6e" "${0}"
+analizarTabla "datos_desa" "tb_ce_${sufijo}_x6e" "${LOG_CE_STATS}"
 analizarTabla "datos_desa" "tb_ce_${sufijo}_x7a" "${LOG_CE_STATS}"
 analizarTabla "datos_desa" "tb_ce_${sufijo}_x7b" "${LOG_CE_STATS}"
 analizarTabla "datos_desa" "tb_ce_${sufijo}_x7c" "${LOG_CE_STATS}"
@@ -1344,49 +1344,4 @@ borrarTablasInnecesarias "${sufijo}"
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}
 
 
-
---------- TABLA: datos_desa.tb_ce_pre_x6e ----------
-
-Leyenda --> campo : MAX|MIN|AVG|STD|NO_NULOS|NULOS
-
-*************************** 1. row ***************************
-                                     _c1: 21|1|6.410078|4.794059|120560|0
-                                     _c2: 20|20|20.000000|0.000000|120560|0
-                                     _c3: 1|1|1.000000|0.000000|120560|0
-                                     _c4: 4.081130|1.000000|3.418870|0.241839|120560|0
-                                     _c5: 3.081130|3.081130|3.081130|0.000000|120560|0
-                                     _c6: 1.000000|1.000000|1.000000|0.000000|120560|0
-                             _id_carrera: 2126604|1|2079097.112641|176472.611522|120560|0
-                           _galgo_nombre: 0.000000|0.000000|0.000000|0.000000|120560|0
-                                  _clase: 0.000000|0.000000|0.000000|0.000000|120560|0
-                   _experiencia_en_clase: 1.000000|0.000000|0.270504|0.239703|120560|0
-                _experiencia_cualitativo: 0.000000|0.000000|0.000000|0.000000|120560|0
-_posicion_media_en_clase_por_experiencia: 1.000000|0.000000|0.785059|0.078490|120560|0
-                                   _anio: 2018|2005|2017.924444|0.277872|120560|0
-                                    _mes: 12|1|5.835352|2.346070|120560|0
-                                    _dia: 31|1|16.158170|8.685599|120560|0
------------------------------------------------------
-
-
---------- TABLA: datos_desa.tb_ce_pre_x6e ----------
-
-Leyenda --> campo : MAX|MIN|AVG|STD|NO_NULOS|NULOS
-
-*************************** 1. row ***************************
-                                     _c1: 21|1|6.418294|4.806332|62817|0
-                                     _c2: 20|20|20.000000|0.000000|62817|0
-                                     _c3: 1|1|1.000000|0.000000|62817|0
-                                     _c4: 4.357143|1.000000|3.412480|0.253104|62817|0
-                                     _c5: 3.357143|3.357143|3.357143|0.000000|62817|0
-                                     _c6: 1.000000|1.000000|1.000000|0.000000|62817|0
-                             _id_carrera: 2127198|1|2078009.284270|193792.098124|62817|0
-                           _galgo_nombre: 0.000000|0.000000|0.000000|0.000000|62817|0
-                                  _clase: 0.000000|0.000000|0.000000|0.000000|62817|0
-                   _experiencia_en_clase: 1.000000|0.000000|0.270915|0.240317|62817|0
-                _experiencia_cualitativo: 0.000000|0.000000|0.000000|0.000000|62817|0
-_posicion_media_en_clase_por_experiencia: 1.000000|0.000000|0.718611|0.075393|62817|0
-                                   _anio: 2018|2007|2017.937899|0.247269|62817|0
-                                    _mes: 12|1|5.897337|2.257684|62817|0
-                                    _dia: 31|1|16.304201|8.735684|62817|0
------------------------------------------------------
 

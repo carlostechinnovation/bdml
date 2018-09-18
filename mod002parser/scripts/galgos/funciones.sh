@@ -6,7 +6,7 @@ RENTABILIDAD_MINIMA="110"
 COBERTURA_MINIMA="0.55"
 SUFICIENTES_CASOS="30"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM=0.85
+PCA_UMBRAL_VARIANZA_ACUM=0.91
 TSNE_NUM_F_OUT=12
 MIN_CG_FUT_SUBGRUPO=1
 
@@ -309,8 +309,6 @@ insertSelectRemark 'Bmp'
 ######## SUBGRUPOS #######################################################################
 function analizarScoreSobreSubgrupos ()
 {
-
-
 
 PATH_LOG=${1}
 
