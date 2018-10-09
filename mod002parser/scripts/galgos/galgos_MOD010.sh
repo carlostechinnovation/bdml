@@ -5,10 +5,8 @@ source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 #Borrar log
 rm -f ${LOG_DESCARGA_BRUTO}
 
-
 #Parametro
 PARAM_CONFIG="${1}"
-
 
 echo -e $(date +"%T")" | 010 | Descarga datos brutos | INICIO" >>$LOG_070
 echo -e "MOD010 --> LOG = "${LOG_DESCARGA_BRUTO}
@@ -61,7 +59,6 @@ consultar_sobreescribirsalida "LOAD DATA LOCAL INFILE '${PATH_FILE_GALGOS_INICIA
 consultar "SELECT COUNT(*) as num_galgos_iniciales FROM datos_desa.tb_cg_semillas_sportium LIMIT 1\W;" "${LOG_DESCARGA_BRUTO}" "-t"
 
 
-
 ###################### FUTURAS - SPORTIUM - DETALLE ####################
 
 echo -e $(date +"%T")" GBGB - Descarga de DATOS BRUTOS históricos (embuclándose) de todas las carreras en las que han corrido los galgos semilla y los de carreras derivadas..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
@@ -92,7 +89,6 @@ echo -e $(date +"%T")"\nNumero de galgos diferentes de los que conocemos su hist
 mysql --execute="SELECT COUNT(DISTINCT galgo_nombre) as num_galgos_diferentes FROM datos_desa.tb_galgos_historico LIMIT 1\W;">>$PATH_LIMPIO_ESTADISTICAS
 
 
-
 #################### BORRADO PARA AHORRAR ESPACIO EN DISCO (andamos justos...) ######################
 echo -e $(date +"%T")" BORRADO PARA AHORRAR ESPACIO EN DISCO (andamos justos...)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 
@@ -103,7 +99,6 @@ rm -f ${brutos_gbgb} 2>&1 1>>${LOG_MASTER}
 brutos_semillas_sportium="${PATH_BRUTO_SEMILLAS_SPORTIUM}_BRUTOCARRERADET*"
 echo -e $(date +"%T")" Borrando datos brutos: "${brutos_semillas_sportium} 2>&1 1>>${LOG_MASTER}
 rm -f ${brutos_semillas_sportium} 2>&1 1>>${LOG_MASTER}
-
 
 
 ##########################################

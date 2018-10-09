@@ -280,7 +280,7 @@ echo -e "MOD050 - Informe FINAL..." 2>&1 1>>${LOG_050}
 read -d '' CONSULTA_PREDICCIONES_INFORME <<- EOF
 SELECT 
 B.anio,B.mes,B.dia, B.track AS estadio, B.hora,B.minuto,
-A.galgo_nombre, A.target_predicho, A.fortaleza, '${TAG}' AS subgrupo
+A.galgo_nombre, B.distancia, A.target_predicho, A.fortaleza, '${TAG}' AS subgrupo
 FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
@@ -295,7 +295,7 @@ mysql -t --execute="$CONSULTA_PREDICCIONES_INFORME"  2>&1 1>>$COMUN_I_PRED
 
 
 read -d '' CONSULTA_PREDICCIONES_CON_PERDEDORES <<- EOF
-SELECT A.*, '${TAG}' AS subgrupo
+SELECT A.*, B.distancia, '${TAG}' AS subgrupo
 FROM datos_desa.tb_fut_1st_final_${TAG} A
 LEFT JOIN  datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
@@ -311,7 +311,7 @@ read -d '' CONSULTA_PREDICCIONES_INFORME_COMANDOS <<- EOF
 SELECT
 concat('curl \\\\\\'http://www.gbgb.org.uk/Racecard.aspx?dogName=', replace(A.galgo_nombre,' ','%20'), '\\\\\\' | grep \\\\\\'',lpad(B.dia,2,'0'),'/',lpad(B.mes,2,'0'),'/',SUBSTRING(B.anio,3,2),'\\\\\\' >> ${INFORME_BRUTO_POSTERIORI}') as comando_futuro
 FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} A
-LEFT JOIN  datos_desa.tb_galgos_carreras B
+LEFT JOIN datos_desa.tb_galgos_carreras B
 ON (A.id_carrera=B.id_carrera)
 WHERE A.posicion_predicha=1 AND A.con_historico_desconocido=0 AND A.target_predicho IS NOT NULL
 ORDER BY B.anio ASC, B.mes ASC, B.dia ASC, B.hora ASC, B.minuto ASC;

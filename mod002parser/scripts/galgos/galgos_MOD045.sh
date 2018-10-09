@@ -20,7 +20,7 @@ fi
 echo -e $(date +"%T")" | 045 | Entreno con pasado-TTV (subgrupo: $TAG) | INICIO" >>$LOG_070
 echo -e "MOD045 --> LOG = "${LOG_045}
 
-echo -e "\n\n\n----------------------------- 045 --------------------\n\n\n" 2>&1 1>>${LOG_045}
+echo -e "\n----------------------------- 045 --------------------\n" 2>&1 1>>${LOG_045}
 echo -e $(date +"%T")" Entrenando el modelo con DS-TTV (todo lo que conocemos del pasado) para tener un modelo bien entrenado..." 2>&1 1>>${LOG_045}
 
 

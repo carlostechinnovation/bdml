@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_fut_combinada_acum (
   real_calc_time varchar(10) DEFAULT NULL,
   real_id_carrera bigint(20) DEFAULT NULL,
   real_id_campeonato bigint(20) DEFAULT NULL,
-  PRIMARY KEY(id_ejecucion,numero1)
+  PRIMARY KEY(id_ejecucion,subgrupo_ganador,numero1)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 DELETE FROM datos_desa.tb_galgos_fut_combinada_acum WHERE id_ejecucion='${ID_EJECUCION}' AND subgrupo_ganador='${TAG}';
@@ -219,29 +219,73 @@ rm -f "${INFORME_RENTABILIDAD_POSTERIORI}"
 
 FILE_TEMP_PRED="./temp_MOD099_num_predicciones_posteriori"
 rm -f ${FILE_TEMP_PRED}
-mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}';" > ${FILE_TEMP_PRED}
+mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}';" > ${FILE_TEMP_PRED}
 numero_predicciones_posteriori=$(cat ${FILE_TEMP_PRED})
 
 
 FILE_TEMP="./temp_MOD099_rentabilidad_posteriori"
 rm -f ${FILE_TEMP}
-mysql -N --execute="SELECT ROUND( 100.0 * SUM(ganado)/SUM(gastado) , 2) AS rentabilidad FROM ( SELECT numero1, fortaleza, 1 AS gastado, CASE WHEN real_posicion=1 THEN cast(numerador AS decimal(2,0)) / cast(denominador AS decimal(2,0)) ELSE 0 END AS ganado FROM ( SELECT numero1, fortaleza, real_posicion, real_sp, substring_index(real_sp,'/',1) as numerador, substring_index(real_sp,'/',-1) as denominador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}' ) d ) fuera;" > ${FILE_TEMP}
+mysql -N --execute="SELECT ROUND( 100.0 * SUM(ganado)/SUM(gastado) , 2) AS rentabilidad FROM ( SELECT numero1, fortaleza, 1 AS gastado, CASE WHEN real_posicion=1 THEN cast(numerador AS decimal(2,0)) / cast(denominador AS decimal(2,0)) ELSE 0 END AS ganado FROM ( SELECT numero1, fortaleza, real_posicion, real_sp, substring_index(real_sp,'/',1) as numerador, substring_index(real_sp,'/',-1) as denominador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}' ) d ) fuera;" > ${FILE_TEMP}
 rentabilidad_posteriori=$( cat ${FILE_TEMP})
 
 
 FILE_TEMP="./temp_MOD099_num_aciertos_posteriori"
-mysql -N --execute="SELECT count(*) FROM datos_desa.tb_galgos_fut_combinada_acum WHERE real_posicion=1 AND subgrupo_ganador='${TAG}'" > ${FILE_TEMP}
+mysql -N --execute="SELECT count(*) FROM datos_desa.tb_galgos_fut_combinada_acum WHERE real_posicion=1 AND subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}'" > ${FILE_TEMP}
 numero_aciertos_posteriori=$( cat ${FILE_TEMP})
 
 
 COBERTURA_posteriori=$(echo "scale=2; $numero_aciertos_posteriori / $numero_predicciones_posteriori" | bc -l)
 
 ####SALIDA
-MENSAJE="FUTURO_POSTERIORI --> Analisis del TAG=${TAG}  cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
-echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
-echo -e "\n\n Tabla completa (PREDICHO y REAL):\n\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
-mysql -t --execute="SELECT * FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}';"  2>&1 1>>${LOG_099}
+echo -e "FUTURO_POSTERIORI --> Analisis del TAG=${TAG}  id_ejecucion=${ID_EJECUCION}" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+#MENSAJE="cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
+#echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+echo -e "Observar las tablas de este informe y calcular RENTABILIDAD POSTERIORI a mano (mirar las carreras futuras con acierto=1 y que esten dentro de los grupo_sp rentables)" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
+echo -e "\nAtencion, dentro del subgrupo, solo debo mirar el grupo_sp rentable:" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+mysql -t  --execute="SELECT A.*, B.* FROM datos_desa.tb_rentabilidades_solo_ganadores A LEFT JOIN datos_desa.tb_grupos_sp B ON (A.grupo_sp=B.grupo_sp) LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+
+echo -e "\nA priori pensabamos que era una distancia, pero a posteriori era otra distancia real!!! (Quitamos casos con mucha distancia_diff > ${VAR_distancia_diff_pct} % ) !!\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+echo -e "\nTabla completa (PREDICHO y REAL):\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+
+read -d '' CONSULTA_PREDICHO_Y_REAL <<- EOF
+select dentro1.*
+ from (
+
+SELECT 
+cast(substring_index(A.real_sp,'/',1) AS decimal(2,0)) / cast(substring_index(A.real_sp,'/',-1) AS decimal(2,0)) AS real_sp_numero,
+
+CASE WHEN (A.posicion_predicha=A.real_posicion) THEN 1 ELSE 0 END AS acierto, 
+abs(A.real_distancia-B.distancia) AS distancia_diff,
+100*(abs(A.real_distancia-B.distancia))/B.distancia AS distancia_diff_pct,
+A.real_distancia AS dis_post,
+B.distancia AS dis_pre,
+CASE WHEN (B.distancia_norm <= 0.33) THEN 1 ELSE 0 END AS b_corta,
+CASE WHEN (B.distancia_norm >0.33 AND  B.distancia_norm <=0.66) THEN 1 ELSE 0 END AS b_media,
+CASE WHEN (B.distancia_norm > 0.66) THEN 1 ELSE 0 END AS b_larga,
+A.*
+FROM datos_desa.tb_galgos_fut_combinada_acum A 
+
+LEFT JOIN  datos_desa.tb_galgos_carreras_norm B
+ON (A.id_carrera=B.id_carrera)
+
+WHERE subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}' AND A.real_posicion > 0
+ORDER BY real_sp_numero ASC
+) as dentro1
+
+INNER JOIN ( 
+  SELECT C.subgrupo, D.* FROM datos_desa.tb_rentabilidades_solo_ganadores C
+  LEFT JOIN datos_desa.tb_grupos_sp D
+  ON (C.grupo_sp=D.grupo_sp)
+) AS dentro2
+ON (dentro1.subgrupo_ganador=dentro2.subgrupo AND dentro1.real_sp_numero >=dentro2.sp_min AND dentro1.real_sp_numero <=dentro2.sp_max)
+
+WHERE dentro1.distancia_diff_pct < ${VAR_distancia_diff_pct};
+
+EOF
+
+echo -e "\n$CONSULTA_PREDICHO_Y_REAL" 2>&1 1>>${LOG_099}
+mysql -t --execute="$CONSULTA_PREDICHO_Y_REAL"  2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
 
 ################################# INFORMES (POSTERIORI) ###############################################

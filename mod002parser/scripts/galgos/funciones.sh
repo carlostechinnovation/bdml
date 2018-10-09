@@ -42,6 +42,7 @@ LOG_DESCARGA_BRUTO="${PATH_LOGS}galgos_010_descarga_bruto.log"
 LOG_DESCARGA_BRUTO_BB="${PATH_LOGS}galgos_010_descarga_bruto_BB.log"
 FLAG_BB_DESCARGADO_OK="${PATH_LOGS}galgos_010_BB.descargado.OK"
 LOG_010_FUT="${PATH_LOGS}galgos_010_FUT.log"
+LOG_010_WHEATHER="${PATH_LOGS}galgos_010_WHEATHER.log"
 LOG_011="${PATH_LOGS}galgos_011_limpieza.log"
 LOG_012="${PATH_LOGS}galgos_012_normalizacion.log"
 LOG_019_EXPORT="${PATH_LOGS}galgos_019_export.log"
@@ -71,6 +72,9 @@ PATH_RENTABILIDADES_WARNINGS="${PATH_LIMPIO}warnings_rentabilidades"
 INFORME_CONFIG_010="${PATH_LOGS}INFORME_CONFIG_010.txt"
 INFORME_RENTABILIDADES="${PATH_LOGS}INFORME_RENTABILIDADES.txt"
 
+DELIMITADOR_R_OUT="#R_OUT#--"
+INFORME_ML_040_045_050="${PATH_LOGS}INFORME_ML_040_045_050.txt"
+
 INFORME_PREDICCIONES="${PATH_LOGS}INFORME_PREDICCIONES.txt"
 INFORME_PREDICCIONES_CON_PERDEDORES="${PATH_LOGS}INFORME_PREDICCIONES_CON_PERDEDORES.txt"
 INFORME_PREDICCIONES_COMANDOS="${PATH_LOGS}INFORME_PREDICCIONES_COMANDOS.sh"
@@ -79,6 +83,7 @@ INFORME_BUCLE_PREDICCIONES="${PATH_LOGS}INFORME_BUCLE_PREDICCIONES.txt"
 INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES="${PATH_LOGS}INFORME_BUCLE_PREDICCIONES_CON_PERDEDORES.txt"
 INFORME_BUCLE_PREDICCIONES_COMANDOS="${PATH_LOGS}INFORME_BUCLE_PREDICCIONES_COMANDOS.sh"
 
+VAR_distancia_diff_pct=20
 INFORME_BRUTO_POSTERIORI="${PATH_LOGS}temp_INFORME_BRUTO_POSTERIORI.txt"
 INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}INFORME_LIMPIO_POSTERIORI.txt"
 INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}INFORME_RENTABILIDAD_POSTERIORI.txt"
@@ -303,6 +308,36 @@ insertSelectRemark 'SAw'
 insertSelectRemark 'Bmp'
 
 #PENDIENTE Los acronimos Crd=Crowd=Crowded, AlwaysHandy=AHandy, ... Por tanto, debo modificar la funcion insertSelectRemark para que acepte un parametro (ej: 'Crd#Crowd#Crowded') para que filtre considerando que significa lo mismo.
+}
+
+
+
+######## SP Tabla descripcion #######################################################################
+function crearTablaTiposSp ()
+{
+read -d '' CONSULTA_TABLA_TIPOS_SP <<- EOF
+DROP TABLE IF EXISTS datos_desa.tb_grupos_sp;
+CREATE TABLE IF NOT EXISTS datos_desa.tb_grupos_sp (grupo_sp varchar(10) NOT NULL, sp_min decimal(6,2) NOT NULL, sp_max decimal(6,2) NOT NULL);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP100150', 1, 1.49);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP150200', 1.5, 1.99);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP200250', 2, 2.49);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP250300', 2.5, 2.99);
+
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP100200', 1, 1.99);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP150250', 1.5, 2.49);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP200300', 2, 2.99);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP250350', 2.5, 3.49);
+
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP30099900', 3, 998.99);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP10099900', 1, 998.99);
+INSERT INTO datos_desa.tb_grupos_sp (grupo_sp, sp_min, sp_max) VALUES ('SP20099900', 2, 998.99);
+
+SELECT * FROM datos_desa.tb_grupos_sp;
+EOF
+
+#echo -e "$CONSULTA_TABLA_TIPOS_SP" 2>&1 1>>${LOG_MASTER}
+mysql -t --execute="$CONSULTA_TABLA_TIPOS_SP" 2>&1 1>>${LOG_MASTER}
+
 }
 
 
@@ -555,14 +590,18 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
-  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS AND num_cg_fut_subgrupo > $MIN_CG_FUT_SUBGRUPO ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
+  mysql -t  --execute="DROP TABLE IF EXISTS datos_desa.tb_rentabilidades_solo_ganadores;" 2>&1 1>>${LOG_ML}
+
+  mysql -t  --execute="CREATE TABLE datos_desa.tb_rentabilidades_solo_ganadores AS SELECT * FROM datos_desa.tb_rentabilidades WHERE cobertura_sg_sp >= $COBERTURA_MINIMA AND rentabilidad_porciento >= $RENTABILIDAD_MINIMA AND casos > $SUFICIENTES_CASOS AND num_cg_fut_subgrupo > $MIN_CG_FUT_SUBGRUPO ORDER BY $CRITERIO_ORDEN DESC LIMIT 100;" 2>&1 1>>${LOG_ML}
+
+  mysql -t  --execute="SELECT * FROM datos_desa.tb_rentabilidades_solo_ganadores LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDADES}
 
   # Borro el fichero e intento escribirlo:
   rm -f $SUBGRUPO_GANADOR_FILE
   rm -f $SUBGRUPOS_GANADORES_FILE
 
-  SUBQUERY_RENT_GANADORES="SELECT A.* FROM datos_desa.tb_rentabilidades A WHERE cobertura_sg_sp >= ${COBERTURA_MINIMA} AND rentabilidad_porciento > ${RENTABILIDAD_MINIMA} AND casos > ${SUFICIENTES_CASOS} AND num_cg_fut_subgrupo > ${MIN_CG_FUT_SUBGRUPO} ORDER BY ${CRITERIO_ORDEN} DESC"
+  SUBQUERY_RENT_GANADORES="SELECT A.* FROM datos_desa.tb_rentabilidades_solo_ganadores A"
 
   mysql -N --execute="SELECT subgrupo FROM ( $SUBQUERY_RENT_GANADORES ) B LIMIT 1;"  1>>${SUBGRUPO_GANADOR_FILE} 2>>$LOG_MASTER
   mysql -N --execute="SELECT subgrupo, GROUP_CONCAT(grupo_sp SEPARATOR '#') FROM ( $SUBQUERY_RENT_GANADORES ) B GROUP BY subgrupo;"  | tr '\t' '|' 1>>${SUBGRUPOS_GANADORES_FILE} 2>>$LOG_MASTER

@@ -22,6 +22,9 @@ echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos -------
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${LOG_MASTER}
 
+crearTablaTiposSp #tabla estatica
+
+
 ##########echo -e $(date +"%T")" ANALISIS de CONFIG para Descarga de datos BRUTOS (puntualmente, no siempre)" >>$LOG_MASTER
 ##########${PATH_SCRIPTS}'galgos_MOD010_ANALISIS_PARAMS.sh'  >>$LOG_MASTER #Sportium-CONFIG
 
@@ -29,30 +32,31 @@ echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_M
 ###########rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 ###########${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
 
-${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos)
-echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos)
+#echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD010_WHEATHER.sh'  >>$LOG_MASTER # WHEATHER de pasado y futuro (para enriquecer despues)
 
-echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
 
-echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
-
-
-echo -e "Borrando tablas LIMPIAS para ahorrar espacio..." >> "${LOG_MASTER}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM;" 2>&1 1>>"${LOG_MASTER}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM;" 2>&1 1>>"${LOG_MASTER}"
+#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
 
-echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+#echo -e "Borrando tablas LIMPIAS para ahorrar espacio..." >> "${LOG_MASTER}"
+#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
+#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
+#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM;" 2>&1 1>>"${LOG_MASTER}"
+#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM;" 2>&1 1>>"${LOG_MASTER}"
+
+
+#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 
 ################## Bucle para obtener SUBGRUPO GANADOR (y SUBGRUPOS GANADORES secundarios) ############################################################
@@ -158,9 +162,19 @@ echo -e "\n\n ************************** FIN DE BUCLE de subgrupos ganadores ***
 
 
 ##################################################################################################################
+#Informe ML-040-045-050  ----> El orden del INFORME sera: 040, 045(ganador)+045's(bucle), 050(ganador)+050's(bucle)
+rm -f "${INFORME_ML_040_045_050}"
+echo -e "\n\n####################### 040 ###################################\n\n" >>"${INFORME_ML_040_045_050}"
+cat "${LOG_ML}" | grep "${DELIMITADOR_R_OUT}" |awk -F"${DELIMITADOR_R_OUT}" '{print $2}'  2>&1 1>>"${INFORME_ML_040_045_050}"
+echo -e "\n\n####################### 045 ###################################\n\n" >>"${INFORME_ML_040_045_050}"
+cat "${LOG_045}" | grep "${DELIMITADOR_R_OUT}" |awk -F"${DELIMITADOR_R_OUT}" '{print $2}'  2>&1 1>>"${INFORME_ML_040_045_050}"
+echo -e "\n\n####################### 050 ###################################\n\n" >>"${INFORME_ML_040_045_050}"
+cat "${LOG_050}" | grep "${DELIMITADOR_R_OUT}" |awk -F"${DELIMITADOR_R_OUT}" '{print $2}'  2>&1 1>>"${INFORME_ML_040_045_050}"
+
 
 #echo -e $(date +"%T")" Limpieza MASIVA final de las tablas que NO son el subgrupo ganador (tablas pasadas, pero no las futuras)" >>$LOG_MASTER
 #limpieza "$SUBGRUPO_GANADOR"
+rm -f ${PATH_LOGS}temp*
 
 ##################################################################################################################
 
