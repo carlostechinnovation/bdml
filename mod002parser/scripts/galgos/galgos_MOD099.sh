@@ -242,6 +242,8 @@ echo -e "FUTURO_POSTERIORI --> Analisis del TAG=${TAG}  id_ejecucion=${ID_EJECUC
 #echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 echo -e "Observar las tablas de este informe y calcular RENTABILIDAD POSTERIORI a mano (mirar las carreras futuras con acierto=1 y que esten dentro de los grupo_sp rentables)" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
+echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren..." 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+
 echo -e "\nAtencion, dentro del subgrupo, solo debo mirar el grupo_sp rentable:" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 mysql -t  --execute="SELECT A.*, B.* FROM datos_desa.tb_rentabilidades_solo_ganadores A LEFT JOIN datos_desa.tb_grupos_sp B ON (A.grupo_sp=B.grupo_sp) LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 

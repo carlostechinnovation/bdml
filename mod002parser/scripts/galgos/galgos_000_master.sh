@@ -35,28 +35,28 @@ echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_M
 #${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos)
 #echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD010_WHEATHER.sh'  >>$LOG_MASTER # WHEATHER de pasado y futuro (para enriquecer despues)
+${PATH_SCRIPTS}'galgos_MOD010_WEATHER.sh'  >>$LOG_MASTER # WHEATHER de pasado y futuro (para enriquecer despues)
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
-
-
-#echo -e "Borrando tablas LIMPIAS para ahorrar espacio..." >> "${LOG_MASTER}"
-#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
-#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
-#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM;" 2>&1 1>>"${LOG_MASTER}"
-#mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM;" 2>&1 1>>"${LOG_MASTER}"
+echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
 
 
-#echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+echo -e "Borrando tablas LIMPIAS para ahorrar espacio..." >> "${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM;" 2>&1 1>>"${LOG_MASTER}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM;" 2>&1 1>>"${LOG_MASTER}"
+
+
+echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
 
 
 ################## Bucle para obtener SUBGRUPO GANADOR (y SUBGRUPOS GANADORES secundarios) ############################################################

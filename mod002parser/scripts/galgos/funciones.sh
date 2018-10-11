@@ -41,8 +41,12 @@ LOG_DESCARGA_BRUTO="${PATH_LOGS}galgos_010_descarga_bruto.log"
 
 LOG_DESCARGA_BRUTO_BB="${PATH_LOGS}galgos_010_descarga_bruto_BB.log"
 FLAG_BB_DESCARGADO_OK="${PATH_LOGS}galgos_010_BB.descargado.OK"
+
 LOG_010_FUT="${PATH_LOGS}galgos_010_FUT.log"
-LOG_010_WHEATHER="${PATH_LOGS}galgos_010_WHEATHER.log"
+LOG_010_WEATHER="${PATH_LOGS}galgos_010_WEATHER.log"
+SH_010_WEATHER_COMANDOS="${PATH_LOGS}galgos_010_WEATHER_comandos.sh"
+PATH_BRUTO_WEATHER="${PATH_BRUTO}weather/"
+
 LOG_011="${PATH_LOGS}galgos_011_limpieza.log"
 LOG_012="${PATH_LOGS}galgos_012_normalizacion.log"
 LOG_019_EXPORT="${PATH_LOGS}galgos_019_export.log"
@@ -588,7 +592,11 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nDATASETS --> [TRAIN + TEST + *VALIDATION] = [100-test-validation + $DATASET_TEST_PORCENTAJE + $DATASET_VALIDATION_PORCENTAJE ]" 2>&1 1>>${INFORME_RENTABILIDADES}
   echo -e "\n* Los usados para Validation seran menos, porque solo cogere los id_carrera de los que conozca el resultado de los 6 galgos que corrieron. Descarto las carreras en las que solo conozca algunos de los galgos que corrieron. Esto es util para calcular bien el SCORE.\n" 2>&1 1>>${INFORME_RENTABILIDADES}
   echo -e "\nSe muestran las tuplas (subgrupo, grupo_sp) más rentables." >>${INFORME_RENTABILIDADES}
-  echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera. " >>${INFORME_RENTABILIDADES}
+  echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera." >>${INFORME_RENTABILIDADES}
+
+  echo -e "\nSolo poner dinero en las carrera futuras que esten dentro de los grupo_sp rentables." 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren. Debo COMPROBAR que se cumple aproximadamente (ej: si habiamos dicho que era una carrera de 450m, puede ser de 480m, pero no de 800m ni de 250m." 2>&1 1>>${INFORME_RENTABILIDADES}
+
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
 
   mysql -t  --execute="DROP TABLE IF EXISTS datos_desa.tb_rentabilidades_solo_ganadores;" 2>&1 1>>${LOG_ML}

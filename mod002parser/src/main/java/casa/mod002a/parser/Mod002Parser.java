@@ -245,6 +245,14 @@ public class Mod002Parser implements Serializable {
 				e.printStackTrace();
 			}
 
+		} else if (param1 != null && param1.equals("GALGOS_02_WEATHER") && param2 != null && !param2.isEmpty()
+				&& param3 != null && !param3.isEmpty()) {
+
+			// TODO PENDIENTE
+			// Entrada: folder (contiene las paginas web en bruto)
+			// Salida: fichero con sentencias INSERT INTO, separadas por ';' para
+			// ejecutarlas secuencialmente
+
 		} else if (param1 != null && param1.equals("GALGOS_03") && param2 != null && !param2.isEmpty() && param3 != null
 				&& !param3.isEmpty()) {
 
