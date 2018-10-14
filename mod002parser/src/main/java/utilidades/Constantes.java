@@ -47,6 +47,7 @@ public class Constantes {
 	public static final boolean GALGOS_FUTUROS_BETBRIGHT_DESCARGAR_DESDE_JAVA = false; // como me banean, lo descargo
 																						// desde fuera con un script
 
+	public static final String PATH_DIR_DATOS_BRUTOS_GALGOS_WEATHER = PATH_DIR_DATOS_BRUTOS_GALGOS + "weather/";
 	public static final Integer NUM_APARICION_REMARKS_RELEVANTES = 35;
 
 	public static final Integer MAX_NUM_FILAS_EN_MEMORIA_SIN_ESCRIBIR_EN_FICHERO = 200;

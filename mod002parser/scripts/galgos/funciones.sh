@@ -46,6 +46,7 @@ LOG_010_FUT="${PATH_LOGS}galgos_010_FUT.log"
 LOG_010_WEATHER="${PATH_LOGS}galgos_010_WEATHER.log"
 SH_010_WEATHER_COMANDOS="${PATH_LOGS}galgos_010_WEATHER_comandos.sh"
 PATH_BRUTO_WEATHER="${PATH_BRUTO}weather/"
+FILE_WEATHER_LIMPIO_INSERT_INTO="${PATH_LIMPIO}weather_info_nueva.txt"
 
 LOG_011="${PATH_LOGS}galgos_011_limpieza.log"
 LOG_012="${PATH_LOGS}galgos_012_normalizacion.log"

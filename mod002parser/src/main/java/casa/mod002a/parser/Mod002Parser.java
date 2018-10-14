@@ -19,6 +19,7 @@ import casa.galgos.gbgb.GbgbCarrera;
 import casa.galgos.gbgb.GbgbGalgoHistorico;
 import casa.galgos.gbgb.GbgbPosicionEnCarrera;
 import casa.galgos.sportium.CarreraGalgoSemillaSportium;
+import casa.galgos.weather.WeatherManager;
 import casa.mod002a.boe.BoeParser;
 import casa.mod002a.bolsamadrid.BM01Parser;
 import casa.mod002a.bolsamadrid.BM02Parser;
@@ -248,10 +249,16 @@ public class Mod002Parser implements Serializable {
 		} else if (param1 != null && param1.equals("GALGOS_02_WEATHER") && param2 != null && !param2.isEmpty()
 				&& param3 != null && !param3.isEmpty()) {
 
-			// TODO PENDIENTE
-			// Entrada: folder (contiene las paginas web en bruto)
-			// Salida: fichero con sentencias INSERT INTO, separadas por ';' para
-			// ejecutarlas secuencialmente
+			try {
+				String pathBrutoWeather = param2;
+				String fileWeatherLimpioInsertInto = param3;
+
+				WeatherManager.getInstancia().parsearWebBrutas(pathBrutoWeather, fileWeatherLimpioInsertInto);
+
+			} catch (InterruptedException e) {
+				MY_LOGGER.error("ERROR Excepcion de galgos.");
+				e.printStackTrace();
+			}
 
 		} else if (param1 != null && param1.equals("GALGOS_03") && param2 != null && !param2.isEmpty() && param3 != null
 				&& !param3.isEmpty()) {
