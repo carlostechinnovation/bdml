@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html><head>
+	<iframe src="javascript:void(0)" title="" style="width: 0px; height: 0px; border: 0px none; display: none;"></iframe><script type="text/javascript" src="2018_10_Belle%20Vue_files/a690b21e9f"></script><script src="2018_10_Belle%20Vue_files/nr-spa-1099.js"></script><script async="" src="2018_10_Belle%20Vue_files/fbds.js"></script><script type="text/javascript" async="" src="2018_10_Belle%20Vue_files/dc.js"></script><script async="" src="2018_10_Belle%20Vue_files/beacon.js"></script><script async="" src="2018_10_Belle%20Vue_files/analytics.js"></script><script async="" src="2018_10_Belle%20Vue_files/gtm.js"></script><script type="text/javascript">window.NREUM||(NREUM={});NREUM.info = {"beacon":"bam.nr-data.net","errorBeacon":"bam.nr-data.net","licenseKey":"a690b21e9f","applicationID":"599479","transactionName":"NV0GYUFWCEUDBkNQDAwXKWNwGCBZEABUWBAWewtbR0UJWg4ARRYuDVYQXQ==","queueTime":0,"applicationTime":166,"agent":"","atts":""}</script><script type="text/javascript">(window.NREUM||(NREUM={})).loader_config={xpid:"VQUFVl5UGwYJXVVVDg=="};window.NREUM||(NREUM={}),__nr_require=function(t,e,n){function r(n){if(!e[n]){var o=e[n]={exports:{}};t[n][0].call(o.exports,function(e){var o=t[n][1][e];return r(o||e)},o,o.exports)}return e[n].exports}if("function"==typeof __nr_require)return __nr_require;for(var o=0;o<n.length;o++)r(n[o]);return r}({1:[function(t,e,n){function r(t){try{s.console&&console.log(t)}catch(e){}}var o,i=t("ee"),a=t(21),s={};try{o=localStorage.getItem("__nr_flags").split(","),console&&"function"==typeof console.log&&(s.console=!0,o.indexOf("dev")!==-1&&(s.dev=!0),o.indexOf("nr_dev")!==-1&&(s.nrDev=!0))}catch(c){}s.nrDev&&i.on("internal-error",function(t){r(t.stack)}),s.dev&&i.on("fn-err",function(t,e,n){r(n.stack)}),s.dev&&(r("NR AGENT IN DEVELOPMENT MODE"),r("flags: "+a(s,function(t,e){return t}).join(", ")))},{}],2:[function(t,e,n){function r(t,e,n,r,s){try{l?l-=1:o(s||new UncaughtException(t,e,n),!0)}catch(f){try{i("ierr",[f,c.now(),!0])}catch(d){}}return"function"==typeof u&&u.apply(this,a(arguments))}function UncaughtException(t,e,n){this.message=t||"Uncaught error with no additional information",this.sourceURL=e,this.line=n}function o(t,e){var n=e?null:c.now();i("err",[t,n])}var i=t("handle"),a=t(22),s=t("ee"),c=t("loader"),f=t("gos"),u=window.onerror,d=!1,p="nr@seenError",l=0;c.features.err=!0,t(1),window.onerror=r;try{throw new Error}catch(h){"stack"in h&&(t(13),t(12),"addEventListener"in window&&t(6),c.xhrWrappable&&t(14),d=!0)}s.on("fn-start",function(t,e,n){d&&(l+=1)}),s.on("fn-err",function(t,e,n){d&&!n[p]&&(f(n,p,function(){return!0}),this.thrown=!0,o(n))}),s.on("fn-end",function(){d&&!this.thrown&&l>0&&(l-=1)}),s.on("internal-error",function(t){i("ierr",[t,c.now(),!0])})},{}],3:[function(t,e,n){t("loader").features.ins=!0},{}],4:[function(t,e,n){function r(){M++,N=y.hash,this[u]=g.now()}function o(){M--,y.hash!==N&&i(0,!0);var t=g.now();this[h]=~~this[h]+t-this[u],this[d]=t}function i(t,e){E.emit("newURL",[""+y,e])}function a(t,e){t.on(e,function(){this[e]=g.now()})}var s="-start",c="-end",f="-body",u="fn"+s,d="fn"+c,p="cb"+s,l="cb"+c,h="jsTime",m="fetch",v="addEventListener",w=window,y=w.location,g=t("loader");if(w[v]&&g.xhrWrappable){var b=t(10),x=t(11),E=t(8),O=t(6),P=t(13),R=t(7),T=t(14),L=t(9),j=t("ee"),S=j.get("tracer");t(15),g.features.spa=!0;var N,M=0;j.on(u,r),j.on(p,r),j.on(d,o),j.on(l,o),j.buffer([u,d,"xhr-done","xhr-resolved"]),O.buffer([u]),P.buffer(["setTimeout"+c,"clearTimeout"+s,u]),T.buffer([u,"new-xhr","send-xhr"+s]),R.buffer([m+s,m+"-done",m+f+s,m+f+c]),E.buffer(["newURL"]),b.buffer([u]),x.buffer(["propagate",p,l,"executor-err","resolve"+s]),S.buffer([u,"no-"+u]),L.buffer(["new-jsonp","cb-start","jsonp-error","jsonp-end"]),a(T,"send-xhr"+s),a(j,"xhr-resolved"),a(j,"xhr-done"),a(R,m+s),a(R,m+"-done"),a(L,"new-jsonp"),a(L,"jsonp-end"),a(L,"cb-start"),E.on("pushState-end",i),E.on("replaceState-end",i),w[v]("hashchange",i,!0),w[v]("load",i,!0),w[v]("popstate",function(){i(0,M>1)},!0)}},{}],5:[function(t,e,n){function r(t){}if(window.performance&&window.performance.timing&&window.performance.getEntriesByType){var o=t("ee"),i=t("handle"),a=t(13),s=t(12),c="learResourceTimings",f="addEventListener",u="resourcetimingbufferfull",d="bstResource",p="resource",l="-start",h="-end",m="fn"+l,v="fn"+h,w="bstTimer",y="pushState",g=t("loader");g.features.stn=!0,t(8);var b=NREUM.o.EV;o.on(m,function(t,e){var n=t[0];n instanceof b&&(this.bstStart=g.now())}),o.on(v,function(t,e){var n=t[0];n instanceof b&&i("bst",[n,e,this.bstStart,g.now()])}),a.on(m,function(t,e,n){this.bstStart=g.now(),this.bstType=n}),a.on(v,function(t,e){i(w,[e,this.bstStart,g.now(),this.bstType])}),s.on(m,function(){this.bstStart=g.now()}),s.on(v,function(t,e){i(w,[e,this.bstStart,g.now(),"requestAnimationFrame"])}),o.on(y+l,function(t){this.time=g.now(),this.startPath=location.pathname+location.hash}),o.on(y+h,function(t){i("bstHist",[location.pathname+location.hash,this.startPath,this.time])}),f in window.performance&&(window.performance["c"+c]?window.performance[f](u,function(t){i(d,[window.performance.getEntriesByType(p)]),window.performance["c"+c]()},!1):window.performance[f]("webkit"+u,function(t){i(d,[window.performance.getEntriesByType(p)]),window.performance["webkitC"+c]()},!1)),document[f]("scroll",r,{passive:!0}),document[f]("keypress",r,!1),document[f]("click",r,!1)}},{}],6:[function(t,e,n){function r(t){for(var e=t;e&&!e.hasOwnProperty(u);)e=Object.getPrototypeOf(e);e&&o(e)}function o(t){s.inPlace(t,[u,d],"-",i)}function i(t,e){return t[1]}var a=t("ee").get("events"),s=t(24)(a,!0),c=t("gos"),f=XMLHttpRequest,u="addEventListener",d="removeEventListener";e.exports=a,"getPrototypeOf"in Object?(r(document),r(window),r(f.prototype)):f.prototype.hasOwnProperty(u)&&(o(window),o(f.prototype)),a.on(u+"-start",function(t,e){var n=t[1],r=c(n,"nr@wrapped",function(){function t(){if("function"==typeof n.handleEvent)return n.handleEvent.apply(n,arguments)}var e={object:t,"function":n}[typeof n];return e?s(e,"fn-",null,e.name||"anonymous"):n});this.wrapped=t[1]=r}),a.on(d+"-start",function(t){t[1]=this.wrapped||t[1]})},{}],7:[function(t,e,n){function r(t,e,n){var r=t[e];"function"==typeof r&&(t[e]=function(){var t=r.apply(this,arguments);return o.emit(n+"start",arguments,t),t.then(function(e){return o.emit(n+"end",[null,e],t),e},function(e){throw o.emit(n+"end",[e],t),e})})}var o=t("ee").get("fetch"),i=t(21);e.exports=o;var a=window,s="fetch-",c=s+"body-",f=["arrayBuffer","blob","json","text","formData"],u=a.Request,d=a.Response,p=a.fetch,l="prototype";u&&d&&p&&(i(f,function(t,e){r(u[l],e,c),r(d[l],e,c)}),r(a,"fetch",s),o.on(s+"end",function(t,e){var n=this;if(e){var r=e.headers.get("content-length");null!==r&&(n.rxSize=r),o.emit(s+"done",[null,e],n)}else o.emit(s+"done",[t],n)}))},{}],8:[function(t,e,n){var r=t("ee").get("history"),o=t(24)(r);e.exports=r,o.inPlace(window.history,["pushState","replaceState"],"-")},{}],9:[function(t,e,n){function r(t){function e(){c.emit("jsonp-end",[],p),t.removeEventListener("load",e,!1),t.removeEventListener("error",n,!1)}function n(){c.emit("jsonp-error",[],p),c.emit("jsonp-end",[],p),t.removeEventListener("load",e,!1),t.removeEventListener("error",n,!1)}var r=t&&"string"==typeof t.nodeName&&"script"===t.nodeName.toLowerCase();if(r){var o="function"==typeof t.addEventListener;if(o){var a=i(t.src);if(a){var u=s(a),d="function"==typeof u.parent[u.key];if(d){var p={};f.inPlace(u.parent,[u.key],"cb-",p),t.addEventListener("load",e,!1),t.addEventListener("error",n,!1),c.emit("new-jsonp",[t.src],p)}}}}}function o(){return"addEventListener"in window}function i(t){var e=t.match(u);return e?e[1]:null}function a(t,e){var n=t.match(p),r=n[1],o=n[3];return o?a(o,e[r]):e[r]}function s(t){var e=t.match(d);return e&&e.length>=3?{key:e[2],parent:a(e[1],window)}:{key:t,parent:window}}var c=t("ee").get("jsonp"),f=t(24)(c);if(e.exports=c,o()){var u=/[?&](?:callback|cb)=([^&#]+)/,d=/(.*)\.([^.]+)/,p=/^(\w+)(\.|$)(.*)$/,l=["appendChild","insertBefore","replaceChild"];f.inPlace(HTMLElement.prototype,l,"dom-"),f.inPlace(HTMLHeadElement.prototype,l,"dom-"),f.inPlace(HTMLBodyElement.prototype,l,"dom-"),c.on("dom-start",function(t){r(t[0])})}},{}],10:[function(t,e,n){var r=t("ee").get("mutation"),o=t(24)(r),i=NREUM.o.MO;e.exports=r,i&&(window.MutationObserver=function(t){return this instanceof i?new i(o(t,"fn-")):i.apply(this,arguments)},MutationObserver.prototype=i.prototype)},{}],11:[function(t,e,n){function r(t){var e=a.context(),n=s(t,"executor-",e),r=new f(n);return a.context(r).getCtx=function(){return e},a.emit("new-promise",[r,e],e),r}function o(t,e){return e}var i=t(24),a=t("ee").get("promise"),s=i(a),c=t(21),f=NREUM.o.PR;e.exports=a,f&&(window.Promise=r,["all","race"].forEach(function(t){var e=f[t];f[t]=function(n){function r(t){return function(){a.emit("propagate",[null,!o],i),o=o||!t}}var o=!1;c(n,function(e,n){Promise.resolve(n).then(r("all"===t),r(!1))});var i=e.apply(f,arguments),s=f.resolve(i);return s}}),["resolve","reject"].forEach(function(t){var e=f[t];f[t]=function(t){var n=e.apply(f,arguments);return t!==n&&a.emit("propagate",[t,!0],n),n}}),f.prototype["catch"]=function(t){return this.then(null,t)},f.prototype=Object.create(f.prototype,{constructor:{value:r}}),c(Object.getOwnPropertyNames(f),function(t,e){try{r[e]=f[e]}catch(n){}}),a.on("executor-start",function(t){t[0]=s(t[0],"resolve-",this),t[1]=s(t[1],"resolve-",this)}),a.on("executor-err",function(t,e,n){t[1](n)}),s.inPlace(f.prototype,["then"],"then-",o),a.on("then-start",function(t,e){this.promise=e,t[0]=s(t[0],"cb-",this),t[1]=s(t[1],"cb-",this)}),a.on("then-end",function(t,e,n){this.nextPromise=n;var r=this.promise;a.emit("propagate",[r,!0],n)}),a.on("cb-end",function(t,e,n){a.emit("propagate",[n,!0],this.nextPromise)}),a.on("propagate",function(t,e,n){this.getCtx&&!e||(this.getCtx=function(){if(t instanceof Promise)var e=a.context(t);return e&&e.getCtx?e.getCtx():this})}),r.toString=function(){return""+f})},{}],12:[function(t,e,n){var r=t("ee").get("raf"),o=t(24)(r),i="equestAnimationFrame";e.exports=r,o.inPlace(window,["r"+i,"mozR"+i,"webkitR"+i,"msR"+i],"raf-"),r.on("raf-start",function(t){t[0]=o(t[0],"fn-")})},{}],13:[function(t,e,n){function r(t,e,n){t[0]=a(t[0],"fn-",null,n)}function o(t,e,n){this.method=n,this.timerDuration=isNaN(t[1])?0:+t[1],t[0]=a(t[0],"fn-",this,n)}var i=t("ee").get("timer"),a=t(24)(i),s="setTimeout",c="setInterval",f="clearTimeout",u="-start",d="-";e.exports=i,a.inPlace(window,[s,"setImmediate"],s+d),a.inPlace(window,[c],c+d),a.inPlace(window,[f,"clearImmediate"],f+d),i.on(c+u,r),i.on(s+u,o)},{}],14:[function(t,e,n){function r(t,e){d.inPlace(e,["onreadystatechange"],"fn-",s)}function o(){var t=this,e=u.context(t);t.readyState>3&&!e.resolved&&(e.resolved=!0,u.emit("xhr-resolved",[],t)),d.inPlace(t,y,"fn-",s)}function i(t){g.push(t),h&&(x?x.then(a):v?v(a):(E=-E,O.data=E))}function a(){for(var t=0;t<g.length;t++)r([],g[t]);g.length&&(g=[])}function s(t,e){return e}function c(t,e){for(var n in t)e[n]=t[n];return e}t(6);var f=t("ee"),u=f.get("xhr"),d=t(24)(u),p=NREUM.o,l=p.XHR,h=p.MO,m=p.PR,v=p.SI,w="readystatechange",y=["onload","onerror","onabort","onloadstart","onloadend","onprogress","ontimeout"],g=[];e.exports=u;var b=window.XMLHttpRequest=function(t){var e=new l(t);try{u.emit("new-xhr",[e],e),e.addEventListener(w,o,!1)}catch(n){try{u.emit("internal-error",[n])}catch(r){}}return e};if(c(l,b),b.prototype=l.prototype,d.inPlace(b.prototype,["open","send"],"-xhr-",s),u.on("send-xhr-start",function(t,e){r(t,e),i(e)}),u.on("open-xhr-start",r),h){var x=m&&m.resolve();if(!v&&!m){var E=1,O=document.createTextNode(E);new h(a).observe(O,{characterData:!0})}}else f.on("fn-end",function(t){t[0]&&t[0].type===w||a()})},{}],15:[function(t,e,n){function r(t){var e=this.params,n=this.metrics;if(!this.ended){this.ended=!0;for(var r=0;r<d;r++)t.removeEventListener(u[r],this.listener,!1);if(!e.aborted){if(n.duration=a.now()-this.startTime,4===t.readyState){e.status=t.status;var i=o(t,this.lastSize);if(i&&(n.rxSize=i),this.sameOrigin){var c=t.getResponseHeader("X-NewRelic-App-Data");c&&(e.cat=c.split(", ").pop())}}else e.status=0;n.cbTime=this.cbTime,f.emit("xhr-done",[t],t),s("xhr",[e,n,this.startTime])}}}function o(t,e){var n=t.responseType;if("json"===n&&null!==e)return e;var r="arraybuffer"===n||"blob"===n||"json"===n?t.response:t.responseText;return h(r)}function i(t,e){var n=c(e),r=t.params;r.host=n.hostname+":"+n.port,r.pathname=n.pathname,t.sameOrigin=n.sameOrigin}var a=t("loader");if(a.xhrWrappable){var s=t("handle"),c=t(16),f=t("ee"),u=["load","error","abort","timeout"],d=u.length,p=t("id"),l=t(19),h=t(18),m=window.XMLHttpRequest;a.features.xhr=!0,t(14),f.on("new-xhr",function(t){var e=this;e.totalCbs=0,e.called=0,e.cbTime=0,e.end=r,e.ended=!1,e.xhrGuids={},e.lastSize=null,l&&(l>34||l<10)||window.opera||t.addEventListener("progress",function(t){e.lastSize=t.loaded},!1)}),f.on("open-xhr-start",function(t){this.params={method:t[0]},i(this,t[1]),this.metrics={}}),f.on("open-xhr-end",function(t,e){"loader_config"in NREUM&&"xpid"in NREUM.loader_config&&this.sameOrigin&&e.setRequestHeader("X-NewRelic-ID",NREUM.loader_config.xpid)}),f.on("send-xhr-start",function(t,e){var n=this.metrics,r=t[0],o=this;if(n&&r){var i=h(r);i&&(n.txSize=i)}this.startTime=a.now(),this.listener=function(t){try{"abort"===t.type&&(o.params.aborted=!0),("load"!==t.type||o.called===o.totalCbs&&(o.onloadCalled||"function"!=typeof e.onload))&&o.end(e)}catch(n){try{f.emit("internal-error",[n])}catch(r){}}};for(var s=0;s<d;s++)e.addEventListener(u[s],this.listener,!1)}),f.on("xhr-cb-time",function(t,e,n){this.cbTime+=t,e?this.onloadCalled=!0:this.called+=1,this.called!==this.totalCbs||!this.onloadCalled&&"function"==typeof n.onload||this.end(n)}),f.on("xhr-load-added",function(t,e){var n=""+p(t)+!!e;this.xhrGuids&&!this.xhrGuids[n]&&(this.xhrGuids[n]=!0,this.totalCbs+=1)}),f.on("xhr-load-removed",function(t,e){var n=""+p(t)+!!e;this.xhrGuids&&this.xhrGuids[n]&&(delete this.xhrGuids[n],this.totalCbs-=1)}),f.on("addEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-added",[t[1],t[2]],e)}),f.on("removeEventListener-end",function(t,e){e instanceof m&&"load"===t[0]&&f.emit("xhr-load-removed",[t[1],t[2]],e)}),f.on("fn-start",function(t,e,n){e instanceof m&&("onload"===n&&(this.onload=!0),("load"===(t[0]&&t[0].type)||this.onload)&&(this.xhrCbStart=a.now()))}),f.on("fn-end",function(t,e){this.xhrCbStart&&f.emit("xhr-cb-time",[a.now()-this.xhrCbStart,this.onload,e],e)})}},{}],16:[function(t,e,n){e.exports=function(t){var e=document.createElement("a"),n=window.location,r={};e.href=t,r.port=e.port;var o=e.href.split("://");!r.port&&o[1]&&(r.port=o[1].split("/")[0].split("@").pop().split(":")[1]),r.port&&"0"!==r.port||(r.port="https"===o[0]?"443":"80"),r.hostname=e.hostname||n.hostname,r.pathname=e.pathname,r.protocol=o[0],"/"!==r.pathname.charAt(0)&&(r.pathname="/"+r.pathname);var i=!e.protocol||":"===e.protocol||e.protocol===n.protocol,a=e.hostname===document.domain&&e.port===n.port;return r.sameOrigin=i&&(!e.hostname||a),r}},{}],17:[function(t,e,n){function r(){}function o(t,e,n){return function(){return i(t,[f.now()].concat(s(arguments)),e?null:this,n),e?void 0:this}}var i=t("handle"),a=t(21),s=t(22),c=t("ee").get("tracer"),f=t("loader"),u=NREUM;"undefined"==typeof window.newrelic&&(newrelic=u);var d=["setPageViewName","setCustomAttribute","setErrorHandler","finished","addToTrace","inlineHit","addRelease"],p="api-",l=p+"ixn-";a(d,function(t,e){u[e]=o(p+e,!0,"api")}),u.addPageAction=o(p+"addPageAction",!0),u.setCurrentRouteName=o(p+"routeName",!0),e.exports=newrelic,u.interaction=function(){return(new r).get()};var h=r.prototype={createTracer:function(t,e){var n={},r=this,o="function"==typeof e;return i(l+"tracer",[f.now(),t,n],r),function(){if(c.emit((o?"":"no-")+"fn-start",[f.now(),r,o],n),o)try{return e.apply(this,arguments)}catch(t){throw c.emit("fn-err",[arguments,this,t],n),t}finally{c.emit("fn-end",[f.now()],n)}}}};a("actionText,setName,setAttribute,save,ignore,onEnd,getContext,end,get".split(","),function(t,e){h[e]=o(l+e)}),newrelic.noticeError=function(t){"string"==typeof t&&(t=new Error(t)),i("err",[t,f.now()])}},{}],18:[function(t,e,n){e.exports=function(t){if("string"==typeof t&&t.length)return t.length;if("object"==typeof t){if("undefined"!=typeof ArrayBuffer&&t instanceof ArrayBuffer&&t.byteLength)return t.byteLength;if("undefined"!=typeof Blob&&t instanceof Blob&&t.size)return t.size;if(!("undefined"!=typeof FormData&&t instanceof FormData))try{return JSON.stringify(t).length}catch(e){return}}}},{}],19:[function(t,e,n){var r=0,o=navigator.userAgent.match(/Firefox[\/\s](\d+\.\d+)/);o&&(r=+o[1]),e.exports=r},{}],20:[function(t,e,n){function r(t,e){if(!o)return!1;if(t!==o)return!1;if(!e)return!0;if(!i)return!1;for(var n=i.split("."),r=e.split("."),a=0;a<r.length;a++)if(r[a]!==n[a])return!1;return!0}var o=null,i=null,a=/Version\/(\S+)\s+Safari/;if(navigator.userAgent){var s=navigator.userAgent,c=s.match(a);c&&s.indexOf("Chrome")===-1&&s.indexOf("Chromium")===-1&&(o="Safari",i=c[1])}e.exports={agent:o,version:i,match:r}},{}],21:[function(t,e,n){function r(t,e){var n=[],r="",i=0;for(r in t)o.call(t,r)&&(n[i]=e(r,t[r]),i+=1);return n}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],22:[function(t,e,n){function r(t,e,n){e||(e=0),"undefined"==typeof n&&(n=t?t.length:0);for(var r=-1,o=n-e||0,i=Array(o<0?0:o);++r<o;)i[r]=t[e+r];return i}e.exports=r},{}],23:[function(t,e,n){e.exports={exists:"undefined"!=typeof window.performance&&window.performance.timing&&"undefined"!=typeof window.performance.timing.navigationStart}},{}],24:[function(t,e,n){function r(t){return!(t&&t instanceof Function&&t.apply&&!t[a])}var o=t("ee"),i=t(22),a="nr@original",s=Object.prototype.hasOwnProperty,c=!1;e.exports=function(t,e){function n(t,e,n,o){function nrWrapper(){var r,a,s,c;try{a=this,r=i(arguments),s="function"==typeof n?n(r,a):n||{}}catch(f){p([f,"",[r,a,o],s])}u(e+"start",[r,a,o],s);try{return c=t.apply(a,r)}catch(d){throw u(e+"err",[r,a,d],s),d}finally{u(e+"end",[r,a,c],s)}}return r(t)?t:(e||(e=""),nrWrapper[a]=t,d(t,nrWrapper),nrWrapper)}function f(t,e,o,i){o||(o="");var a,s,c,f="-"===o.charAt(0);for(c=0;c<e.length;c++)s=e[c],a=t[s],r(a)||(t[s]=n(a,f?s+o:o,i,s))}function u(n,r,o){if(!c||e){var i=c;c=!0;try{t.emit(n,r,o,e)}catch(a){p([a,n,r,o])}c=i}}function d(t,e){if(Object.defineProperty&&Object.keys)try{var n=Object.keys(t);return n.forEach(function(n){Object.defineProperty(e,n,{get:function(){return t[n]},set:function(e){return t[n]=e,e}})}),e}catch(r){p([r])}for(var o in t)s.call(t,o)&&(e[o]=t[o]);return e}function p(e){try{t.emit("internal-error",e)}catch(n){}}return t||(t=o),n.inPlace=f,n.flag=a,n}},{}],ee:[function(t,e,n){function r(){}function o(t){function e(t){return t&&t instanceof r?t:t?c(t,s,i):i()}function n(n,r,o,i){if(!p.aborted||i){t&&t(n,r,o);for(var a=e(o),s=m(n),c=s.length,f=0;f<c;f++)s[f].apply(a,r);var d=u[g[n]];return d&&d.push([b,n,r,a]),a}}function l(t,e){y[t]=m(t).concat(e)}function h(t,e){var n=y[t];if(n)for(var r=0;r<n.length;r++)n[r]===e&&n.splice(r,1)}function m(t){return y[t]||[]}function v(t){return d[t]=d[t]||o(n)}function w(t,e){f(t,function(t,n){e=e||"feature",g[n]=e,e in u||(u[e]=[])})}var y={},g={},b={on:l,addEventListener:l,removeEventListener:h,emit:n,get:v,listeners:m,context:e,buffer:w,abort:a,aborted:!1};return b}function i(){return new r}function a(){(u.api||u.feature)&&(p.aborted=!0,u=p.backlog={})}var s="nr@context",c=t("gos"),f=t(21),u={},d={},p=e.exports=o();p.backlog=u},{}],gos:[function(t,e,n){function r(t,e,n){if(o.call(t,e))return t[e];var r=n();if(Object.defineProperty&&Object.keys)try{return Object.defineProperty(t,e,{value:r,writable:!0,enumerable:!1}),r}catch(i){}return t[e]=r,r}var o=Object.prototype.hasOwnProperty;e.exports=r},{}],handle:[function(t,e,n){function r(t,e,n,r){o.buffer([t],r),o.emit(t,e,n)}var o=t("ee").get("handle");e.exports=r,r.ee=o},{}],id:[function(t,e,n){function r(t){var e=typeof t;return!t||"object"!==e&&"function"!==e?-1:t===window?0:a(t,i,function(){return o++})}var o=1,i="nr@id",a=t("gos");e.exports=r},{}],loader:[function(t,e,n){function r(){if(!E++){var t=x.info=NREUM.info,e=l.getElementsByTagName("script")[0];if(setTimeout(u.abort,3e4),!(t&&t.licenseKey&&t.applicationID&&e))return u.abort();f(g,function(e,n){t[e]||(t[e]=n)}),c("mark",["onload",a()+x.offset],null,"api");var n=l.createElement("script");n.src="https://"+t.agent,e.parentNode.insertBefore(n,e)}}function o(){"complete"===l.readyState&&i()}function i(){c("mark",["domContent",a()+x.offset],null,"api")}function a(){return O.exists&&performance.now?Math.round(performance.now()):(s=Math.max((new Date).getTime(),s))-x.offset}var s=(new Date).getTime(),c=t("handle"),f=t(21),u=t("ee"),d=t(20),p=window,l=p.document,h="addEventListener",m="attachEvent",v=p.XMLHttpRequest,w=v&&v.prototype;NREUM.o={ST:setTimeout,SI:p.setImmediate,CT:clearTimeout,XHR:v,REQ:p.Request,EV:p.Event,PR:p.Promise,MO:p.MutationObserver};var y=""+location,g={beacon:"bam.nr-data.net",errorBeacon:"bam.nr-data.net",agent:"js-agent.newrelic.com/nr-spa-1099.min.js"},b=v&&w&&w[h]&&!/CriOS/.test(navigator.userAgent),x=e.exports={offset:s,now:a,origin:y,features:{},xhrWrappable:b,userAgent:d};t(17),l[h]?(l[h]("DOMContentLoaded",i,!1),p[h]("load",r,!1)):(l[m]("onreadystatechange",o),p[m]("onload",r)),c("mark",["firstbyte",s],null,"api");var E=0,O=t(23)},{}]},{},["loader",2,15,5,3,4]);</script>
+
+		<title>Manchester October Weather 2018 - AccuWeather Forecast for Greater Manchester United Kingdom</title>
+<meta name="description" content="Get Manchester, United Kingdom typical October Weather including average and record temperatures from AccuWeather.com">
+<link rel="canonical" href="https://www.accuweather.com/en/gb/manchester/m15-6/october-weather/329260">
+<meta name="keywords" content="Manchester United Kingdom, October weather, average October temperatures">
+<link rel="alternate" media="only screen and (max-width: 640px)" href="https://m.accuweather.com/en/gb/manchester/m15-6/october-weather/329260">
+<link rel="alternate" media="handheld" href="https://m.accuweather.com/en/gb/manchester/m15-6/october-weather/329260">
+
+	<link rel="stylesheet" href="2018_10_Belle%20Vue_files/slate.css" type="text/css" media="all">
+	<meta name="viewport" content="width=988">
+
+
+
+	<link rel="shortcut icon" href="https://vortex.accuweather.com/adc2010/images/favicons/awx-2013-master.ico">
+	<link href="https://www.googletagservices.com/" rel="preconnect" crossorigin="">
+	<link href="https://securepubads.g.doubleclick.net/" rel="preconnect" crossorigin="">
+	<link href="https://www.googletagmanager.com/" rel="preconnect" crossorigin="">
+	<link href="https://sirocco.accuweather.com/" rel="preconnect" crossorigin="">
+	<link href="https://contributor.google.com/" rel="preconnect" crossorigin="">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="msapplication-config" content="none">
+
+		<style type="text/css">
+.flag-GB { background-image: url(https://vortex.accuweather.com/adc2010/images/flags/GB.png) !important;}
+.flag-US { background-image: url(https://vortex.accuweather.com/adc2010/images/flags/US.png) !important;}
+.flag-CN { background-image: url(https://vortex.accuweather.com/adc2010/images/flags/CN.png) !important;}
+		</style>
+
+
+
+<meta property="fb:app_id" content="132437483467956">
+<meta property="og:site_name" content="AccuWeather">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@breakingweather">
+<meta name="twitter:image:src" content="https://vortex.accuweather.com/adc2010/images/awx-orange-sun-logo-180x180.png">
+<meta name="twitter:image:width" content="180">
+<meta name="twitter:image:height" content="180">
+
+
+<meta property="og:image" content="https://vortex.accuweather.com/adc2010/images/awx-orange-sun-logo-650x315.png">
+<meta property="og:type" content="website">
+
+
+	<script type="text/javascript">
+
+var trafficFlag = false;
+
+    //all things being equal...
+    var amobeeParams = {
+        p:{
+            version:"",
+            adsource:"",
+            guid:"",
+            ira:"",
+            skymotion:"",
+            tzo:"",
+            lat:"",
+            long:"",
+            LotameID:"",
+            kw:"",
+            adtestkey:""
+        }
+    }
+
+    //ATP Config
+    var atp_config = {
+        AdPlatform: "GPT",
+        IsDebug: false,
+        PrebidTimeout: 300,
+        TargetingOverrides:
+        {
+        },
+        Criteo :
+        {
+            crtg_nid:"3852",
+            crtg_cookiename:"crtg_accwea",
+            crtg_varname:"crtg_content"
+        },
+        ForecastDays: 2,        //number of forecast days to send
+        //TargetingIndicies: ["migraine", "flu","cold","dust","asthma","pollen"]
+        //TargetingIndicies: []   //no indicies
+        TargetingIndicies: undefined //all indicies
+        //TargetingIndicies: ["cold", "flu"] // cold and flu indicies
+    }
+    var TILE_SIZES = {
+        ATFPENCIL: [[980, 30]],
+        ATF728: [[728, 90], [970, 250], [750, 100], [750, 200], [750, 300], [930, 180], [950, 90], [980, 90], [980, 120], [970, 90], [960, 90]],
+        ATF300: [[300, 250], [336, 280], [300, 1050], [250, 360], [240, 400]],
+        ATF300_NONPROD: [[300, 600]],
+        ATF160: [[120, 60], [120, 240]],
+        BTF160: [[120, 60], [120, 240]],
+        BTF300: [[300, 250], [300, 251], [250, 360], [240, 400], [300,600], [336,280]],
+        BTF300_NONPROD: [[300, 601]],
+        BTF728: [[728, 90], [728, 91], [750, 100], [950, 90], [980, 90], [970, 90], [960, 90]],
+        ATFVIDEOCOMP300: [[300, 250]],
+        ATF_TRR:[[160, 600], [120, 600]],
+        BTF_TRR:[[160, 600]]
+    };
+    var pageWx = {
+        nwsalrt: 'TODO',
+        alerts: { source: '', category: '', typeid: '' },
+        isday: '1',
+        lfs: { day: '', category: '', severity: '' },
+        hdln: '',
+        ut: '1',
+cu: {
+wx : '6',
+hi : '19',
+wd : '34',
+hd : '70',
+uv : '0',
+lo : '19',
+txt : 'Mostly cloudy',
+temp_f : '67',
+rf : '17'
+},
+fc: [
+{wx:'',hi:'',lo:'',rdx:'',
+dp:{lp:'0',r:'0',s:'0',i:'0'},np:{lp:'0',r:'0',s:'0',i:'0'}},
+{wx:'',hi:'',lo:'',rdx:'',
+dp:{lp:'0',r:'0',s:'0',i:'0'},np:{lp:'0',r:'0',s:'0',i:'0'}},
+{wx:'',hi:'',lo:'',rdx:'',
+dp:{lp:'0',r:'0',s:'0',i:'0'},np:{lp:'0',r:'0',s:'0',i:'0'}},
+{wx:'',hi:'',lo:'',rdx:'',
+dp:{lp:'0',r:'0',s:'0',i:'0'},np:{lp:'0',r:'0',s:'0',i:'0'}},
+{wx:'',hi:'',lo:'',rdx:'',
+dp:{lp:'0',r:'0',s:'0',i:'0'},np:{lp:'0',r:'0',s:'0',i:'0'}},
+],
+        ix: {arthritis:'3',asthma:'2',bbq:'1',cold:'2',flu:'',lawnmowing:'2',migraine:'1',outdoor:'1',schoolclosing:'1',sinus:'1',soil:'',field:'',beach:'1',biking:'2',concert:'',construction:'1',composting:'3',dust:'1',fishing:'2',fueleconomy:'3',golf:'1',heart:'4',hiking:'2',hvac:'1',mosq:'2',sailing:'3',running:'2',schoolbus:'5',skiing:'1',star:'1',frizz:'2',pollen:'1',uvindex:'1',hunting:'1', driving:'3', travel:'5', airq:'1', pgrass:'1', pmold:'1', pweed:'1', ptree:'1', copd:'1' }
+    };
+	</script>
+
+	
+
+
+
+	<script type="text/javascript">
+    //define our user bucket settings from config
+    var userLevelSettings = {
+        engagedUserSessionPageViews: 9,
+        ambassadorSessions: 5,
+        engagedAmbassadorTotalPageViews: 18
+        };
+
+    var bingMapsKey = 'AoznCIbkg0lP0cZOHAPwZJMxL_Qqm9xrHj4T1BzmC2ACRGZLWHyOJIDTSakVRzT7';
+
+    var gaKey = 'UA-20804842-1';
+
+        var awxIsSlateSite = true;
+
+        var adcRefreshBag = 'Slate';
+	</script>
+
+		<script type="text/javascript">
+    var atp_queue = atp_queue ? atp_queue : [];
+    var pbjs = pbjs || {};
+    pbjs.que = pbjs.que || [];
+
+    var apgUserInfoObj = {
+        country: 'GB',
+        city: 'Manchester',
+        state: 'GTM',
+        metro: '',
+        zip: 'M15 6',
+        fcode: 'EGSCK',
+        partner: 'accuweather',
+        sessionPartner: 'accuweather',
+        referer: '',
+        lang: 'en-us',
+        langid: '1',
+        lat: '53.472',
+        lon: '-2.239',
+        dma: '',
+        ip: '80.174.26.69',
+        ipHash: 'e447092f57485285d257c09857ca783e',
+        ipLocation: 'gb/manchester/m15-6/',
+        ipCountry: 'es',
+        bot: false,
+        sessionViews: 1,
+        //visitFlow: '',
+        geo_dma: '',
+        geo_city: 'Madrid',
+        geo_state: 'MD',
+        geo_zip: '',
+        geo_country: 'ES',
+        edge_country:'es',
+        edge_eea:true,
+        gmtOffset: '1',
+        locationKey: '329260',
+        canonicalLocationKey: '329260',
+        weatherDate:'20181013',
+        callRender:'1'
+    };
+
+var aadCustomKeyValuePairs = {};
+		</script>
+
+	<script type="text/javascript">
+    var AW_EXP_ID = null;
+    var AW_EXP_VAR = null;
+        var apgConfigObj = {};
+        apgConfigObj.showLifestyle = true;
+        apgConfigObj.showPreviousVisitedLifestyle = true;
+        apgConfigObj.prompts = {};
+    apgConfigObj.useBrightcoveVideoWall = true;
+    apgConfigObj.openBrightCoveVideoWallInNewTab = true;
+    apgConfigObj.useLotame = true;
+
+        var acm_RecentLocationsCarousel= new Array();
+
+acm_RecentLocationsCarousel.push({name:"Manchester, United Kingdom", daypart:'day', href:'/en/gb/manchester/m15-6/weather-forecast/329260', icon:'i-6-l', bg:'c', temp:'20',  realfeel:'17',  text:"Mostly cloudy"});
+acm_RecentLocationsCarousel.push({name:"New York, NY", daypart:'day', href:'/en/us/new-york-ny/10017/weather-forecast/349727', icon:'i-7-l', bg:'c', temp:'11',  realfeel:'9',  text:"Cloudy"});
+acm_RecentLocationsCarousel.push({name:"Miami, FL", daypart:'day', href:'/en/us/miami-fl/33128/weather-forecast/347936', icon:'i-3-l', bg:'su', temp:'30',  realfeel:'37',  text:"Partly sunny"});
+acm_RecentLocationsCarousel.push({name:"Los Angeles, CA", daypart:'day', href:'/en/us/los-angeles-ca/90012/weather-forecast/347625', icon:'i-7-l', bg:'c', temp:'19',  realfeel:'19',  text:"Cloudy"});
+
+	</script>
+
+				<script type="text/javascript">
+                var acm_InterestLayers = [
+{group:'1.1', name:'Cold & Flu', code:'10302', icon: 'cold-flu', href:'https://www.accuweather.com/en/gb/manchester/m15-6/cold-flu-weather/329260', alarm:[3,4,5], curCategory:'Neutral', curStatusRed:false},
+{group:'1.1', name:'Allergies', code:'10201', icon: 'allergies', href:'https://www.accuweather.com/en/gb/manchester/m15-6/allergies-weather/329260', alarm:[3,4,5], curCategory:'Low', curStatusRed:false},
+{group:'1.1', name:'Respiratory', code:'10301', icon: 'asthma', href:'https://www.accuweather.com/en/gb/manchester/m15-6/asthma-weather/329260', alarm:[3,4,5], curCategory:'Neutral', curStatusRed:false},
+{group:'1.1', name:'Arthritis', code:'10102', icon: 'arthritis', href:'https://www.accuweather.com/en/gb/manchester/m15-6/arthritis-weather/329260', alarm:[3,4,5], curCategory:'At Risk', curStatusRed:true},
+{group:'1.1', name:'Migraine', code:'10101', icon: 'migraine', href:'https://www.accuweather.com/en/gb/manchester/m15-6/migraine-weather/329260', alarm:[3,4,5], curCategory:'Beneficial', curStatusRed:false},
+{group:'1.1', name:'Sinus', code:'10103', icon: 'sinus', href:'https://www.accuweather.com/en/gb/manchester/m15-6/sinus-weather/329260', alarm:[3,4,5], curCategory:'Beneficial', curStatusRed:false},
+{group:'1.2', name:'Travel', code:'20501', icon: 'air-travel', href:'https://www.accuweather.com/en/gb/manchester/m15-6/air-travel-weather/329260', alarm:[1], curCategory:'Very Unlikely', curStatusRed:false},
+{group:'1.2', name:'Astronomy', code:'40501', icon: 'astronomy', href:'https://www.accuweather.com/en/gb/manchester/m15-6/astronomy-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'1.2', name:'Events', code:'41001', icon: 'events', href:'https://www.accuweather.com/en/gb/manchester/m15-6/events-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'2.1', name:'Driving', code:'20401', icon: 'driving', href:'https://www.accuweather.com/en/gb/manchester/m15-6/driving-weather/329260', alarm:[1], curCategory:'Good', curStatusRed:false},
+{group:'2.1', name:'School Day', code:'30401', icon: 'school-day', href:'https://www.accuweather.com/en/gb/manchester/m15-6/school-day-weather/329260', alarm:[1], curCategory:'Excellent', curStatusRed:false},
+{group:'2.1', name:'Hair Day', code:'30301', icon: 'hair-day', href:'https://www.accuweather.com/en/gb/manchester/m15-6/hair-day-weather/329260', alarm:[3,4,5], curCategory:'Watch', curStatusRed:false},
+{group:'2.1', name:'Snow Days', code:'30402', icon: 'snow-day', href:'https://www.accuweather.com/en/gb/manchester/m15-6/snow-day-weather/329260', alarm:[4,5], curCategory:'Very Unlikely', curStatusRed:false},
+{group:'2.2', name:'D.I.Y.', code:'30101', icon: 'diy', href:'https://www.accuweather.com/en/gb/manchester/m15-6/diy-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'2.2', name:'Lawn & Garden', code:'30201', icon: 'lawn-garden', href:'https://www.accuweather.com/en/gb/manchester/m15-6/lawn-garden-weather/329260', alarm:[1], curCategory:'Fair', curStatusRed:false},
+{group:'2.2', name:'Home Energy', code:'30501', icon: 'home-energy', href:'https://www.accuweather.com/en/gb/manchester/m15-6/home-energy-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'2.2', name:'Entertaining', code:'40102', icon: 'outdoor-entertaining', href:'https://www.accuweather.com/en/gb/manchester/m15-6/outdoor-entertaining-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'2.2', name:'Mosquito', code:'40103', icon: 'mosquito-activity', href:'https://www.accuweather.com/en/gb/manchester/m15-6/mosquito-activity-weather/329260', alarm:[1], curCategory:'Moderate', curStatusRed:false},
+{group:'3.1', name:'Golf', code:'40201', icon: 'golf', href:'https://www.accuweather.com/en/gb/manchester/m15-6/golf-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'3.1', name:'Ski', code:'40301', icon: 'ski', href:'https://www.accuweather.com/en/gb/manchester/m15-6/ski-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'3.1', name:'Hunting', code:'40601', icon: 'hunting', href:'https://www.accuweather.com/en/gb/manchester/m15-6/hunting-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'3.1', name:'Fishing', code:'40602', icon: 'fishing', href:'https://www.accuweather.com/en/gb/manchester/m15-6/fishing-weather/329260', alarm:[1], curCategory:'Fair', curStatusRed:false},
+{group:'3.1', name:'Running', code:'40901', icon: 'running', href:'https://www.accuweather.com/en/gb/manchester/m15-6/running-weather/329260', alarm:[1], curCategory:'Fair', curStatusRed:false},
+{group:'3.1', name:'Hiking', code:'40903', icon: 'hiking', href:'https://www.accuweather.com/en/gb/manchester/m15-6/hiking-weather/329260', alarm:[1], curCategory:'Fair', curStatusRed:false},
+{group:'3.1', name:'Biking', code:'40902', icon: 'biking', href:'https://www.accuweather.com/en/gb/manchester/m15-6/biking-weather/329260', alarm:[1], curCategory:'Fair', curStatusRed:false},
+{group:'3.1', name:'Sun & Sand', code:'40401', icon: 'sun-sand', href:'https://www.accuweather.com/en/gb/manchester/m15-6/sun-sand-weather/329260', alarm:[1], curCategory:'Poor', curStatusRed:true},
+{group:'3.1', name:'Sailing', code:'40402', icon: 'sailing', href:'https://www.accuweather.com/en/gb/manchester/m15-6/sailing-weather/329260', alarm:[1], curCategory:'Good', curStatusRed:false}];
+				</script>
+
+
+
+	<script type="text/javascript">
+        if (apgConfigObj.minutecast) {
+            apgConfigObj.minutecast.contentAmount = '1';
+        }
+	</script>
+
+	
+<script type="text/javascript">
+    var apgPageInfoObj = {
+        ad_site: 'world', section: 'forecast', ad_section: 'forecast', page: 'forecast-month', ad_page: 'month', page_code: '', crumb_trail: ["Forecast", "Month", "Calendar", "GB", "Greater Manchester", "Manchester"], pageType: 'forecast', pageExt: '', adPos: { atf728: true, atfPencil: true, atf300: false, atf160: true, btf728: true, btf300: false, popunder: true, prestitial: true, links: false, ptoSkin: true, tiles: [
+{
+  collectionid: "top",
+  divid: "top",
+  atf: true,
+  companion: false,
+  name: "Tile1",
+  enabled: true,
+  sizes: {
+    ATF728:true,
+    ATFPENCIL:true
+  },
+  bidders: [
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336565"
+    }
+  }
+,
+  {
+    bidder:"pubmatic",
+    params: {
+      "publisherId":"34576",
+      "adSlot":"{AdUnit}@728x90"
+    }
+  }
+  ]
+},
+{
+  collectionid: "top_right",
+  divid: "top_right",
+  atf: true,
+  companion: false,
+  name: "Tile2",
+  enabled: false,
+  sizes: {
+    ATF300:true,
+    ATF300_NONPROD:true,
+    ATF160:false
+  },
+  bidders: [
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336566"
+    }
+  }
+,
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336567"
+    }
+  }
+,
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336568"
+    }
+  }
+,
+  {
+    bidder:"pubmatic",
+    params: {
+      "publisherId":"34576",
+      "adSlot":"{AdUnit}@300x600"
+    }
+  }
+,
+  {
+    bidder:"pubmatic",
+    params: {
+      "publisherId":"34576",
+      "adSlot":"{AdUnit}@300x250"
+    }
+  }
+  ]
+},
+{
+  collectionid: "bottom_right",
+  divid: "bottom_right",
+  atf: false,
+  companion: false,
+  name: "Tile3",
+  enabled: false,
+  sizes: {
+    BTF300:true,
+    BTF300_NONPROD:true
+  },
+  bidders: [
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336566"
+    }
+  }
+,
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336567"
+    }
+  }
+,
+  {
+    bidder:"sovrn",
+    params: {
+      "tagid":"336568"
+    }
+  }
+,
+  {
+    bidder:"pubmatic",
+    params: {
+      "publisherId":"34576",
+      "adSlot":"{AdUnit}@300x600"
+    }
+  }
+,
+  {
+    bidder:"pubmatic",
+    params: {
+      "publisherId":"34576",
+      "adSlot":"{AdUnit}@300x250"
+    }
+  }
+  ]
+},
+{
+  collectionid: "bottom",
+  divid: "bottom",
+  atf: false,
+  companion: false,
+  name: "Tile4",
+  enabled: true,
+  sizes: {
+    BTF728:true
+  },
+  bidders: [
+  {
+    bidder:"pubmatic",
+    params: {
+      "publisherId":"34576",
+      "adSlot":"{AdUnit}@728x90"
+    }
+  }
+  ]
+},
+{
+  collectionid: "thin_top_right",
+  divid: "top_right",
+  atf: true,
+  companion: false,
+  name: "Tile5",
+  enabled: true,
+  sizes: {
+    ATF300:false,
+    ATF300_NONPROD:false,
+    ATF160:true,
+    ATF_TRR:true
+  },
+  bidders: [
+  ]
+},
+{
+  collectionid: "thin_bottom_right",
+  divid: "bottom_right",
+  atf: false,
+  companion: false,
+  name: "Tile6",
+  enabled: true,
+  sizes: {
+    ATF160:true,
+    BTF_TRR:true
+  },
+  bidders: [
+  ]
+}]
+ },
+        adUnit: { platform: "web", country: "gb", section: "weather", template: "month" }
+    };
+</script>
+
+
+<script type="text/javascript">
+    var climoMonth = "10";
+    var climoYear = "2018";
+
+    function setNewFMYear(theyear) {
+        window.location.href = "https://www.accuweather.com/en/gb/manchester/m15-6/month/329260?monyr=" + climoMonth + "/01/" + theyear;
+    }
+    function setNewFMMonth(themonth) {
+        window.location.href = "https://www.accuweather.com/en/gb/manchester/m15-6/month/329260?monyr=" + themonth + "/01/" + climoYear;
+    }
+</script> 
+
+
+			<script src="2018_10_Belle%20Vue_files/gpt.js"></script><script id="gpt-impl-0.07885854399024994" src="2018_10_Belle%20Vue_files/pubads_impl_264.js"></script><link rel="preload" href="2018_10_Belle%20Vue_files/integrator.js" as="script"><script src="2018_10_Belle%20Vue_files/integrator.js"></script><script>processGoogleTokenSync({"newToken":"FBS"},5);</script>
+	<script>
+		(function (w, d, s, l, i) {
+			w[l] = w[l] || []; w[l].push(
+				{ 'gtm.start': new Date().getTime(), event: 'gtm.js' }
+			); var f = d.getElementsByTagName(s)[0],
+				j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+					'//www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+		})(window, document, 'script', 'dataLayer', 'GTM-P7HTGM');
+	</script>
+
+	<script src="2018_10_Belle%20Vue_files/loader.js"></script>
+	<script>(function () { var c = function (a) { var b = typeof a; if ("object" == b) if (a) { if (a instanceof Array) return "array"; if (a instanceof Object) return b; var d = Object.prototype.toString.call(a); if ("[object Window]" == d) return "object"; if ("[object Array]" == d || "number" == typeof a.length && "undefined" != typeof a.splice && "undefined" != typeof a.propertyIsEnumerable && !a.propertyIsEnumerable("splice")) return "array"; if ("[object Function]" == d || "undefined" != typeof a.call && "undefined" != typeof a.propertyIsEnumerable && !a.propertyIsEnumerable("call")) return "function" } else return "null"; else if ("function" == b && "undefined" == typeof a.call) return "object"; return b }; var h; a: { var k = this.navigator; if (k) { var l = k.userAgent; if (l) { h = l; break a } } h = "" } var m = function (a) { return -1 != h.indexOf(a) }; var n = m("Opera"), p = -1 != h.toLowerCase().indexOf("webkit") && !m("Edge"); var q = m("Safari") && !((m("Chrome") || m("CriOS")) && !m("Edge") || m("Coast") || m("Opera") || m("Edge") || m("Silk") || m("Android")) && !(m("iPhone") && !m("iPod") && !m("iPad") || m("iPad") || m("iPod")); var r = null, aa = m("Gecko") && !(-1 != h.toLowerCase().indexOf("webkit") && !m("Edge")) && !(m("Trident") || m("MSIE")) && !m("Edge") || p && !q || n || "function" == typeof this.btoa; var t = function (a) { "function" == c(a) && a() }, u = function (a, b, d) { a.addEventListener ? a.addEventListener(b, d) : a.attachEvent && a.attachEvent("on" + b, d) }, v = function (a, b) { var d = a.indexOf(b); return 0 <= d ? parseInt(a.substring(d + b.length, a.indexOf(".", d)), 10) : -1 }, w = -2; var ba = function (a, b, d, g) { var e = new Date; u(b, "load", function () { if (-2 === w) { var f = window.navigator.userAgent; var I = v(f, "MSIE "); w = 0 <= I ? I : 0 <= f.indexOf("Trident/") ? 11 : v(f, "Edge/") } f = w; -1 !== f && 11 >= f && a.a[b.src] >= e ? t(g) : t(d) }); u(b, "error", function () { t(g) }) }, x = function (a, b, d, g) { var e = document.createElement("script"); ba(a, e, function () { t(d); e && e.parentNode && e.parentNode.removeChild(e) }, function () { t(g); e && e.parentNode && e.parentNode.removeChild(e) }); e.async = !0; e.src = b; document.getElementsByTagName("head")[0].appendChild(e) }, y = function (a, b, d, g, e, f) { 0 >= e ? t(g) : x(a, b, d, function () { f ? window.setTimeout(function () { y(a, b, d, g, e - 1, f) }, f) : y(a, b, d, g, e - 1) }) }; var z = new function () { this.a = {} }, B = function () { if (!/Mobi/i.test(navigator.userAgent) && !window["turnoff66691c7eb3b172d6"]) { t(window.stop); document.body && document.body.parentNode.removeChild(document.body); document.getElementsByTagName("HTML")[0].appendChild(document.createElement("BODY")); var a = document.createElement("IFRAME"); a.src = "https:\/\/p.w.m80fg.com\/s\/err?w\x3d66691c7eb3b172d6"; a.style.width = "100%"; a.style.height = "100%"; a.style.background = "white"; a.style.border = "none"; a.style.zIndex = 2147483647; document.body.appendChild(a); a = document.createElement("STYLE"); a.innerText = "body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }"; document.head.appendChild(a); a = "https:\/\/p.d.e0mn.com\/v4\/AAAACgAAhDda6R-g4Pn495b2Ds-pdAAA_XYlDxg0043J3Fl17lTRKxp8GbQIZE9Vj6RHpbqKGHLcMaJPoY4tlU?ls=" + encodeURIComponent(JSON.stringify(A)); x(z, a, null, null) } }, A = [0, 0], C = function (a, b) { A[a] = b; 3 !== A[1] && (2 !== A[0] || 2 !== A[1]) || /Mobi/i.test(navigator.userAgent) || (window["turnoff66691c7eb3b172d6"] = !1, x(z, "https:\/\/www.gstatic.com\/0emm\/status\/b\/66691c7eb3b172d6.js", B, B)) }; window["mjuxow"] = B; y(z, "https:\/\/p.d.e0mn.com\/v4\/AAAACgAAhDda6R-g4Pn495b2Ds-pdAAA_DIIHLA0086vAXAvAeewKdNb4x1UeXvoYig9GNd1JutUUfM3UT1SPBbJ6yTLG9s8zBK4YP6Pb_KNLyutVJRhLMNuPfz7AqOuQ-PeW9g7PqXS9D3fSmeh9x", function () { window["hDda6Rg4Pk"] || C(1, 3) }, function () { C(1, 2) }, 3, 450); var ca = y, D, E = ("&" + window.location.search.substring(1)).split("&gmefkevpis="); D = 1 < E.length ? "?gmefkevpis=" + E[1].split("&")[0] : ""; var F = Date.now().toString(), G; if (aa) G = this.btoa(F); else { for (var H = [], J = 0, K = 0; K < F.length; K++) { var L = F.charCodeAt(K); 255 < L && (H[J++] = L & 255, L >>= 8); H[J++] = L } if (!r) { r = {}; for (var M = 0; 65 > M; M++)r[M] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(M) } for (var N = r, O = [], P = 0; P < H.length; P += 3) { var Q = H[P], R = P + 1 < H.length, S = R ? H[P + 1] : 0, T = P + 2 < H.length, U = T ? H[P + 2] : 0, da = Q >> 2, ea = (Q & 3) << 4 | S >> 4, V = (S & 15) << 2 | U >> 6, W = U & 63; T || (W = 64, R || (V = 64)); O.push(N[da], N[ea], N[V], N[W]) } G = O.join("") } for (var fa = "https:\/\/p.d.e0mn.com\/v4\/AAAACgAAhDda6R-g4Pn495b2Ds-pdAAA_8yg24Q0107kyIL9W1Pupys0_M_WdtnfL5YSxoZe95DHVuAq3CrxpxICzMLJiSMxb4ysspDvQjn7aDZKcGzBMnWg9FUnPAEfSKS8BCeOEAh_rz9uy0WzMs" + (G + "|"), X = ("; " + document.cookie).split("; nzcynj="), Y = [], Z = 1; Z < X.length; Z++)Y.push(X[Z].split(";")[0]); ca(z, fa + Y.join(",") + D, null, function () { C(0, 2) }, 3, 550); }).call(this);</script>
+	<script>
+		window['ntixyt'] = window['ntixyt'] || [];
+		window['ntixyt'].push(function (api) { api.enable(); });
+	</script>
+
+
+
+	<script type="text/javascript" src="2018_10_Belle%20Vue_files/bundle-refactor-20180816-1001.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/rta.js" async=""></script>
+
+
+
+
+
+	
+
+
+<link rel="stylesheet" type="text/css" href="2018_10_Belle%20Vue_files/html5-skin.css"><link rel="stylesheet" type="text/css" href="2018_10_Belle%20Vue_files/All.css"><script type="text/javascript" src="2018_10_Belle%20Vue_files/slick.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/core.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/iris.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/bit_wrapper.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/main_html5.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/google_ima.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/sp.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/googleAnalytics.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/html5-skin.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/playlists.js"></script><script type="text/javascript" src="2018_10_Belle%20Vue_files/main.js"></script>
+
+
+	<script type="text/javascript" src="2018_10_Belle%20Vue_files/moatframe.js"></script>
+
+	
+	<script>
+		var _comscore = _comscore || [];
+		_comscore.push({ c1: "2", c2: "6005068" });
+		(function () {
+			var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+			s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
+			el.parentNode.insertBefore(s, el);
+		})();
+	</script>
+
+		<script type="text/javascript">
+			(function () {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'stats.g.doubleclick.net/dc.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})()
+		</script>
+
+		<style>
+			.fc-consent-root a {
+				cursor: pointer;
+				text-decoration: none;
+				outline: none;
+				color: blue;
+			}
+		</style>
+		<script type="text/javascript">
+			$('document').ready(function () {
+				if (apgPageInfoObj.ad_page == "privacy") {
+					var privacyContainer;
+					if ($('.article-story').length) {
+						privacyContainer = $('.article-story');
+					} else if ($('.privterms').length) {
+						privacyContainer = $('.privterms');
+					}
+					if (privacyContainer) {
+						privacyContainer.append('<p><a href="javascript:googlefc.suppressConsentMessage=false;googlefc.callbackQueue.push(googlefc.showRevocationMessage)">European Union Users may click here to revoke consent to data usage</a></p>');
+					}
+				}
+			});
+		</script>
+
+<script>!function(){function o(n,i){if(n&&i)for(var r in i)i.hasOwnProperty(r)&&(void 0===n[r]?n[r]=i[r]:n[r].constructor===Object&&i[r].constructor===Object?o(n[r],i[r]):n[r]=i[r])}try{var n=decodeURIComponent("");if(n.length>0&&window.JSON&&"function"==typeof window.JSON.parse){var i=JSON.parse(n);void 0!==window.BOOMR_config?o(window.BOOMR_config,i):window.BOOMR_config=i}}catch(o){window.console&&"function"==typeof window.console.error&&console.error("mPulse: Could not parse configuration",o)}}();</script>
+<script>!function(e){function a(a){if(a&&a.data&&a.data.boomr_mq)e.BOOMR_mq=e.BOOMR_mq||[],e.BOOMR_mq.push(a.data.boomr_mq)}var t="https://s.go-mpulse.net/boomerang/";if("False"=="True")e.BOOMR_config=e.BOOMR_config||{},e.BOOMR_config.PageParams=e.BOOMR_config.PageParams||{},e.BOOMR_config.PageParams.pci=!0,t="https://s2.go-mpulse.net/boomerang/";if(function(){function a(a){e.BOOMR_onload=a&&a.timeStamp||(new Date).getTime()}if(!e.BOOMR||!e.BOOMR.version&&!e.BOOMR.snippetExecuted){e.BOOMR=e.BOOMR||{},e.BOOMR.snippetExecuted=!0;var n,i,r,o=document.createElement("iframe");if(e.addEventListener)e.addEventListener("load",a,!1);else if(e.attachEvent)e.attachEvent("onload",a);o.src="javascript:void(0)",o.title="",o.role="presentation",(o.frameElement||o).style.cssText="width:0;height:0;border:0;display:none;",r=document.getElementsByTagName("script")[0],r.parentNode.insertBefore(o,r);try{i=o.contentWindow.document}catch(e){n=document.domain,o.src="javascript:var d=document.open();d.domain='"+n+"';void(0);",i=o.contentWindow.document}i.open()._l=function(){var e=this.createElement("script");if(n)this.domain=n;e.id="boomr-if-as",e.src=t+"WVCM2-8MB3H-J4PHA-TKSJD-9YGAB",BOOMR_lstart=(new Date).getTime(),this.body.appendChild(e)},i.write("<bo"+'dy onload="document._l();">'),i.close()}}(),"300".length>0)if(e&&"performance"in e&&e.performance&&"function"==typeof e.performance.setResourceTimingBufferSize)e.performance.setResourceTimingBufferSize(300);if(function(){if(BOOMR=e.BOOMR||{},BOOMR.plugins=BOOMR.plugins||{},!BOOMR.plugins.AK){var a={i:!1,av:function(a){var t="http.initiator";if(a&&(!a[t]||"spa_hard"===a[t])){var n=""=="true"?1:0,i="",r=void 0!==e.aFeoApplied?1:0;if(BOOMR.addVar({"ak.v":13,"ak.cp":"100709","ak.ai":"295874","ak.ol":"0","ak.cr":34,"ak.ipv":4,"ak.proto":"","ak.rid":"23b48c3a","ak.r":22441,"ak.a2":n,"ak.m":"e12","ak.n":"essl","ak.bpcip":"80.174.26.0","ak.cport":51628,"ak.gh":"72.247.210.89","ak.quicv":"","ak.tlsv":"tls1.2","ak.0rtt":"","ak.csrc":"-","ak.acc":"reno","ak.feo":r}),""!==i)BOOMR.addVar("ak.ruds",i)}},rv:function(){var e=["ak.bpcip","ak.cport","ak.cr","ak.csrc","ak.gh","ak.ipv","ak.m","ak.n","ak.ol","ak.proto","ak.quicv","ak.tlsv","ak.0rtt","ak.r","ak.acc"];BOOMR.removeVar(e)}};BOOMR.plugins.AK={init:function(){if(!a.i){var e=BOOMR.subscribe;e("before_beacon",a.av,null,null),e("onbeacon",a.rv,null,null),a.i=!0}return this},is_complete:function(){return!0}}}}(),e.addEventListener)e.addEventListener("message",a);var n=e.navigator;if(n&&"serviceWorker"in n&&n.serviceWorker.addEventListener)n.serviceWorker.addEventListener("message",a)}(window);</script><script>bazadebezolkohpepadr="286374175"</script><script type="text/javascript" src="2018_10_Belle%20Vue_files/1111b9a0.html" defer="defer"></script><script async="" src="2018_10_Belle%20Vue_files/AGSKWxW4U8becH_fksJHueenoV4gwKb9LxyMB08R809VxuqmTJeaa4xTb1glg.js"></script></head>
+<body id="forecast-month" class="en-us forecast ">
+<script src="2018_10_Belle%20Vue_files/loader_002.js"></script>
+<script>
+    window.googlefc = window.googlefc || {};
+    googlefc.callbackQueue = googlefc.callbackQueue || [];
+    googlefc.suppressConsentMessage = false;
+</script>
+<script src="2018_10_Belle%20Vue_files/AGSKWxVpaedQv_oEQdNKOzYPsa9e8xsLsD_FHsnQvnOEdSAIwjaCeVKeb9JEr.js"></script><iframe name="googlefcInactive" src="2018_10_Belle%20Vue_files/a_002.html" style="display: none; width: 0px; height: 0px; border: medium none; z-index: -1000; left: -1000px; top: -1000px;"></iframe>
+<iframe name="googlefcPresent" style="display: none; width: 0px; height: 0px; border: none; z-index: -1000; left: -1000px; top: -1000px;"></iframe>
+		<!--[if lte IE 8]>
+		<div class="old-alert time-to-upgrade">
+			<div class="inner">
+				<p>Your version of Internet Explorer is no longer supported. Please <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">upgrade</a> your browser for the best AccuWeather experience.</p>
+				<div class="close">X</div>
+			</div>
+		</div>
+		<![endif]-->
+		<!-- Google Tag Manager -->
+		<noscript>
+			<iframe src="//www.googletagmanager.com/ns.html?id=GTM-P7HTGM"
+					height="0" width="0" style="display:none;visibility:hidden"></iframe>
+		</noscript>
+		<!-- End Google Tag Manager -->
+
+			<div id="eu-cookie-notify-wrap">
+				<div id="eu-cookie-notify">
+					<div class="eu-cookie-text">
+						<div>We have updated our <a href="https://www.accuweather.com/en/privacy">Privacy Policy</a> and our <a href="https://www.accuweather.com/en/cookiepolicy">Cookie Policy</a> effective May 25, 2018.  Please review them.</div>
+					</div>
+					<div class="continue">CONTINUE</div>
+					<div class="close"></div>
+				</div>
+			</div>
+<span id="dynamic-menu-container"></span> 
+<div id="menu-cities" class="menu menu-list add-interest-menu"> 
+  <div class="menu-head-lt"> 
+    <div class="menu-head-rt"> 
+      <div class="menu-head"></div> 
+    </div> 
+  </div> 
+  <!-- /.menu-head-lt --> 
+  <div class="menu-body-lt"> 
+    <div class="menu-body-rt"> 
+      <div class="menu-body"> 
+        <ul class="menu-items">
+            <li class="title">MY RECENT LOCATIONS<span>°C</span></li>
+            <li>
+                <a href="https://www.accuweather.com/en/gb/manchester/m15-6/weather-forecast/329260">Manchester, United Kingdom<span class="temp">20°</span><span class="icon i-6-s"></span></a>
+            </li>
+            <li>
+                <a href="https://www.accuweather.com/en/us/new-york-ny/10017/weather-forecast/349727">New York, NY<span class="temp">11°</span><span class="icon i-7-s"></span></a>
+            </li>
+            <li>
+                <a href="https://www.accuweather.com/en/us/miami-fl/33128/weather-forecast/347936">Miami, FL<span class="temp">30°</span><span class="icon i-3-s"></span></a>
+            </li>
+            <li>
+                <a href="https://www.accuweather.com/en/us/los-angeles-ca/90012/weather-forecast/347625">Los Angeles, CA<span class="temp">19°</span><span class="icon i-7-s"></span></a>
+            </li>
+          <li class="more"><a href="https://www.accuweather.com/en/browse-locations">Browse for your location<span></span></a></li> 
+        </ul>
+        <span class="arrow"></span><span class="arrow-border"></span>
+      </div> 
+    </div> 
+  </div> 
+  <!-- /.menu-body-lt --> 
+  <div class="menu-foot-lt"> 
+    <div class="menu-foot-rt"> 
+      <div class="menu-foot"></div> 
+    </div> 
+  </div> 
+  <!-- /.menu-foot-lt --> 
+</div> 
+
+
+
+ 
+<!-- add interest dropdown -->
+<div id="add-interest-dropdown" class="clearfix">
+
+	<div id="inner-content" class="clearfix">		
+	</div><!-- end add-interest-inner-content -->
+						
+	<!-- icons -->
+	<span class="arrow"></span>
+	<span class="arrow-border"></span>
+	<!-- end icons -->
+
+</div><!-- end id="add-interest-dropdown" -->
+
+	<div id="wrap" class="autumn h-c">
+		<div class="wrap___960">
+				<!-- /#header-ad -->
+				<style type="text/css">
+
+					#header-nav {
+						overflow: visible;
+						position: static;
+						height: auto;
+					}
+				</style>
+				<div class="container_12">
+					<div class="grid_12">
+						<div class="settings-wrapper">
+							
+<div id="wrap-country-settings"> 
+    <div id="country-settings"> 
+        <a href="#menu-country" id="bt-menu-country" class="menu-arrow tmenu { el:'#menu-country', affix: { from: 'nw', to: 'nw', offset: [ -6, -8 ] } }"><strong><span class="ir flag-GB">United Kingdom</span></strong></a>
+
+        <div id="menu-country" class="menu menu-with-title">
+
+            <h3 class="menu-title"><span><span class="flag-GB">United Kingdom</span></span></h3>
+
+            <div class="menu-head-lt">
+                <div class="menu-head-rt">
+                    <div class="menu-head"></div>
+                </div>
+            </div>
+            <!-- /.menu-head-lt -->
+            <div class="menu-body-lt">
+                <div class="menu-body-rt">
+                    <div class="menu-body">
+
+                        <h4>My Recent Countries</h4>
+
+                        <ul class="menu-items">
+                                    <li><a href="https://www.accuweather.com/en/gb/united-kingdom-weather" class="flag-GB">United Kingdom</a></li>
+                                    <li><a href="https://www.accuweather.com/en/us/united-states-weather" class="flag-US">United States</a></li>
+                                    <li><a href="https://www.accuweather.com/en/cn/china-weather" class="flag-CN">China</a></li>
+                        </ul>
+
+                        <a href="#country-selector" id="bt-more-countries">More Countries</a>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.menu-body-lt -->
+
+            <div class="menu-foot-lt">
+                <div class="menu-foot-rt">
+                    <div class="menu-foot"></div>
+                </div>
+            </div>
+            <!-- /.menu-foot-lt -->
+
+        </div>
+        <!-- /#menu-country --> 
+
+        <ul id="country-breadcrumbs"> 
+       
+                    <li class="first"><a href="https://www.accuweather.com/en/world-weather">World</a></li> 
+                    <li><a href="https://www.accuweather.com/en/europe-weather">Europe</a></li> 
+                    <li><a href="https://www.accuweather.com/en/gb/united-kingdom-weather">United Kingdom</a></li> 
+                    <li><a href="https://www.accuweather.com/en/gb/gtm/greater-manchester-weather">Greater Manchester</a></li>  
+                        <li class="last"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/weather-forecast/329260">Manchester</a></li>
+    </ul> 
+    <!-- /#country-breadcrumbs --> 
+  </div> 
+  <!-- /#nav-country --> 
+</div> 
+<!-- /#wrap-nav-country -->  
+
+
+
+							<div class="control-wrapper">
+								<a id="bt-menu-settings" class="tmenu { el:'#menu-settings', affix: { from: 'ne', to: 'ne', offset: [ 0,-6 ] } }"><span class="menu-arrow"><span>English (US)</span>, °C</span></a>
+								<div id="menu-settings" class="menu menu-with-title">
+
+    <h3 class="menu-title"><span>English (US), °C</span></h3>
+
+    <div class="menu-head-lt">
+        <div class="menu-head-rt">
+            <div class="menu-head"></div>
+        </div>
+    </div>
+    <!-- /.menu-head-lt -->
+    <div class="menu-body-lt">
+        <div class="menu-body-rt">
+            <div class="menu-body">
+
+                <h4>My Settings</h4>
+
+                <div class="control-wrap">
+
+                    <form action="" method="post" autocomplete="false">
+
+                        <label for="settings-language"></label>
+                            <select id="settings-language" name="language" class="match-toggle">
+                                <option value="en-us" selected="selected">English (US)</option>
+<option value="es">Español</option>
+<option value="fr">Français</option>
+<option value="da">Dansk</option>
+<option value="pt-pt">Português</option>
+<option value="nl">Nederlands</option>
+<option value="no">Norsk</option>
+<option value="it">Italiano</option>
+<option value="de">Deutsch</option>
+<option value="sv">Svenska</option>
+<option value="fi">Suomi</option>
+<option value="zh-hk">中文 (HK)</option>
+<option value="zh-cn">中文 (SIM)</option>
+<option value="zh-tw">中文 (Taiwan)</option>
+<option value="es-ar">Español (Argentina)</option>
+<option value="es-mx">Español (Latin America)</option>
+<option value="sk">Slovenčinu</option>
+<option value="ro">Romana</option>
+<option value="cs">Čeština</option>
+<option value="hu">Magyar</option>
+<option value="pl">Polski</option>
+<option value="ca">Català</option>
+<option value="pt-br">Português (Brazil)</option>
+<option value="hi">हिन्दी</option>
+<option value="ru">русский</option>
+<option value="ar">عربي</option>
+<option value="el">Ελληνικά</option>
+<option value="en-gb">English (UK)</option>
+<option value="ja">日本語</option>
+<option value="ko">한국어</option>
+<option value="tr">TÜRKÇE</option>
+<option value="fr-ca">Français (Canada)</option>
+<option value="he">עברית</option>
+<option value="sl">Slovenski</option>
+<option value="uk">Українське</option>
+<option value="id">Bahasa Indonesia</option>
+<option value="bg">български</option>
+<option value="et">Eesti keeles</option>
+<option value="hr">Hrvatski</option>
+<option value="kk">Қазақша</option>
+<option value="lt">Lietuvių</option>
+<option value="lv">Latviski</option>
+<option value="mk">Македонски</option>
+<option value="ms">Bahasa Melayu</option>
+<option value="tl">Tagalog</option>
+<option value="sr">Srpski</option>
+<option value="th">ไทย</option>
+<option value="vi">Tiếng Việt</option>
+<option value="fa">فارسی</option>
+<option value="bn">বাংলা</option>
+<option value="bs">bosanski</option>
+<option value="is">íslenska</option>
+<option value="sw">Kiswahili</option>
+<option value="ur">اُردُو</option>
+<option value="sr-me">Crnogorski</option>
+<option value="uz">Oʻzbekcha</option>
+<option value="az">Azərbaycanca</option>
+<option value="ta">தமிழ்</option>
+<option value="gu">ગુજરાતી</option>
+<option value="kn">ಕನ್ನಡ</option>
+<option value="te">తెలుగు</option>
+<option value="mr">मराठी</option>
+<option value="pa">ਪੰਜਾਬੀ</option>
+<option value="my">မြန်မာဘာသာ</option>
+                            </select>
+
+                </form></div>
+
+                <!-- /.control-wrap -->
+
+                    <div id="radio-toggle-temp-unit" class="radio-toggle">
+                        <label for="settings-temp-unit-farenheit" class="first">
+                            <span>°F</span>
+                            <input id="settings-temp-unit-farenheit" name="temp_unit" value="farenheit" type="radio">
+                        </label>
+
+                        <label for="settings-temp-unit-celsius" class="last checked">
+                            <span>°C</span>
+                            <input id="settings-temp-unit-celsius" name="temp_unit" checked="checked" value="celsius" type="radio">
+                        </label>
+                    </div>
+
+                <!-- /.radio-toggle -->
+                
+
+            </div>
+        </div>
+    </div>
+    <!-- /.menu-body-lt -->
+
+    <div class="menu-foot-lt">
+        <div class="menu-foot-rt">
+            <div class="menu-foot"></div>
+        </div>
+    </div>
+    <!-- /.menu-foot-lt -->
+</div>
+<!-- /#settings-menu -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="wrap-header-nav" class="day">
+					<div id="header-nav" class="i-6-header">
+						<div id="header" class="container_12">
+  
+<div id="country-selector" class="grid_12 strong panel">
+
+  <div class="panel-head-lt"><div class="panel-head-rt"><div class="panel-head"></div></div></div>
+  <div class="panel-body-lt">
+    <div class="panel-body-rt">
+      <div class="panel-body">
+        <div class="title">
+          <button class="bt bt-panel-close">Close</button>
+          <div id="country-selector-recent">
+            <h3>My Recent Countries</h3>
+            <ul>
+                  <li class="first"><a href="https://www.accuweather.com/en/gb/united-kingdom-weather" class="flag-GB">United Kingdom</a></li>
+                  <li class=""><a href="https://www.accuweather.com/en/us/united-states-weather" class="flag-US">United States</a></li>
+                  <li class=""><a href="https://www.accuweather.com/en/cn/china-weather" class="flag-CN">China</a></li>
+            </ul>
+          </div>
+          <!-- /#country-selector-recent -->
+        </div>
+        <!-- /.title -->
+
+        <div id="country-selector-region" class="panel-content">
+
+          <div class="title">
+            <h3>Select a Region</h3>
+          </div>
+
+          <div class="content">
+
+            <ul id="country-selector-region-list" class="menu-items">
+              <li><a class="link-region" id="link-region-afr" href="#region-afr">Africa</a></li>
+              <li><a class="link-region" id="link-region-ant" href="#region-ant">Antarctica</a></li>
+              <li><a class="link-region" id="link-region-arc" href="#region-arc">Arctic</a></li>
+              <li><a class="link-region" id="link-region-asi" href="#region-asi">Asia</a></li>
+              <li><a class="link-region" id="link-region-cac" href="#region-cac">Central America</a></li>
+              <li><a class="link-region" id="link-region-eur" href="#region-eur">Europe</a></li>
+              <li><a class="link-region" id="link-region-mea" href="#region-mea">Middle East</a></li>
+              <li><a class="link-region" id="link-region-nam" href="#region-nam">North America</a></li>
+              <li><a class="link-region" id="link-region-ocn" href="#region-ocn">Oceania</a></li>
+              <li><a class="link-region" id="link-region-sam" href="#region-sam">South America</a></li>
+            </ul>
+            <!-- /#country-selector-region-list -->
+
+            <div id="country-selector-region-map">
+            </div>
+            <!-- /#country-selector-region-map -->
+          </div>
+          <!-- /.content -->
+        </div>
+        <!-- /#country-selector-region -->
+
+
+        <div id="country-selector-country" class="panel-content">
+          <div id="region-afr" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /africa-->
+          <div id="region-eur" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /europe-->
+          <div id="region-nam" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /north america-->
+          <div id="region-sam" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /south america-->
+          <div id="region-cac" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /central america-->
+          <div id="region-ocn" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /oceania-->
+          <div id="region-mea" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /middle east-->
+          <div id="region-ant" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /antarctica-->
+          <div id="region-arc" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /arctic-->
+          <div id="region-asi" class="region">
+            <div class="title">
+              <a href="#country-selector-region" class="world"><span>World</span></a>
+              <h3></h3>
+            </div>
+            <div class="items"> </div>
+          </div>
+          <!-- /asia-->
+        </div>
+        <!-- /#country-selector-country -->
+
+
+        <div id="country-selector-notes">
+          <p class="first">
+            Note: Select a region before finding a country.
+          </p>
+
+          <p></p>
+
+        </div>
+        <!-- /#country-selector-notes -->
+
+
+      </div>
+    </div>
+  </div>
+  <!-- /.panel-body-lt -->
+
+  <div class="panel-foot-lt"><div class="panel-foot-rt"><div class="panel-foot"></div></div></div>
+
+</div>
+<!-- / #country-selector --> 
+
+
+  <div id="header-logo-search" class="clearfix">
+
+    
+	<div id="header-logo" class="ir no-partner">
+		<a href="https://www.accuweather.com/">
+			<span>Manchester October Weather</span>
+		</a>
+	</div>
+
+
+    <div class="right-side">
+      <div id="wrap-s-rt">
+  <div id="wrap-s-lt">
+    <div id="wrap-s" class="tmenu { affix: {offset: [ 0, 7 ], to: 'sw', from: 'nw'},el: '#menu-cities' }">
+      <form id="findcity" action="https://www.accuweather.com/en/search-locations" method="post">
+
+        <input name="enter-postal-city" value="Enter city or postal code" type="hidden">
+        <input id="s" name="s" autocomplete="off" class="text hint" value="Manchester, United Kingdom" data-default-value="Manchester, United Kingdom" data-default-route="https://www.accuweather.com/en/gb/manchester/m15-6/weather-forecast/329260" type="text">
+
+        <input name="rn" value="3day" type="hidden">
+        <button type="button" class="bt bt-go">
+          <img src="2018_10_Belle%20Vue_files/search-glass.svg">
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- /#wrap-s-rt -->
+
+
+      <div id="control-panel">
+        <div id="social-connect">
+          <ul class="social-list">
+            <li class="label">Follow us on</li>
+            <li class="social-icon"><a id="connect_facebook" href="https://www.facebook.com/AccuWeather" class="facebook" target="_blank"></a></li>
+            <li class="social-icon"><a id="connect_twitter" href="https://twitter.com/breakingweather" class="twitter" target="_blank"></a></li>
+            <li class="social-icon"><a id="connect_instagram" href="https://www.instagram.com/accuweather/" class="instagram" target="_blank"></a></li>
+            <li class="social-icon"><a id="connect_youtube" href="https://www.youtube.com/user/accuweather" class="youtube" target="_blank"></a></li>
+          </ul>
+        </div>
+        <a id="bt-menu-login" class="tmenu { el:'#menu-premium', affix: { to: 'ne', from: 'ne', offset: [ 0,-6 ] } }"><span class="menu-arrow"><span>Login</span></span></a>
+      </div>
+      <!--#control-panel-->
+    </div>
+  </div>
+  <!-- /#header-logo-search -->
+</div>
+<!-- /#header -->
+
+					</div>
+					<!-- /#header-nav -->
+				</div>
+				<!-- /#wrap-header-nav -->
+				<div class="sub-header-wrap">
+					<div class="inner-city-header">
+						<div class="container_12">
+							<div class="grid_12">
+								<div id="nav-main-add-interests" class="clearfix alpha">
+									<div id="nav-main-background"></div>
+									<ul id="nav-current-location" class="sub-nav">
+											<li id="current-country-tab" class=" tmenu { affix: {offset: [ 0, 5 ], to: 'sw', from: 'nw' }, el: '#current-country-menu' }">
+												<a href="https://www.accuweather.com/en/gb/united-kingdom-weather" class="tab">
+													<span class="current-country">United Kingdom</span>
+													<span class="title">Weather</span>
+												</a>
+												<span class="bottom-line"></span>
+											</li>
+											<li id="country-dropdown-tab" class="location-menu">
+												<a href="#" class="tab">
+													<span class="arrow"></span>
+												</a>
+												<span class="cover-line"></span>
+											</li>
+											<li id="current-city-tab" class="selected">
+												<a href="https://www.accuweather.com/en/gb/manchester/m15-6/weather-forecast/329260" class="tab">
+													<span class="current-city"><h1>Manchester, United Kingdom</h1></span>
+													
+													<span><div class="icon icon-inline i-6-s"></div></span>
+													<span class="local-temp">20°C</span>
+													<span class="divider"></span>
+													<span class="more-info-arrow"></span>
+													<div class="more-info-content">
+													</div><!-- end more-info-content -->
+												</a>
+											</li>
+										<li id="locations-dropdown-tab" class="location-menu { el: '#locations-dropdown-menu' }">
+											<a href="#" class="tab">
+												<span class="arrow"></span>
+												<span class="right-arrow"></span>
+											</a>
+											<span class="cover-line"></span>
+										</li>
+												<noscript>
+													<style>
+
+														#special-forecasts-dropdown-tab, #lifestyle-dropdown-tab {
+															display: block !important;
+														}
+													</style>
+												</noscript>
+												<li id="lifestyle-dropdown-tab" class="location-menu" style="display: list-item;">
+													<a href="#" class="tab">
+														<span class="arrow"></span>
+														<span class="right-arrow"></span>
+													</a>
+													<span class="cover-line"></span>
+												</li>
+												<li id="special-forecasts-dropdown-tab" class="location-menu " style="display: list-item;">
+													<a href="https://www.accuweather.com/en/gb/manchester/m15-6/allergies-weather/329260" class="tab">
+														<span>
+															<div class="special-forecast-icon-container">
+																<div class="special-forecast-icon allergies" data-icon="allergies"></div>
+															</div>
+															<span class="special-forecast-label highlighted">Allergies</span><span>:</span> <span class="special-forecast-value ">Low</span>
+														</span>
+													</a>
+												</li>
+									</ul><!-- end nav-current-location -->
+								</div>
+							</div>
+						</div>
+						<!-- end nav-main-add-interests-->
+					</div><!--inner city header -->
+					<div class="country-dropdown">
+						<div class="inner">
+							<div class="col">
+										<h3><a data-label="Radar" href="https://www.accuweather.com/en/gb/national/weather-radar">Radar &amp; Maps</a></h3>
+										<ul>
+											<li><a data-label="Radar" href="https://www.accuweather.com/en/gb/national/weather-radar">Radar</a></li>
+											<li><a data-label="Satellite" href="https://www.accuweather.com/en/gb/national/satellite">Satellite</a></li>
+											<li><a data-label="Forecast" href="https://www.accuweather.com/en/gb/national/weather-forecast-maps">Weather Forecast Maps</a></li>
+										</ul>
+							</div>
+								<div class="col">
+									<h3><a data-label="News" href="https://www.accuweather.com/en/weather-news">News &amp; Video</a></h3>
+									<ul>
+										<li><a data-label="News" href="https://www.accuweather.com/en/weather-news">Weather News</a></li>
+										<li><a data-label="Video" href="https://www.accuweather.com/en/videos/?utm_source=accuweather&amp;utm_medium=accuweather&amp;utm_campaign=sitenav" target="_blank">Weather Video</a></li>
+										<li><a data-label="Blogs" href="https://www.accuweather.com/en/weather-blogs">Weather Blogs</a></li>
+										<li><a data-label="Personalities" href="https://www.accuweather.com/en/personalities">Personalities</a></li>
+									</ul>
+								</div>
+								<div class="col">
+									<h3><a data-label="Extreme" href="https://www.accuweather.com/en/climate-change">Extreme Weather</a></h3>
+									<ul>
+										<li><a data-label="Climate" href="https://www.accuweather.com/en/climate-change">Climate Change</a></li>
+									</ul>
+								</div>
+								<div class="col">
+									<h3><a data-label="Social" href="https://www.accuweather.com/en/social">Social</a></h3>
+									<ul>
+										<li><a data-label="Social" href="https://www.accuweather.com/en/social">Social Media</a></li>
+										<li><a data-label="Apps" href="https://www.accuweather.com/en/downloads">Apps &amp; Downloads</a></li>
+										<li><a data-label="Photos" href="http://photo.accuweather.com/">Weather Photos</a></li>
+										<li><a data-label="Forums" href="http://forums.accuweather.com/">Weather Forums</a></li>
+									</ul>
+								</div>
+						</div>
+					</div>
+					<!-- /.country-dropdown -->
+
+
+    <div class="special-forecast-dropdown">
+        <div class="inner">
+            <h2>Personalized Forecasts <span class="icon-pencil"></span></h2>
+            <div class="col">
+                <h3>A.M. Planner</h3>
+                <ul>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/driving-weather/329260">Driving</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/school-day-weather/329260">School Day</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/hair-day-weather/329260">Hair Day</a>
+</li>
+                </ul>
+                <h3>Home &amp; Garden</h3>
+                <ul>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/diy-weather/329260">D.I.Y.</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/lawn-garden-weather/329260">Lawn &amp; Garden</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/home-energy-weather/329260">Home Energy</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/outdoor-entertaining-weather/329260">Entertaining</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/mosquito-activity-weather/329260">Mosquito</a>
+</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>Sports &amp; Recreation</h3>
+                <ul>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/golf-weather/329260">Golf</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/ski-weather/329260">Ski</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/hunting-weather/329260">Hunting</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/fishing-weather/329260">Fishing</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/running-weather/329260">Running</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/hiking-weather/329260">Hiking</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/biking-weather/329260">Biking</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/sun-sand-weather/329260">Sun &amp; Sand</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/sailing-weather/329260">Sailing</a>
+</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>Health</h3>
+                <ul>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/cold-flu-weather/329260">Cold &amp; Flu</a>
+</li>
+                    <li>        <a class="highlighted" href="https://www.accuweather.com/en/gb/manchester/m15-6/allergies-weather/329260">Allergies</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/asthma-weather/329260">Respiratory</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/arthritis-weather/329260">Arthritis</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/migraine-weather/329260">Migraine</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/sinus-weather/329260">Sinus</a>
+</li>
+                </ul>
+                <h3>Miscellaneous</h3>
+                <ul>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/air-travel-weather/329260">Travel</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/astronomy-weather/329260">Astronomy</a>
+</li>
+                    <li>        <a class="" href="https://www.accuweather.com/en/gb/manchester/m15-6/events-weather/329260">Events</a>
+</li>
+                </ul>
+            </div>
+            <div class="col">
+                <h3>Featured Forecast</h3>
+                <ul>
+                    <li><a class="no-select highlighted" href="https://www.accuweather.com/en/gb/manchester/m15-6/allergies-weather/329260">Allergies</a></li>
+                </ul>
+                <h3 class="forecast-favorite-header">My Favorite Forecasts</h3>
+                <ul class="forecast-favorite-list"></ul>
+            </div>
+        </div>
+    </div>
+					<div class="recent-locations-dropdown">
+						<div class="inner">
+							<div class="local-weather col">
+								<div class="display-name">Manchester, United Kingdom</div>
+								<h2>Local Weather</h2>
+								<ul>
+										<li><a data-label="Today" href="https://www.accuweather.com/en/gb/manchester/m15-6/weather-forecast/329260">Today's Weather</a></li>
+									<li><a data-label="Hourly" href="https://www.accuweather.com/en/gb/manchester/m15-6/hourly-weather-forecast/329260">Hourly Forecast</a></li>
+									<li><a data-label="Extended" href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260">Extended</a></li>
+									<li><a data-label="Weekend" href="https://www.accuweather.com/en/gb/manchester/m15-6/weekend-weather/329260">Weekend</a></li>
+									<li><a data-label="Month" href="https://www.accuweather.com/en/gb/manchester/m15-6/october-weather/329260">Month Outlook</a></li>
+									<li><a data-label="Current" href="https://www.accuweather.com/en/gb/manchester/m15-6/current-weather/329260">Current Weather</a></li>
+								</ul>
+							</div>
+							<div class="col-3wide">
+								<h2>My Recent Locations</h2>
+								<div id="feed-tabs" class="panel-list">
+									<ul>
+										
+
+											<li class="day first" data-href="/en/gb/manchester/m15-6/weather-forecast/329260" data-label="Recent 1">
+												<div class="bg c">
+													<h3><a href="file:///en/gb/manchester/m15-6/weather-forecast/329260">Manchester, United Kingdom</a></h3>
+													<div class="icon i-6-l "></div>
+													<div class="info">
+														<div class="temp">
+															<span class="large-temp">20°</span>
+															<span class="real-feel">RealFeel® 17°</span>
+														</div>
+														<ul class="special-forecast"></ul>
+													</div>
+													<!-- /.info -->
+												</div>
+												<!-- /.bg -->
+											</li>
+											<li class="day " data-href="/en/us/new-york-ny/10017/weather-forecast/349727" data-label="Recent 2">
+												<div class="bg c">
+													<h3><a href="file:///en/us/new-york-ny/10017/weather-forecast/349727">New York, NY</a></h3>
+													<div class="icon i-7-l "></div>
+													<div class="info">
+														<div class="temp">
+															<span class="large-temp">11°</span>
+															<span class="real-feel">RealFeel® 9°</span>
+														</div>
+														<ul class="special-forecast"></ul>
+													</div>
+													<!-- /.info -->
+												</div>
+												<!-- /.bg -->
+											</li>
+											<li class="day " data-href="/en/us/miami-fl/33128/weather-forecast/347936" data-label="Recent 3">
+												<div class="bg su">
+													<h3><a href="file:///en/us/miami-fl/33128/weather-forecast/347936">Miami, FL</a></h3>
+													<div class="icon i-3-l "></div>
+													<div class="info">
+														<div class="temp">
+															<span class="large-temp">30°</span>
+															<span class="real-feel">RealFeel® 37°</span>
+														</div>
+														<ul class="special-forecast"></ul>
+													</div>
+													<!-- /.info -->
+												</div>
+												<!-- /.bg -->
+											</li>
+											<li class="day " data-href="/en/us/los-angeles-ca/90012/weather-forecast/347625" data-label="Recent 4">
+												<div class="bg c">
+													<h3><a href="file:///en/us/los-angeles-ca/90012/weather-forecast/347625">Los Angeles, CA</a></h3>
+													<div class="icon i-7-l "></div>
+													<div class="info">
+														<div class="temp">
+															<span class="large-temp">19°</span>
+															<span class="real-feel">RealFeel® 19°</span>
+														</div>
+														<ul class="special-forecast"></ul>
+													</div>
+													<!-- /.info -->
+												</div>
+												<!-- /.bg -->
+											</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="inner-subnav">
+						<div class="container_12">
+							<div class="grid_12">
+								
+    
+<div class="subnav-head-tabs-rt clearfix">
+    <div class="subnav-head-tabs-lt clearfix">
+    <ul class="subnav-tab-buttons">
+    
+    <li data-label="fcst_nav_forecast_now"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/weather-forecast/329260"><span>Now</span></a></li>
+    <li data-label="fcst_nav_forecast_weekend"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/weekend-weather/329260"><span>Weekend</span></a></li>
+    <li data-label="fcst_nav_forecast_extended"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260"><span>Extended</span></a></li>
+    <li data-label="fcst_nav_forecast_month" class="current"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/october-weather/329260"><span><strong>Month</strong></span></a></li>
+        <li data-label="fcst_nav_forecast_radar" class=""><a href="https://www.accuweather.com/en/gb/manchester/m15-6/weather-radar/329260"><span>Radar</span></a></li>
+        <li data-label="fcst_nav_forecast_minutecast" class="last subnav-minutecast"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/minute-weather-forecast/329260"><span>MinuteCast<sup>®</sup></span></a></li>
+    <li data-label="fcst_nav_forecast_watch_news" id="subnavpromo">
+    <a href="https://www.accuweather.com/en/videos/european-playlist/c3215323eb1349cb83e8fc96dd7f7ef8?utm_source=accuweather&amp;utm_medium=accuweather&amp;utm_campaign=orangenavbutton&amp;autoStart=true" target="_blank">
+        <span>Watch News</span>
+    </a>
+</li>
+
+
+    </ul>
+    </div>
+</div>
+
+<!-- /.panel-head-rt -->
+
+							</div>
+						</div>
+					</div>
+				</div>
+			<div id="takeover-wrap" style="position:relative;">
+				<div id="header-davek">
+					<div id="top"></div>
+					<div id="header-oop" style="position:absolute; width:1px; height:1px; left:0px; top:0px;"></div>
+				</div>
+				<div id="wrap-content">
+					<div id="content" class="container_12">
+						
+
+<div class="column-1 column-1-e clearfix">
+    
+
+
+
+    
+    <div id="panel-main" class="strong panel">
+        <!-- NOTE: The left and right ordering is swapped for this one, since it's a two element stretch! -->
+        <div class="panel-head-rt">
+        <div class="panel-head-lt">
+        </div>
+        </div>
+        <!-- /.panel-head-rt -->
+        <div class="panel-body-lt">
+        <div class="panel-body-rt">
+            <div class="panel-body">
+
+            
+<div class="calendar-controls">
+        <a href="https://www.accuweather.com/en/gb/manchester/m15-6/september-weather/329260?monyr=9/1/2018" rel="nofollow" class="lt previous-month float-left"><span class="small-left-arrow"></span> September&nbsp;2018</a>
+
+    <div class="center">
+        <div class="view">
+            <span class="btr-label">View: </span>
+            <ul class="g">
+                <li><a href="https://www.accuweather.com/en/gb/manchester/m15-6/october-weather/329260?monyr=10/1/2018&amp;view=table" class="btr btri btri-view-list">As List</a></li>
+                <li class="tight"><a href="https://www.accuweather.com/en/gb/manchester/m15-6/october-weather/329260?monyr=10/1/2018" class="btr-active btr btri btri-view-calendar">As Calendar</a></li>
+            </ul>
+        </div>
+        <!-- /.view -->
+
+        <div class="month">
+            <ul class="g">
+                <li>
+                    <a href="#" class="btr btr-select { el: '#menu-month', affix: { use: 'position' } }"><span>October</span></a>
+                    <div id="menu-month" class="menu">
+                        <div class="menu-head-lt">
+                            <div class="menu-head-rt">
+                                <div class="menu-head"></div>
+                            </div>
+                        </div>
+                        <!-- /.menu-head-lt -->
+                        <div class="menu-body-lt">
+                            <div class="menu-body-rt">
+                                <div class="menu-body">
+                                    <ul class="menu-items">
+                                            <li><a href="javascript:setNewFMMonth('1');">January</a></li>
+                                            <li><a href="javascript:setNewFMMonth('2');">February</a></li>
+                                            <li><a href="javascript:setNewFMMonth('3');">March</a></li>
+                                            <li><a href="javascript:setNewFMMonth('4');">April</a></li>
+                                            <li><a href="javascript:setNewFMMonth('5');">May</a></li>
+                                            <li><a href="javascript:setNewFMMonth('6');">June</a></li>
+                                            <li><a href="javascript:setNewFMMonth('7');">July</a></li>
+                                            <li><a href="javascript:setNewFMMonth('8');">August</a></li>
+                                            <li><a href="javascript:setNewFMMonth('9');">September</a></li>
+                                            <li><a href="javascript:setNewFMMonth('10');">October</a></li>
+                                            <li><a href="javascript:setNewFMMonth('11');">November</a></li>
+                                            <li><a href="javascript:setNewFMMonth('12');">December</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.menu-body-lt -->
+                        <div class="menu-foot-lt">
+                            <div class="menu-foot-rt">
+                                <div class="menu-foot"></div>
+                            </div>
+                        </div>
+                        <!-- /.menu-foot-lt -->
+                    </div>
+                    <!-- /.menu -->
+                </li>
+                <li>
+                    <a href="#" class="btr btr-increment { el: '#menu-year', affix: { use: 'position' } }"><span>2018</span></a>
+                    <div id="menu-year" class="menu">
+                        <div class="menu-head-lt">
+                            <div class="menu-head-rt">
+                                <div class="menu-head"></div>
+                            </div>
+                        </div>
+                        <!-- /.menu-head-lt -->
+                        <div class="menu-body-lt">
+                            <div class="menu-body-rt">
+                                <div class="menu-body">
+                                    <ul class="menu-items">
+                                            <li><a href="javascript:setNewFMYear('2017');">2017</a></li>
+                                            <li><a href="javascript:setNewFMYear('2018');">2018</a></li>
+                                            <li><a href="javascript:setNewFMYear('2019');">2019</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.menu-body-lt -->
+                        <div class="menu-foot-lt">
+                            <div class="menu-foot-rt">
+                                <div class="menu-foot"></div>
+                            </div>
+                        </div>
+                        <!-- /.menu-foot-lt -->
+                    </div>
+                    <!-- /.menu -->
+                </li>
+            </ul>
+        </div>
+        <!-- /.month -->
+    </div>
+
+                            <a href="https://www.accuweather.com/en/gb/manchester/m15-6/november-weather/329260?monyr=11/1/2018" rel="nofollow" class="rt next-month float-right">November&nbsp;2018 <span class="small-right-arrow"></span></a>
+
+                        </div>
+
+
+                                <table class="calendar calendar-block " cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                                <th>Sunday</th>
+                                                <th>Monday</th>
+                                                <th>Tuesday</th>
+                                                <th>Wednesday</th>
+                                                <th>Thursday</th>
+                                                <th>Friday</th>
+                                                <th>Saturday</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+<tr class="small-row">                                                <td class="om">
+                                                    <div class="box">
+                                                            <h3 class="date">Sun 9/30</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">13°</span>
+                                                                            <span class="small-temp">/8°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">16°</span>/<span class="lo">9°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Mon 10/1</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">12°</span>
+                                                                            <span class="small-temp">/1°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">16°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Tue 10/2</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">15°</span>
+                                                                            <span class="small-temp">/8°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">16°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Wed 10/3</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">15°</span>
+                                                                            <span class="small-temp">/10°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">15°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Thu 10/4</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">17°</span>
+                                                                            <span class="small-temp">/12°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">15°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Fri 10/5</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">16°</span>
+                                                                            <span class="small-temp">/7°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">15°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Sat 10/6</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">11°</span>
+                                                                            <span class="small-temp">/1°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">15°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+</tr><tr class="this-week">                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Sun 10/7</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">12°</span>
+                                                                            <span class="small-temp">/-1°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">14°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Mon 10/8</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">16°</span>
+                                                                            <span class="small-temp">/10°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">14°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Tue 10/9</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">18°</span>
+                                                                            <span class="small-temp">/9°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">14°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Wed 10/10</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">22°</span>
+                                                                            <span class="small-temp">/9°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">14°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date">Thu 10/11</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">18°</span>
+                                                                            <span class="small-temp">/9°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">14°</span>/<span class="lo">8°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="nf">
+                                                    <div class="box">
+                                                            <h3 class="date yesterday">Yesterday</h3>
+                                                        <div class="info">
+                                                            <div class="cond"></div>
+                                                                <div class="actual">
+                                                                    <h4>Actual Temp</h4>
+                                                                    <div class="temp">
+                                                                            <span class="large-temp">19°</span>
+                                                                            <span class="small-temp">/10°</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="avg">
+                                                                    <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                                                                            <span class="temp">14°</span>/<span class="lo">7°</span>
+                                                                </div>
+
+                                                        </div>
+                                                    </div>
+                                                </td>
+<td class="today ">
+    <div class="box today night hv bg-s cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=1">
+
+            <h3 class="date today">Tonight <time>10/13</time></h3>
+        <div class="icon i-18-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">10°</span>
+                </div>
+                <div class="cond">Periods of rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">14°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+</tr><tr class=""><td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=2">
+
+            <h3 class="date">Sun <time>10/14</time></h3>
+        <div class="icon i-14-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/4°</span>
+                </div>
+                <div class="cond">Cooler; morning rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">14°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=3">
+
+            <h3 class="date">Mon <time>10/15</time></h3>
+        <div class="icon i-4-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/5°</span>
+                </div>
+                <div class="cond">Sun and clouds</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">14°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=4">
+
+            <h3 class="date">Tue <time>10/16</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">15°</span>
+                    <span class="small-temp">/9°</span>
+                </div>
+                <div class="cond">Mostly cloudy, a little rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=5">
+
+            <h3 class="date">Wed <time>10/17</time></h3>
+        <div class="icon i-4-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/5°</span>
+                </div>
+                <div class="cond">A morning shower</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=6">
+
+            <h3 class="date">Thu <time>10/18</time></h3>
+        <div class="icon i-4-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/5°</span>
+                </div>
+                <div class="cond">A blend of sun and clouds</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=7">
+
+            <h3 class="date">Fri <time>10/19</time></h3>
+        <div class="icon i-13-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/8°</span>
+                </div>
+                <div class="cond">A morning shower, then rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=8">
+
+            <h3 class="date">Sat <time>10/20</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">15°</span>
+                    <span class="small-temp">/9°</span>
+                </div>
+                <div class="cond">A passing p.m. shower or two</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+</tr><tr class=""><td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=9">
+
+            <h3 class="date">Sun <time>10/21</time></h3>
+        <div class="icon i-14-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">15°</span>
+                    <span class="small-temp">/7°</span>
+                </div>
+                <div class="cond">A little a.m. rain; clearing</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=10">
+
+            <h3 class="date">Mon <time>10/22</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">11°</span>
+                    <span class="small-temp">/5°</span>
+                </div>
+                <div class="cond">Cloudy, a shower or two</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=11">
+
+            <h3 class="date">Tue <time>10/23</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">13°</span>
+                    <span class="small-temp">/8°</span>
+                </div>
+                <div class="cond">Windy; a touch of a.m. rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">13°</span>/<span class="lo">7°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=12">
+
+            <h3 class="date">Wed <time>10/24</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/6°</span>
+                </div>
+                <div class="cond">A little morning rain; clouds</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=13">
+
+            <h3 class="date">Thu <time>10/25</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/7°</span>
+                </div>
+                <div class="cond">Occasional morning rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=14">
+
+            <h3 class="date">Fri <time>10/26</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">12°</span>
+                    <span class="small-temp">/7°</span>
+                </div>
+                <div class="cond">A little afternoon rain</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=15">
+
+            <h3 class="date">Sat <time>10/27</time></h3>
+        <div class="icon i-7-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">14°</span>
+                    <span class="small-temp">/7°</span>
+                </div>
+                <div class="cond">Overcast</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+</tr><tr class=""><td class="">
+    <div class="box day hv bg-r cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=16">
+
+            <h3 class="date">Sun <time>10/28</time></h3>
+        <div class="icon i-18-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">10°</span>
+                    <span class="small-temp">/6°</span>
+                </div>
+                <div class="cond">Rain becoming steadier</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=17">
+
+            <h3 class="date">Mon <time>10/29</time></h3>
+        <div class="icon i-4-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">14°</span>
+                    <span class="small-temp">/8°</span>
+                </div>
+                <div class="cond">Clouds breaking for some sun</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=18">
+
+            <h3 class="date">Tue <time>10/30</time></h3>
+        <div class="icon i-3-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">14°</span>
+                    <span class="small-temp">/7°</span>
+                </div>
+                <div class="cond">Sun and some clouds</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=19">
+
+            <h3 class="date">Wed <time>10/31</time></h3>
+        <div class="icon i-12-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">14°</span>
+                    <span class="small-temp">/7°</span>
+                </div>
+                <div class="cond">Cloudy, showers</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">12°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=20">
+
+            <h3 class="date">Thu <time>11/1</time></h3>
+        <div class="icon i-3-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">13°</span>
+                    <span class="small-temp">/5°</span>
+                </div>
+                <div class="cond">Sunshine and some clouds</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">11°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-c cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=21">
+
+            <h3 class="date">Fri <time>11/2</time></h3>
+        <div class="icon i-14-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">11°</span>
+                    <span class="small-temp">/6°</span>
+                </div>
+                <div class="cond">A couple of morning showers</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">11°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+<td class="">
+    <div class="box day hv bg-su cl" data-href="https://www.accuweather.com/en/gb/manchester/m15-6/daily-weather-forecast/329260?day=22">
+
+            <h3 class="date">Sat <time>11/3</time></h3>
+        <div class="icon i-3-m"></div>
+        <div class="info">
+                <div class="temp">
+                    <span class="large-temp">13°</span>
+                    <span class="small-temp">/6°</span>
+                </div>
+                <div class="cond">Windy; an afternoon t-storm</div>
+
+            <div class="avg">
+                <h4><abbr title="historical">Hist. Avg.</abbr></h4>
+                        <span class="temp">11°</span>/<span class="lo">6°</span>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>                                        </tbody>
+                                    </table>
+                        <div class="calendar-controls" style="margin-top:15px;">
+                                <a href="https://www.accuweather.com/en/gb/manchester/m15-6/september-weather/329260?monyr=9/1/2018" rel="nofollow" class="lt previous-month float-left"><span class="small-left-arrow"></span> September&nbsp;2018</a>
+
+                                <a href="https://www.accuweather.com/en/gb/manchester/m15-6/november-weather/329260?monyr=11/1/2018" rel="nofollow" class="rt next-month float-right">November&nbsp;2018 <span class="small-right-arrow"></span></a>
+                        </div>
+
+
+            </div>
+        </div>
+        </div>
+        <!-- /.panel-body-lt -->
+        <div class="panel-foot-lt">
+        <div class="panel-foot-rt">
+            <div class="panel-foot"></div>
+        </div>
+        </div>
+    </div>
+    <!-- /#panel-main -->
+
+    
+
+
+    <div id="monthly-chart" class="panel">
+        <div class="panel-body-lt">
+            <div class="panel-body-rt">
+                <div class="panel-body">
+                    <div class="panel-body-content">
+                        <h3>Temperature Graph October 2018</h3>
+                        <div class="content">
+                            <style>
+                                .no-svg #monthly-line-chart {
+                                    display: none;
+                                }
+                            </style>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="770" height="310" viewBox="0 0 770 310" id="monthly-line-chart" style="margin-top: 10px;">
+
+
+                                
+                                        <g>
+                                            <text x="18" y="25" text-anchor="end" font-size="12">30</text>
+                                        </g>
+                                        <g>
+                                            <text x="18" y="83.75" text-anchor="end" font-size="12">20</text>
+                                        </g>
+                                        <g>
+                                            <text x="18" y="142.5" text-anchor="end" font-size="12">10</text>
+                                        </g>
+                                        <g>
+                                            <text x="18" y="201.25" text-anchor="end" font-size="12">0</text>
+                                        </g>
+                                        <g>
+                                            <text x="18" y="260" text-anchor="end" font-size="12">-10</text>
+                                        </g>
+
+                                            <g data-name="today-marker">
+                                                <line x1="319" x2="319" y1="20" y2="265" stroke="#777" stroke-width="2"></line>
+                                                <text x="319" y="14" text-anchor="middle" style="fill: #777; font-family: Arial, Helvetica, sans-serif; font-size: 13px;">Today</text>
+                                            </g>
+
+                                    <path d="M 35 102.25 L 58 102.25 L 82 108.125 L 106 108.125 L 129 108.125 L 153 108.125 L 177 114 L 200 114 L 224 114 L 248 114 L 272 114 L 295 114 L 319 114 L 343 114 L 366 114 L 390 119.875 L 414 119.875 L 438 119.875 L 461 119.875 L 485 119.875 L 509 119.875 L 532 119.875 L 556 119.875 L 580 125.75 L 604 125.75 L 627 125.75 L 651 125.75 L 675 125.75 L 698 125.75 L 722 125.75 L 746 125.75 " stroke="#fdd6af" stroke-width="3" fill="transparent" data-name="average-hi-line"></path>
+                                    <path d="M 35 149.25 L 58 149.25 L 82 149.25 L 106 149.25 L 129 149.25 L 153 149.25 L 177 149.25 L 200 149.25 L 224 149.25 L 248 149.25 L 272 149.25 L 295 155.125 L 319 155.125 L 343 155.125 L 366 155.125 L 390 155.125 L 414 155.125 L 438 155.125 L 461 155.125 L 485 155.125 L 509 155.125 L 532 155.125 L 556 155.125 L 580 161 L 604 161 L 627 161 L 651 161 L 675 161 L 698 161 L 722 161 L 746 161 " stroke="#bde6f0" stroke-width="3" fill="transparent" data-name="average-lo-line"></path>
+
+                                    <path d="M 35 125.75 L 58 108.125 L 82 108.125 L 106 96.375 L 129 102.25 L 153 131.625 L 177 125.75 L 200 102.25 L 224 90.5 L 248 67 L 272 90.5 L 295 84.625 " stroke="#ef5823" stroke-width="3" fill="transparent" data-name="actual-hi-line"></path>
+                                    <path d="M 35 190.375 L 58 149.25 L 82 137.5 L 106 125.75 L 129 155.125 L 153 190.375 L 177 202.125 L 200 137.5 L 224 143.375 L 248 143.375 L 272 143.375 L 295 137.5 " stroke="#1aafbe" stroke-width="3" fill="transparent" data-name="actual-lo-line"></path>
+
+                                    <path d="M 319 72.875 L 343 125.75 L 366 125.75 L 390 108.125 L 414 125.75 L 438 125.75 L 461 125.75 L 485 108.125 L 509 108.125 L 532 131.625 L 556 119.875 L 580 125.75 L 604 125.75 L 627 125.75 L 651 114 L 675 137.5 L 698 114 L 722 114 L 746 114 " stroke="#ef5823" stroke-dasharray="8, 4" stroke-width="3" fill="transparent" data-name="forecast-hi-line"></path>
+                                    <path d="M 319 137.5 L 343 172.75 L 366 166.875 L 390 143.375 L 414 166.875 L 438 166.875 L 461 149.25 L 485 143.375 L 509 155.125 L 532 166.875 L 556 149.25 L 580 161 L 604 155.125 L 627 155.125 L 651 155.125 L 675 161 L 698 149.25 L 722 155.125 L 746 155.125 " stroke="#1aafbe" stroke-dasharray="8, 4" stroke-width="3" fill="transparent" data-name="forecast-lo-line"></path>
+                                    <g>
+                                        <text x="35" y="280" text-anchor="middle" font-size="12">1</text>
+                                    </g>
+                                    <g>
+                                        <text x="58" y="280" text-anchor="middle" font-size="12">2</text>
+                                    </g>
+                                    <g>
+                                        <text x="82" y="280" text-anchor="middle" font-size="12">3</text>
+                                    </g>
+                                    <g>
+                                        <text x="106" y="280" text-anchor="middle" font-size="12">4</text>
+                                    </g>
+                                    <g>
+                                        <text x="129" y="280" text-anchor="middle" font-size="12">5</text>
+                                    </g>
+                                    <g>
+                                        <text x="153" y="280" text-anchor="middle" font-size="12">6</text>
+                                    </g>
+                                    <g>
+                                        <text x="177" y="280" text-anchor="middle" font-size="12">7</text>
+                                    </g>
+                                    <g>
+                                        <text x="200" y="280" text-anchor="middle" font-size="12">8</text>
+                                    </g>
+                                    <g>
+                                        <text x="224" y="280" text-anchor="middle" font-size="12">9</text>
+                                    </g>
+                                    <g>
+                                        <text x="248" y="280" text-anchor="middle" font-size="12">10</text>
+                                    </g>
+                                    <g>
+                                        <text x="272" y="280" text-anchor="middle" font-size="12">11</text>
+                                    </g>
+                                    <g>
+                                        <text x="295" y="280" text-anchor="middle" font-size="12">12</text>
+                                    </g>
+                                    <g>
+                                        <text x="319" y="280" text-anchor="middle" font-size="12">13</text>
+                                    </g>
+                                    <g>
+                                        <text x="343" y="280" text-anchor="middle" font-size="12">14</text>
+                                    </g>
+                                    <g>
+                                        <text x="366" y="280" text-anchor="middle" font-size="12">15</text>
+                                    </g>
+                                    <g>
+                                        <text x="390" y="280" text-anchor="middle" font-size="12">16</text>
+                                    </g>
+                                    <g>
+                                        <text x="414" y="280" text-anchor="middle" font-size="12">17</text>
+                                    </g>
+                                    <g>
+                                        <text x="438" y="280" text-anchor="middle" font-size="12">18</text>
+                                    </g>
+                                    <g>
+                                        <text x="461" y="280" text-anchor="middle" font-size="12">19</text>
+                                    </g>
+                                    <g>
+                                        <text x="485" y="280" text-anchor="middle" font-size="12">20</text>
+                                    </g>
+                                    <g>
+                                        <text x="509" y="280" text-anchor="middle" font-size="12">21</text>
+                                    </g>
+                                    <g>
+                                        <text x="532" y="280" text-anchor="middle" font-size="12">22</text>
+                                    </g>
+                                    <g>
+                                        <text x="556" y="280" text-anchor="middle" font-size="12">23</text>
+                                    </g>
+                                    <g>
+                                        <text x="580" y="280" text-anchor="middle" font-size="12">24</text>
+                                    </g>
+                                    <g>
+                                        <text x="604" y="280" text-anchor="middle" font-size="12">25</text>
+                                    </g>
+                                    <g>
+                                        <text x="627" y="280" text-anchor="middle" font-size="12">26</text>
+                                    </g>
+                                    <g>
+                                        <text x="651" y="280" text-anchor="middle" font-size="12">27</text>
+                                    </g>
+                                    <g>
+                                        <text x="675" y="280" text-anchor="middle" font-size="12">28</text>
+                                    </g>
+                                    <g>
+                                        <text x="698" y="280" text-anchor="middle" font-size="12">29</text>
+                                    </g>
+                                    <g>
+                                        <text x="722" y="280" text-anchor="middle" font-size="12">30</text>
+                                    </g>
+                                    <g>
+                                        <text x="746" y="280" text-anchor="middle" font-size="12">31</text>
+                                    </g>
+                            </svg>
+                            <div class="legend">
+                                <span>
+                                    <span class="color-bar" style="background: #fdd6af;"></span>
+                                    <span class="text">Avg. Hi</span>
+                                </span>
+                                <span>
+                                    <span class="color-bar" style="background: #bde6f0;"></span>
+                                    <span class="text">Avg. Lo</span>
+                                </span>
+                                <span>
+                                    <span class="color-bar" style="background: #ef5823;"></span>
+                                    <span class="text">Actual Hi</span>
+                                </span>
+                                <span>
+                                    <span class="color-bar" style="background: #1aafbe;"></span>
+                                    <span class="text">Actual Lo</span>
+                                </span>
+                                <span>
+                                    <span class="color-dash" style="border-color: #ef5823;"></span>
+                                    <span class="text">Forecast Hi</span>
+                                </span>
+                                <span>
+                                    <span class="color-dash" style="border-color: #1aafbe;"></span>
+                                    <span class="text">Forecast Lo</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#panel-main -->
+
+
+    
+
+
+
+    
+
+
+
+    
+
+
+
+
+</div>
+<!-- /.column-1 -->
+
+						
+  <div class="column-2 column-2-r clearfix"> 
+    
+
+
+	<div id="top_right" class="ad-lr">
+	</div> 
+      
+
+
+      <div id="bottom_right" class="ad-lr" style="margin-top:30px">
+      </div>
+
+
+
+
+
+
+  </div> 
+
+  <!-- /.column-2 --> 
+
+
+
+<div id="offers" class="offers-extras">
+    
+        <div class="panel">
+    <div class="panel-head-lt">
+        <div class="panel-head-rt">
+            <div class="panel-head"></div>
+        </div>
+    </div>
+    <div class="panel-body-lt">
+        <div class="panel-body-rt">
+            <div class="panel-body">
+                <div class="panel-body-content">
+
+                    
+                        
+                            <a data-type="Image" data-label="Verizon Fios" href="https://getaccuweather.tv/" target="_blank"><img src="2018_10_Belle%20Vue_files/a.png" alt="Verizon Fios"></a>
+                        
+                    
+
+                    
+                    
+                        <h3></h3>
+                    
+
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-foot-lt">
+        <div class="panel-foot-rt">
+            <div class="panel-foot"></div>
+        </div>
+    </div>
+</div>
+
+    
+        <div class="panel">
+    <div class="panel-head-lt">
+        <div class="panel-head-rt">
+            <div class="panel-head"></div>
+        </div>
+    </div>
+    <div class="panel-body-lt">
+        <div class="panel-body-rt">
+            <div class="panel-body">
+                <div class="panel-body-content">
+
+                    
+                        
+                            <a data-type="Image" data-label="YourCaster" href="https://itunes.apple.com/us/app/yourcaster/id1055725052?mt=8" target="_blank"><img src="2018_10_Belle%20Vue_files/a.jpeg" alt="YourCaster"></a>
+                        
+                    
+
+                    
+                    
+                        <h3></h3>
+                    
+
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-foot-lt">
+        <div class="panel-foot-rt">
+            <div class="panel-foot"></div>
+        </div>
+    </div>
+</div>
+
+    
+        <div class="panel scroll-panel">
+    <div class="panel-head-lt">
+        <div class="panel-head-rt">
+            <div class="panel-head"></div>
+        </div>
+    </div>
+    <div class="panel-body-lt">
+        <div class="panel-body-rt">
+            <div class="panel-body">
+                <div class="panel-body-content">
+
+                    
+
+                    
+                    
+                        <h3></h3>
+                    
+
+                    
+                        <ul class="scroll-area scrollbar">
+                            
+                                <li><a href="https://www.accuweather.com/en/free-weather-widgets?utm_source=adc&amp;utm_medium=ExtraAd&amp;utm_campaign=FreeWidget" target="_blank" data-type="Text" data-label="Free Weather For Your Site">Free Weather For Your Site</a></li>
+                            
+                                <li><a href="https://play.google.com/store/apps/details?id=com.accuweather.android&amp;hl=en" target="_blank" data-type="Text" data-label="AccuWeather for Android">AccuWeather for Android</a></li>
+                            
+                                <li><a href="https://itunes.apple.com/us/app/accuweather-weather-for-life/id300048137?mt=8" target="_blank" data-type="Text" data-label="AccuWeather - Weather for Life">AccuWeather - Weather for Life</a></li>
+                            
+                                <li><a href="https://getaccuweather.tv/" target="_blank" data-type="Text" data-label="The AccuWeather Network">The AccuWeather Network</a></li>
+                            
+                                <li><a href="https://wwwl.accuweather.com/pro_login.php" target="_blank" data-type="Text" data-label="Try RadarPro™ Today">Try RadarPro™ Today</a></li>
+                            
+                                <li><a href="https://enterprisesolutions.accuweather.com/skyguard" target="_blank" data-type="Text" data-label="Site Specific Severe Weather Warnings">Site Specific Severe Weather Warnings</a></li>
+                            
+                                <li><a href="https://accuweatherstore.com/" target="_blank" data-type="Text" data-label="The AccuWeather Store">The AccuWeather Store</a></li>
+                            
+                                <li><a href="http://www.accuweatherglobal.com/default.php" target="_blank" data-type="Text" data-label="Telemet Data Feeds">Telemet Data Feeds</a></li>
+                            
+                                <li><a href="https://status.accuweather.com/" target="_blank" data-type="Text" data-label="System Status Updates">System Status Updates</a></li>
+                            
+                                <li><a href="https://itunes.apple.com/us/app/yourcaster/id1055725052?mt=8" target="_blank" data-type="Text" data-label="YourCaster for iOS">YourCaster for iOS</a></li>
+                            
+                        </ul>
+                    
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-foot-lt">
+        <div class="panel-foot-rt">
+            <div class="panel-foot"></div>
+        </div>
+    </div>
+</div>
+
+    
+</div>
+
+					</div>
+					<!-- /#content -->
+				</div>
+				<!-- /#wrap-content -->
+			</div>
+		</div>
+		<div id="footer">
+	<div id="footer-content-wrapper">
+		<div class="logo-ad">
+			<h5 class="logo">AccuWeather.com</h5>
+			<div id="footer-stevem">
+				<div id="bottom"></div>
+			</div>
+		</div>
+
+			<div id="custom-goog-search">
+				<style type="text/css">
+					@import url(https://www.google.com/cse/api/branding.css);
+				</style>
+				<div class="cse-branding-right" style="color:#000000">
+					<div class="cse-branding-form">
+						<form action="https://www.google.com" id="cse-search-box" target="_blank">
+							<div>
+								<input name="cx" value="partner-pub-5771594739411148:7839492073" type="hidden">
+								<input name="ie" value="UTF-8" type="hidden">
+								<input id="goog-cse-input" name="q" size="100" type="text">
+								<input id="goog-cse-submit" name="sa" value="" type="submit">
+							</div>
+						</form>
+					</div>
+					<div class="cse-branding-logo">
+						<img src="2018_10_Belle%20Vue_files/googlelogo.png" alt="Google">
+					</div>
+					<div class="cse-branding-text">
+						Custom Search
+					</div>
+				</div>
+			</div>
+
+
+
+
+<div id="footer">
+    <div id="footer-content-wrapper">
+        <div class="logo-ad">
+            <h5 class="logo"></h5>
+            <div id="footer-stevem">
+                <div id="footer-stevem-ps"></div>
+            </div>
+        </div>
+
+        <div id="footer-nav-main" class="clearfix">
+            <div id="footer-nav-inner">
+                
+                    <div>
+    
+        <ul>
+    
+        <li class="head">COMPANY</li>
+    
+
+    
+        <li data-label="Superior Accuracy in Action"><a href="https://corporate.accuweather.com/" target="_top">Superior Accuracy in Action</a></li>
+
+    
+        <li data-label="About AccuWeather"><a href="https://corporate.accuweather.com/" target="_blank">About AccuWeather</a></li>
+
+    
+        <li data-label="Media Kit"><a href="https://mediakit.accuweather.com/" target="_blank">Media Kit</a></li>
+
+    
+        <li data-label="Careers"><a href="https://careers.accuweather.com/" target="_blank">Careers</a></li>
+
+    
+        <li data-label="Press"><a href="https://www.accuweather.com/en/press" target="_blank">Press</a></li>
+
+    
+        <li data-label="Contact Us"><a href="https://www.accuweather.com/en/contact" target="_blank">Contact Us</a></li>
+
+    
+</ul>
+
+    
+</div>
+
+                
+                    <div>
+    
+        <ul>
+    
+        <li class="head">PRODUCTS &amp; SERVICES</li>
+    
+
+    
+        <li data-label="Enterprise Solutions"><a href="https://enterprisesolutions.accuweather.com/" target="_blank">Enterprise Solutions</a></li>
+
+    
+        <li data-label="D3: Data Driven Decisions"><a href="https://d3.accuweather.com/" target="_blank">D3: Data Driven Decisions</a></li>
+
+    
+        <li data-label="AccuWeather Network"><a href="https://getaccuweather.tv/?utm_source=adc&amp;utm_medium=icon&amp;utm_campaign=footer" target="_blank">AccuWeather Network</a></li>
+
+    
+        <li data-label="StoryTeller"><a href="https://storyteller.accuweather.com/" target="_blank">StoryTeller</a></li>
+
+    
+        <li data-label="Tools for Broadcast"><a href="https://corporate.accuweather.com/broadcast" target="_blank">Tools for Broadcast</a></li>
+
+    
+        <li data-label="Radio &amp; Newspaper"><a href="https://corporate.accuweather.com/radio" target="_blank">Radio &amp; Newspaper</a></li>
+
+    
+        <li data-label="AccuWeather APIs"><a href="https://developer.accuweather.com/" target="_blank">AccuWeather APIs</a></li>
+
+    
+        <li data-label="AccuWeather Status"><a href="https://status.accuweather.com/" target="_blank">AccuWeather Status</a></li>
+
+    
+        <li data-label="Podcast"><a href="https://www.accuweather.com/podcast" target="_blank">Podcast</a></li>
+
+    
+</ul>
+
+    
+</div>
+
+                
+                    <div>
+    
+        <ul>
+    
+        <li class="head">APPS &amp; DOWNLOADS</li>
+    
+
+    
+        <li data-label="iPhone App"><a href="https://itunes.apple.com/us/app/accuweather-weather-for-life/id300048137?mt=8" target="_blank">iPhone App</a></li>
+
+    
+        <li data-label="Android App"><a href="https://play.google.com/store/apps/details?id=com.accuweather.android" target="_blank">Android App</a></li>
+
+    
+        <li data-label="Windows App"><a href="https://www.microsoft.com/en-us/store/p/accuweather-weather-for-life/9wzdncrfj1cf" target="_blank">Windows App</a></li>
+
+    
+        <li data-label="See all Apps &amp; Downloads"><a href="https://accuweather.onelink.me/dZpv/aba0397" target="_blank">See all Apps &amp; Downloads</a></li>
+
+    
+</ul>
+
+    
+</div>
+
+                
+                    <div>
+    
+        <ul>
+    
+        <li class="head">SUBSCRIPTION SERVICES</li>
+    
+
+    
+        <li data-label="AccuWeather Premium"><a href="https://wwwl.accuweather.com/premium_login.php" target="_blank">AccuWeather Premium</a></li>
+
+    
+        <li data-label="AccuWeather Professional"><a href="https://wwwl.accuweather.com/pro_login.php" target="_blank">AccuWeather Professional</a></li>
+
+    
+</ul>
+
+    
+        <ul class="footer-social">
+    
+
+    
+        <li class="apps" data-label="Apps &amp; Downloads"><a href="https://downloads.accuweather.com/" target="_blank">Apps &amp; Downloads</a></li>
+
+    
+        <li class="fb" data-label="Facebook"><a href="https://www.facebook.com/AccuWeather" target="_blank">Facebook</a></li>
+
+    
+        <li class="twt" data-label="Follow Us"><a href="https://twitter.com/BreakingWeather" target="_blank">Follow Us</a></li>
+
+    
+        <li class="utube" data-label="Watch Us"><a href="https://getaccuweather.tv/?utm_source=adc&amp;utm_medium=icon&amp;utm_campaign=footer" target="_blank">Watch Us</a></li>
+
+    
+</ul>
+
+    
+</div>
+
+                
+            </div>
+        </div>
+
+        
+            <div id="footer-tm">
+                <div class="footer-tm-inner"><p>© 2018 AccuWeather, Inc. All Rights Reserved. AccuWeather.com is a registered trademark of AccuWeather, Inc. <a href="https://www.accuweather.com/en/legal">Terms of usage</a> under which this service is provided <a href="https://www.accuweather.com/en/privacy">Privacy Statement</a> | <a href="https://www.accuweather.com/en/privacy#adChoices">Ad Choices</a> | <a href="https://www.accuweather.com/en/cookiepolicy">Cookie Policy</a></p></div>
+            </div>
+        
+    </div>
+</div>
+
+		<!-- /#footer-info -->
+	</div>
+  <!-- /#footer-content-wrapper -->
+</div>
+<!-- /#footer -->
+
+<div id="tracking-pixels"></div>
+
+	</div>
+	<!-- /#wrap -->
+		<div class="vcard">
+			<span class="adr">
+				<span class="locality">
+					<span class="value-title" title="Manchester"></span>
+				</span>
+				<abbr class="region" title="Greater Manchester">
+					<span class="value-title" title="GTM"></span>
+				</abbr>
+					<span class="postal-code">
+						<span class="value-title" title="M15 6"></span>
+					</span>
+				<abbr class="country-name" title="United Kingdom">
+					<span class="value-title" title="GB"></span>
+				</abbr>
+			</span>
+			<span class="geo">
+				<span class="latitude">
+					<span class="value-title" title="53.472"></span>
+				</span>
+				<span class="longitude">
+					<span class="value-title" title="-2.239"></span>
+				</span>
+			</span>
+		</div>
+		<script type="text/javascript">
+			var _qoptions = { qacct: 'p-4b4gl_1fWISuU' };
+			if (typeof (apgPageInfoObj) != 'undefined' && apgPageInfoObj.crumb_trail) {
+				_qoptions.labels = apgPageInfoObj.crumb_trail.join('.');
+			}
+		</script>
+		<script type="text/javascript">
+			document.write(unescape("%3Cscript src='" + (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js' %3E%3C/script%3E"));
+		</script><script src="2018_10_Belle%20Vue_files/beacon.js"></script>
+		<script type="text/javascript">
+    try {
+        COMSCORE.beacon({
+                c1: 2,
+                c2: "6005068",
+                c3: "6005068",
+                //c4: "http://www.accuweather.com/en/gb/manchester/m15-6/january-weather/329260?monyr=10/1/2018",
+                c5: "",
+                c6: "",
+                c15: "C67BD3C1"
+        });
+    } catch(e){}
+		</script>
+		<noscript>
+			<img src="https://sb.scorecardresearch.com/b?c1=&c2=6005068&c3=6005068&c15=C67BD3C1&cv=1.3&cj=1" style="display:none" width="0" height="0" alt="" />
+		</noscript>
+		<script type="text/javascript">
+			(function () {
+				var d = new Image(1, 1);
+				d.onerror = d.onload = function () {
+					d.onerror = d.onload = null;
+				};
+				d.src = ["//secure-us.imrworldwide.com/cgi-bin/m?ci=us-accuweather&cg=0&cc=1&si=", escape(window.location.href), "&rp=", escape(document.referrer), "&ts=compact&rnd=", (new Date()).getTime()].join('');
+			})();
+		</script>
+		<noscript>
+			<img style="display:none;" src="//secure-us.imrworldwide.com/cgi-bin/m?ci=us-accuweather&amp;cg=0&amp;cc=1&amp;ts=noscript" width="1" height="1" alt="" />
+		</noscript>
+		<script type="text/javascript">
+			var google_conversion_id = 1013122394;
+			var google_custom_params = window.google_tag_params;
+			var google_remarketing_only = true;
+		</script>
+		<script type="text/javascript" src="2018_10_Belle%20Vue_files/conversion.js">
+		</script>
+		<script type="text/javascript" src="2018_10_Belle%20Vue_files/sovrn_standalone_beacon.js" id="sBeacon"></script>
+			<script>
+				(function () {
+					var _fbq = window._fbq || (window._fbq = []);
+					if (!_fbq.loaded) { var fbds = document.createElement('script'); fbds.async = true; fbds.src = '//connect.facebook.net/en_US/fbds.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(fbds, s); _fbq.loaded = true; }
+					_fbq.push(['addPixelId', '513722158765166']);
+				})();
+				window._fbq = window._fbq || [];
+				window._fbq.push(['track', 'PixelInitialized', {}]);
+			</script>
+			<script>
+				(function () {
+					var _fbq = window._fbq || (window._fbq = []);
+					if (!_fbq.loaded) { var fbds = document.createElement('script'); fbds.async = true; fbds.src = '//connect.facebook.net/en_US/fbds.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(fbds, s); _fbq.loaded = true; }
+				})();
+				window._fbq = window._fbq || [];
+				window._fbq.push(['track', '6020195729798',
+					{ 'value': '0.00', 'currency': 'CAD' }
+				]);
+			</script>
+		<noscript>
+			
+			<div style="display:inline;">
+				<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/1013122394/?value=0&guid=ON&script=0" />
+			</div>
+				<img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?id=513722158765166&ev=PixelInitialized" />
+				<img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6020195729798&cd[value]=0.00&cd[currency]=CAD&noscript=1" />
+			<img src="https://sb.scorecardresearch.com/p?c1=2&c2=6005068&cv=2.0&cj=1" />
+		</noscript>
+
+	<script type="text/javascript" charset="UTF-8" src="2018_10_Belle%20Vue_files/cti_accuweather.js" async=""></script>
+<script type="text/javascript">
+  window._CTZ = window._CTZ || {};
+  window._CTZ.consent = window._CTZ.consent || {};
+</script>
+
+  <script type="text/javascript">
+    if (googlefc) {
+      googlefc.callbackQueue.push(function () {
+        switch (googlefc.getConsentStatus()) {
+          case googlefc.ConsentStatusEnum.CONSENTED_TO_PERSONALIZED_ADS:
+          case googlefc.ConsentStatusEnum.CONSENT_NOT_REQUIRED:
+            // Consent given; Alert integration.
+            window._CTZ.consent.allowed = true;
+            break;
+          case googlefc.ConsentStatusEnum.CONSENTED_TO_NON_PERSONALIZED_ADS:
+          case googlefc.ConsentStatusEnum.CONTRIBUTOR:
+            // Consent implied with contributor status; Alert integration.
+            window._CTZ.consent.allowed = true;
+            window._CTZ.consent.contributor = true;
+            break;
+          case googlefc.ConsentStatusEnum.UNKNOWN:
+          case googlefc.ConsentStatusEnum.NO_CONSENT:
+            // Consent denied; Alert integration.
+            window._CTZ.consent.allowed = false;
+            break;
+        }
+        if (!!window._CTZ_RELOAD) { window._CTZ_RELOAD() };
+      });
+    }
+  </script>
+
+	
+<noscript><img src="https://www.accuweather.com/akam/10/pixel_1111b9a0?a=dD0zMWQ1NzVlMjNhNzRiMDgxMzQxNjA3MjBkYTE1ZmQ1NTlmZjU0ZTZhJmpzPW9mZg==" style="visibility: hidden; position: absolute; left: -999px; top: -999px;" /></noscript>
+
+
+<iframe id="sovrn_beacon" margin="0" padding="0" scrolling="no" src="//gslbeacon.lijit.com/beacon?informer=12058463" style="margin: 0px; padding: 0px; border: 0px none; width: 1px; height: 1px; overflow: hidden;" width="1" height="1" frameborder="0"></iframe></body></html>
