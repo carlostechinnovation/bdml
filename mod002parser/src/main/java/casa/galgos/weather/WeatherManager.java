@@ -9,6 +9,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+/**
+ * Gestor de descarga y parseo de datos sobre WEATHER.
+ *
+ */
 public class WeatherManager implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -52,27 +56,55 @@ public class WeatherManager implements Serializable {
 		File[] directoryListing = dir.listFiles();
 		if (directoryListing != null && directoryListing.length > 0) {
 
-			MY_LOGGER.info("[PBW] contiene " + pathBrutoWeather + " paginas web brutas");
+			MY_LOGGER.info("[PBW] contiene " + directoryListing.length + " paginas web brutas");
 			List<AccuweatherParseado> websParseadas = new ArrayList<AccuweatherParseado>();
 
 			for (File pathWebBruta : directoryListing) {
 				MY_LOGGER.info("Weather - Parseando: " + pathWebBruta.getAbsolutePath());
-				websParseadas.add(parser.ejecutar(pathWebBruta.getAbsolutePath()));
+				AccuweatherParseado filaNueva = parser.ejecutar(pathWebBruta.getAbsolutePath());
 
+				if (filaNueva == null) {
+					MY_LOGGER.error("FWLII - Problema al parsear:" + pathWebBruta.getAbsolutePath());
+				} else {
+					websParseadas.add(filaNueva);
+				}
 			}
 
 			boolean modoAppend = true;
 			BufferedWriter writer = new BufferedWriter(new FileWriter(fileWeatherLimpioInsertInto, modoAppend));
-			int numSentenciasSqlEscritas = 0;
+
+			int numSentenciasSqlSobreDiasEscritas = 0;
 
 			for (AccuweatherParseado webParseada : websParseadas) {
-				for (AccuweatherDiaParseado adp : webParseada.diasParseados) {
-					writer.append(adp.generarInsertorUpdate() + "\n");
-					numSentenciasSqlEscritas++;
+
+				if (webParseada == null || webParseada.diasParseados == null || webParseada.diasParseados.isEmpty()) {
+					MY_LOGGER.error("FWLII - Web problematica en indice:" + websParseadas.indexOf(webParseada));
+
+				} else {
+
+					// Por cada DIA
+					for (AccuweatherDiaParseado adp : webParseada.diasParseados) {
+						writer.append(adp.generarInsertorUpdate(webParseada.estadio) + "\n");
+						numSentenciasSqlSobreDiasEscritas++;
+					}
+
+					// SENTENCIA SQL que indica que el mes ENTERO es del pasado y lo he procesado
+					// entero. Evito descargarlo en el futuro.
+					if (webParseada.sonTodosCompletosYPasados()) {
+						MY_LOGGER.info("FWLII - El mes esta completo y pasado (" + webParseada.anio + "-"
+								+ webParseada.mes + "). Lo marcamos!!");
+						writer.append("UPDATE datos_desa.tb_galgos_weam SET descargado = true WHERE anio="
+								+ webParseada.anio + " AND mes=" + webParseada.mes + ";\n");
+					} else {
+						MY_LOGGER.info("FWLII - El mes todavia no esta completo+pasado (" + webParseada.anio + "-"
+								+ webParseada.mes + "). Lo dejamos como no descargado completamente.");
+					}
 				}
+
 			}
 
-			MY_LOGGER.info("FWLII - Se han escrito " + numSentenciasSqlEscritas + " sentencias SQL en el fichero");
+			MY_LOGGER.info(
+					"FWLII - Se han escrito " + numSentenciasSqlSobreDiasEscritas + " sentencias SQL en el fichero");
 
 			// Cerrar fichero
 			writer.close();

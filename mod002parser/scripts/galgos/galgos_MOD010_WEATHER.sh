@@ -110,7 +110,7 @@ echo -e $(date +"%T")" Insertando en WEATHER_ESTADIOS_FECHAS (WEAM) las combinac
 read -d '' CONSULTA_TABLA_WEATHER_ESTADIOS_FECHAS <<- EOF
 
 -- Weather Estadios anio mes
--- Solo la creamos una vez en la historia. Iremos metiendo solo aquela info que nueva, pero mantenemos la ya conocida.
+-- Solo la creamos una vez en la historia. Iremos metiendo solo aquella info que nueva, pero mantenemos la ya conocida.
 -- DROP TABLE IF EXISTS datos_desa.tb_galgos_weam;
 
 CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_weam (
@@ -167,36 +167,71 @@ echo -e $(date +"%T")" Creando fichero de COMANDOS para DESCARGAR datos BRUTOS d
 rm -f ${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
 
 read -d '' CONSULTA_COMANDOS_DESCARGAS_WEAM <<- EOF
-select url_descarga_fecha FROM datos_desa.tb_galgos_weam WHERE descargado=0;
+select concat('sleep 1s; ', url_descarga_fecha) AS espera_y_comando FROM datos_desa.tb_galgos_weam WHERE descargado=0;
 EOF
 echo -e "\n$CONSULTA_COMANDOS_DESCARGAS_WEAM" 2>&1 1>>${LOG_010_WEATHER}
-#mysql -Ns --execute="$CONSULTA_COMANDOS_DESCARGAS_WEAM" 2>&1 1>>${SH_010_WEATHER_COMANDOS}
+mysql -Ns --execute="$CONSULTA_COMANDOS_DESCARGAS_WEAM" 2>&1 1>>${SH_010_WEATHER_COMANDOS}
 
 chmod 777 ${SH_010_WEATHER_COMANDOS}
 
-echo -e "\nComandos para descargar los WEATHER pedientes en: ${SH_010_WEATHER_COMANDOS}" 2>&1 1>>${LOG_010_WEATHER}
+echo -e "\nComandos para descargar los WEATHER pendientes en: ${SH_010_WEATHER_COMANDOS}" 2>&1 1>>${LOG_010_WEATHER}
 
 ###########################################################################
 echo -e $(date +"%T")" Crear directorio de datos BRUTOS para WEAM (por si no existe)..." 2>&1 1>>${LOG_010_WEATHER}
 mkdir "${PATH_BRUTO_WEATHER}" 2>&1 1>>${LOG_010_WEATHER}
+rm -f "${PATH_BRUTO_WEATHER}2*" #Borrar posibles ficheros preexistentes
 
 ###########################################################################
 echo -e $(date +"%T")" Ejecutando comandos de descarga de datos BRUTOS..." 2>&1 1>>${LOG_010_WEATHER}
-#${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
+${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
 
 ############# Parsear el contenido y meterlo en una tabla: estadio, anio, mes, dia, datos-meteorologicos #######
 echo -e $(date +"%T")" Parseando datos BRUTOS y metiendolos en la tabla WEAM con datos meteorológicos..." 2>&1 1>>${LOG_010_WEATHER}
 
-echo -e $(date +"%T")" Generando fichero de SENTENCIAS SQL (varios INSERT INTO)..." 2>&1 1>>${LOG_010_WEATHER}
+echo -e $(date +"%T")" Generando fichero de SENTENCIAS SQL (varios INSERT INTO): ${FILE_WEATHER_LIMPIO_INSERT_INTO}" 2>&1 1>>${LOG_010_WEATHER}
 #Entrada: folder (contiene las paginas web en bruto)
 #Salida: fichero con sentencias INSERT INTO, separadas por ';' para ejecutarlas secuencialmente
 rm -f ${FILE_WEATHER_LIMPIO_INSERT_INTO}
 echo -e "" > ${FILE_WEATHER_LIMPIO_INSERT_INTO} #Crear fichero vacio
 java -jar ${PATH_JAR} "GALGOS_02_WEATHER" "${PATH_BRUTO_WEATHER}" "${FILE_WEATHER_LIMPIO_INSERT_INTO}" 2>&1 1>>${LOG_010_WEATHER}
 SENTENCIAS_IT=$(cat ${FILE_WEATHER_LIMPIO_INSERT_INTO})
+
+
+read -d '' CONSULTA_TABLA_WEATHER_ESTADIOS_AMD <<- EOF
+
+-- Weather Estadios anio mes dia
+-- Solo la creamos una vez en la historia. Iremos metiendo solo aquella info que nueva, pero mantenemos la ya conocida.
+-- DROP TABLE IF EXISTS datos_desa.tb_galgos_weamd;
+
+CREATE TABLE IF NOT EXISTS datos_desa.tb_galgos_weamd (
+estadio varchar(40) NOT NULL,
+anio INT NOT NULL, 
+mes INT NOT NULL,
+dia INT NOT NULL,
+pasada BOOLEAN,
+tempMin INT,
+tempMax INT,
+histAvgMin INT,
+histAvgMax INT,
+texto varchar(80),
+rain BOOLEAN,
+wind BOOLEAN,
+cloud BOOLEAN,
+sun BOOLEAN,
+snow BOOLEAN,
+PRIMARY KEY (estadio,anio,mes,dia)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+EOF
+
+echo -e "\n$CONSULTA_TABLA_WEATHER_ESTADIOS_AMD" 2>&1 1>>${LOG_010_WEATHER}
+mysql -t --execute="$CONSULTA_TABLA_WEATHER_ESTADIOS_AMD"  2>&1 1>>${LOG_010_WEATHER}
+
+#Sentencias:
+# - Insertan la info meteorologica de los dias...
+# - pone 'descargado=true' en los meses completos para evitar descargar lo ya conocido
 consultar "$SENTENCIAS_IT" "${LOG_010_WEATHER}" "-tN"
 
-#PENDIENTE Ejecutar el fichero de sentencias INSERT INTO con info meteorológica y marcar las filas como 'descargado=true' para evitar descargar lo ya conocido
+
 
 ##########################################
 echo -e $(date +"%T")" | 010_WEATHER | Insertar datos FUTUROS en datos brutos | FIN" >>$LOG_070

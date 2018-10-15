@@ -44,8 +44,12 @@ public class AccuweatherParser implements Serializable {
 		String contenidoBruto = "";
 
 		try {
-			contenidoBruto = AccuweatherParser.readFile(pathBrutaIn, Charset.forName("ISO-8859-1"));
-			out = parsear(contenidoBruto, pathBrutaIn);
+			contenidoBruto = AccuweatherParser.readFile(pathBrutaIn, Charset.forName("ISO-8859-15"));
+			if (contenidoBruto == null || contenidoBruto.isEmpty()) {
+				MY_LOGGER.error("GALGOS-WEATHER - Contenido vacio: " + pathBrutaIn);
+			} else {
+				out = parsear(contenidoBruto, pathBrutaIn);
+			}
 
 		} catch (Exception e) {
 			MY_LOGGER.error("Error: " + e.getMessage());
@@ -66,8 +70,19 @@ public class AccuweatherParser implements Serializable {
 	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
 		MY_LOGGER.info("Leyendo " + path + " ...");
+
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		MY_LOGGER.info("Bytes leidos: " + encoded.length);
 		return new String(encoded, encoding);
+
+//		BufferedReader br = new BufferedReader(new FileReader(path));
+//		String st = "", out = "";
+//		while ((st = br.readLine()) != null) {
+//			out += st;
+//		}
+//		br.close();
+//		MY_LOGGER.info("Fichero total leido tiene " + out.length() + " caracteres");
+//		return out;
 	}
 
 	/**
@@ -80,6 +95,9 @@ public class AccuweatherParser implements Serializable {
 	 */
 	protected static AccuweatherParseado parsear(String in, String pathBrutaIn) throws Exception {
 
+		MY_LOGGER.info("AccuweatherParseado - parsear -> IN tiene " + in.length() + " caracteres");
+		MY_LOGGER.info("AccuweatherParseado - parsear -> pathBrutaIn: " + pathBrutaIn);
+
 		AccuweatherParseado out = new AccuweatherParseado();
 
 		Document doc = Jsoup.parse(in);
@@ -91,8 +109,14 @@ public class AccuweatherParser implements Serializable {
 			for (Element dia : semana.children()) {
 				parsearDia(dia, out, pathBrutaIn);
 			}
-
 		}
+
+		// Anio y mes
+		String[] partes = pathBrutaIn.split("/");
+		String nombre_fichero = partes[partes.length - 1];
+		out.anio = Integer.valueOf(nombre_fichero.split("_")[0]);
+		out.mes = Integer.valueOf(nombre_fichero.split("_")[1]);
+		out.estadio = (nombre_fichero.split("_")[2]).split("\\.")[0];
 
 		MY_LOGGER.info("GALGOS-WEATHER - Numero de elementos EXTRAIDOS (dias parseados) de la web bruta: "
 				+ out.diasParseados.size());
@@ -142,7 +166,6 @@ public class AccuweatherParser implements Serializable {
 						adp.anio = cal.get(Calendar.YEAR);
 						adp.mes = cal.get(Calendar.MONTH) + 1;
 						adp.dia = cal.get(Calendar.DAY_OF_MONTH);
-						int x = 0;
 					}
 
 				}

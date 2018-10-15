@@ -30,11 +30,35 @@ public class AccuweatherDiaParseado implements Serializable {
 				&& historicAvgMax != null;
 	}
 
-	public String generarInsertorUpdate() {
-		// TODO Pendiente
-		// INSERT INTO devices(id,name) VALUES (4,'Printer') ON DUPLICATE KEY UPDATE
-		// name = 'Central Printer';
-		return "PENDIENTE";
+	/**
+	 * @param estadio
+	 * @return
+	 */
+	public String generarInsertorUpdate(String estadio) {
+
+		String out = "REPLACE INTO datos_desa.tb_galgos_weamd (";
+		out += "estadio,anio,mes,dia, pasada,tempMin,tempMax,histAvgMin,histAvgMax,texto,rain,wind,cloud,sun,snow";
+		out += ") VALUES (";
+
+		out += ((estadio != null && !estadio.isEmpty()) ? ("'" + estadio + "'") : null) + ",";
+		out += anio + ",";
+		out += mes + ",";
+		out += dia + ",";
+
+		out += real + ",";// pasada
+		out += tempMin + ",";
+		out += tempMax + ",";
+		out += historicAvgMin + ",";
+		out += historicAvgMax + ",";
+		out += ((texto != null && !texto.isEmpty()) ? ("'" + texto + "'") : null) + ",";
+		out += rain + ",";
+		out += wind + ",";
+		out += cloud + ",";
+		out += sun + ",";
+		out += snow;
+
+		out += ");";
+		return out;
 	}
 
 	@Override
