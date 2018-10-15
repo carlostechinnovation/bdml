@@ -70,11 +70,11 @@ PRIMARY KEY (anio, mes)
 
 -- En la URL, la FECHA tiene el formato m/d/aaaa (ej: 9/1/2018)
 
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 1, '1/1/2018');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 2, '2/1/2018');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 3, '3/1/2018');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 4, '4/1/2018');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 5, '5/1/2018');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 1, '1/1/2018');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 2, '2/1/2018');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 3, '3/1/2018');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 4, '4/1/2018');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 5, '5/1/2018');
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 6, '6/1/2018');
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 7, '7/1/2018');
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 8, '8/1/2018');
@@ -84,17 +84,17 @@ INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 11, '11/
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 12, '12/1/2018');
 
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 1, '1/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 2, '2/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 3, '3/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 4, '4/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 5, '5/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 6, '6/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 7, '7/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 8, '8/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 9, '9/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 10, '10/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 11, '11/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 12, '12/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 2, '2/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 3, '3/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 4, '4/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 5, '5/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 6, '6/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 7, '7/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 8, '8/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 9, '9/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 10, '10/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 11, '11/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 12, '12/1/2019');
 
 SELECT * FROM datos_desa.tb_weather_fechas LIMIT 5;
 EOF
@@ -183,7 +183,7 @@ rm -f "${PATH_BRUTO_WEATHER}2*" #Borrar posibles ficheros preexistentes
 
 ###########################################################################
 echo -e $(date +"%T")" Ejecutando comandos de descarga de datos BRUTOS..." 2>&1 1>>${LOG_010_WEATHER}
-${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
+#${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
 
 ############# Parsear el contenido y meterlo en una tabla: estadio, anio, mes, dia, datos-meteorologicos #######
 echo -e $(date +"%T")" Parseando datos BRUTOS y metiendolos en la tabla WEAM con datos meteorológicos..." 2>&1 1>>${LOG_010_WEATHER}
@@ -192,9 +192,8 @@ echo -e $(date +"%T")" Generando fichero de SENTENCIAS SQL (varios INSERT INTO):
 #Entrada: folder (contiene las paginas web en bruto)
 #Salida: fichero con sentencias INSERT INTO, separadas por ';' para ejecutarlas secuencialmente
 rm -f ${FILE_WEATHER_LIMPIO_INSERT_INTO}
-echo -e "" > ${FILE_WEATHER_LIMPIO_INSERT_INTO} #Crear fichero vacio
+echo -e ";" > ${FILE_WEATHER_LIMPIO_INSERT_INTO} #Crear fichero vacio
 java -jar ${PATH_JAR} "GALGOS_02_WEATHER" "${PATH_BRUTO_WEATHER}" "${FILE_WEATHER_LIMPIO_INSERT_INTO}" 2>&1 1>>${LOG_010_WEATHER}
-SENTENCIAS_IT=$(cat ${FILE_WEATHER_LIMPIO_INSERT_INTO})
 
 
 read -d '' CONSULTA_TABLA_WEATHER_ESTADIOS_AMD <<- EOF
@@ -226,11 +225,17 @@ EOF
 echo -e "\n$CONSULTA_TABLA_WEATHER_ESTADIOS_AMD" 2>&1 1>>${LOG_010_WEATHER}
 mysql -t --execute="$CONSULTA_TABLA_WEATHER_ESTADIOS_AMD"  2>&1 1>>${LOG_010_WEATHER}
 
-#Sentencias:
-# - Insertan la info meteorologica de los dias...
-# - pone 'descargado=true' en los meses completos para evitar descargar lo ya conocido
-consultar "$SENTENCIAS_IT" "${LOG_010_WEATHER}" "-tN"
 
+echo -e "\nEjecutando sentencias SQL (insertan la info meteorologica de los dias + pone 'descargado=true' en los meses completos para evitar descargar lo ya conocido) ..." 2>&1 1>>${LOG_010_WEATHER}
+
+while IFS="" read -r linea || [ -n "${linea}" ]
+do
+  consultar "${linea}" "${LOG_010_WEATHER}" "-tN"
+done < "${FILE_WEATHER_LIMPIO_INSERT_INTO}"
+
+
+echo -e "\nContenido de la tabla WEAMD (weather estadio anio-mes-dia):" 2>&1 1>>${LOG_010_WEATHER}
+mysql -t --execute="SELECT anio, mes, pasada, count(*) AS num_weamd FROM datos_desa.tb_galgos_weamd GROUP BY anio ASC, mes ASC, pasada ASC;"  2>&1 1>>${LOG_010_WEATHER}
 
 
 ##########################################

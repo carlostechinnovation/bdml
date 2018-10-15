@@ -91,13 +91,20 @@ public class WeatherManager implements Serializable {
 					// SENTENCIA SQL que indica que el mes ENTERO es del pasado y lo he procesado
 					// entero. Evito descargarlo en el futuro.
 					if (webParseada.sonTodosCompletosYPasados()) {
-						MY_LOGGER.info("FWLII - El mes esta completo y pasado (" + webParseada.anio + "-"
-								+ webParseada.mes + "). Lo marcamos!!");
-						writer.append("UPDATE datos_desa.tb_galgos_weam SET descargado = true WHERE anio="
-								+ webParseada.anio + " AND mes=" + webParseada.mes + ";\n");
+
+						String consultaUpdateWeam = "REPLACE INTO datos_desa.tb_galgos_weam SELECT estadio,anio,mes,url_descarga_fecha, true AS descargado FROM datos_desa.tb_galgos_weam WHERE ";
+						consultaUpdateWeam += "estadio='" + webParseada.estadio + "' ";
+						consultaUpdateWeam += "AND anio=" + webParseada.anio + " ";
+						consultaUpdateWeam += "AND mes=" + webParseada.mes + ";";
+
+						MY_LOGGER.info("FWLII - El mes esta completo y pasado (" + webParseada.estadio
+								+ webParseada.anio + "-" + webParseada.mes + "). Lo marcamos!!");
+						writer.append(consultaUpdateWeam + "\n");
+
 					} else {
-						MY_LOGGER.info("FWLII - El mes todavia no esta completo+pasado (" + webParseada.anio + "-"
-								+ webParseada.mes + "). Lo dejamos como no descargado completamente.");
+						MY_LOGGER.info("FWLII - El mes todavia NO esta completo+pasado (" + webParseada.estadio
+								+ webParseada.anio + "-" + webParseada.mes
+								+ "). Lo dejamos como NO descargado completamente.");
 					}
 				}
 

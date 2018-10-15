@@ -70,19 +70,9 @@ public class AccuweatherParser implements Serializable {
 	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
 		MY_LOGGER.info("Leyendo " + path + " ...");
-
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		MY_LOGGER.info("Bytes leidos: " + encoded.length);
 		return new String(encoded, encoding);
-
-//		BufferedReader br = new BufferedReader(new FileReader(path));
-//		String st = "", out = "";
-//		while ((st = br.readLine()) != null) {
-//			out += st;
-//		}
-//		br.close();
-//		MY_LOGGER.info("Fichero total leido tiene " + out.length() + " caracteres");
-//		return out;
 	}
 
 	/**
@@ -94,9 +84,6 @@ public class AccuweatherParser implements Serializable {
 	 * @throws Exception
 	 */
 	protected static AccuweatherParseado parsear(String in, String pathBrutaIn) throws Exception {
-
-		MY_LOGGER.info("AccuweatherParseado - parsear -> IN tiene " + in.length() + " caracteres");
-		MY_LOGGER.info("AccuweatherParseado - parsear -> pathBrutaIn: " + pathBrutaIn);
 
 		AccuweatherParseado out = new AccuweatherParseado();
 
@@ -193,14 +180,16 @@ public class AccuweatherParser implements Serializable {
 										if (realch.hasClass("large-temp")) {
 
 											tempMaxStr = realch.text().replace("Â", "").replace("°", "");
-											if (tempMaxStr != null && !tempMaxStr.isEmpty()) {
+											if (tempMaxStr != null && !tempMaxStr.isEmpty()
+													&& !tempMaxStr.equals("N/A")) {
 												adp.tempMax = Integer.valueOf(tempMaxStr);
 											}
 
 										} else if (realch.hasClass("small-temp")) {
 											tempMinStr = realch.text().replace("/", "").replace("Â", "").replace("°",
 													"");
-											if (tempMinStr != null && !tempMinStr.isEmpty()) {
+											if (tempMinStr != null && !tempMinStr.isEmpty()
+													&& !tempMinStr.equals("N/A")) {
 												adp.tempMin = Integer.valueOf(tempMinStr);
 											}
 										}
@@ -213,14 +202,14 @@ public class AccuweatherParser implements Serializable {
 																												// (cercana)
 							adp.real = false; // futura
 							String tempMaxStr = itemsInfoCh.text().replace("Â", "").replace("°", "");
-							if (tempMaxStr != null && !tempMaxStr.isEmpty()) {
+							if (tempMaxStr != null && !tempMaxStr.isEmpty() && !tempMaxStr.equals("N/A")) {
 								adp.tempMax = Integer.valueOf(tempMaxStr);
 							}
 						} else if (itemsInfoCh.size() == 1 && itemsInfoCh.toString().contains("small-temp")) { // FUTURA
 																												// (cercana)
 							adp.real = false; // futura
 							String tempMinStr = itemsInfoCh.text().replace("Â", "").replace("°", "");
-							if (tempMinStr != null && !tempMinStr.isEmpty()) {
+							if (tempMinStr != null && !tempMinStr.isEmpty() && !tempMinStr.equals("N/A")) {
 								adp.tempMin = Integer.valueOf(tempMinStr);
 							}
 						} else if (itemsInfoCh.size() == 2 && itemsInfoCh.toString().contains("large-temp")) { // FUTURA
@@ -231,14 +220,14 @@ public class AccuweatherParser implements Serializable {
 								if (realch.hasClass("large-temp")) {
 
 									String tempMaxStr = realch.text().replace("Â", "").replace("°", "");
-									if (tempMaxStr != null && !tempMaxStr.isEmpty()) {
+									if (tempMaxStr != null && !tempMaxStr.isEmpty() && !tempMaxStr.equals("N/A")) {
 										adp.tempMax = Integer.valueOf(tempMaxStr);
 									}
 
 								} else if (realch.hasClass("small-temp")) {
 									String tempMinStr = realch.text().replace("/", "").replace("Â", "").replace("°",
 											"");
-									if (tempMinStr != null && !tempMinStr.isEmpty()) {
+									if (tempMinStr != null && !tempMinStr.isEmpty() && !tempMinStr.equals("N/A")) {
 										adp.tempMin = Integer.valueOf(tempMinStr);
 									}
 								}
@@ -259,7 +248,8 @@ public class AccuweatherParser implements Serializable {
 
 									histTempMaxStr = iice.text().replace("Â", "").replace("°", "").trim();
 
-									if (histTempMaxStr != null && !histTempMaxStr.isEmpty()) {
+									if (histTempMaxStr != null && !histTempMaxStr.isEmpty()
+											&& !histTempMaxStr.equals("N/A")) {
 										adp.historicAvgMax = Integer.valueOf(histTempMaxStr);
 
 									}
@@ -268,7 +258,8 @@ public class AccuweatherParser implements Serializable {
 									histTempMinStr = iice.text().replace("/", "").replace("Â", "").replace("°", "")
 											.trim();
 
-									if (histTempMinStr != null && !histTempMinStr.isEmpty()) {
+									if (histTempMinStr != null && !histTempMinStr.isEmpty()
+											&& !histTempMinStr.equals("N/A")) {
 										adp.historicAvgMin = Integer.valueOf(histTempMinStr);
 									}
 
@@ -277,14 +268,16 @@ public class AccuweatherParser implements Serializable {
 									for (Element iicee : iice.children()) {
 										histTempMaxStr = iice.children().get(0).text().replace("Â", "").replace("°", "")
 												.trim();
-										if (histTempMaxStr != null && !histTempMaxStr.isEmpty()) {
+										if (histTempMaxStr != null && !histTempMaxStr.isEmpty()
+												&& !histTempMaxStr.equals("N/A")) {
 											adp.historicAvgMax = Integer.valueOf(histTempMaxStr);
 										}
 
 										histTempMinStr = iice.children().get(1).text().replace("/", "").replace("Â", "")
 												.replace("°", "").trim();
 
-										if (histTempMinStr != null && !histTempMinStr.isEmpty()) {
+										if (histTempMinStr != null && !histTempMinStr.isEmpty()
+												&& !histTempMinStr.equals("N/A")) {
 											adp.historicAvgMin = Integer.valueOf(histTempMinStr);
 										}
 									}
@@ -294,6 +287,9 @@ public class AccuweatherParser implements Serializable {
 
 						}
 
+					} else if (itemInfo.hasClass("cond") && !itemInfo.text().isEmpty()) {
+						String texto = itemInfo.text().replace(";", "").trim();
+						adp.texto = texto;
 					}
 
 				}

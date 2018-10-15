@@ -32,16 +32,18 @@ public class AccuweatherParseado implements Serializable {
 	 * @return True si todos los dias han sido parseados y todos son del PASADO.
 	 */
 	public boolean sonTodosCompletosYPasados() {
-		boolean out = true;
-		if (diasParseados.size() >= 28) {
-			for (AccuweatherDiaParseado adp : diasParseados) {
-				if (adp.minimoRelleno() && adp.real == false) {
-					out = false;
-				}
+
+		boolean algunoIncompleto = false;
+
+		for (AccuweatherDiaParseado adp : diasParseados) {
+			if (!adp.minimoRelleno() // incompleto
+					|| adp.real == false // futuro
+			) {
+				algunoIncompleto = true;
 			}
 		}
 
-		return out;
+		return (diasParseados.size() < 28) || algunoIncompleto;
 	}
 
 }
