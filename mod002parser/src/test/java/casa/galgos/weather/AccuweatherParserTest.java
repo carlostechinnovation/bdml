@@ -66,6 +66,55 @@ public class AccuweatherParserTest {
 
 	}
 
+	@Test
+	public void generarInsertorUpdateSinTextoTest() throws Exception {
+		AccuweatherDiaParseado in = new AccuweatherDiaParseado();
+
+		in.anio = 2018;
+		in.mes = 10;
+		in.dia = 15;
+		in.real = false;
+		in.tempMin = 5;
+		in.tempMax = 15;
+		in.historicAvgMin = 6;
+		in.historicAvgMax = 8;
+		in.texto = null;
+		in.rain = false;
+		in.wind = false;
+		in.cloud = false;
+		in.sun = false;
+		in.snow = false;
+
+		String out = in.generarInsertorUpdate("mi_estadio");
+
+		System.out.println(out);
+	}
+
+	@Test
+	public void generarInsertorUpdateConTextoTest() throws Exception {
+		AccuweatherDiaParseado in = new AccuweatherDiaParseado();
+
+		in.anio = 2018;
+		in.mes = 10;
+		in.dia = 15;
+		in.real = false;
+		in.tempMin = 5;
+		in.tempMax = 15;
+		in.historicAvgMin = 6;
+		in.historicAvgMax = 8;
+		in.texto = null;
+		in.rain = false;
+		in.wind = false;
+		in.cloud = false;
+		in.sun = false;
+		in.snow = false;
+
+		String out = in.generarInsertorUpdate("mi_estadio");
+
+		System.out.println(out);
+
+	}
+
 	@After
 	public void terminar() {
 	}

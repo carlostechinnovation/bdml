@@ -290,6 +290,7 @@ public class AccuweatherParser implements Serializable {
 					} else if (itemInfo.hasClass("cond") && !itemInfo.text().isEmpty()) {
 						String texto = itemInfo.text().replace(";", "").trim();
 						adp.texto = texto;
+						extraerFlagsDelTexto(texto, adp);
 					}
 
 				}
@@ -306,6 +307,43 @@ public class AccuweatherParser implements Serializable {
 		} else {
 			MY_LOGGER.error("GALGOS-WEATHER - Dia MAL parseado en: " + pathBrutaIn);
 		}
+	}
+
+	/**
+	 * @param texto
+	 * @param adp
+	 * @throws Exception
+	 */
+	protected static void extraerFlagsDelTexto(String texto, AccuweatherDiaParseado adp) throws Exception {
+
+		if (texto != null && !texto.isEmpty()) {
+
+			// Si tiene texto, los flags tomaran siempre valores. Establezco valores por
+			// defecto.
+
+			if (texto.toLowerCase().contains("rain") || texto.toLowerCase().contains("shower")) {
+				adp.rain = true;
+			}
+
+			if (texto.toLowerCase().contains("wind")) {
+				adp.wind = true;
+			}
+
+			if (texto.toLowerCase().contains("cloud")) {
+				adp.cloud = true;
+			}
+
+			if (texto.toLowerCase().contains("sun")) {
+				adp.sun = true;
+			}
+
+			if (texto.toLowerCase().contains("snow") || texto.toLowerCase().contains("flurries")
+					|| texto.toLowerCase().contains("flurry")) {
+				adp.snow = true;
+			}
+
+		}
+
 	}
 
 }
