@@ -6,7 +6,7 @@ source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 rm -f ${LOG_010_WEATHER}
 
 
-echo -e $(date +"%T")" | 010_WEATHER | Insertar datos FUTUROS en datos brutos | INICIO" >>$LOG_070
+echo -e $(date +"%T")" | 010_WEATHER | Tiempo | INICIO" >>$LOG_070
 echo -e "MOD010_WEATHER --> LOG = "${LOG_010_WEATHER}
 
 ###########################################################################
@@ -178,12 +178,13 @@ echo -e "\nComandos para descargar los WEATHER pendientes en: ${SH_010_WEATHER_C
 
 ###########################################################################
 echo -e $(date +"%T")" Crear directorio de datos BRUTOS para WEAM (por si no existe)..." 2>&1 1>>${LOG_010_WEATHER}
+rm -f "${PATH_BRUTO_WEATHER}*" #Borrar posibles ficheros preexistentes
 mkdir "${PATH_BRUTO_WEATHER}" 2>&1 1>>${LOG_010_WEATHER}
-rm -f "${PATH_BRUTO_WEATHER}2*" #Borrar posibles ficheros preexistentes
+
 
 ###########################################################################
 echo -e $(date +"%T")" Ejecutando comandos de descarga de datos BRUTOS..." 2>&1 1>>${LOG_010_WEATHER}
-#${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
+${SH_010_WEATHER_COMANDOS} 2>&1 1>>${LOG_010_WEATHER}
 
 ############# Parsear el contenido y meterlo en una tabla: estadio, anio, mes, dia, datos-meteorologicos #######
 echo -e $(date +"%T")" Parseando datos BRUTOS y metiendolos en la tabla WEAM con datos meteorológicos..." 2>&1 1>>${LOG_010_WEATHER}
@@ -239,7 +240,7 @@ mysql -t --execute="SELECT anio, mes, pasada, count(*) AS num_weamd FROM datos_d
 
 
 ##########################################
-echo -e $(date +"%T")" | 010_WEATHER | Insertar datos FUTUROS en datos brutos | FIN" >>$LOG_070
+echo -e $(date +"%T")" | 010_WEATHER | Tiempo | FIN" >>$LOG_070
 
 
 
