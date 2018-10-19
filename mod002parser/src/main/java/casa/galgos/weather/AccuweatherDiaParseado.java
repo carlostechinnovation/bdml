@@ -26,8 +26,7 @@ public class AccuweatherDiaParseado implements Serializable {
 	 * @return
 	 */
 	public boolean minimoRelleno() {
-		return anio != null && mes != null && dia != null && real != null && historicAvgMin != null
-				&& historicAvgMax != null;
+		return anio != null && mes != null && dia != null && real != null;
 	}
 
 	/**
@@ -36,7 +35,9 @@ public class AccuweatherDiaParseado implements Serializable {
 	 */
 	public String generarInsertorUpdate(String estadio) {
 
-		String out = "REPLACE INTO datos_desa.tb_galgos_weamd (";
+		String texto_2 = ((texto != null && !texto.isEmpty()) ? ("'" + texto + "'") : null);
+
+		String out = "INSERT INTO datos_desa.tb_galgos_weamd (";
 		out += "estadio,anio,mes,dia, pasada,tempMin,tempMax,histAvgMin,histAvgMax,texto,rain,wind,cloud,sun,snow";
 		out += ") VALUES (";
 
@@ -50,14 +51,35 @@ public class AccuweatherDiaParseado implements Serializable {
 		out += tempMax + ",";
 		out += historicAvgMin + ",";
 		out += historicAvgMax + ",";
-		out += ((texto != null && !texto.isEmpty()) ? ("'" + texto + "'") : null) + ",";
+		out += texto_2 + ",";
 		out += rain + ",";
 		out += wind + ",";
 		out += cloud + ",";
 		out += sun + ",";
 		out += snow;
 
-		out += ");";
+		out += ")";
+		out += " ON DUPLICATE KEY UPDATE ";
+
+		out += " pasada=( CASE WHEN (" + real + " IS NOT NULL AND " + real + " <> '') THEN " + real
+				+ " ELSE pasada END ),";
+
+		out += " tempMin=( CASE WHEN (" + tempMin + " IS NOT NULL AND " + tempMin + " <> '') THEN " + tempMin
+				+ " ELSE tempMin END ),";
+		out += " tempMax=( CASE WHEN (" + tempMax + " IS NOT NULL AND " + tempMax + " <> '') THEN " + tempMax
+				+ " ELSE tempMax END ),";
+
+		out += " texto=( CASE WHEN (" + texto_2 + " IS NOT NULL AND " + texto_2 + " <> '') THEN " + texto_2
+				+ " ELSE texto END ),";
+		out += " rain=( CASE WHEN (" + rain + " IS NOT NULL AND " + rain + " <> '') THEN " + rain + " ELSE rain END ),";
+		out += " wind=( CASE WHEN (" + wind + " IS NOT NULL AND " + wind + " <> '') THEN " + wind + " ELSE wind END ),";
+		out += " cloud=( CASE WHEN (" + cloud + " IS NOT NULL AND " + cloud + " <> '') THEN " + cloud
+				+ " ELSE cloud END ),";
+		out += " sun=( CASE WHEN (" + sun + " IS NOT NULL AND " + sun + " <> '') THEN " + sun + " ELSE sun END ),";
+		out += " snow=( CASE WHEN (" + snow + " IS NOT NULL AND " + snow + " <> '') THEN " + snow + " ELSE snow END )";
+
+		out += ";";
+
 		return out;
 	}
 

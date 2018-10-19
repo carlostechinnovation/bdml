@@ -60,7 +60,7 @@ public class WeatherManager implements Serializable {
 			List<AccuweatherParseado> websParseadas = new ArrayList<AccuweatherParseado>();
 
 			for (File pathWebBruta : directoryListing) {
-				MY_LOGGER.info("Weather - Parseando: " + pathWebBruta.getAbsolutePath());
+				MY_LOGGER.debug("Weather - Parseando: " + pathWebBruta.getAbsolutePath());
 				AccuweatherParseado filaNueva = parser.ejecutar(pathWebBruta.getAbsolutePath());
 
 				if (filaNueva == null) {
@@ -97,12 +97,12 @@ public class WeatherManager implements Serializable {
 						consultaUpdateWeam += "AND anio=" + webParseada.anio + " ";
 						consultaUpdateWeam += "AND mes=" + webParseada.mes + ";";
 
-						MY_LOGGER.info("FWLII - El mes esta completo y pasado (" + webParseada.estadio
+						MY_LOGGER.debug("FWLII - El mes esta completo y pasado (" + webParseada.estadio
 								+ webParseada.anio + "-" + webParseada.mes + "). Lo marcamos!!");
 						writer.append(consultaUpdateWeam + "\n");
 
 					} else {
-						MY_LOGGER.info("FWLII - El mes todavia NO esta completo+pasado (" + webParseada.estadio
+						MY_LOGGER.debug("FWLII - El mes todavia NO esta completo+pasado (" + webParseada.estadio
 								+ webParseada.anio + "-" + webParseada.mes
 								+ "). Lo dejamos como NO descargado completamente.");
 					}

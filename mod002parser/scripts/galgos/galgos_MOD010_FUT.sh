@@ -248,9 +248,13 @@ FUERA.clase_reciente AS clase,
 DENTRO.anio, DENTRO.mes, DENTRO.dia, DENTRO.hora, DENTRO.minuto, 
 FUERA2.distancia_reciente AS distancia,
 DENTRO.num_galgos,
-DENTRO.premio_primero, DENTRO.premio_segundo, DENTRO.premio_otros ,  DENTRO.premio_total_carrera ,  DENTRO.going_allowance_segundos ,
+DENTRO.premio_primero, DENTRO.premio_segundo, DENTRO.premio_otros,  DENTRO.premio_total_carrera,  DENTRO.going_allowance_segundos,
 DENTRO.fc_1 ,  DENTRO.fc_2 ,  DENTRO.fc_pounds ,
-DENTRO.tc_1 , DENTRO.tc_2 , DENTRO.tc_3 , DENTRO.tc_pounds
+DENTRO.tc_1 , DENTRO.tc_2 , DENTRO.tc_3 , DENTRO.tc_pounds,
+
+CONTIEMPO.pasada, CONTIEMPO.tempMin, CONTIEMPO.tempMax, CONTIEMPO.histAvgMin, CONTIEMPO.histAvgMax, CONTIEMPO.texto, 
+CONTIEMPO.rain, CONTIEMPO.wind, CONTIEMPO.cloud, CONTIEMPO.sun, CONTIEMPO.snow
+
 FROM (
   SELECT 
   MAX(id_carrera_artificial) AS id_carrera, 
@@ -270,11 +274,15 @@ FROM (
   FROM datos_desa.tb_cg_semillas_sportium_d A
   GROUP BY DHE
 ) DENTRO
+
 LEFT JOIN datos_desa.tb_carreras_futuras_con_clase_reciente_mas_repetida FUERA 
 ON (DENTRO.id_carrera=FUERA.id_carrera_artificial)
 
 LEFT JOIN datos_desa.tb_carreras_futuras_con_distancia_reciente_mas_repetida FUERA2 
 ON (DENTRO.id_carrera=FUERA2.id_carrera_artificial)
+
+LEFT JOIN datos_desa.tb_galgos_weamd CONTIEMPO
+ON (DENTRO.track=CONTIEMPO.estadio AND DENTRO.anio=CONTIEMPO.anio AND DENTRO.mes=CONTIEMPO.mes AND DENTRO.dia=CONTIEMPO.dia)
 ;
 
 

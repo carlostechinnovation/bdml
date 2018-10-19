@@ -98,7 +98,7 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += "hora SMALLINT,";
 		out += "minuto SMALLINT, ";
 		out += "distancia INT,";
-		out += "num_galgos SMALLINT,";
+		out += "num_galgos SMALLINT, ";
 
 		out += "premio_primero INT, ";
 		out += "premio_segundo INT, ";
@@ -111,7 +111,21 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += "tc_1 SMALLINT, ";
 		out += "tc_2 SMALLINT, ";
 		out += "tc_3 SMALLINT, ";
-		out += "tc_pounds decimal(10,2)";
+		out += "tc_pounds decimal(10,2), ";
+
+		// DATOS del ESTADIO que rellenaremos a posteriori con un REPLACE y LEFT JOIN
+		out += "pasada BOOLEAN, ";
+		out += "tempMin INT, ";
+		out += "tempMax INT, ";
+		out += "histAvgMin INT, ";
+		out += "histAvgMax INT, ";
+		out += "texto varchar(80), ";
+		out += "rain BOOLEAN, ";
+		out += "wind BOOLEAN, ";
+		out += "cloud BOOLEAN, ";
+		out += "sun BOOLEAN, ";
+		out += "snow BOOLEAN ";
+
 		out += ");";
 
 		return out;
@@ -165,15 +179,37 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 				? Constantes.round2(Float.valueOf(tc_pounds), 2)
 				: "\\N";
 
+		// DATOS DEL ESTADIO (rellenados despues)
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N"; // pasada
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// tempMin
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// tempMax
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// histAvgMin
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// histAvgMax
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// texto
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// rain
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// wind
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// cloud
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// sun
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// snow
+
 		out += Constantes.SEPARADOR_FILA;
 		return out;
 	}
 
 	/**
-	 * @param fc
-	 *            " (2-1) £11.75 |"
-	 * @param tc
-	 *            " (2-1-3) £23.19"
+	 * @param fc " (2-1) £11.75 |"
+	 * @param tc " (2-1-3) £23.19"
 	 */
 	public void rellenarForecastyTricast(String fc, String tc) {
 
@@ -196,8 +232,7 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 	}
 
 	/**
-	 * @param in
-	 *            Calendar
+	 * @param in Calendar
 	 * @return 2017|11|09|20|52
 	 */
 	public static String formatearFechaParaExportar(Calendar in) {

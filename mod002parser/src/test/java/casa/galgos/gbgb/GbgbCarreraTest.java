@@ -35,4 +35,12 @@ public class GbgbCarreraTest {
 
 	}
 
+	@Test
+	public void generarSqlCreateTableTest() throws Exception {
+
+		GbgbCarrera instancia = new GbgbCarrera(true);
+		String out = instancia.generarSqlCreateTable("_pre");
+		Assert.assertTrue(out != null && !out.isEmpty());
+	}
+
 }

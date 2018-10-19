@@ -3,6 +3,7 @@
  */
 package casa.galgos.weather;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.charset.Charset;
@@ -44,11 +45,20 @@ public class AccuweatherParser implements Serializable {
 		String contenidoBruto = "";
 
 		try {
-			contenidoBruto = AccuweatherParser.readFile(pathBrutaIn, Charset.forName("ISO-8859-15"));
-			if (contenidoBruto == null || contenidoBruto.isEmpty()) {
-				MY_LOGGER.error("GALGOS-WEATHER - Contenido vacio: " + pathBrutaIn);
+
+			File f = new File(pathBrutaIn);
+
+			if (f.exists() && !f.isDirectory()) {
+
+				contenidoBruto = AccuweatherParser.readFile(pathBrutaIn, Charset.forName("ISO-8859-15"));
+				if (contenidoBruto == null || contenidoBruto.isEmpty()) {
+					MY_LOGGER.error("GALGOS-WEATHER - Contenido vacio: " + pathBrutaIn);
+				} else {
+					out = parsear(contenidoBruto, pathBrutaIn);
+				}
+
 			} else {
-				out = parsear(contenidoBruto, pathBrutaIn);
+				MY_LOGGER.error("GALGOS-AccuweatherParser: NO existe el fichero: " + pathBrutaIn);
 			}
 
 		} catch (Exception e) {
@@ -69,9 +79,9 @@ public class AccuweatherParser implements Serializable {
 	 * @throws IOException
 	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
-		MY_LOGGER.info("Leyendo " + path + " ...");
+		MY_LOGGER.debug("Leyendo " + path + " ...");
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
-		MY_LOGGER.info("Bytes leidos: " + encoded.length);
+		MY_LOGGER.debug("Bytes leidos: " + encoded.length);
 		return new String(encoded, encoding);
 	}
 

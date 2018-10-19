@@ -101,6 +101,32 @@ echo -e $(date +"%T")" Borrando datos brutos: "${brutos_semillas_sportium} 2>&1 
 rm -f ${brutos_semillas_sportium} 2>&1 1>>${LOG_MASTER}
 
 
+#################### Enriquecimiento de tabla CARRERAS con WEATHER (WEAMD) #################################
+
+read -d '' CONSULTA_RELLENAR_WEAMD <<- EOF
+
+REPLACE INTO datos_desa.tb_galgos_carreras
+
+SELECT id_carrera,id_campeonato,track,clase, A.anio,A.mes,A.dia,
+hora,minuto, distancia,num_galgos,premio_primero, premio_segundo, premio_otros, 
+premio_total_carrera,going_allowance_segundos, fc_1, fc_2, fc_pounds, 
+tc_1, tc_2, tc_3, tc_pounds,
+
+B.pasada, B.tempMin,B.tempMax,B.histAvgMin,B.histAvgMax,B.texto,B.rain,B.wind,B.cloud,B.sun,B.snow
+
+FROM datos_desa.tb_galgos_carreras A 
+LEFT JOIN datos_desa.tb_galgos_weamd B
+ON (A.track=B.estadio AND A.anio=B.anio AND A.mes=B.mes AND A.dia=B.dia)
+EOF
+
+echo -e $(date +"%T")" Rellenando info WEAMD en tabla de carreras: INICIO..." 2>&1 1>>${LOG_MASTER}
+echo -e "$CONSULTA_RELLENAR_WEAMD\n********************************\n" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+mysql --execute="$CONSULTA_RELLENAR_WEAMD" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e "\n-------------------------------------" 2>&1 1>>${LOG_DESCARGA_BRUTO}
+echo -e $(date +"%T")" Rellenando info WEAMD en tabla de carreras: FIN" 2>&1 1>>${LOG_MASTER}
+
+
+
 ##########################################
 
 echo -e $(date +"%T")" | 010 | Descarga datos brutos | FIN" >>$LOG_070
