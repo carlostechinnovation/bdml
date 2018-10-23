@@ -112,7 +112,8 @@ hora,minuto, distancia,num_galgos,premio_primero, premio_segundo, premio_otros,
 premio_total_carrera,going_allowance_segundos, fc_1, fc_2, fc_pounds, 
 tc_1, tc_2, tc_3, tc_pounds,
 
-B.pasada, B.tempMin,B.tempMax,B.histAvgMin,B.histAvgMax,B.texto,B.rain,B.wind,B.cloud,B.sun,B.snow
+B.pasada, B.tempMin, B.tempMax, (B.tempMax - B.tempMin) AS tempSpan, B.histAvgMin, B.histAvgMax, 
+B.texto, B.rain, B.wind, B.cloud, B.sun, B.snow
 
 FROM datos_desa.tb_galgos_carreras A 
 LEFT JOIN datos_desa.tb_galgos_weamd B

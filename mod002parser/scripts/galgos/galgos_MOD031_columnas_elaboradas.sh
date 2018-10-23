@@ -981,6 +981,8 @@ dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
 num_galgos_norm, mes_norm,hora_norm,premio_primero_norm,premio_segundo_norm,premio_otros_norm,premio_total_carrera_norm,going_allowance_segundos_norm,
 fc_1_norm,fc_2_norm,fc_pounds_norm,tc_1_norm,tc_2_norm,tc_3_norm,tc_pounds_norm,
 
+tempMin_norm, tempMax_norm, tempSpan_norm,
+
 CAST( D.venue_going_std AS DECIMAL(8,6) ) AS venue_going_std,
 CAST( D.venue_going_avg AS DECIMAL(8,6) ) AS venue_going_avg
 
@@ -1005,7 +1007,9 @@ FROM (
   CAST( IFNULL(B.tc_1_norm, C.tc_1_norm) AS DECIMAL(8,6) ) AS tc_1_norm,
   CAST( IFNULL(B.tc_2_norm, C.tc_2_norm) AS DECIMAL(8,6) ) AS tc_2_norm,
   CAST( IFNULL(B.tc_3_norm, C.tc_3_norm) AS DECIMAL(8,6) ) AS tc_3_norm,
-  CAST( IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS DECIMAL(8,6) ) AS tc_pounds_norm
+  CAST( IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS DECIMAL(8,6) ) AS tc_pounds_norm,
+
+  B.tempMin_norm, B.tempMax_norm, B.tempSpan_norm
 
   FROM datos_desa.tb_ids_carreras_${sufijo} A
   LEFT OUTER JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
@@ -1338,7 +1342,7 @@ analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos_${sufijo}" "${LOG_CE_STA
 
 
 echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_CE}
-borrarTablasInnecesarias "${sufijo}"
+#borrarTablasInnecesarias "${sufijo}"
 
 
 echo -e " Generador de COLUMNAS ELABORADAS: FIN\n\n" 2>&1 1>>${LOG_CE}

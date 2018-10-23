@@ -41,6 +41,13 @@ set @diff_tc_2=(select CASE WHEN MIN(tc_2)=0 THEN MAX(tc_2) ELSE MAX(tc_2)-MIN(t
 set @min_tc_3=(select MIN(tc_3) FROM datos_desa.tb_galgos_carreras_LIM);
 set @diff_tc_3=(select CASE WHEN MIN(tc_3)=0 THEN MAX(tc_3) ELSE MAX(tc_3)-MIN(tc_3) END FROM datos_desa.tb_galgos_carreras_LIM);
 
+-- Variables WEATHER. PENDIENTE restantes variables que tambien sean utiles (y derivadas)
+set @min_tempMin=(select MIN(tempMin) FROM datos_desa.tb_galgos_carreras_LIM);
+set @diff_tempMin=(select CASE WHEN MIN(tempMin)=0 THEN MAX(tempMin) ELSE MAX(tempMin)-MIN(tempMin) END FROM datos_desa.tb_galgos_carreras_LIM);
+set @min_tempMax=(select MIN(tempMax) FROM datos_desa.tb_galgos_carreras_LIM);
+set @diff_tempMax=(select CASE WHEN MIN(tempMax)=0 THEN MAX(tempMax) ELSE MAX(tempMax)-MIN(tempMax) END FROM datos_desa.tb_galgos_carreras_LIM);
+set @min_tempSpan=(select MIN(tempSpan) FROM datos_desa.tb_galgos_carreras_LIM);
+set @diff_tempSpan=(select CASE WHEN MIN(tempSpan)=0 THEN MAX(tempSpan) ELSE MAX(tempSpan)-MIN(tempSpan) END FROM datos_desa.tb_galgos_carreras_LIM);
 
 DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_norm;
 
@@ -124,7 +131,15 @@ FROM (
   tc_3, 
   CASE WHEN (tc_3 IS NULL OR @diff_tc_3=0) THEN NULL ELSE ((tc_3 - @min_tc_3)/@diff_tc_3) END AS tc_3_norm,
   tc_pounds, 
-  CASE WHEN (tc_pounds IS NULL OR @diff_tc_pounds=0) THEN NULL ELSE ROUND( ((tc_pounds - @min_tc_pounds)/@diff_tc_pounds) ,6) END AS tc_pounds_norm
+  CASE WHEN (tc_pounds IS NULL OR @diff_tc_pounds=0) THEN NULL ELSE ROUND( ((tc_pounds - @min_tc_pounds)/@diff_tc_pounds) ,6) END AS tc_pounds_norm,
+
+  tempMin,
+  CASE WHEN (tempMin IS NULL OR @diff_tempMin=0) THEN NULL ELSE ((tempMin - @min_tempMin)/@diff_tempMin) END AS tempMin_norm,
+  tempMax,
+  CASE WHEN (tempMax IS NULL OR @diff_tempMax=0) THEN NULL ELSE ((tempMax - @min_tempMax)/@diff_tempMax) END AS tempMax_norm,
+  tempSpan,
+  CASE WHEN (tempSpan IS NULL OR @diff_tempSpan=0) THEN NULL ELSE ((tempSpan - @min_tempSpan)/@diff_tempSpan) END AS tempSpan_norm
+
   FROM datos_desa.tb_galgos_carreras_LIM
 ) dentro;
 

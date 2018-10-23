@@ -252,7 +252,9 @@ DENTRO.premio_primero, DENTRO.premio_segundo, DENTRO.premio_otros,  DENTRO.premi
 DENTRO.fc_1 ,  DENTRO.fc_2 ,  DENTRO.fc_pounds ,
 DENTRO.tc_1 , DENTRO.tc_2 , DENTRO.tc_3 , DENTRO.tc_pounds,
 
-CONTIEMPO.pasada, CONTIEMPO.tempMin, CONTIEMPO.tempMax, CONTIEMPO.histAvgMin, CONTIEMPO.histAvgMax, CONTIEMPO.texto, 
+CONTIEMPO.pasada, CONTIEMPO.tempMin, CONTIEMPO.tempMax, 
+(CONTIEMPO.tempMax - CONTIEMPO.tempMin) AS tempSpan,
+CONTIEMPO.histAvgMin, CONTIEMPO.histAvgMax, CONTIEMPO.texto, 
 CONTIEMPO.rain, CONTIEMPO.wind, CONTIEMPO.cloud, CONTIEMPO.sun, CONTIEMPO.snow
 
 FROM (

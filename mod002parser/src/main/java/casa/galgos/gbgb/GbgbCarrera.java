@@ -117,6 +117,7 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += "pasada BOOLEAN, ";
 		out += "tempMin INT, ";
 		out += "tempMax INT, ";
+		out += "tempSpan INT, ";
 		out += "histAvgMin INT, ";
 		out += "histAvgMax INT, ";
 		out += "texto varchar(80), ";
@@ -186,6 +187,8 @@ public class GbgbCarrera implements Serializable, GalgosGuardable {
 		out += "\\N";// tempMin
 		out += Constantes.SEPARADOR_CAMPO;
 		out += "\\N";// tempMax
+		out += Constantes.SEPARADOR_CAMPO;
+		out += "\\N";// tempSpan
 		out += Constantes.SEPARADOR_CAMPO;
 		out += "\\N";// histAvgMin
 		out += Constantes.SEPARADOR_CAMPO;
