@@ -83,8 +83,8 @@ INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 10, '10/
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 11, '11/1/2018');
 INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2018, 12, '12/1/2018');
 
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 1, '1/1/2019');
-INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 2, '2/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 1, '1/1/2019');
+-- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 2, '2/1/2019');
 -- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 3, '3/1/2019');
 -- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 4, '4/1/2019');
 -- INSERT INTO datos_desa.tb_weather_fechas (anio,mes,fecha) VALUES (2019, 5, '5/1/2019');

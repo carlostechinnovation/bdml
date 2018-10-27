@@ -166,7 +166,8 @@ peso_galgo_norm, eed_norm, experiencia, trap_factor, experiencia_en_clase, posic
 -- vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, 
 vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
 
-distancia_norm, num_galgos_norm, mes_norm, hora_norm, venue_going_std, venue_going_avg, dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
+distancia_norm, num_galgos_norm, mes_norm, hora_norm, venue_going_std, venue_going_avg, 
+-- dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
 tempMin_norm, tempMax_norm, tempSpan_norm
 EOF
 
