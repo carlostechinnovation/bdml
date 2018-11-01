@@ -28,15 +28,17 @@ echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_M
 ###########rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
 ###########${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
 
-${PATH_SCRIPTS}'galgos_MOD010_WEATHER.sh'  >>$LOG_MASTER # WEATHER de pasado y futuro (para enriquecer despues)
-${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos). Se enriquece con info WEATHER
-echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
+#${PATH_SCRIPTS}'galgos_MOD010_WEATHER.sh'  >>$LOG_MASTER # WEATHER de pasado y futuro (para enriquecer despues)
+#${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos). Se enriquece con info WEATHER
+#echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
 
 
 echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+##########${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
 
 echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER

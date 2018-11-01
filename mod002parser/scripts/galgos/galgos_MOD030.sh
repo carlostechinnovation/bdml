@@ -12,7 +12,7 @@ echo -e "MOD030 --> LOG = "${LOG_CE}
 "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/galgos_MOD031_columnas_elaboradas.sh" "pre"
 
 
-stats_completitud=$(cat "${PATH_LOGS}galgos_031_columnas_elaboradas_stats.log" | grep '_velocidad_con_going_norm')
+stats_completitud=$(cat "${LOG_CE_STATS}" | grep '_velocidad_con_going_norm')
 echo -e "\nMETRICA de COMPLETITUD de los datos historicos --> (tabla datos_desa.tb_elaborada_carrerasgalgos_pre, campo _velocidad_con_going_norm ): ${stats_completitud}\n" >>$LOG_070
 echo -e "MAX|MIN|AVG|STD|NO_NULOS|NULOS --> El ratio NULOS/No_nulos debe ser bajo.\n" >>$LOG_070
 

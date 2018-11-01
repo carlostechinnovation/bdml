@@ -9,7 +9,11 @@ echo -e $(date +"%T")" | 012 | INICIO" >>$LOG_070
 echo -e "MOD012 --> LOG = "${LOG_012}
 
 ##########################################
-echo -e $(date +"%T")" NORMALIZACION NUMERICA - Normalizamos los campos NUMERICOS (que tenga sentido) de las tablas brutas iniciales (para que las tablas derivadas ya trabajen con datos normalizados)..." 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" TRANSFORMACIONES NUMERICAS *************************" 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" - NORMALIZACION (scale) a rango [0,1]" 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" - STANDARDIZE (z-score) a gausianna[media=0, std=1] --> Util en Regr. Log., LDA... pero las features deben ser gaussianas!!! (transformarlas con LOG u otra funcion y comprobar su normalidad pintando un QQ-plot)" 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" - NORMALIZACION de filas para que los pesos de cada fila sumen 1 --> Util en KNN, NeuralNet..." 2>&1 1>>${LOG_012}
+echo -e $(date +"%T")" ****************************************************" 2>&1 1>>${LOG_012}
 
 read -d '' CONSULTA_NORMALIZACIONES <<- EOF
 set @min_hora=(select MIN(hora) FROM datos_desa.tb_galgos_carreras_LIM);
@@ -54,15 +58,15 @@ DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_norm;
 CREATE TABLE datos_desa.tb_galgos_carreras_norm AS 
 SELECT 
 dentro.*,
-CASE WHEN dlmxjvs=1 THEN 1 ELSE 0 END AS dow_d,
-CASE WHEN dlmxjvs=2 THEN 1 ELSE 0 END AS dow_l,
-CASE WHEN dlmxjvs=3 THEN 1 ELSE 0 END AS dow_m,
-CASE WHEN dlmxjvs=4 THEN 1 ELSE 0 END AS dow_x,
-CASE WHEN dlmxjvs=5 THEN 1 ELSE 0 END AS dow_j,
-CASE WHEN dlmxjvs=6 THEN 1 ELSE 0 END AS dow_v,
-CASE WHEN dlmxjvs=7 THEN 1 ELSE 0 END AS dow_s,
-CASE WHEN (dlmxjvs=6 OR dlmxjvs=7 OR dlmxjvs=1) THEN 1 ELSE 0 END AS dow_finde,
-CASE WHEN (dlmxjvs<>6 AND dlmxjvs<>7 AND dlmxjvs<>1) THEN 1 ELSE 0 END AS dow_laborable
+CASE WHEN dlmxjvs=1 THEN 1-0.5 ELSE 0-0.5 END AS dow_d,
+CASE WHEN dlmxjvs=2 THEN 1-0.5 ELSE 0-0.5 END AS dow_l,
+CASE WHEN dlmxjvs=3 THEN 1-0.5 ELSE 0-0.5 END AS dow_m,
+CASE WHEN dlmxjvs=4 THEN 1-0.5 ELSE 0-0.5 END AS dow_x,
+CASE WHEN dlmxjvs=5 THEN 1-0.5 ELSE 0-0.5 END AS dow_j,
+CASE WHEN dlmxjvs=6 THEN 1-0.5 ELSE 0-0.5 END AS dow_v,
+CASE WHEN dlmxjvs=7 THEN 1-0.5 ELSE 0-0.5 END AS dow_s,
+CASE WHEN (dlmxjvs=6 OR dlmxjvs=7 OR dlmxjvs=1) THEN 1-0.5 ELSE 0-0.5 END AS dow_finde,
+CASE WHEN (dlmxjvs<>6 AND dlmxjvs<>7 AND dlmxjvs<>1) THEN 1-0.5 ELSE 0-0.5 END AS dow_laborable
 
 FROM (
   SELECT 
@@ -91,54 +95,54 @@ FROM (
   mes, 
 
   CASE 
-  WHEN (mes=12 OR mes=1 OR mes=2) THEN 0
-  WHEN (mes=3 OR mes=11) THEN 0.2
-  WHEN (mes=4) THEN 0.3
-  WHEN (mes=5 OR mes=10) THEN 0.5
-  WHEN (mes=6 OR mes=9) THEN 0.8
-  WHEN (mes=7 OR mes=8) THEN 1
+  WHEN (mes=12 OR mes=1 OR mes=2) THEN 0-0.5
+  WHEN (mes=3 OR mes=11) THEN 0.2-0.5
+  WHEN (mes=4) THEN 0.3-0.5
+  WHEN (mes=5 OR mes=10) THEN 0.5-0.5
+  WHEN (mes=6 OR mes=9) THEN 0.8-0.5
+  WHEN (mes=7 OR mes=8) THEN 1-0.5
   ELSE NULL
   END AS mes_norm,
 
   dia,
   hora, 
-  CASE WHEN (hora IS NULL OR @diff_hora=0) THEN NULL ELSE ((hora - @min_hora)/@diff_hora) END AS hora_norm,
+  CASE WHEN (hora IS NULL OR @diff_hora=0) THEN NULL ELSE ((hora - @min_hora)/@diff_hora)-0.5 END AS hora_norm,
   minuto,
   distancia, 
-  CASE WHEN (distancia IS NULL OR @diff_distancia=0) THEN NULL ELSE ((distancia - @min_distancia)/@diff_distancia) END AS distancia_norm,
+  CASE WHEN (distancia IS NULL OR @diff_distancia=0) THEN NULL ELSE ((distancia - @min_distancia)/@diff_distancia)-0.5 END AS distancia_norm,
   num_galgos,
-  CASE WHEN (num_galgos IS NULL OR @diff_num_galgos=0) THEN NULL ELSE ((num_galgos - @min_num_galgos)/@diff_num_galgos) END AS num_galgos_norm,
+  CASE WHEN (num_galgos IS NULL OR @diff_num_galgos=0) THEN NULL ELSE ((num_galgos - @min_num_galgos)/@diff_num_galgos)-0.5 END AS num_galgos_norm,
   premio_primero, 
-  CASE WHEN (premio_primero IS NULL OR @diff_premio_primero=0) THEN NULL ELSE ((premio_primero - @min_premio_primero)/@diff_premio_primero) END AS premio_primero_norm,
+  CASE WHEN (premio_primero IS NULL OR @diff_premio_primero=0) THEN NULL ELSE ((premio_primero - @min_premio_primero)/@diff_premio_primero)-0.5 END AS premio_primero_norm,
   premio_segundo, 
-  CASE WHEN (premio_segundo IS NULL OR @diff_premio_segundo=0) THEN NULL ELSE ((premio_segundo - @min_premio_segundo)/@diff_premio_segundo) END AS premio_segundo_norm,
+  CASE WHEN (premio_segundo IS NULL OR @diff_premio_segundo=0) THEN NULL ELSE ((premio_segundo - @min_premio_segundo)/@diff_premio_segundo)-0.5 END AS premio_segundo_norm,
   premio_otros, 
-  CASE WHEN (premio_otros IS NULL OR @diff_premio_otros=0) THEN NULL ELSE ((premio_otros - @min_premio_otros)/@diff_premio_otros) END AS premio_otros_norm,
+  CASE WHEN (premio_otros IS NULL OR @diff_premio_otros=0) THEN NULL ELSE ((premio_otros - @min_premio_otros)/@diff_premio_otros)-0.5 END AS premio_otros_norm,
   premio_total_carrera, 
-  CASE WHEN (premio_total_carrera IS NULL OR @diff_premio_total_carrera=0) THEN NULL ELSE ((premio_total_carrera - @min_premio_total_carrera)/@diff_premio_total_carrera) END AS premio_total_carrera_norm,
+  CASE WHEN (premio_total_carrera IS NULL OR @diff_premio_total_carrera=0) THEN NULL ELSE ((premio_total_carrera - @min_premio_total_carrera)/@diff_premio_total_carrera)-0.5 END AS premio_total_carrera_norm,
   going_allowance_segundos, 
-  CASE WHEN (going_allowance_segundos IS NULL OR @diff_going_allowance_segundos=0) THEN NULL ELSE ROUND( ((going_allowance_segundos - @min_going_allowance_segundos)/@diff_going_allowance_segundos) ,6) END AS going_allowance_segundos_norm,
+  CASE WHEN (going_allowance_segundos IS NULL OR @diff_going_allowance_segundos=0) THEN NULL ELSE ROUND( ((going_allowance_segundos - @min_going_allowance_segundos)/@diff_going_allowance_segundos) ,6)-0.5 END AS going_allowance_segundos_norm,
   fc_1, 
-  CASE WHEN (fc_1 IS NULL OR @diff_fc_1=0) THEN NULL ELSE ((fc_1 - @min_fc_1)/@diff_fc_1) END AS fc_1_norm,
+  CASE WHEN (fc_1 IS NULL OR @diff_fc_1=0) THEN NULL ELSE ((fc_1 - @min_fc_1)/@diff_fc_1)-0.5 END AS fc_1_norm,
   fc_2, 
-  CASE WHEN (fc_2 IS NULL OR @diff_fc_2=0) THEN NULL ELSE ((fc_2 - @min_fc_2)/@diff_fc_2) END AS fc_2_norm,
+  CASE WHEN (fc_2 IS NULL OR @diff_fc_2=0) THEN NULL ELSE ((fc_2 - @min_fc_2)/@diff_fc_2)-0.5 END AS fc_2_norm,
   fc_pounds, 
-  CASE WHEN (fc_pounds IS NULL OR @diff_fc_pounds=0) THEN NULL ELSE ROUND( ((fc_pounds - @min_fc_pounds)/@diff_fc_pounds) ,6) END AS fc_pounds_norm,
+  CASE WHEN (fc_pounds IS NULL OR @diff_fc_pounds=0) THEN NULL ELSE ROUND( ((fc_pounds - @min_fc_pounds)/@diff_fc_pounds) ,6)-0.5 END AS fc_pounds_norm,
   tc_1, 
-  CASE WHEN (tc_1 IS NULL OR @diff_tc_1=0) THEN NULL ELSE ((tc_1 - @min_tc_1)/@diff_tc_1) END AS tc_1_norm,
+  CASE WHEN (tc_1 IS NULL OR @diff_tc_1=0) THEN NULL ELSE ((tc_1 - @min_tc_1)/@diff_tc_1)-0.5 END AS tc_1_norm,
   tc_2, 
-  CASE WHEN (tc_2 IS NULL OR @diff_tc_2=0) THEN NULL ELSE ((tc_2 - @min_tc_2)/@diff_tc_2) END AS tc_2_norm,
+  CASE WHEN (tc_2 IS NULL OR @diff_tc_2=0) THEN NULL ELSE ((tc_2 - @min_tc_2)/@diff_tc_2)-0.5 END AS tc_2_norm,
   tc_3, 
-  CASE WHEN (tc_3 IS NULL OR @diff_tc_3=0) THEN NULL ELSE ((tc_3 - @min_tc_3)/@diff_tc_3) END AS tc_3_norm,
+  CASE WHEN (tc_3 IS NULL OR @diff_tc_3=0) THEN NULL ELSE ((tc_3 - @min_tc_3)/@diff_tc_3)-0.5 END AS tc_3_norm,
   tc_pounds, 
-  CASE WHEN (tc_pounds IS NULL OR @diff_tc_pounds=0) THEN NULL ELSE ROUND( ((tc_pounds - @min_tc_pounds)/@diff_tc_pounds) ,6) END AS tc_pounds_norm,
+  CASE WHEN (tc_pounds IS NULL OR @diff_tc_pounds=0) THEN NULL ELSE ROUND( ((tc_pounds - @min_tc_pounds)/@diff_tc_pounds) ,6)-0.5 END AS tc_pounds_norm,
 
   tempMin,
-  CASE WHEN (tempMin IS NULL OR @diff_tempMin=0) THEN NULL ELSE ((tempMin - @min_tempMin)/@diff_tempMin) END AS tempMin_norm,
+  CASE WHEN (tempMin IS NULL OR @diff_tempMin=0) THEN NULL ELSE ((tempMin - @min_tempMin)/@diff_tempMin)-0.5 END AS tempMin_norm,
   tempMax,
-  CASE WHEN (tempMax IS NULL OR @diff_tempMax=0) THEN NULL ELSE ((tempMax - @min_tempMax)/@diff_tempMax) END AS tempMax_norm,
+  CASE WHEN (tempMax IS NULL OR @diff_tempMax=0) THEN NULL ELSE ((tempMax - @min_tempMax)/@diff_tempMax)-0.5 END AS tempMax_norm,
   tempSpan,
-  CASE WHEN (tempSpan IS NULL OR @diff_tempSpan=0) THEN NULL ELSE ((tempSpan - @min_tempSpan)/@diff_tempSpan) END AS tempSpan_norm
+  CASE WHEN (tempSpan IS NULL OR @diff_tempSpan=0) THEN NULL ELSE ((tempSpan - @min_tempSpan)/@diff_tempSpan)-0.5 END AS tempSpan_norm
 
   FROM datos_desa.tb_galgos_carreras_LIM
 ) dentro;
@@ -172,24 +176,24 @@ SELECT
 id_carrera,
 id_campeonato,
 posicion, 
-CASE WHEN (posicion IS NULL OR @diff_posicion=0) THEN NULL ELSE ROUND( ((posicion - @min_posicion)/@diff_posicion) ,6) END AS posicion_norm,
+CASE WHEN (posicion IS NULL OR @diff_posicion=0) THEN NULL ELSE ROUND( ((posicion - @min_posicion)/@diff_posicion) ,6)-0.5 END AS posicion_norm,
 galgo_nombre,
 trap, 
-CASE WHEN (trap IS NULL OR @diff_trap=0) THEN NULL ELSE ((trap - @min_trap)/@diff_trap) END AS trap_norm,
+CASE WHEN (trap IS NULL OR @diff_trap=0) THEN NULL ELSE ((trap - @min_trap)/@diff_trap)-0.5 END AS trap_norm,
 sp, 
-CASE WHEN sp<=1 THEN 0 WHEN (sp>1 AND sp<=5) THEN ROUND( ((sp-1)/5) ,6) WHEN (sp>5 AND sp<=8) THEN ROUND( ((sp+7)/15) ,6) WHEN sp>8 THEN 1 ELSE NULL END AS sp_norm,
+CASE WHEN sp<=1 THEN 0-0.5 WHEN (sp>1 AND sp<=5) THEN ROUND( ((sp-1)/5) ,6)-0.5 WHEN (sp>5 AND sp<=8) THEN ROUND( ((sp+7)/15) ,6)-0.5 WHEN sp>8 THEN 1-0.5 ELSE NULL END AS sp_norm,
 time_sec, 
-CASE WHEN (time_sec IS NULL OR @diff_time_sec=0) THEN NULL ELSE ROUND( ((time_sec - @min_time_sec)/@diff_time_sec) ,6) END AS time_sec_norm,
+CASE WHEN (time_sec IS NULL OR @diff_time_sec=0) THEN NULL ELSE ROUND( ((time_sec - @min_time_sec)/@diff_time_sec) ,6)-0.5 END AS time_sec_norm,
 time_distance, 
-CASE WHEN (time_distance IS NULL OR @diff_time_distance=0) THEN NULL ELSE ROUND( ((time_distance - @min_time_distance)/@diff_time_distance) ,6) END AS time_distance_norm,
+CASE WHEN (time_distance IS NULL OR @diff_time_distance=0) THEN NULL ELSE ROUND( ((time_distance - @min_time_distance)/@diff_time_distance) ,6)-0.5 END AS time_distance_norm,
 peso_galgo, 
-CASE WHEN (peso_galgo IS NULL OR @diff_peso_galgo=0) THEN NULL ELSE ROUND( ((peso_galgo - @min_peso_galgo)/@diff_peso_galgo) ,6) END AS peso_galgo_norm,
+CASE WHEN (peso_galgo IS NULL OR @diff_peso_galgo=0) THEN NULL ELSE ROUND( ((peso_galgo - @min_peso_galgo)/@diff_peso_galgo) ,6)-0.5 END AS peso_galgo_norm,
 entrenador_nombre,
 galgo_padre,
 galgo_madre,
 comment,
 edad_en_dias, 
-CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1 ELSE (edad_en_dias/1600) END AS edad_en_dias_norm
+CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1-0.5 ELSE (edad_en_dias/1600)-0.5 END AS edad_en_dias_norm
 
 FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM;
 
@@ -225,25 +229,25 @@ SELECT
 galgo_nombre, entrenador,
 padre,madre,nacimiento,
 id_carrera, id_campeonato, anio,
-mes, CASE WHEN (mes <=7) THEN (-1/6 + mes/6) WHEN (mes >7) THEN (5/12 - 5*mes/144) ELSE 0.5 END AS mes_norm,
+mes, CASE WHEN (mes <=7) THEN (-1/6 + mes/6)-0.5 WHEN (mes >7) THEN (5/12 - 5*mes/144)-0.5 ELSE 0.5-0.5 END AS mes_norm,
 dia,
 distancia, 
-CASE WHEN (distancia IS NULL OR @diff_distancia=0) THEN NULL ELSE ((distancia - @min_distancia)/@diff_distancia) END AS distancia_norm,
+CASE WHEN (distancia IS NULL OR @diff_distancia=0) THEN NULL ELSE ((distancia - @min_distancia)/@diff_distancia)-0.5 END AS distancia_norm,
 trap, 
-CASE WHEN (trap IS NULL OR @diff_trap=0) THEN NULL ELSE ROUND( ((trap - @min_trap)/@diff_trap) ,6) END AS trap_norm,
+CASE WHEN (trap IS NULL OR @diff_trap=0) THEN NULL ELSE ROUND( ((trap - @min_trap)/@diff_trap) ,6)-0.5 END AS trap_norm,
 cast(stmhcp AS decimal(6,2)) AS stmhcp,
-CASE WHEN (stmhcp IS NULL OR @diff_stmhcp=0) THEN NULL ELSE ROUND( ((cast(stmhcp AS decimal(6,2)) - @min_stmhcp)/@diff_stmhcp) ,6) END AS stmhcp_norm,
+CASE WHEN (stmhcp IS NULL OR @diff_stmhcp=0) THEN NULL ELSE ROUND( ((cast(stmhcp AS decimal(6,2)) - @min_stmhcp)/@diff_stmhcp) ,6)-0.5 END AS stmhcp_norm,
 posicion, 
-CASE WHEN (posicion IS NULL OR @diff_posicion=0) THEN NULL ELSE ROUND( ((posicion - @min_posicion)/@diff_posicion) ,6) END AS posicion_norm,
+CASE WHEN (posicion IS NULL OR @diff_posicion=0) THEN NULL ELSE ROUND( ((posicion - @min_posicion)/@diff_posicion) ,6)-0.5 END AS posicion_norm,
 by_dato,
 galgo_primero_o_segundo,
 venue,
 remarks,
 win_time, 
-CASE WHEN (win_time IS NULL OR @diff_win_time=0) THEN NULL ELSE ROUND( ((win_time - @min_win_time)/@diff_win_time) ,6) END AS win_time_norm,
+CASE WHEN (win_time IS NULL OR @diff_win_time=0) THEN NULL ELSE ROUND( ((win_time - @min_win_time)/@diff_win_time) ,6)-0.5 END AS win_time_norm,
 going,
 sp, 
-CASE WHEN sp<=1 THEN 0 WHEN (sp>1 AND sp<=5) THEN ((sp-1)/5) WHEN (sp>5 AND sp<=8) THEN ((sp+7)/15) WHEN sp>8 THEN 1 ELSE NULL END AS sp_norm,
+CASE WHEN sp<=1 THEN 0-0.5 WHEN (sp>1 AND sp<=5) THEN ((sp-1)/5)-0.5 WHEN (sp>5 AND sp<=8) THEN ((sp+7)/15)-0.5 WHEN sp>8 THEN 1-0.5 ELSE NULL END AS sp_norm,
 
 CASE 
     WHEN clase='A1' OR clase='A2' OR clase='A3' THEN 'A123'
@@ -262,13 +266,13 @@ CASE
 END as clase,
 
 calculated_time, 
-CASE WHEN (calculated_time IS NULL OR @diff_calculated_time=0) THEN NULL ELSE ROUND( ((calculated_time - @min_calculated_time)/@diff_calculated_time) ,6) END AS calculated_time_norm,
+CASE WHEN (calculated_time IS NULL OR @diff_calculated_time=0) THEN NULL ELSE ROUND( ((calculated_time - @min_calculated_time)/@diff_calculated_time) ,6)-0.5 END AS calculated_time_norm,
 velocidad_real, 
-CASE WHEN (velocidad_real IS NULL OR @diff_velocidad_real=0) THEN NULL ELSE ROUND( ((velocidad_real - @min_velocidad_real)/@diff_velocidad_real) ,6) END AS velocidad_real_norm,
+CASE WHEN (velocidad_real IS NULL OR @diff_velocidad_real=0) THEN NULL ELSE ROUND( ((velocidad_real - @min_velocidad_real)/@diff_velocidad_real) ,6)-0.5 END AS velocidad_real_norm,
 velocidad_con_going, 
-CASE WHEN (velocidad_con_going IS NULL OR @diff_velocidad_con_going=0) THEN NULL ELSE ROUND( ((velocidad_con_going - @min_velocidad_con_going)/@diff_velocidad_con_going) ,6) END AS velocidad_con_going_norm,
+CASE WHEN (velocidad_con_going IS NULL OR @diff_velocidad_con_going=0) THEN NULL ELSE ROUND( ((velocidad_con_going - @min_velocidad_con_going)/@diff_velocidad_con_going) ,6)-0.5 END AS velocidad_con_going_norm,
 edad_en_dias, 
-CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias_gh=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1 ELSE (edad_en_dias/1600) END AS edad_en_dias_norm
+CASE WHEN (edad_en_dias IS NULL OR @diff_edad_en_dias_gh=0) THEN NULL WHEN (edad_en_dias >=1600) THEN 1-0.5 ELSE (edad_en_dias/1600)-0.5 END AS edad_en_dias_norm
 FROM datos_desa.tb_galgos_historico_LIM;
 
 ALTER TABLE datos_desa.tb_galgos_historico_norm ADD INDEX tb_galgos_historico_norm_idx1(id_carrera, galgo_nombre);
@@ -310,29 +314,29 @@ CREATE TABLE datos_desa.tb_galgos_agregados_norm AS
 SELECT 
 galgo_nombre,
 vel_real_cortas_mediana, 
-CASE WHEN (vel_real_cortas_mediana IS NULL OR @diff_vel_real_cortas_mediana=0) THEN NULL ELSE ROUND( ((vel_real_cortas_mediana - @min_vel_real_cortas_mediana)/@diff_vel_real_cortas_mediana) ,6) END AS vel_real_cortas_mediana_norm,
+CASE WHEN (vel_real_cortas_mediana IS NULL OR @diff_vel_real_cortas_mediana=0) THEN NULL ELSE ROUND( ((vel_real_cortas_mediana - @min_vel_real_cortas_mediana)/@diff_vel_real_cortas_mediana) ,6)-0.5 END AS vel_real_cortas_mediana_norm,
 vel_real_cortas_max, 
-CASE WHEN (vel_real_cortas_max IS NULL OR @diff_vel_real_cortas_max=0) THEN NULL ELSE ROUND( ((vel_real_cortas_max - @min_vel_real_cortas_max)/@diff_vel_real_cortas_max) ,6) END AS vel_real_cortas_max_norm,
+CASE WHEN (vel_real_cortas_max IS NULL OR @diff_vel_real_cortas_max=0) THEN NULL ELSE ROUND( ((vel_real_cortas_max - @min_vel_real_cortas_max)/@diff_vel_real_cortas_max) ,6)-0.5 END AS vel_real_cortas_max_norm,
 vel_going_cortas_mediana, 
-CASE WHEN (vel_going_cortas_mediana IS NULL OR @diff_vel_going_cortas_mediana=0) THEN NULL ELSE ROUND( ((vel_going_cortas_mediana - @min_vel_going_cortas_mediana)/@diff_vel_going_cortas_mediana) ,6) END AS vel_going_cortas_mediana_norm,
+CASE WHEN (vel_going_cortas_mediana IS NULL OR @diff_vel_going_cortas_mediana=0) THEN NULL ELSE ROUND( ((vel_going_cortas_mediana - @min_vel_going_cortas_mediana)/@diff_vel_going_cortas_mediana) ,6)-0.5 END AS vel_going_cortas_mediana_norm,
 vel_going_cortas_max, 
-CASE WHEN (vel_going_cortas_max IS NULL OR @diff_vel_going_cortas_max=0) THEN NULL ELSE ROUND( ((vel_going_cortas_max - @min_vel_going_cortas_max)/@diff_vel_going_cortas_max) ,6) END AS vel_going_cortas_max_norm,
+CASE WHEN (vel_going_cortas_max IS NULL OR @diff_vel_going_cortas_max=0) THEN NULL ELSE ROUND( ((vel_going_cortas_max - @min_vel_going_cortas_max)/@diff_vel_going_cortas_max) ,6)-0.5 END AS vel_going_cortas_max_norm,
 vel_real_longmedias_mediana, 
-CASE WHEN (vel_real_longmedias_mediana IS NULL OR @diff_vel_real_longmedias_mediana=0) THEN NULL ELSE ROUND( ((vel_real_longmedias_mediana - @min_vel_real_longmedias_mediana)/@diff_vel_real_longmedias_mediana) ,6) END AS vel_real_longmedias_mediana_norm,
+CASE WHEN (vel_real_longmedias_mediana IS NULL OR @diff_vel_real_longmedias_mediana=0) THEN NULL ELSE ROUND( ((vel_real_longmedias_mediana - @min_vel_real_longmedias_mediana)/@diff_vel_real_longmedias_mediana) ,6)-0.5 END AS vel_real_longmedias_mediana_norm,
 vel_real_longmedias_max, 
-CASE WHEN (vel_real_longmedias_max IS NULL OR @diff_vel_real_longmedias_max=0) THEN NULL ELSE ROUND( ((vel_real_longmedias_max - @min_vel_real_longmedias_max)/@diff_vel_real_longmedias_max) ,6) END AS vel_real_longmedias_max_norm,
+CASE WHEN (vel_real_longmedias_max IS NULL OR @diff_vel_real_longmedias_max=0) THEN NULL ELSE ROUND( ((vel_real_longmedias_max - @min_vel_real_longmedias_max)/@diff_vel_real_longmedias_max) ,6)-0.5 END AS vel_real_longmedias_max_norm,
 vel_going_longmedias_mediana, 
-CASE WHEN (vel_going_longmedias_mediana IS NULL OR @diff_vel_going_longmedias_mediana=0) THEN NULL ELSE ROUND( ((vel_going_longmedias_mediana - @min_vel_going_longmedias_mediana)/@diff_vel_going_longmedias_mediana) ,6) END AS vel_going_longmedias_mediana_norm,
+CASE WHEN (vel_going_longmedias_mediana IS NULL OR @diff_vel_going_longmedias_mediana=0) THEN NULL ELSE ROUND( ((vel_going_longmedias_mediana - @min_vel_going_longmedias_mediana)/@diff_vel_going_longmedias_mediana) ,6)-0.5 END AS vel_going_longmedias_mediana_norm,
 vel_going_longmedias_max, 
-CASE WHEN (vel_going_longmedias_max IS NULL OR @diff_vel_going_longmedias_max=0) THEN NULL ELSE ROUND( ((vel_going_longmedias_max - @min_vel_going_longmedias_max)/@diff_vel_going_longmedias_max) ,6) END AS vel_going_longmedias_max_norm,
+CASE WHEN (vel_going_longmedias_max IS NULL OR @diff_vel_going_longmedias_max=0) THEN NULL ELSE ROUND( ((vel_going_longmedias_max - @min_vel_going_longmedias_max)/@diff_vel_going_longmedias_max) ,6)-0.5 END AS vel_going_longmedias_max_norm,
 vel_real_largas_mediana, 
-CASE WHEN (vel_real_largas_mediana IS NULL OR @diff_vel_real_largas_mediana=0) THEN NULL ELSE ROUND( ((vel_real_largas_mediana - @min_vel_real_largas_mediana)/@diff_vel_real_largas_mediana) ,6) END AS vel_real_largas_mediana_norm,
+CASE WHEN (vel_real_largas_mediana IS NULL OR @diff_vel_real_largas_mediana=0) THEN NULL ELSE ROUND( ((vel_real_largas_mediana - @min_vel_real_largas_mediana)/@diff_vel_real_largas_mediana) ,6)-0.5 END AS vel_real_largas_mediana_norm,
 vel_real_largas_max, 
-CASE WHEN (vel_real_largas_max IS NULL OR @diff_vel_real_largas_max=0) THEN NULL ELSE ROUND( ((vel_real_largas_max - @min_vel_real_largas_max)/@diff_vel_real_largas_max) ,6) END AS vel_real_largas_max_norm,
+CASE WHEN (vel_real_largas_max IS NULL OR @diff_vel_real_largas_max=0) THEN NULL ELSE ROUND( ((vel_real_largas_max - @min_vel_real_largas_max)/@diff_vel_real_largas_max) ,6)-0.5 END AS vel_real_largas_max_norm,
 vel_going_largas_mediana, 
-CASE WHEN (vel_going_largas_mediana IS NULL OR @diff_vel_going_largas_mediana=0) THEN NULL ELSE ROUND( ((vel_going_largas_mediana - @min_vel_going_largas_mediana)/@diff_vel_going_largas_mediana) ,6) END AS vel_going_largas_mediana_norm,
+CASE WHEN (vel_going_largas_mediana IS NULL OR @diff_vel_going_largas_mediana=0) THEN NULL ELSE ROUND( ((vel_going_largas_mediana - @min_vel_going_largas_mediana)/@diff_vel_going_largas_mediana) ,6)-0.5 END AS vel_going_largas_mediana_norm,
 vel_going_largas_max, 
-CASE WHEN (vel_going_largas_max IS NULL OR @diff_vel_going_largas_max=0) THEN NULL ELSE ROUND( ((vel_going_largas_max - @min_vel_going_largas_max)/@diff_vel_going_largas_max) ,6) END AS vel_going_largas_max_norm
+CASE WHEN (vel_going_largas_max IS NULL OR @diff_vel_going_largas_max=0) THEN NULL ELSE ROUND( ((vel_going_largas_max - @min_vel_going_largas_max)/@diff_vel_going_largas_max) ,6)-0.5 END AS vel_going_largas_max_norm
 
 FROM datos_desa.tb_galgos_agregados_LIM;
 

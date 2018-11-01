@@ -6,7 +6,7 @@ RENTABILIDAD_MINIMA="110"
 COBERTURA_MINIMA="0.55"
 SUFICIENTES_CASOS="30"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM=0.91
+PCA_UMBRAL_VARIANZA_ACUM=0.95
 TSNE_NUM_F_OUT=12
 MIN_CG_FUT_SUBGRUPO=1
 
@@ -50,6 +50,8 @@ FILE_WEATHER_LIMPIO_INSERT_INTO="${PATH_LIMPIO}weather_info_nueva.txt"
 
 LOG_011="${PATH_LOGS}galgos_011_limpieza.log"
 LOG_012="${PATH_LOGS}galgos_012_normalizacion.log"
+LOG_013="${PATH_LOGS}galgos_013_columnas_elab.log"
+LOG_014_STATS="${PATH_LOGS}galgos_014_cols_sin_transformar_stats.log"
 LOG_019_EXPORT="${PATH_LOGS}galgos_019_export.log"
 LOG_020_ESTADISTICA="${PATH_LOGS}galgos_020_stats.log"
 LOG_CE="${PATH_LOGS}galgos_031_columnas_elaboradas_proceso.log"
@@ -94,8 +96,10 @@ INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}INFORME_LIMPIO_POSTERIORI.txt"
 INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}INFORME_RENTABILIDAD_POSTERIORI.txt"
 
 EXTERNAL_010_BRUTO="${PATH_EXTERNAL_DATA}010_BRUTOS/"
-EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
+EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}014/"
+EXTERNAL_014="${PATH_EXTERNAL_DATA}012_LIMNOR/"
 EXTERNAL_037_DS_PASADOS_SPLIT="${PATH_EXTERNAL_DATA}037_DS_PASADOS_SPLIT/"
+EXTERNAL_037="${PATH_EXTERNAL_DATA}037/"
 EXTERNAL_038_DS_PASADOS="${PATH_EXTERNAL_DATA}038_DS_PASADOS/"
 EXTERNAL_050_DS_FUTUROS="${PATH_EXTERNAL_DATA}050_DS_FUTUROS/"
 
@@ -347,6 +351,31 @@ mysql -t --execute="$CONSULTA_TABLA_TIPOS_SP" 2>&1 1>>${LOG_MASTER}
 
 
 ######## SUBGRUPOS #######################################################################
+function analizarScoreSobreSubgrupos_TEMP ()
+{
+
+PATH_LOG=${1}
+
+echo -e $(date +"%T")" ------- analizarScoreSobreSubgrupos -------" 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
+
+#filtro_carreras filtro_galgos filtro_cg sufijo
+
+#----Criterios simples ---
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
+
+echo -e $(date +"%T")" Exportando 037 TOTAL hacia fichero externo..." 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" Creando carpeta vacia para external_037 (si no existe ya)..." 2>&1 1>>${PATH_LOG}
+mkdir -p "$EXTERNAL_037"
+rm -f "${EXTERNAL_037}037_train_f_TOTAL.txt" #Por si ya existe
+rm -f "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" #Por si ya existe
+exportarTablaAFichero "datos_desa" "tb_ds_pasado_train_features_TOTAL" "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" "${PATH_LOG}" "${EXTERNAL_037}037_train_f_TOTAL.txt"
+}
+
+
 function analizarScoreSobreSubgrupos ()
 {
 
@@ -358,9 +387,17 @@ echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 #filtro_carreras filtro_galgos filtro_cg sufijo
 
 #----Criterios simples ---
+
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
+
+echo -e $(date +"%T")" Exportando 037 TOTAL hacia fichero externo..." 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" Creando carpeta vacia para external_037 (si no existe ya)..." 2>&1 1>>${PATH_LOG}
+mkdir -p "$EXTERNAL_037"
+rm -f "${EXTERNAL_037}037_train_f_TOTAL.txt" #Por si ya existe
+rm -f "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" #Por si ya existe
+exportarTablaAFichero "datos_desa" "tb_ds_pasado_train_features_TOTAL" "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" "${PATH_LOG}" "${EXTERNAL_037}037_train_f_TOTAL.txt"
 
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
@@ -581,7 +618,7 @@ function analisisRentabilidadesPorSubgrupos(){
   rm -f $LOG_ML
 
   resetTablaRentabilidades #Reseteando tabla de rentabilidades
-  analizarScoreSobreSubgrupos "$LOG_MASTER"
+  analizarScoreSobreSubgrupos_TEMP "$LOG_MASTER"
 
   #Cargando fichero de rentabilidades a la tabla
   echo -e "ATENCION: Solo pongo DINERO en las carreras predichas y que sean rentables (en los grupo_sp que tengan muchos casos) !!!!\n" 2>&1 1>>${LOG_ML}

@@ -21,10 +21,11 @@ public class Constantes {
 	public static final String ANALITICA_GLOBAL = "ANALITICA_GLOBAL";
 
 	// -------------- GALGOS --------
-	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 9 * 7;// TODO //Ultimas X semanas
+	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 7 * 7;// TODO //Ultimas 9*7 semanas
 	public static Integer MAX_NUM_CARRERAS_SEMILLA = 300;// TODO 300 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
 															// las derivadas)
-	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 40;// TODO // semillas*derivadas
+	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 6 * 6;// TODO X*6*6
+																							// semillas*derivadas
 	public static Integer MAX_PROFUNDIDAD_PROCESADA = 2;// No aumentar por encima de 2, porque se generan muchos
 	// historicos, pero no cogemos suficientes posiciones-en-carrera
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;

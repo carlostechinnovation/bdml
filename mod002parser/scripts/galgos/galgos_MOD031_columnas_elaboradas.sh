@@ -2,6 +2,8 @@
 
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
+
+
 echo -e "Los galgos SEMILLAS deberian tener el SP (STARTING PRICE) si lo conocemos en el instante de la descarga" 2>&1 1>>${LOG_CE}
 
 
@@ -31,11 +33,11 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x1b;
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x1b AS 
 SELECT galgo_nombre,
 
-(vel_going_cortas_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=1) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=1) AS vgcortas_max_norm,
+((vel_going_cortas_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=1) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=1))-0.5 AS vgcortas_max_norm,
 
-(vel_going_longmedias_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=2) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=2) AS vgmedias_max_norm,
+((vel_going_longmedias_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=2) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=2))-0.5 AS vgmedias_max_norm,
 
-(vel_going_largas_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=3) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=3) AS vglargas_max_norm
+((vel_going_largas_max - (select valor_min FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=3) ) / (select valor_max FROM datos_desa.tb_ce_${sufijo}_x1a WHERE distancia_tipo=3))-0.5 AS vglargas_max_norm
 
 FROM datos_desa.tb_galgos_agregados_norm;
 
@@ -85,7 +87,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x2b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x2b AS 
 SELECT id_carrera, galgo_nombre, anio, mes, dia, 
-CASE WHEN (experiencia IS NULL OR @diff_experiencia=0) THEN NULL ELSE ((experiencia - @min_experiencia)/@diff_experiencia) END AS experiencia
+CASE WHEN (experiencia IS NULL OR @diff_experiencia=0) THEN NULL ELSE ((experiencia - @min_experiencia)/@diff_experiencia)-0.5 END AS experiencia
 FROM datos_desa.tb_ce_${sufijo}_x2a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x2b ADD INDEX tb_ce_${sufijo}_x2b_idx(id_carrera, galgo_nombre);
@@ -127,7 +129,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x3b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x3b AS 
 SELECT trap, 
-CASE WHEN (trap_suma IS NULL OR @diff_trap_puntos=0) THEN NULL ELSE ((trap_suma - @min_trap_puntos)/@diff_trap_puntos) END AS trap_factor
+CASE WHEN (trap_suma IS NULL OR @diff_trap_puntos=0) THEN NULL ELSE ((trap_suma - @min_trap_puntos)/@diff_trap_puntos)-0.5 END AS trap_factor
 FROM datos_desa.tb_ce_${sufijo}_x3a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x3b ADD INDEX tb_ce_${sufijo}_x3b_idx(trap);
@@ -325,9 +327,9 @@ X6B.posicion_media_en_clase_por_experiencia AS c4,
 cruce1.id_carrera,
 cruce1.galgo_nombre,
 cruce1.clase,
-CASE WHEN (cruce1.experiencia_en_clase IS NULL OR @diff_experiencia_en_clase=0) THEN NULL ELSE ((cruce1.experiencia_en_clase - @min_experiencia_en_clase)/@diff_experiencia_en_clase) END AS experiencia_en_clase,
+CASE WHEN (cruce1.experiencia_en_clase IS NULL OR @diff_experiencia_en_clase=0) THEN NULL ELSE ((cruce1.experiencia_en_clase - @min_experiencia_en_clase)/@diff_experiencia_en_clase)-0.5 END AS experiencia_en_clase,
 cruce1.experiencia_cualitativo,
-CASE WHEN (X6B.posicion_media_en_clase_por_experiencia IS NULL OR @diff_posicion_media_en_clase_por_experiencia=0) THEN NULL ELSE ((X6B.posicion_media_en_clase_por_experiencia - @min_posicion_media_en_clase_por_experiencia)/@diff_posicion_media_en_clase_por_experiencia) END AS posicion_media_en_clase_por_experiencia,
+CASE WHEN (X6B.posicion_media_en_clase_por_experiencia IS NULL OR @diff_posicion_media_en_clase_por_experiencia=0) THEN NULL ELSE ((X6B.posicion_media_en_clase_por_experiencia - @min_posicion_media_en_clase_por_experiencia)/@diff_posicion_media_en_clase_por_experiencia)-0.5 END AS posicion_media_en_clase_por_experiencia,
 anio, mes, dia
 FROM datos_desa.tb_ce_${sufijo}_x6e_aux1 cruce1
 LEFT JOIN datos_desa.tb_ce_${sufijo}_x6b X6B ON (cruce1.clase=X6B.clase AND cruce1.experiencia_cualitativo=X6B.experiencia_cualitativo)
@@ -367,7 +369,9 @@ CREATE TABLE datos_desa.tb_ce_${sufijo}_x7a AS
 SELECT PO.id_carrera, PO.posicion, PO.peso_galgo, GH.distancia, (GH.distancia/100 - GH.distancia%100/100) AS distancia_centenas 
 FROM datos_desa.tb_galgos_posiciones_en_carreras_norm PO 
 LEFT JOIN (select id_carrera, MAX(distancia) AS distancia FROM datos_desa.tb_galgos_historico_norm GROUP BY id_carrera) GH 
-ON PO.id_carrera=GH.id_carrera WHERE PO.posicion IN (1,2) ORDER BY PO.id_carrera ASC, PO.posicion ASC;
+ON PO.id_carrera=GH.id_carrera 
+WHERE PO.posicion IN (1,2) AND GH.distancia IS NOT NULL 
+ORDER BY PO.id_carrera ASC, PO.posicion ASC;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x7a LIMIT 5;
 SELECT count(*) as num_x7a FROM datos_desa.tb_ce_${sufijo}_x7a LIMIT 5;
@@ -381,8 +385,7 @@ read -d '' CONSULTA_X7B <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x7b AS 
-SELECT distancia_centenas, AVG(peso_galgo) AS peso_medio, COUNT(*) 
-FROM datos_desa.tb_ce_${sufijo}_x7a GROUP BY distancia_centenas ORDER BY distancia_centenas ASC;
+SELECT distancia_centenas, AVG(peso_galgo) AS peso_medio, count(*) as num_a FROM datos_desa.tb_ce_${sufijo}_x7a GROUP BY distancia_centenas ORDER BY distancia_centenas ASC;
 
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x7b LIMIT 5;
 SELECT count(*) as num_x7b FROM datos_desa.tb_ce_${sufijo}_x7b LIMIT 5;
@@ -429,8 +432,8 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x7d;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x7d AS 
 SELECT id_carrera, galgo_nombre, distancia_centenas, 
-CASE WHEN (distancia IS NULL OR @diff_distancia=0) THEN NULL ELSE ((distancia - @min_distancia)/@diff_distancia) END AS distancia_norm,
-CASE WHEN (dif_peso IS NULL OR @diff_dif_peso=0) THEN NULL ELSE ((dif_peso - @min_dif_peso)/@diff_dif_peso) END AS dif_peso
+CASE WHEN (distancia IS NULL OR @diff_distancia=0) THEN NULL ELSE ((distancia - @min_distancia)/@diff_distancia)-0.5 END AS distancia_norm,
+CASE WHEN (dif_peso IS NULL OR @diff_dif_peso=0) THEN NULL ELSE ((dif_peso - @min_dif_peso)/@diff_dif_peso)-0.5 END AS dif_peso
 FROM datos_desa.tb_ce_${sufijo}_x7c;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x7d ADD INDEX tb_ce_${sufijo}_x7d_idx(id_carrera, galgo_nombre);
@@ -472,8 +475,8 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x8b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x8b AS 
 SELECT track,
-CASE WHEN (venue_going_std IS NULL OR @diff_vgs=0) THEN NULL ELSE ((venue_going_std - @min_vgs)/@diff_vgs) END AS venue_going_std,
-CASE WHEN (venue_going_avg IS NULL OR @diff_vga=0) THEN NULL ELSE ((venue_going_avg - @min_vga)/@diff_vga) END AS venue_going_avg
+CASE WHEN (venue_going_std IS NULL OR @diff_vgs=0) THEN NULL ELSE ((venue_going_std - @min_vgs)/@diff_vgs)-0.5 END AS venue_going_std,
+CASE WHEN (venue_going_avg IS NULL OR @diff_vga=0) THEN NULL ELSE ((venue_going_avg - @min_vga)/@diff_vga)-0.5 END AS venue_going_avg
 FROM datos_desa.tb_ce_${sufijo}_x8a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x8b ADD INDEX tb_ce_${sufijo}_x8b_idx(track);
@@ -508,7 +511,7 @@ SELECT count(*) as num_x9a FROM datos_desa.tb_ce_${sufijo}_x9a LIMIT 5;
 DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x9b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x9b AS 
-SELECT entrenador, (6-posicion_avg)/5 AS entrenador_posicion_norm FROM datos_desa.tb_ce_${sufijo}_x9a;
+SELECT entrenador, ((6-posicion_avg)/5)-0.5 AS entrenador_posicion_norm FROM datos_desa.tb_ce_${sufijo}_x9a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x9b ADD INDEX tb_ce_${sufijo}_x9b_idx(entrenador);
 SELECT * FROM datos_desa.tb_ce_${sufijo}_x9b LIMIT 5;
@@ -545,7 +548,7 @@ DROP TABLE IF EXISTS datos_desa.tb_ce_${sufijo}_x10b;
 
 CREATE TABLE datos_desa.tb_ce_${sufijo}_x10b AS 
 SELECT id_carrera, galgo_nombre,
-CASE WHEN (edad_en_dias IS NULL OR @diff_eed=0) THEN NULL ELSE ((edad_en_dias - @min_eed)/@diff_eed) END AS eed_norm
+CASE WHEN (edad_en_dias IS NULL OR @diff_eed=0) THEN NULL ELSE ((edad_en_dias - @min_eed)/@diff_eed)-0.5 END AS eed_norm
 FROM datos_desa.tb_ce_${sufijo}_x10a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x10b ADD INDEX tb_ce_${sufijo}_x10b_idx(id_carrera, galgo_nombre);
@@ -603,31 +606,31 @@ CREATE TABLE datos_desa.tb_ce_${sufijo}_x11 AS
 SELECT galgo_nombre,
 
 vel_real_cortas_mediana,
-CASE WHEN (vel_real_cortas_mediana IS NULL OR @diff_vrc_med=0) THEN NULL ELSE ((vel_real_cortas_mediana - @min_vrc_med)/@diff_vrc_med) END AS vel_real_cortas_mediana_norm,
+CASE WHEN (vel_real_cortas_mediana IS NULL OR @diff_vrc_med=0) THEN NULL ELSE ((vel_real_cortas_mediana - @min_vrc_med)/@diff_vrc_med)-0.5 END AS vel_real_cortas_mediana_norm,
 vel_real_cortas_max,
-CASE WHEN (vel_real_cortas_max IS NULL OR @diff_vrc_max=0) THEN NULL ELSE ((vel_real_cortas_max - @min_vrc_max)/@diff_vrc_max) END AS vel_real_cortas_max_norm,
+CASE WHEN (vel_real_cortas_max IS NULL OR @diff_vrc_max=0) THEN NULL ELSE ((vel_real_cortas_max - @min_vrc_max)/@diff_vrc_max)-0.5 END AS vel_real_cortas_max_norm,
 vel_going_cortas_mediana,
-CASE WHEN (vel_going_cortas_mediana IS NULL OR @diff_vgc_med=0) THEN NULL ELSE ((vel_going_cortas_mediana - @min_vgc_med)/@diff_vgc_med) END AS vel_going_cortas_mediana_norm,
+CASE WHEN (vel_going_cortas_mediana IS NULL OR @diff_vgc_med=0) THEN NULL ELSE ((vel_going_cortas_mediana - @min_vgc_med)/@diff_vgc_med)-0.5 END AS vel_going_cortas_mediana_norm,
 vel_going_cortas_max,
-CASE WHEN (vel_going_cortas_max IS NULL OR @diff_vgc_max=0) THEN NULL ELSE ((vel_going_cortas_max - @min_vgc_max)/@diff_vgc_max) END AS vel_going_cortas_max_norm,
+CASE WHEN (vel_going_cortas_max IS NULL OR @diff_vgc_max=0) THEN NULL ELSE ((vel_going_cortas_max - @min_vgc_max)/@diff_vgc_max)-0.5 END AS vel_going_cortas_max_norm,
 
 vel_real_longmedias_mediana,
-CASE WHEN (vel_real_longmedias_mediana IS NULL OR @diff_vrlm_med=0) THEN NULL ELSE ((vel_real_longmedias_mediana - @min_vrlm_med)/@diff_vrlm_med) END AS vel_real_longmedias_mediana_norm,
+CASE WHEN (vel_real_longmedias_mediana IS NULL OR @diff_vrlm_med=0) THEN NULL ELSE ((vel_real_longmedias_mediana - @min_vrlm_med)/@diff_vrlm_med)-0.5 END AS vel_real_longmedias_mediana_norm,
 vel_real_longmedias_max,
-CASE WHEN (vel_real_longmedias_max IS NULL OR @diff_vrlm_max=0) THEN NULL ELSE ((vel_real_longmedias_max - @min_vrlm_max)/@diff_vrlm_max) END AS vel_real_longmedias_max_norm,
+CASE WHEN (vel_real_longmedias_max IS NULL OR @diff_vrlm_max=0) THEN NULL ELSE ((vel_real_longmedias_max - @min_vrlm_max)/@diff_vrlm_max)-0.5 END AS vel_real_longmedias_max_norm,
 vel_going_longmedias_mediana,
-CASE WHEN (vel_going_longmedias_mediana IS NULL OR @diff_vglm_med=0) THEN NULL ELSE ((vel_going_longmedias_mediana - @min_vglm_med)/@diff_vglm_med) END AS vel_going_longmedias_mediana_norm,
+CASE WHEN (vel_going_longmedias_mediana IS NULL OR @diff_vglm_med=0) THEN NULL ELSE ((vel_going_longmedias_mediana - @min_vglm_med)/@diff_vglm_med)-0.5 END AS vel_going_longmedias_mediana_norm,
 vel_going_longmedias_max,
-CASE WHEN (vel_going_longmedias_max IS NULL OR @diff_vglm_max=0) THEN NULL ELSE ((vel_going_longmedias_max - @min_vglm_max)/@diff_vglm_max) END AS vel_going_longmedias_max_norm,
+CASE WHEN (vel_going_longmedias_max IS NULL OR @diff_vglm_max=0) THEN NULL ELSE ((vel_going_longmedias_max - @min_vglm_max)/@diff_vglm_max)-0.5 END AS vel_going_longmedias_max_norm,
 
 vel_real_largas_mediana,
-CASE WHEN (vel_real_largas_mediana IS NULL OR @diff_vrl_med=0) THEN NULL ELSE ((vel_real_largas_mediana - @min_vrl_med)/@diff_vrl_med) END AS vel_real_largas_mediana_norm,
+CASE WHEN (vel_real_largas_mediana IS NULL OR @diff_vrl_med=0) THEN NULL ELSE ((vel_real_largas_mediana - @min_vrl_med)/@diff_vrl_med)-0.5 END AS vel_real_largas_mediana_norm,
 vel_real_largas_max,
-CASE WHEN (vel_real_largas_max IS NULL OR @diff_vrl_max=0) THEN NULL ELSE ((vel_real_largas_max - @min_vrl_max)/@diff_vrl_max) END AS vel_real_largas_max_norm,
+CASE WHEN (vel_real_largas_max IS NULL OR @diff_vrl_max=0) THEN NULL ELSE ((vel_real_largas_max - @min_vrl_max)/@diff_vrl_max)-0.5 END AS vel_real_largas_max_norm,
 vel_going_largas_mediana,
-CASE WHEN (vel_going_largas_mediana IS NULL OR @diff_vgl_med=0) THEN NULL ELSE ((vel_going_largas_mediana - @min_vgl_med)/@diff_vgl_med) END AS vel_going_largas_mediana_norm,
+CASE WHEN (vel_going_largas_mediana IS NULL OR @diff_vgl_med=0) THEN NULL ELSE ((vel_going_largas_mediana - @min_vgl_med)/@diff_vgl_med)-0.5 END AS vel_going_largas_mediana_norm,
 vel_going_largas_max,
-CASE WHEN (vel_going_largas_max IS NULL OR @diff_vgl_max=0) THEN NULL ELSE ((vel_going_largas_max - @min_vgl_max)/@diff_vgl_max) END AS vel_going_largas_max_norm
+CASE WHEN (vel_going_largas_max IS NULL OR @diff_vgl_max=0) THEN NULL ELSE ((vel_going_largas_max - @min_vgl_max)/@diff_vgl_max)-0.5 END AS vel_going_largas_max_norm
 
 FROM datos_desa.tb_galgos_agregados_norm;
 
@@ -704,20 +707,20 @@ CREATE TABLE datos_desa.tb_ce_${sufijo}_x12b AS
 SELECT 
 id_carrera,
 mes AS mes_norm,
-CASE WHEN (hora IS NULL OR @diff_hora=0) THEN NULL ELSE ((hora - @min_hora)/@diff_hora) END AS hora_norm,
-CASE WHEN (num_galgos IS NULL OR @diff_num_galgos=0) THEN NULL ELSE ((num_galgos - @min_num_galgos)/@diff_num_galgos) END AS num_galgos_norm,
-CASE WHEN (premio_primero IS NULL OR @diff_premio_primero=0) THEN NULL ELSE ((premio_primero - @min_premio_primero)/@diff_premio_primero) END AS premio_primero_norm,
-CASE WHEN (premio_segundo IS NULL OR @diff_premio_segundo=0) THEN NULL ELSE ((premio_segundo - @min_premio_segundo)/@diff_premio_segundo) END AS premio_segundo_norm,
-CASE WHEN (premio_otros IS NULL OR @diff_premio_otros=0) THEN NULL ELSE ((premio_otros - @min_premio_otros)/@diff_premio_otros) END AS premio_otros_norm,
-CASE WHEN (premio_total_carrera IS NULL OR @diff_premio_total_carrera=0) THEN NULL ELSE ((premio_total_carrera - @min_premio_total_carrera)/@diff_premio_total_carrera) END AS premio_total_carrera_norm,
-CASE WHEN (going_allowance_segundos IS NULL OR @diff_going_allowance_segundos=0) THEN NULL ELSE ((going_allowance_segundos - @min_going_allowance_segundos)/@diff_going_allowance_segundos) END AS going_allowance_segundos_norm,
-CASE WHEN (fc_1 IS NULL OR @diff_fc_1=0) THEN NULL ELSE ((fc_1 - @min_fc_1)/@diff_fc_1) END AS fc_1_norm,
-CASE WHEN (fc_2 IS NULL OR @diff_fc_2=0) THEN NULL ELSE ((fc_2 - @min_fc_2)/@diff_fc_2) END AS fc_2_norm,
-CASE WHEN (fc_pounds IS NULL OR @diff_fc_pounds=0) THEN NULL ELSE ((fc_pounds - @min_fc_pounds)/@diff_fc_pounds) END AS fc_pounds_norm,
-CASE WHEN (tc_1 IS NULL OR @diff_tc_1=0) THEN NULL ELSE ((tc_1 - @min_tc_1)/@diff_tc_1) END AS tc_1_norm,
-CASE WHEN (tc_2 IS NULL OR @diff_tc_2=0) THEN NULL ELSE ((tc_2 - @min_tc_2)/@diff_tc_2) END AS tc_2_norm,
-CASE WHEN (tc_3 IS NULL OR @diff_tc_3=0) THEN NULL ELSE ((tc_3 - @min_tc_3)/@diff_tc_3) END AS tc_3_norm,
-CASE WHEN (tc_pounds IS NULL OR @diff_tc_pounds=0) THEN NULL ELSE ((tc_pounds - @min_tc_pounds)/@diff_tc_pounds) END AS tc_pounds_norm
+CASE WHEN (hora IS NULL OR @diff_hora=0) THEN NULL ELSE ((hora - @min_hora)/@diff_hora)-0.5 END AS hora_norm,
+CASE WHEN (num_galgos IS NULL OR @diff_num_galgos=0) THEN NULL ELSE ((num_galgos - @min_num_galgos)/@diff_num_galgos)-0.5 END AS num_galgos_norm,
+CASE WHEN (premio_primero IS NULL OR @diff_premio_primero=0) THEN NULL ELSE ((premio_primero - @min_premio_primero)/@diff_premio_primero)-0.5 END AS premio_primero_norm,
+CASE WHEN (premio_segundo IS NULL OR @diff_premio_segundo=0) THEN NULL ELSE ((premio_segundo - @min_premio_segundo)/@diff_premio_segundo)-0.5 END AS premio_segundo_norm,
+CASE WHEN (premio_otros IS NULL OR @diff_premio_otros=0) THEN NULL ELSE ((premio_otros - @min_premio_otros)/@diff_premio_otros)-0.5 END AS premio_otros_norm,
+CASE WHEN (premio_total_carrera IS NULL OR @diff_premio_total_carrera=0) THEN NULL ELSE ((premio_total_carrera - @min_premio_total_carrera)/@diff_premio_total_carrera)-0.5 END AS premio_total_carrera_norm,
+CASE WHEN (going_allowance_segundos IS NULL OR @diff_going_allowance_segundos=0) THEN NULL ELSE ((going_allowance_segundos - @min_going_allowance_segundos)/@diff_going_allowance_segundos)-0.5 END AS going_allowance_segundos_norm,
+CASE WHEN (fc_1 IS NULL OR @diff_fc_1=0) THEN NULL ELSE ((fc_1 - @min_fc_1)/@diff_fc_1)-0.5 END AS fc_1_norm,
+CASE WHEN (fc_2 IS NULL OR @diff_fc_2=0) THEN NULL ELSE ((fc_2 - @min_fc_2)/@diff_fc_2)-0.5 END AS fc_2_norm,
+CASE WHEN (fc_pounds IS NULL OR @diff_fc_pounds=0) THEN NULL ELSE ((fc_pounds - @min_fc_pounds)/@diff_fc_pounds)-0.5 END AS fc_pounds_norm,
+CASE WHEN (tc_1 IS NULL OR @diff_tc_1=0) THEN NULL ELSE ((tc_1 - @min_tc_1)/@diff_tc_1)-0.5 END AS tc_1_norm,
+CASE WHEN (tc_2 IS NULL OR @diff_tc_2=0) THEN NULL ELSE ((tc_2 - @min_tc_2)/@diff_tc_2)-0.5 END AS tc_2_norm,
+CASE WHEN (tc_3 IS NULL OR @diff_tc_3=0) THEN NULL ELSE ((tc_3 - @min_tc_3)/@diff_tc_3)-0.5 END AS tc_3_norm,
+CASE WHEN (tc_pounds IS NULL OR @diff_tc_pounds=0) THEN NULL ELSE ((tc_pounds - @min_tc_pounds)/@diff_tc_pounds)-0.5 END AS tc_pounds_norm
 FROM datos_desa.tb_ce_${sufijo}_x12a;
 
 ALTER TABLE datos_desa.tb_ce_${sufijo}_x12b ADD INDEX tb_ce_${sufijo}_x12b_idx(id_carrera);
@@ -798,25 +801,27 @@ DROP TABLE IF EXISTS datos_desa.tb_gh_y_remarkspuntos_norm3;
 CREATE TABLE datos_desa.tb_gh_y_remarkspuntos_norm3 AS
 
 SELECT 
-T_todos.galgo_nombre, T_todos.id_carrera, T_todos.fecha, T_todos.remarks_puntos_historico,
+T_todos.galgo_nombre, T_todos.id_carrera, T_todos.fecha, 
+
+T_todos.remarks_puntos_historico -0.5 AS remarks_puntos_historico,
 
 -- En caso de valores NULL, cojo el valor medio mas cercano usando el historico
 -- T10D.remarks_puntos_historico_10d,
 -- T20D.remarks_puntos_historico_20d,
 -- T50D.remarks_puntos_historico_50d
 
-CASE WHEN (T10D.remarks_puntos_historico_10d IS NOT NULL) THEN T10D.remarks_puntos_historico_10d 
-WHEN (T20D.remarks_puntos_historico_20d IS NOT NULL) THEN T20D.remarks_puntos_historico_20d 
-WHEN (T50D.remarks_puntos_historico_50d IS NOT NULL) THEN T50D.remarks_puntos_historico_50d
+CASE WHEN (T10D.remarks_puntos_historico_10d IS NOT NULL) THEN T10D.remarks_puntos_historico_10d -0.5 
+WHEN (T20D.remarks_puntos_historico_20d IS NOT NULL) THEN T20D.remarks_puntos_historico_20d -0.5
+WHEN (T50D.remarks_puntos_historico_50d IS NOT NULL) THEN T50D.remarks_puntos_historico_50d -0.5
 ELSE NULL
 END AS  remarks_puntos_historico_10d,
 
-CASE WHEN (T20D.remarks_puntos_historico_20d IS NOT NULL) THEN T20D.remarks_puntos_historico_20d 
-WHEN(T50D.remarks_puntos_historico_50d IS NOT NULL) THEN T50D.remarks_puntos_historico_50d
+CASE WHEN (T20D.remarks_puntos_historico_20d IS NOT NULL) THEN T20D.remarks_puntos_historico_20d -0.5
+WHEN (T50D.remarks_puntos_historico_50d IS NOT NULL) THEN T50D.remarks_puntos_historico_50d -0.5
 ELSE NULL
-END AS  remarks_puntos_historico_20d,
+END AS remarks_puntos_historico_20d,
 
-T50D.remarks_puntos_historico_50d
+(T50D.remarks_puntos_historico_50d -0.5) AS remarks_puntos_historico_50d
 
 FROM 
   (SELECT a_nombre AS galgo_nombre, a_idc AS id_carrera,  a_fechaint AS fecha, AVG(b_puntos) as remarks_puntos_historico FROM datos_desa.tb_gh_y_remarkspuntos_norm2 GROUP BY a_nombre, a_idc, a_fechaint ) T_todos
