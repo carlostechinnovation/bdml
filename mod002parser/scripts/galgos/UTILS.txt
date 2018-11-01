@@ -1,0 +1,9 @@
+x <- matrix(1:10, ncol = 2); View(x)
+x_centrada_escalada <- scale(x,center = TRUE, scale = FALSE); View(x_centrada_escalada);
+qqplot(x)
+x_rhd <- robustHD::robStandardize(x)  # median and MAD
+
+
+
+
+
