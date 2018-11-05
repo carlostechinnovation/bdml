@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+ 
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
 RENTABILIDAD_MINIMA="110"
@@ -19,6 +21,8 @@ PATH_INFORMES="/home/carloslinux/Desktop/INFORMES/"
 PATH_LOGS="/home/carloslinux/Desktop/LOGS/"
 PATH_EXTERNAL_DATA="/home/carloslinux/Desktop/EXTERNAL/"
 PATH_MYSQL_PRIV_SECURE="/var/lib/mysql-files/"
+PATH_RSTUDIO_WSKP="/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/"
+
 
 TAG_GBGB="GBGB"
 FILE_SENTENCIAS_CREATE_TABLE="${PATH_LIMPIO}galgos_sentencias_create_table"
@@ -51,7 +55,10 @@ FILE_WEATHER_LIMPIO_INSERT_INTO="${PATH_LIMPIO}weather_info_nueva.txt"
 LOG_011="${PATH_LOGS}galgos_011_limpieza.log"
 LOG_012="${PATH_LOGS}galgos_012_normalizacion.log"
 LOG_013="${PATH_LOGS}galgos_013_columnas_elab.log"
-LOG_014_STATS="${PATH_LOGS}galgos_014_cols_sin_transformar_stats.log"
+LOG_014_STATS="${PATH_LOGS}galgos_014_sin_transformar_stats.log"
+LOG_015="${PATH_LOGS}galgos_015_transformaciones.log"
+LOG_016_STATS="${PATH_LOGS}galgos_016_transformadas_stats.log"
+
 LOG_019_EXPORT="${PATH_LOGS}galgos_019_export.log"
 LOG_020_ESTADISTICA="${PATH_LOGS}galgos_020_stats.log"
 LOG_CE="${PATH_LOGS}galgos_031_columnas_elaboradas_proceso.log"
@@ -96,8 +103,9 @@ INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}INFORME_LIMPIO_POSTERIORI.txt"
 INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}INFORME_RENTABILIDAD_POSTERIORI.txt"
 
 EXTERNAL_010_BRUTO="${PATH_EXTERNAL_DATA}010_BRUTOS/"
-EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}014/"
-EXTERNAL_014="${PATH_EXTERNAL_DATA}012_LIMNOR/"
+EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
+EXTERNAL_014="${PATH_EXTERNAL_DATA}014/"
+EXTERNAL_016="${PATH_EXTERNAL_DATA}016/"
 EXTERNAL_037_DS_PASADOS_SPLIT="${PATH_EXTERNAL_DATA}037_DS_PASADOS_SPLIT/"
 EXTERNAL_037="${PATH_EXTERNAL_DATA}037/"
 EXTERNAL_038_DS_PASADOS="${PATH_EXTERNAL_DATA}038_DS_PASADOS/"
@@ -266,7 +274,7 @@ function insertSelectRemark ()
 {
   remark_in="${1}"
 
-  echo -e "Calculando peso del remark='${remark_in}'..." 2>&1 1>>${LOG_CE}
+  echo -e "Calculando peso del remark='${remark_in}'..." 2>&1 1>>${LOG_013}
 
 read -d '' CONSULTA_REMARKS_PUNTOS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_remark_puntos_1;
@@ -281,23 +289,23 @@ CREATE TABLE datos_desa.tb_remark_puntos_2 AS SELECT posicion, contador/@sum_con
 INSERT INTO datos_desa.tb_remarks_puntos(remark,posicion,remark_puntos_norm) SELECT '${remark_in}' AS remark, posicion, CAST(puntos_norm AS decimal(20,6)) AS remark_puntos_norm FROM datos_desa.tb_remark_puntos_2;
 EOF
 
-  echo -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
-  mysql -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_CE}
+  echo -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_013}
+  mysql -e "$CONSULTA_REMARKS_PUNTOS" 2>&1 1>>${LOG_013}
 }
 
 
 function crearTablaRemarksPuntos ()
 {
-echo -e "La tabla de remarks_puntos indica el PESO/INFLUENCIA que tiene cada REMARK en el campo POSICION. Es una especie de 'posición normalizada mirando solo remarks'" 2>&1 1>>${LOG_CE}
+echo -e "La tabla de remarks_puntos indica el PESO/INFLUENCIA que tiene cada REMARK en el campo POSICION. Es una especie de 'posición normalizada mirando solo remarks'" 2>&1 1>>${LOG_013}
 
 CONSULTA_DROP="DROP TABLE IF EXISTS datos_desa.tb_remarks_puntos;"
-mysql -e "$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
+mysql -e "$CONSULTA_DROP" 2>&1 1>>${LOG_013}
 
 CONSULTA_CREAR="CREATE TABLE datos_desa.tb_remarks_puntos (remark varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '', posicion SMALLINT DEFAULT NULL, remark_puntos_norm decimal(20,2) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;"
-mysql -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
+mysql -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_013}
 
-echo -e "$CONSULTA_DROP" 2>&1 1>>${LOG_CE}
-echo -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_CE}
+echo -e "$CONSULTA_DROP" 2>&1 1>>${LOG_013}
+echo -e "$CONSULTA_CREAR" 2>&1 1>>${LOG_013}
 
 #Calcular e INSERTAR los puntos NORMALIZADOS (peso) de influencia en la posición, por tener cada remark
 insertSelectRemark 'Crd'

@@ -33,6 +33,14 @@ echo -e "LIMPIANDO tb_galgos_agregados..." >> "${LOG_011}"
 mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM; CREATE TABLE datos_desa.tb_galgos_agregados_LIM AS SELECT * FROM datos_desa.tb_galgos_agregados;" 2>&1 1>>"${LOG_011}"
 
 
+##########################################
+echo -e "Indices en tablas limpias..." >> "${LOG_011}"
+mysql -tN --execute="ALTER TABLE datos_desa.tb_galgos_posiciones_en_carreras_LIM ADD INDEX tb_PECLIM_idx(id_carrera,galgo_nombre);" 2>&1 1>>"${LOG_011}"
+mysql -tN --execute="ALTER TABLE datos_desa.tb_galgos_historico_LIM ADD INDEX tb_GHLIM_idx1(id_carrera,galgo_nombre);" 2>&1 1>>"${LOG_011}"
+mysql -tN --execute="ALTER TABLE datos_desa.tb_galgos_historico_LIM ADD INDEX tb_GHLIM_idx2(galgo_nombre,clase);" 2>&1 1>>"${LOG_011}"
+mysql -tN --execute="ALTER TABLE datos_desa.tb_galgos_agregados_LIM ADD INDEX tb_GALIM_idx2(galgo_nombre);" 2>&1 1>>"${LOG_011}"
+
+
 #######################################
 echo -e "\n----------- Tablas LIMPIAS --------------" 2>&1 1>>${LOG_012}
 echo -e "datos_desa.tb_galgos_carreras_LIM" 2>&1 1>>${LOG_012}

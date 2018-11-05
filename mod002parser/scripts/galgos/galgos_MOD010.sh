@@ -48,6 +48,11 @@ SENTENCIAS_CREATE_TABLE=$(cat ${FILE_SENTENCIAS_CREATE_TABLE})
 consultar "$SENTENCIAS_CREATE_TABLE" "${LOG_DESCARGA_BRUTO}" "-tN"
 
 
+consultar "ALTER TABLE datos_desa.tb_galgos_carreras ADD INDEX tb_GC_idx(id_carrera);" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "ALTER TABLE datos_desa.tb_galgos_posiciones_en_carreras ADD INDEX tb_GPEC_idx(id_carrera);" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "ALTER TABLE datos_desa.tb_galgos_historico ADD INDEX tb_GH_idx(galgo_nombre);" "${LOG_DESCARGA_BRUTO}" "-tN"
+consultar "ALTER TABLE datos_desa.tb_galgos_agregados ADD INDEX tb_GA_idx(galgo_nombre);" "${LOG_DESCARGA_BRUTO}" "-tN"
+
 #################### FUTURAS - SPORTIUM ######################
 echo -e $(date +"%T")" Borrando las paginas BRUTAS de detalle (carreras FUTURAS)..." 2>&1 1>>${LOG_DESCARGA_BRUTO}
 rm -fR "${PATH_BRUTO_SEMILLAS_SPORTIUM}_BRUTOCARRERADET*"

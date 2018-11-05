@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
 #Script principal COORDINADOR de todas las tareas. Lo que no quiera ejecutar, lo comento.
@@ -39,6 +39,11 @@ ${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 ##########${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
+
+
+
 
 echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER

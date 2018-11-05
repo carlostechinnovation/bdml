@@ -1,5 +1,5 @@
 #!/bin/bash
-
+ 
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/galgos_MOD013_001_nuevas_cols.sh"
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/galgos_MOD013_002_tablas_cols_elab.sh"
@@ -48,7 +48,6 @@ generarTablasElaboradas
 
 ####################################################################
 echo -e "\n\n | 013 | --- Analizando tablas intermedias (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_013}
-rm -f "${LOG_013}"
 
 analizarTabla "datos_desa" "tb_ce_x1a" "${LOG_013}"
 analizarTabla "datos_desa" "tb_ce_x1b" "${LOG_013}"
@@ -72,15 +71,20 @@ analizarTabla "datos_desa" "tb_ce_x10b" "${LOG_013}"
 analizarTabla "datos_desa" "tb_ce_x11" "${LOG_013}"
 analizarTabla "datos_desa" "tb_ce_x12a" "${LOG_013}"
 analizarTabla "datos_desa" "tb_ce_x12b" "${LOG_013}"
-analizarTabla "datos_desa" "tb_gh_y_remarkspuntos_norm3" "${LOG_013}"
+analizarTabla "datos_desa" "tb_gh_y_remarkspuntos_LIM3" "${LOG_013}"
 analizarTabla "datos_desa" "tb_ce_x13" "${LOG_013}"
 
 ####################################################################
 
+#echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_013}
+#borrarTablasInnecesarias
 
-echo -e "\n\n --- Borrando tablas intermedias innecesarias..." 2>&1 1>>${LOG_013}
-borrarTablasInnecesarias
+####################################################################
+echo -e "\n\n | 013 | --- Analizando tablas finales ELABORADAS (¡¡ mirar MUCHO los NULOS de CADA columna!!!! )...\n\n" 2>&1 1>>${LOG_013}
 
+analizarTabla "datos_desa" "tb_elaborada_carreras" "${LOG_013}"
+analizarTabla "datos_desa" "tb_elaborada_galgos" "${LOG_013}"
+analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos" "${LOG_013}"
 
 echo -e $(date +"%T")" | 013 | Columnas elaboradas | FIN" >>$LOG_070
 

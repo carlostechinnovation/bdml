@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
+source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh" 
 
 
 ################ TABLAS de INDICES ####################################################################################
@@ -9,16 +9,16 @@ function generarTablasIndices ()
 echo -e "\n""\n---- TABLAS DE INDICES -------- " 2>&1 1>>${LOG_013}
 
 echo -e "Tablas ORIGINALES:" 2>&1 1>>${LOG_013}
-echo -e "datos_desa.tb_galgos_carreras_norm --> id_carrera" 2>&1 1>>${LOG_013}
-echo -e "datos_desa.tb_galgos_posiciones_en_carreras_norm --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
-echo -e "datos_desa.tb_galgos_historico_norm --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
-echo -e "datos_desa.tb_galgos_agregados_norm --> galgo_nombre" 2>&1 1>>${LOG_013}
+echo -e "datos_desa.tb_galgos_carreras_LIM --> id_carrera" 2>&1 1>>${LOG_013}
+echo -e "datos_desa.tb_galgos_posiciones_en_carreras_LIM --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
+echo -e "datos_desa.tb_galgos_historico_LIM --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
+echo -e "datos_desa.tb_galgos_agregados_LIM --> galgo_nombre" 2>&1 1>>${LOG_013}
 
 echo -e " Tablas de columnas ELABORADAS (provienen de usar las originales, así que tienen las mismas claves):" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x1b --> galgo_nombre" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x2b --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x3b --> trap (se usa con carrera+galgo)" 2>&1 1>>${LOG_013}
-echo -e "datos_desa.datos_desa.tb_ce_x4 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
+echo -e "datos_desa.tb_ce_x4 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x5 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x6e --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x7d --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
@@ -30,18 +30,18 @@ echo -e "datos_desa.tb_ce_x12b --> id_carrera" 2>&1 1>>${LOG_013}
 echo -e "datos_desa.tb_ce_x13 --> (id_carrera, galgo_nombre)" 2>&1 1>>${LOG_013}
 
 
-echo -e "\n""\n-------- 3 Tablas auxiliares con todas las claves extraidas y haciendo DISTINCT (serán las tablas MAESTRAS de índices)-------" 2>&1 1>>${LOG_013}
+echo -e "\n\n-------- 3 Tablas auxiliares con todas las claves extraidas y haciendo DISTINCT (serán las tablas MAESTRAS de índices)-------" 2>&1 1>>${LOG_013}
 
 read -d '' CONSULTA_IDS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_ids_carreras;
 CREATE TABLE datos_desa.tb_ids_carreras AS 
 SELECT DISTINCT id_carrera 
 FROM (
-  SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_carreras_norm
+  SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_carreras_LIM
   UNION DISTINCT
-  SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_posiciones_en_carreras_norm
+  SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM
   UNION DISTINCT
-  SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_historico_norm
+  SELECT DISTINCT id_carrera FROM datos_desa.tb_galgos_historico_LIM
 ) dentro
 ;
 ALTER TABLE datos_desa.tb_ids_carreras ADD INDEX tb_ids_carreras_idx(id_carrera);
@@ -53,11 +53,11 @@ DROP TABLE IF EXISTS datos_desa.tb_ids_galgos;
 CREATE TABLE datos_desa.tb_ids_galgos AS 
 SELECT DISTINCT galgo_nombre 
 FROM (
-  SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_posiciones_en_carreras_norm
+  SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM
   UNION DISTINCT
-  SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_historico_norm
+  SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_historico_LIM
   UNION DISTINCT
-  SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_agregados_norm
+  SELECT DISTINCT galgo_nombre FROM datos_desa.tb_galgos_agregados_LIM
 ) dentro;
 ALTER TABLE datos_desa.tb_ids_galgos ADD INDEX tb_ids_galgos_idx(galgo_nombre);
 SELECT count(*) AS num_ids_galgos FROM datos_desa.tb_ids_galgos LIMIT 5;
@@ -73,9 +73,9 @@ substring_index(cg,"|",-1) AS galgo_nombre
 FROM (
   SELECT DISTINCT cg
   FROM (
-    SELECT CONCAT(id_carrera,'|',galgo_nombre) as cg FROM datos_desa.tb_galgos_posiciones_en_carreras_norm
+    SELECT CONCAT(id_carrera,'|',galgo_nombre) as cg FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM
     UNION DISTINCT
-    SELECT CONCAT(id_carrera,'|',galgo_nombre) as cg FROM datos_desa.tb_galgos_historico_norm
+    SELECT CONCAT(id_carrera,'|',galgo_nombre) as cg FROM datos_desa.tb_galgos_historico_LIM
   ) dentro
 ) fuera;
 
@@ -115,49 +115,62 @@ IFNULL(dentro.id_carrera, GH.id_carrera) AS id_carrera,
 IFNULL(dentro.id_campeonato, GH.id_campeonato) AS id_campeonato,
 IFNULL(dentro.track, GH.track) AS track,
 IFNULL(dentro.clase, GH.clase) AS clase,
-IFNULL(dentro.distancia_norm, GH.distancia_norm) AS distancia_norm,
-dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
-num_galgos_norm, mes_norm,hora_norm,premio_primero_norm,premio_segundo_norm,premio_otros_norm,premio_total_carrera_norm,going_allowance_segundos_norm,
-fc_1_norm,fc_2_norm,fc_pounds_norm,tc_1_norm,tc_2_norm,tc_3_norm,tc_pounds_norm,
+IFNULL(dentro.distancia, GH.distancia) AS distancia,
 
-tempMin_norm, tempMax_norm, tempSpan_norm,
+CASE WHEN dlmxjvs=1 THEN 1 ELSE 0 END AS dow_d,
+CASE WHEN dlmxjvs=2 THEN 1 ELSE 0 END AS dow_l,
+CASE WHEN dlmxjvs=3 THEN 1 ELSE 0 END AS dow_m,
+CASE WHEN dlmxjvs=4 THEN 1 ELSE 0 END AS dow_x,
+CASE WHEN dlmxjvs=5 THEN 1 ELSE 0 END AS dow_j,
+CASE WHEN dlmxjvs=6 THEN 1 ELSE 0 END AS dow_v,
+CASE WHEN dlmxjvs=7 THEN 1 ELSE 0 END AS dow_s,
+CASE WHEN (dlmxjvs=6 OR dlmxjvs=7 OR dlmxjvs=1) THEN 1 ELSE 0 END AS dow_finde,
+CASE WHEN (dlmxjvs<>6 AND dlmxjvs<>7 AND dlmxjvs<>1) THEN 1 ELSE 0 END AS dow_laborable,
 
-CAST( D.venue_going_std AS DECIMAL(8,6) ) AS venue_going_std,
-CAST( D.venue_going_avg AS DECIMAL(8,6) ) AS venue_going_avg
+num_galgos, 
+ROUND(mes_norm,2) AS mes_norm,
+hora,premio_primero,premio_segundo,premio_otros,premio_total_carrera,going_allowance_segundos,
+fc_1,fc_2,fc_pounds,tc_1,tc_2,tc_3,tc_pounds,
+
+tempMin, tempMax, tempSpan,
+
+ROUND( D.venue_going_std,2 ) AS venue_going_std,
+ROUND( D.venue_going_avg,2 ) AS venue_going_avg
 
 FROM (
   SELECT 
   A.id_carrera,
 
-  B.id_campeonato, B.track, B.clase, CAST(B.distancia_norm AS DECIMAL(8,6)) AS distancia_norm,
-  B.dow_d, B.dow_l, B.dow_m, B.dow_x, B.dow_j, B.dow_v, B.dow_s, B.dow_finde, B.dow_laborable,
+  B.id_campeonato, B.track, B.clase, 
+  ROUND(B.distancia,2) AS distancia,
+  DAYOFWEEK(concat(B.anio,'-',  LPAD(cast(B.mes as char), 2, '0')    ,'-',B.dia)) AS dlmxjvs,
 
-  CAST(C.num_galgos_norm AS DECIMAL(8,6)) AS num_galgos_norm,
-  CAST( IFNULL(B.mes_norm, C.mes_norm) AS DECIMAL(8,6) ) AS mes_norm,
-  CAST( IFNULL(B.hora_norm, C.hora_norm) AS DECIMAL(8,6) ) AS hora_norm,
-  CAST( IFNULL(B.premio_primero_norm, C.premio_primero_norm) AS DECIMAL(8,6) ) AS premio_primero_norm,
-  CAST( IFNULL(B.premio_segundo_norm, C.premio_segundo_norm) AS DECIMAL(8,6) ) AS premio_segundo_norm,
-  CAST( IFNULL(B.premio_otros_norm, C.premio_otros_norm) AS DECIMAL(8,6) ) AS premio_otros_norm,
-  CAST( IFNULL(B.premio_total_carrera_norm, C.premio_total_carrera_norm) AS DECIMAL(8,6) ) AS premio_total_carrera_norm,
-  CAST( IFNULL(B.going_allowance_segundos_norm, C.going_allowance_segundos_norm) AS DECIMAL(8,6) ) AS going_allowance_segundos_norm,
-  CAST( IFNULL(B.fc_1_norm, C.fc_1_norm) AS DECIMAL(8,6) ) AS fc_1_norm,
-  CAST( IFNULL(B.fc_2_norm, C.fc_2_norm) AS DECIMAL(8,6) ) AS fc_2_norm,
-  CAST( IFNULL(B.fc_pounds_norm, C.fc_pounds_norm) AS DECIMAL(8,6) ) AS fc_pounds_norm,
-  CAST( IFNULL(B.tc_1_norm, C.tc_1_norm) AS DECIMAL(8,6) ) AS tc_1_norm,
-  CAST( IFNULL(B.tc_2_norm, C.tc_2_norm) AS DECIMAL(8,6) ) AS tc_2_norm,
-  CAST( IFNULL(B.tc_3_norm, C.tc_3_norm) AS DECIMAL(8,6) ) AS tc_3_norm,
-  CAST( IFNULL(B.tc_pounds_norm, C.tc_pounds_norm) AS DECIMAL(8,6) ) AS tc_pounds_norm,
+  ROUND(B.num_galgos,2) AS num_galgos,
+  CASE WHEN (B.mes <=7) THEN (-1/6 + B.mes/6) WHEN (B.mes >7) THEN (5/12 - 5* B.mes/144) ELSE 0.5 END AS mes_norm,
+  ROUND(B.hora,2 ) AS hora,
+  ROUND( B.premio_primero,2) AS premio_primero,
+  ROUND( B.premio_segundo,2) AS premio_segundo,
+  ROUND( B.premio_otros,2 ) AS premio_otros,
+  ROUND( B.premio_total_carrera,2 ) AS premio_total_carrera,
+  ROUND( B.going_allowance_segundos,2 ) AS going_allowance_segundos,
+  ROUND( B.fc_1,2) AS fc_1,
+  ROUND( B.fc_2 ,2 ) AS fc_2,
+  ROUND( B.fc_pounds,2 ) AS fc_pounds,
+  ROUND( B.tc_1,2 ) AS tc_1,
+  ROUND( B.tc_2,2) AS tc_2,
+  ROUND( B.tc_3,2) AS tc_3,
+  ROUND( B.tc_pounds,2) AS tc_pounds,
 
-  B.tempMin_norm, B.tempMax_norm, B.tempSpan_norm
+  B.tempMin, B.tempMax, B.tempSpan
 
   FROM datos_desa.tb_ids_carreras A
-  LEFT OUTER JOIN datos_desa.tb_galgos_carreras_norm B ON (A.id_carrera=B.id_carrera)
-  LEFT JOIN datos_desa.tb_ce_x12b C ON (A.id_carrera=C.id_carrera)
+  LEFT OUTER JOIN datos_desa.tb_galgos_carreras_LIM B ON (A.id_carrera=B.id_carrera)
+
 ) dentro
 
 LEFT JOIN (
-  SELECT id_carrera, MAX(id_campeonato) AS id_campeonato, MAX(venue) AS track, MAX(clase) AS clase, MAX(distancia_norm) AS distancia_norm
-  FROM datos_desa.tb_galgos_historico_norm GROUP BY id_carrera
+  SELECT id_carrera, MAX(id_campeonato) AS id_campeonato, MAX(venue) AS track, MAX(clase) AS clase, MAX(distancia) AS distancia
+  FROM datos_desa.tb_galgos_historico_LIM GROUP BY id_carrera
 ) GH
 ON (dentro.id_carrera=GH.id_carrera)
 
@@ -183,27 +196,30 @@ CREATE TABLE datos_desa.tb_elaborada_galgos AS
 SELECT 
 A.*,
 
--- CAST( C.vgcortas_max_norm AS DECIMAL(8,6) ) AS vgcortas_max_norm, 
--- CAST( C.vgmedias_max_norm AS DECIMAL(8,6) ) AS vgmedias_max_norm, 
--- CAST( C.vglargas_max_norm AS DECIMAL(8,6) ) AS vglargas_max_norm,
+B.vel_real_cortas_mediana, 
+B.vel_real_cortas_max, 
+B.vel_going_cortas_mediana, 
+B.vel_going_cortas_max, 
+B.vel_real_longmedias_mediana, 
+B.vel_real_longmedias_max, 
+B.vel_going_longmedias_mediana, 
+B.vel_going_longmedias_max, 
+B.vel_real_largas_mediana, 
+B.vel_real_largas_max, 
+B.vel_going_largas_mediana, 
+B.vel_going_largas_max,
 
-CAST( D.vel_real_cortas_mediana_norm AS DECIMAL(8,6) ) AS vel_real_cortas_mediana_norm, 
-CAST( D.vel_real_cortas_max_norm AS DECIMAL(8,6) ) AS vel_real_cortas_max_norm, 
-CAST( D.vel_going_cortas_mediana_norm AS DECIMAL(8,6) ) AS vel_going_cortas_mediana_norm, 
-CAST( D.vel_going_cortas_max_norm AS DECIMAL(8,6) ) AS vel_going_cortas_max_norm, 
-CAST( D.vel_real_longmedias_mediana_norm AS DECIMAL(8,6) ) AS vel_real_longmedias_mediana_norm, 
-CAST( D.vel_real_longmedias_max_norm AS DECIMAL(8,6) ) AS vel_real_longmedias_max_norm, 
-CAST( D.vel_going_longmedias_mediana_norm AS DECIMAL(8,6) ) AS vel_going_longmedias_mediana_norm, 
-CAST( D.vel_going_longmedias_max_norm AS DECIMAL(8,6) ) AS vel_going_longmedias_max_norm, 
-CAST( D.vel_real_largas_mediana_norm AS DECIMAL(8,6) ) AS vel_real_largas_mediana_norm, 
-CAST( D.vel_real_largas_max_norm AS DECIMAL(8,6) ) AS vel_real_largas_max_norm, 
-CAST( D.vel_going_largas_mediana_norm AS DECIMAL(8,6) ) AS vel_going_largas_mediana_norm, 
-CAST( D.vel_going_largas_max_norm AS DECIMAL(8,6) ) AS vel_going_largas_max_norm
+C.vgcortas_med_min,
+C.vgcortas_med_max,
+C.vgmedias_med_min,
+C.vgmedias_med_max,
+C.vglargas_med_min,
+C.vglargas_med_max
 
 FROM datos_desa.tb_ids_galgos A
-LEFT JOIN datos_desa.tb_galgos_agregados_norm B ON (A.galgo_nombre=B.galgo_nombre)
+LEFT JOIN datos_desa.tb_galgos_agregados_LIM B ON (A.galgo_nombre=B.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_x1b C ON (A.galgo_nombre=C.galgo_nombre)
-LEFT JOIN datos_desa.tb_ce_x11 D ON (A.galgo_nombre=D.galgo_nombre)
+-- LEFT JOIN datos_desa.tb_ce_x11 D ON (A.galgo_nombre=D.galgo_nombre)
 ;
 
 ALTER TABLE datos_desa.tb_elaborada_galgos ADD INDEX tb_elaborada_galgos_idx(galgo_nombre);
@@ -216,7 +232,7 @@ mysql -t --execute="$CONSULTA_ELAB2" >>${LOG_013}
 
 
 echo -e "\n\n ---- TABLA ELABORADA 3: [ carrera+galgo -> columnas ]" 2>&1 1>>${LOG_013}
-read -d '' CONSULTA_ELAB3 <<- EOF
+read -d '' CONSULTA_ELAB3_PARTE1 <<- EOF
 
 -- SIMULAMOS FULL OUTER JOIN mediante LEFT y RIGHT-connullizda (alternativa porque MYSQL no soporta FULL)
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_fullouterjoin1;
@@ -224,33 +240,31 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_fullouterjoin1;
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_fullouterjoin1 AS
 SELECT 
 B.id_carrera,B.galgo_nombre,
-B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
-C.distancia_norm,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real_norm, C.velocidad_con_going_norm,
+B.time_sec, B.time_distance, B.peso_galgo, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias,
+C.distancia,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real, C.velocidad_con_going,
 IFNULL(B.posicion,C.posicion) AS posicion,
-IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
+IFNULL(B.sp, C.sp) AS sp,
 IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
 IFNULL(B.trap, C.trap) AS trap,
-IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
 C.anio,C.mes,C.dia,
 IFNULL(B.entrenador_nombre, C.entrenador) AS entrenador
-FROM datos_desa.tb_galgos_posiciones_en_carreras_norm B
-LEFT JOIN datos_desa.tb_galgos_historico_norm C ON (B.id_carrera=C.id_carrera AND B.galgo_nombre=C.galgo_nombre)
+FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM B
+LEFT JOIN datos_desa.tb_galgos_historico_LIM C ON (B.id_carrera=C.id_carrera AND B.galgo_nombre=C.galgo_nombre)
 
 UNION ALL
 
 SELECT 
 B.id_carrera,B.galgo_nombre,
-B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
-C.distancia_norm,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real_norm, C.velocidad_con_going_norm,
+B.time_sec, B.time_distance, B.peso_galgo, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias,
+C.distancia,  C.stmhcp, C.by_dato, C.galgo_primero_o_segundo, C.venue, C.remarks, C.win_time, C.going, C.clase, C.calculated_time, C.velocidad_real, C.velocidad_con_going,
 IFNULL(B.posicion,C.posicion) AS posicion,
-IFNULL(B.sp_norm, C.sp_norm) AS sp_norm,
+IFNULL(B.sp, C.sp) AS sp,
 IFNULL(B.id_campeonato, C.id_campeonato) AS id_campeonato,
 IFNULL(B.trap, C.trap) AS trap,
-IFNULL(B.trap_norm, C.trap_norm) AS trap_norm,
 C.anio,C.mes,C.dia,
 IFNULL(B.entrenador_nombre, C.entrenador) AS entrenador
-FROM datos_desa.tb_galgos_posiciones_en_carreras_norm B
-RIGHT JOIN datos_desa.tb_galgos_historico_norm C ON (B.id_carrera=C.id_carrera AND B.galgo_nombre=C.galgo_nombre)
+FROM datos_desa.tb_galgos_posiciones_en_carreras_LIM B
+RIGHT JOIN datos_desa.tb_galgos_historico_LIM C ON (B.id_carrera=C.id_carrera AND B.galgo_nombre=C.galgo_nombre)
 WHERE (B.id_carrera IS NULL AND B.galgo_nombre IS NULL)
 ;
 
@@ -262,10 +276,11 @@ DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos_aux1;
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos_aux1 AS
 SELECT 
   A.*,
-  B.time_sec_norm, B.time_distance_norm, B.peso_galgo_norm, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias_norm,
-  B.distancia_norm,  B.stmhcp, B.by_dato, B.galgo_primero_o_segundo, B.venue, B.remarks, B.win_time, B.going, B.clase, B.calculated_time, B.velocidad_real_norm, B.velocidad_con_going_norm,
+  B.time_sec, B.time_distance, B.peso_galgo, B.galgo_padre, B.galgo_madre, B.comment, B.edad_en_dias,
+  B.distancia,  B.stmhcp, B.by_dato, B.galgo_primero_o_segundo, B.venue, B.remarks, B.win_time, 
+  B.going, B.clase, B.calculated_time, B.velocidad_real, B.velocidad_con_going,
   D.experiencia,
-  B.posicion, B.sp_norm, B.id_campeonato, B.trap, B.trap_norm,
+  B.posicion, B.sp, B.id_campeonato, B.trap,
   IFNULL(B.anio, D.anio) AS anio,
   IFNULL(B.mes, D.mes) AS mes,
   IFNULL(B.dia, D.dia) AS dia,
@@ -283,6 +298,12 @@ ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_aux1 ADD INDEX tb_elaborada_c
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_aux1 ADD INDEX tb_elaborada_carrerasgalgos_aux1_idx3(id_carrera, galgo_nombre, clase);
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos_aux1 ADD INDEX tb_elaborada_carrerasgalgos_aux1_idx4(entrenador);
 
+EOF
+
+echo -e "\n$CONSULTA_ELAB3_PARTE1" 2>&1 1>>${LOG_013}
+mysql -t --execute="$CONSULTA_ELAB3_PARTE1" >>${LOG_013}
+
+read -d '' CONSULTA_ELAB3 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carrerasgalgos;
 
 CREATE TABLE datos_desa.tb_elaborada_carrerasgalgos AS 
@@ -291,9 +312,9 @@ dentro.cg,
 CASE WHEN (dentro.id_carrera<100000) THEN true ELSE false END AS futuro,
 dentro.id_carrera, 
 dentro.galgo_nombre, 
-CAST( dentro.time_sec_norm AS DECIMAL(8,6) ) AS time_sec_norm, 
-CAST( dentro.time_distance_norm AS DECIMAL(8,6) ) AS time_distance_norm, 
-CAST( dentro.peso_galgo_norm AS DECIMAL(8,6) ) AS peso_galgo_norm, 
+CAST( dentro.time_sec AS DECIMAL(8,6) ) AS time_sec, 
+CAST( dentro.time_distance AS DECIMAL(8,6) ) AS time_distance, 
+CAST( dentro.peso_galgo AS DECIMAL(8,6) ) AS peso_galgo, 
 dentro.galgo_padre, 
 dentro.galgo_madre, 
 dentro.comment, 
@@ -305,29 +326,30 @@ dentro.remarks,
 dentro.win_time, 
 dentro.going, 
 dentro.calculated_time, 
-CAST( dentro.velocidad_real_norm AS DECIMAL(8,6) ) AS velocidad_real_norm, 
-CAST( dentro.velocidad_con_going_norm AS DECIMAL(8,6) ) AS velocidad_con_going_norm, 
-CAST( dentro.experiencia AS DECIMAL(8,6) ) AS experiencia, 
+ROUND( dentro.velocidad_real,2 ) AS velocidad_real, 
+ROUND( dentro.velocidad_con_going,2) AS velocidad_con_going, 
+ROUND( dentro.experiencia,2) AS experiencia, 
 dentro.posicion, 
 dentro.id_campeonato,
-CAST( E.trap_factor AS DECIMAL(8,6) ) AS trap_factor,
+ROUND( E.trap_factor,2 ) AS trap_factor,
 H.experiencia_cualitativo, 
 H.experiencia_en_clase, 
-H.posicion_media_en_clase_por_experiencia,
+ROUND(H.posicion_media_en_clase_por_experiencia,2) AS posicion_media_en_clase_por_experiencia,
 I.distancia_centenas, 
-CAST( I.dif_peso AS DECIMAL(8,6) ) AS dif_peso,
-CAST( J.entrenador_posicion_norm AS DECIMAL(8,6) ) AS entrenador_posicion_norm,
-CAST( IFNULL(dentro.edad_en_dias_norm,K.eed_norm) AS DECIMAL(8,6) ) AS eed_norm, -- Me fio mas de la pagina de posiciones en carreras que del historico
-dentro.trap_norm,
+ROUND( I.dif_peso,2 ) AS dif_peso,
+ROUND( J.posicion_avg,2 ) AS entrenador_posicion_avg,
+ROUND( J.posicion_std,2 ) AS entrenador_posicion_std,
+ROUND( IFNULL(dentro.edad_en_dias, K.edad_en_dias) ,2 ) AS eed, -- Me fio mas de la pagina de posiciones en carreras que del historico
+dentro.trap,
 IFNULL(dentro.mes, H.mes) AS mes,
-CAST( IFNULL(dentro.sp_norm,F.sp_norm) AS DECIMAL(8,6) ) AS sp_norm,
+ROUND( IFNULL(dentro.sp,F.sp) ,2 ) AS sp,
 IFNULL(dentro.clase, IFNULL(G.clase, H.clase) ) AS clase,
-IFNULL(dentro.distancia_norm, I.distancia_norm) AS distancia_norm,
+IFNULL(dentro.distancia, I.distancia) AS distancia,
 IFNULL(dentro.entrenador, J.entrenador) AS entrenador,
-L.remarks_puntos_historico,
-L.remarks_puntos_historico_10d,
-L.remarks_puntos_historico_20d,
-L.remarks_puntos_historico_50d
+ROUND(L.remarks_puntos_historico,2) AS remarks_puntos_historico,
+ROUND(L.remarks_puntos_historico_10d,2) AS remarks_puntos_historico_10d,
+ROUND(L.remarks_puntos_historico_20d,2) AS remarks_puntos_historico_20d,
+ROUND(L.remarks_puntos_historico_50d,2) AS remarks_puntos_historico_50d
 
 FROM datos_desa.tb_elaborada_carrerasgalgos_aux1 dentro
 LEFT JOIN datos_desa.tb_ce_x3b E ON (dentro.trap=E.trap)
@@ -345,7 +367,6 @@ SELECT * FROM datos_desa.tb_elaborada_carrerasgalgos ORDER BY cg LIMIT 5;
 SELECT count(*) as num_elab_cg FROM datos_desa.tb_elaborada_carrerasgalgos LIMIT 5;
 
 EOF
-
 
 echo -e "\n$CONSULTA_ELAB3" 2>&1 1>>${LOG_013}
 mysql -t --execute="$CONSULTA_ELAB3" >>${LOG_013}
@@ -406,7 +427,5 @@ echo -e "\n$CONSULTA_DROP_TABLAS_INNECESARIAS" 2>&1 1>>${LOG_013}
 mysql -t --execute="$CONSULTA_DROP_TABLAS_INNECESARIAS" >>${LOG_013}
 
 }
-
-
 
 
