@@ -453,7 +453,7 @@ ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "CON_5_GALGOS_JOVENES" 2>&1 1>>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_elaborada_carrerastb_trans_carrerasgalgos WHERE eed <= 0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_VIEJOS" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE eed <= 0.66 GROUP BY id_carrera HAVING count(*)>=5 )" "CON_5_GALGOS_VIEJOS" 2>&1 1>>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "CON_5_GALGOS_VIEJOS" 2>&1 1>>$PATH_LOG
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
