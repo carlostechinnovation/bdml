@@ -21,43 +21,20 @@ echo -e "Ruta log (coordinador)="${LOG_MASTER}
 
 crearTablaTiposSp #tabla estatica
 
-##########echo -e $(date +"%T")" ANALISIS de CONFIG para Descarga de datos BRUTOS (puntualmente, no siempre)" >>$LOG_MASTER
-##########${PATH_SCRIPTS}'galgos_MOD010_ANALISIS_PARAMS.sh'  >>$LOG_MASTER #Sportium-CONFIG
-
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
-###########rm -f "$FLAG_BB_DESCARGADO_OK" #fichero FLAG que indica que el proceso hijo ha terminado (el padre lo mirará cuando le haga falta en el módulo predictivo de carreras FUTURAS).
-###########${PATH_SCRIPTS}'galgos_MOD010_paralelo_BB.sh'  >>$LOG_MASTER ## FUTURAS - BETBRIGHT (ASYNC?? Poner & en tal caso) ##
 
 #${PATH_SCRIPTS}'galgos_MOD010_WEATHER.sh'  >>$LOG_MASTER # WEATHER de pasado y futuro (para enriquecer despues)
 #${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos). Se enriquece con info WEATHER
 #echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
 
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
-##########${PATH_SCRIPTS}'galgos_MOD012.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
-
-
-
-##########echo -e $(date +"%T")" Exportacion externa de tablas brutas" >>$LOG_MASTER
-##########${PATH_SCRIPTS}'galgos_MOD019.sh' >>$LOG_MASTER
-
-##########echo -e $(date +"%T")" Analisis de datos BRUTOS: ESTADISTICA BASICA" >>$LOG_MASTER
-##########${PATH_SCRIPTS}'galgos_MOD020.sh' >>$LOG_MASTER
-
-##########echo -e "Borrando tablas LIMPIAS para ahorrar espacio..." >> "${LOG_MASTER}"
-##########mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
-##########mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM;" 2>&1 1>>"${LOG_MASTER}"
-##########mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM;" 2>&1 1>>"${LOG_MASTER}"
-##########mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM;" 2>&1 1>>"${LOG_MASTER}"
-
-##########echo -e $(date +"%T")" Generador de COLUMNAS ELABORADAS" >>$LOG_MASTER
-##########${PATH_SCRIPTS}'galgos_MOD030.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
 
 
 rm -f $LOG_DS  # Limpiar LOG de la capa 035 (036+037)

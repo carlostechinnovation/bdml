@@ -361,6 +361,21 @@ mysql -t --execute="$CONSULTA_TABLA_TIPOS_SP" 2>&1 1>>${LOG_MASTER}
 
 ######## SUBGRUPOS #######################################################################
 
+
+function tablasAuxiliaresParaSubgrupos ()
+{
+
+PATH_LOG=${1}
+
+echo -e $(date +"%T")" ------- tablasAuxiliaresParaSubgrupos -------" 2>&1 1>>${PATH_LOG}
+
+mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_aux_carreras_con_algun_lento;" 2>&1 1>>${LOG_MASTER}
+mysql -t --execute="CREATE TABLE datos_desa.tb_aux_carreras_con_algun_lento AS SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT  galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 );" 2>&1 1>>${LOG_MASTER}
+
+
+}
+
+
 function analizarScoreSobreSubgrupos ()
 {
 
@@ -486,7 +501,7 @@ ${PATH_SCRIPTS}'galgos_MOD040.sh' "TRAINER_MALOS_GALGOS" 2>&1 1>>$PATH_LOG
 #----Criterios COMPLEJOS ---
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carreras WHERE distancia >0.66) AND id_carrera IN ( SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT DISTINCT galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 ) )" "LARGA_Y_ALGUNO_LENTO" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carreras WHERE distancia >0.66) AND id_carrera IN ( SELECT id_carrera FROM datos_desa.tb_aux_carreras_con_algun_lento )" "LARGA_Y_ALGUNO_LENTO" 2>&1 1>>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "LARGA_Y_ALGUNO_LENTO" 2>&1 1>>$PATH_LOG
 
 }
@@ -603,6 +618,7 @@ function analisisRentabilidadesPorSubgrupos(){
   rm -f $LOG_ML
 
   resetTablaRentabilidades #Reseteando tabla de rentabilidades
+  tablasAuxiliaresParaSubgrupos #tablas auxiliares para q los filtros sean mas sencillos y rapidos
   analizarScoreSobreSubgrupos "$LOG_MASTER"
 
   #Cargando fichero de rentabilidades a la tabla

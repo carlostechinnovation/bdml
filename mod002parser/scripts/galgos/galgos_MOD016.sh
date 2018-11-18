@@ -14,6 +14,22 @@ analizarTabla "datos_desa" "tb_trans_carreras" "${LOG_016_STATS}"
 analizarTabla "datos_desa" "tb_trans_galgos" "${LOG_016_STATS}"
 analizarTabla "datos_desa" "tb_trans_carrerasgalgos" "${LOG_016_STATS}"
 
+
+############################## OPTIMIZACION #######################################################################
+echo -e "-------------- OPTIMIZACION --------------" >> "${LOG_016_STATS}"
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_galgos ADD INDEX trans_galgos_idx1(galgo_nombre);" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_galgos ADD INDEX trans_galgos_idx2(vel_going_largas_max);" 2>&1 1>>${LOG_016_STATS}
+
+
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_carreras_idx1(id_carrera);" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_carreras_idx2(distancia);" 2>&1 1>>${LOG_016_STATS}
+
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_cg_idx1(id_carrera);" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_cg_idx2(galgo_nombre);" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_cg_idx3(id_carrera,galgo_nombre);" 2>&1 1>>${LOG_016_STATS}
+
+
+
 #####################################################################################################
 echo -e "Analizando con KNIME..." >> "${LOG_016_STATS}"
 PATH_KNIME_WFLOW="/root/knime-workspace/workflow_galgos/"
