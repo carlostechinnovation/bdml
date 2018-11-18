@@ -21,37 +21,104 @@ CREATE TABLE datos_desa.tb_dataset_con_ids_${TAG} AS
 SELECT *
 FROM (
 
-  SELECT 
+SELECT 
+A.galgo_nombre_ix,
+A.id_carrera_ix,
+A.cg,
+A.futuro,
+A.id_carrera, 
+A.galgo_nombre, 
+A.time_sec, 
+A.time_distance, 
+A.peso_galgo, 
+A.galgo_padre, 
+A.galgo_madre, 
+A.comment, 
+A.stmhcp, 
+A.by_dato, 
+A.galgo_primero_o_segundo, 
+A.venue, 
+A.remarks, 
+A.win_time, 
+A.going, 
+A.calculated_time, 
+A.velocidad_real, 
+A.velocidad_con_going AS TARGET,
+A.experiencia, 
+A.posicion, 
+A.id_campeonato,
+A.trap_factor,
+A.experiencia_cualitativo, 
+A.experiencia_en_clase, 
+A.posicion_media_en_clase_por_experiencia,
+A.distancia_centenas, 
+A.dif_peso,
+A.entrenador_posicion_avg,
+A.entrenador_posicion_std,
+A.eed,
+A.trap,
+A.mes,
+A.sp,
+A.clase,
+A.distancia,
+A.entrenador,
+A.remarks_puntos_historico,
+A.remarks_puntos_historico_10d,
+A.remarks_puntos_historico_20d,
+A.remarks_puntos_historico_50d,
 
-A.id_carrera, A.galgo_nombre, A.futuro,
+B.vel_real_cortas_mediana, 
+B.vel_real_cortas_max, 
+B.vel_going_cortas_mediana, 
+B.vel_going_cortas_max, 
+B.vel_real_longmedias_mediana, 
+B.vel_real_longmedias_max, 
+B.vel_going_longmedias_mediana, 
+B.vel_going_longmedias_max, 
+B.vel_real_largas_mediana, 
+B.vel_real_largas_max, 
+B.vel_going_largas_mediana, 
+B.vel_going_largas_max,
+B.vgcortas_med_min,
+B.vgcortas_med_max,
+B.vgmedias_med_min,
+B.vgmedias_med_max,
+B.vglargas_med_min,
+B.vglargas_med_max,
 
-A.peso_galgo_norm, A.eed_norm, A.experiencia, A.trap_factor, A.experiencia_en_clase, A.posicion_media_en_clase_por_experiencia, A.dif_peso, A.entrenador_posicion_norm, A.trap_norm, A.remarks_puntos_historico, A.remarks_puntos_historico_10d, A.remarks_puntos_historico_20d, A.remarks_puntos_historico_50d,
-
--- B.vgcortas_max_norm, B.vgmedias_max_norm, B.vglargas_max_norm, 
-B.vel_real_cortas_mediana_norm, B.vel_real_cortas_max_norm, B.vel_going_cortas_mediana_norm, B.vel_going_cortas_max_norm, B.vel_real_longmedias_mediana_norm, B.vel_real_longmedias_max_norm, B.vel_going_longmedias_mediana_norm, B.vel_going_longmedias_max_norm, B.vel_real_largas_mediana_norm, B.vel_real_largas_max_norm, B.vel_going_largas_mediana_norm, B.vel_going_largas_max_norm,
-
-C.distancia_norm, C.num_galgos_norm, C.mes_norm, C.hora_norm, C.venue_going_std, C.venue_going_avg, C.dow_d, C.dow_l, C.dow_m, C.dow_x, C.dow_j, C.dow_v, C.dow_s, C.dow_finde, C.dow_laborable,
-
-C.tempMin_norm, C.tempMax_norm, C.tempSpan_norm,
-
-velocidad_con_going_norm AS TARGET
+C.track,
+C.dow_d,C.dow_l,C.dow_m,C.dow_x,C.dow_j,C.dow_v,C.dow_s,C.dow_finde,C.dow_laborable,
+C.num_galgos, 
+C.mes_norm,
+C.hora,
+C.premio_primero,
+C.premio_segundo,
+C.premio_otros,
+C.premio_total_carrera,
+C.going_allowance_segundos,
+C.fc_1,C.fc_2,C.fc_pounds,C.tc_1,C.tc_2,C.tc_3,C.tc_pounds,
+C.tempMin, 
+C.tempMax, 
+C.tempSpan,
+C.venue_going_std,
+C.venue_going_avg
 
   FROM datos_desa.tb_filtrada_carrerasgalgos_${TAG} A
-  INNER JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre=B.galgo_nombre)
-  INNER JOIN datos_desa.tb_filtrada_carreras_${TAG} C ON (A.id_carrera=C.id_carrera)
+  INNER JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre_ix=B.galgo_nombre_ix)
+  INNER JOIN datos_desa.tb_filtrada_carreras_${TAG} C ON (A.id_carrera_ix=C.id_carrera_ix)
 ) dentro
 
 WHERE (futuro=true OR (futuro=false AND dentro.TARGET IS NOT NULL))
 ;
 
-ALTER TABLE datos_desa.tb_dataset_con_ids_${TAG} ADD INDEX tb_dscids_idx(id_carrera);
+ALTER TABLE datos_desa.tb_dataset_con_ids_${TAG} ADD INDEX tb_dscids_idx(id_carrera_ix);
 SELECT count(*) as num_dataset_con_ids FROM datos_desa.tb_dataset_con_ids_${TAG} LIMIT 5;
 EOF
 
-echo -e "$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_CON_IDs" 2>&1 1>>${LOG_DS}
 mysql -t --execute="$CONSULTA_CON_IDs" >>$LOG_DS
 
-echo -e "PASADO y FUTURO (con boolean e IDs) --> datos_desa.tb_dataset_con_ids_${TAG}" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"PASADO y FUTURO (con boolean e IDs) --> datos_desa.tb_dataset_con_ids_${TAG}" 2>&1 1>>${LOG_DS}
 
 
 #####################################################################################
@@ -74,7 +141,7 @@ ALTER TABLE datos_desa.tb_dataset_ids_futuros_${TAG} ADD INDEX tb_dscids_f_idx(i
 SELECT count(*) as num_ids_futuros FROM datos_desa.tb_dataset_ids_futuros_${TAG} LIMIT 1;
 EOF
 
-echo -e "$CONSULTA_IDS_PASADOS_Y_FUTUROS" 2>&1 1>>${LOG_DS}
+echo -e $(date +"%T")"$CONSULTA_IDS_PASADOS_Y_FUTUROS" 2>&1 1>>${LOG_DS}
 mysql -t --execute="$CONSULTA_IDS_PASADOS_Y_FUTUROS" >>$LOG_DS
 
 
@@ -112,7 +179,7 @@ echo -e "${TAG}|DS-Futuros = ${numero_ids_futuros}"
 ######################################################################
 #3º Crear estas 4 listas de IDs: PASADO-TRAIN, PASADO-TEST, PASADO-VALIDATION, FUTURA (ya creada).
 ######################################################################
-echo -e "\nATENCION: El dataset pasado-VALIDATION me servira para calcular el SCORE. Por ello, en ese dataset solo cojo aquellas en las que conozca SUFICIENTES galgos que corrieron por carrera. NO cogere carreras en las que solo conozca POCOS galgos de los que corrieron, SINO siempre un numero suficiente!!" >>$LOG_DS
+echo -e $(date +"%T")"\nATENCION: El dataset pasado-VALIDATION me servira para calcular el SCORE. Por ello, en ese dataset solo cojo aquellas en las que conozca SUFICIENTES galgos que corrieron por carrera. NO cogere carreras en las que solo conozca POCOS galgos de los que corrieron, SINO siempre un numero suficiente!!" >>$LOG_DS
 
 num_suficiente_galgos_conocidos=4
 echo -e "Numero de galgos SUFICIENTE para considerar que la carrera es usable para SCORE ==>" ${num_suficiente_galgos_conocidos}"\n" >>$LOG_DS
@@ -161,14 +228,79 @@ echo -e "FUTURO_IDs -> datos_desa.tb_dataset_ids_futuros_${TAG}" 2>&1 1>>${LOG_D
 #4º Columnas usadas (FEATURES), sin IDs ni target.
 ######################################################################
 read -d '' FEATURES_COMUNES <<- EOF
-peso_galgo_norm, eed_norm, experiencia, trap_factor, experiencia_en_clase, posicion_media_en_clase_por_experiencia, dif_peso, entrenador_posicion_norm, trap_norm,  remarks_puntos_historico, remarks_puntos_historico_10d, remarks_puntos_historico_20d, remarks_puntos_historico_50d,
 
--- vgcortas_max_norm, vgmedias_max_norm, vglargas_max_norm, 
-vel_real_cortas_mediana_norm, vel_real_cortas_max_norm, vel_going_cortas_mediana_norm, vel_going_cortas_max_norm, vel_real_longmedias_mediana_norm, vel_real_longmedias_max_norm, vel_going_longmedias_mediana_norm, vel_going_longmedias_max_norm, vel_real_largas_mediana_norm, vel_real_largas_max_norm, vel_going_largas_mediana_norm, vel_going_largas_max_norm,
+-- futuro,
+-- time_sec, 
+-- time_distance, 
+peso_galgo, 
+-- stmhcp, 
+-- by_dato, 
+-- galgo_primero_o_segundo, 
+-- venue, 
+-- remarks, 
+-- win_time, 
+-- going, 
+-- calculated_time, 
+-- velocidad_real, 
+-- TARGET,
+experiencia, 
+-- posicion, 
+-- id_campeonato,
+trap_factor,
+-- experiencia_cualitativo, 
+experiencia_en_clase, 
+posicion_media_en_clase_por_experiencia,
+distancia_centenas, 
+dif_peso,
+entrenador_posicion_avg,
+entrenador_posicion_std,
+eed,
+-- trap,
+-- mes,
+sp,
+-- clase,
+distancia,
+-- entrenador,
+remarks_puntos_historico,
+remarks_puntos_historico_10d,
+remarks_puntos_historico_20d,
+remarks_puntos_historico_50d,
 
-distancia_norm, num_galgos_norm, mes_norm, hora_norm, venue_going_std, venue_going_avg, 
--- dow_d, dow_l, dow_m, dow_x, dow_j, dow_v, dow_s, dow_finde, dow_laborable,
-tempMin_norm, tempMax_norm, tempSpan_norm
+vel_real_cortas_mediana, 
+vel_real_cortas_max, 
+vel_going_cortas_mediana, 
+vel_going_cortas_max, 
+vel_real_longmedias_mediana, 
+vel_real_longmedias_max, 
+vel_going_longmedias_mediana, 
+vel_going_longmedias_max, 
+vel_real_largas_mediana, 
+vel_real_largas_max, 
+vel_going_largas_mediana, 
+vel_going_largas_max,
+vgcortas_med_min,
+vgcortas_med_max,
+vgmedias_med_min,
+vgmedias_med_max,
+vglargas_med_min,
+vglargas_med_max,
+
+-- track,
+dow_d,dow_l,dow_m,dow_x,dow_j,dow_v,dow_s,dow_finde,dow_laborable,
+num_galgos, 
+mes_norm,
+hora,
+premio_primero,
+premio_segundo,
+premio_otros,
+premio_total_carrera,
+-- going_allowance_segundos,
+fc_1,fc_2,fc_pounds,tc_1,tc_2,tc_3,tc_pounds,
+tempMin, 
+tempMax, 
+tempSpan,
+venue_going_std,
+venue_going_avg
 EOF
 
 
@@ -336,7 +468,7 @@ echo -e "----------------------------------------------------\n\n\n" 2>&1 1>>${L
 
 
 #####################################################################################
-
+echo -e "Borrando temp..." 2>&1 1>>${LOG_DS}
 rm -f ${FILE_TEMP}
 
 ###########################################################################

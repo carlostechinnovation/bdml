@@ -84,7 +84,7 @@ DROP TABLE IF EXISTS datos_desa.tb_val_1st_connombre_${TAG};
 CREATE TABLE datos_desa.tb_val_1st_connombre_${TAG} AS
 SELECT AB.*, @rowid:=@rowid+1 as rowid 
 FROM (
-  SELECT A.id_carrera, A.galgo_nombre
+  SELECT A.id_carrera, A.galgo_nombre_ix AS galgo_nombre
   FROM datos_desa.tb_dataset_con_ids_${TAG} A 
   RIGHT JOIN datos_desa.tb_dataset_ids_pasado_validation_${TAG} B
   ON (A.id_carrera=B.id_carrera)
@@ -144,7 +144,7 @@ mysql -t --execute="$CONSULTA_SCORE" 2>&1 1>>${LOG_042}
 
 
 echo -e "MOD042_1st Ejemplos de filas PREDICHAS (dataset PASADO_VALIDATION):" 2>&1 1>>${LOG_042}
-mysql --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1st, acierto, fortaleza FROM datos_desa.tb_val_1st_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_042}
+mysql -t --execute="SELECT id_carrera, galgo_nombre, posicion_real, posicion_predicha, predicha_1st, acierto, fortaleza FROM datos_desa.tb_val_1st_riesgo_${TAG} LIMIT 3;" 2>&1 1>>${LOG_042}
 
 
 ##################### CALCULO ECONÓMICO y salida hacia SCRIPT PADRE ################

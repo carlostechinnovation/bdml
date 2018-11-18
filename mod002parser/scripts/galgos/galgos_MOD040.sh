@@ -14,7 +14,7 @@ TAG="${1}"
 
 
 echo -e $(date +"%T")" | 040 | Modelo predictivo (subgrupo: $TAG) | INICIO" >>$LOG_070
-echo -e "MOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
+echo -e "\n\n\nMOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
 
 PATH_FILE_VALIDATION_TARGETS_PREDICHOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pasado_validation_targets_predichos_"${TAG}".txt"

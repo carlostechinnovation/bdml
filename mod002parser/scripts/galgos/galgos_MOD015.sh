@@ -20,9 +20,12 @@ echo -e $(date +"%T")" - Si p-value es mayor que alpha (0.05) entonces no se pue
 echo -e $(date +"%T")" - Si p-value es menor que alpha (0.05) entonces rechazamos la hipotesis nula: SEGURO que la muestra NO viene de una distribucion NORMAL." 2>&1 1>>${LOG_015}
 ##########################################
 
+#Borrar graficos previos
+rm -Rf '/home/carloslinux/Desktop/LOGS/015_graficos/'
+mkdir '/home/carloslinux/Desktop/LOGS/015_graficos/'
 
 echo -e "MOD015 - Transformando con R..." 2>&1 1>>${LOG_015}
-Rscript "${PATH_RSTUDIO_WSKP}galgos_015.R" "10000" 2>&1 1>>"${LOG_015}"
+Rscript "${PATH_RSTUDIO_WSKP}galgos_015.R" "10000000" 2>&1 1>>"${LOG_015}"
 
 
 echo -e $(date +"%T")" | 015 | Transformacion de columnas | FIN" >>$LOG_070

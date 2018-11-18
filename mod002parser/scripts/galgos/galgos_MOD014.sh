@@ -44,6 +44,11 @@ echo -e "MAX|MIN|AVG|STD|NO_NULOS|NULOS --> El ratio NULOS/No_nulos debe ser baj
 
 #####################################################################################################
 echo -e "Analizando con KNIME..." >> "${LOG_014_STATS}"
+
+#Borrar graficos previos
+rm -Rf '/home/carloslinux/Desktop/LOGS/014_graficos/'
+mkdir '/home/carloslinux/Desktop/LOGS/014_graficos/'
+
 PATH_KNIME_WFLOW="/root/knime-workspace/workflow_galgos/"
 #sudo "/home/carloslinux/Desktop/PROGRAMAS/knime/knime" -batch -reset -workflowFile="${PATH_KNIME_WFLOW}galgos_014_analisis" &
 #sudo "/home/carloslinux/Desktop/PROGRAMAS/knime/knime" -consoleLog -nosplash -noexit -application org.knime.product.KNIME_BATCH_APPLICATION -workflowFile="${PATH_KNIME_WFLOW}galgos_014_analisis"  > "/home/carloslinux/Desktop/LOGS/014_knime_log.txt"
