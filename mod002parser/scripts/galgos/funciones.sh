@@ -278,7 +278,7 @@ function insertSelectRemark ()
 read -d '' CONSULTA_REMARKS_PUNTOS <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_remark_puntos_1;
 
-CREATE TABLE datos_desa.tb_remark_puntos_1 AS SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico_norm WHERE remarks LIKE '%${remark_in}%' GROUP BY posicion;
+CREATE TABLE datos_desa.tb_remark_puntos_1 AS SELECT posicion, count(*) as contador FROM datos_desa.tb_galgos_historico WHERE remarks LIKE '%${remark_in}%' GROUP BY posicion;
 
 set @sum_contador=(SELECT  SUM(contador) FROM datos_desa.tb_remark_puntos_1);
 
