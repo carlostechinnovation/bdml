@@ -4,10 +4,10 @@
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
 RENTABILIDAD_MINIMA="110"
-COBERTURA_MINIMA="0.55"
-SUFICIENTES_CASOS="30"
+COBERTURA_MINIMA="0.50"
+SUFICIENTES_CASOS="20"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM=0.94
+PCA_UMBRAL_VARIANZA_ACUM=0.90
 TSNE_NUM_F_OUT=12
 MIN_CG_FUT_SUBGRUPO=1
 
@@ -634,7 +634,7 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera." >>${INFORME_RENTABILIDADES}
 
   echo -e "\nSolo poner dinero en las carrera futuras que esten dentro de los grupo_sp rentables." 2>&1 1>>${INFORME_RENTABILIDADES}
-  echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren. Debo COMPROBAR que se cumple aproximadamente (ej: si habiamos dicho que era una carrera de 450m, puede ser de 480m, pero no de 800m ni de 250m." 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren. Debo COMPROBAR que se cumple aproximadamente (ej: si habiamos dicho que era una carrera de 450m, puede ser de 480m, pero no de 800m ni de 250m)." 2>&1 1>>${INFORME_RENTABILIDADES}
 
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
 
