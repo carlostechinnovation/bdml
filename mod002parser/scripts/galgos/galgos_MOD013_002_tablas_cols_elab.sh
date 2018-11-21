@@ -176,6 +176,8 @@ ON (dentro.id_carrera=GH.id_carrera)
 
 LEFT JOIN datos_desa.tb_ce_x8b D 
 ON (dentro.track=D.track)
+
+WHERE tempSpan >3 AND tempSpan <14
 ;
 
 
@@ -220,6 +222,7 @@ FROM datos_desa.tb_ids_galgos A
 LEFT JOIN datos_desa.tb_galgos_agregados_LIM B ON (A.galgo_nombre=B.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_x1b C ON (A.galgo_nombre=C.galgo_nombre)
 -- LEFT JOIN datos_desa.tb_ce_x11 D ON (A.galgo_nombre=D.galgo_nombre)
+
 ;
 
 ALTER TABLE datos_desa.tb_elaborada_galgos ADD INDEX tb_elaborada_galgos_idx(galgo_nombre);
@@ -360,6 +363,13 @@ LEFT JOIN datos_desa.tb_ce_x7d I ON (dentro.id_carrera=I.id_carrera AND dentro.g
 LEFT JOIN datos_desa.tb_ce_x9b J ON (dentro.entrenador=J.entrenador)
 LEFT JOIN datos_desa.tb_ce_x10b K ON (dentro.id_carrera=K.id_carrera AND dentro.galgo_nombre=K.galgo_nombre)
 LEFT JOIN datos_desa.tb_ce_x13 L ON (dentro.id_carrera=L.id_carrera AND dentro.galgo_nombre=L.galgo_nombre)
+
+WHERE L.remarks_puntos_historico_50d <0.55
+AND L.remarks_puntos_historico_20d <0.65
+AND L.remarks_puntos_historico_10d <0.65
+AND I.dif_peso <11
+AND J.posicion_avg >2 AND J.posicion_avg <4
+AND J.posicion_std >1 AND J.posicion_std <2 
 ;
 
 ALTER TABLE datos_desa.tb_elaborada_carrerasgalgos ADD INDEX tb_elaborada_carrerasgalgos_idx(id_carrera,galgo_nombre);

@@ -26,7 +26,7 @@ mkdir '/home/carloslinux/Desktop/LOGS/015_graficos/'
 
 echo -e "MOD015 - Transformando con R..." 2>&1 1>>${LOG_015}
 Rscript "${PATH_RSTUDIO_WSKP}galgos_015.R" "10000000" 2>&1 1>>"${LOG_015}"
-
+echo -e "MOD015 - Transformando con R - FIN" 2>&1 1>>${LOG_015}
 
 echo -e $(date +"%T")" | 015 | Transformacion de columnas | FIN" >>$LOG_070
 

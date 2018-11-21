@@ -4,12 +4,12 @@
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
 RENTABILIDAD_MINIMA="110"
-COBERTURA_MINIMA="0.55"
-SUFICIENTES_CASOS="30"
+COBERTURA_MINIMA="0.49"
+SUFICIENTES_CASOS="18"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM=0.94
-TSNE_NUM_F_OUT=12
-MIN_CG_FUT_SUBGRUPO=1
+PCA_UMBRAL_VARIANZA_ACUM="0.94"
+TSNE_NUM_F_OUT="12"
+MIN_CG_FUT_SUBGRUPO="1"
 
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
@@ -365,12 +365,12 @@ mysql -t --execute="$CONSULTA_TABLA_TIPOS_SP" 2>&1 1>>${LOG_MASTER}
 function tablasAuxiliaresParaSubgrupos ()
 {
 
-PATH_LOG=${1}
+PATH_LOG_P=${1}
 
-echo -e $(date +"%T")" ------- tablasAuxiliaresParaSubgrupos -------" 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" ------- tablasAuxiliaresParaSubgrupos -------" 2>&1 1>>${PATH_LOG_P}
 
-mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_aux_carreras_con_algun_lento;" 2>&1 1>>${LOG_MASTER}
-mysql -t --execute="CREATE TABLE datos_desa.tb_aux_carreras_con_algun_lento AS SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT  galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 );" 2>&1 1>>${LOG_MASTER}
+mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_aux_carreras_con_algun_lento;" 2>&1 1>>${PATH_LOG_P}
+mysql -t --execute="CREATE TABLE datos_desa.tb_aux_carreras_con_algun_lento AS SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT  galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 );" 2>&1 1>>${PATH_LOG_P}
 
 
 }
@@ -544,7 +544,7 @@ DROP TABLE IF EXISTS datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_
 CREATE TABLE datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} AS
 SELECT A.*, GH.sp, ${dinero_gastado} AS gastado_${tag_prediccion}, acierto * 1 * sp AS beneficio_bruto 
 FROM datos_desa.tb_val_${tag_prediccion}_riesgo_${TAG} A 
-INNER JOIN datos_desa.tb_galgos_historico_norm GH 
+INNER JOIN datos_desa.tb_galgos_historico GH 
 ON (
   A.id_carrera=GH.id_carrera 
   AND A.galgo_nombre=GH.galgo_nombre 

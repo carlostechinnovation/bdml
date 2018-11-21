@@ -34,7 +34,7 @@ rm -f $PATH_FILE_VALIDATION_TARGETS_PREDICHOS
 #------------------------------------------------ R ----------------------------------------------------
 # Modelo predictivo REGRESION
 echo -e "MOD040 - Prediciendo con R..." 2>&1 1>>${LOG_ML}
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "30000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" $PCA_UMBRAL_VARIANZA_ACUM $TSNE_NUM_F_OUT 2>&1 1>>"${LOG_ML}"
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "30000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" "${PCA_UMBRAL_VARIANZA_ACUM}" "${TSNE_NUM_F_OUT}" 2>&1 1>>"${LOG_ML}"
 
 #---------------------------------------------------------------------------------------------------------------
 

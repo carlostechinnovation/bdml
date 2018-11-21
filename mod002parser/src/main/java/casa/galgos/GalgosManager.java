@@ -998,12 +998,17 @@ public class GalgosManager implements Serializable {
 		Boolean out = false;
 		if (distancia != null && tipoDistanciaAnalizada != null) {
 
-			if (distancia.intValue() < 400 && tipoDistanciaAnalizada.equals(DISTANCIA_CORTA)) {
+			if (distancia.intValue() < Constantes.UMBRAL_DISTANCIA_CORTAS_MEDIAS.intValue()
+					&& tipoDistanciaAnalizada.equals(DISTANCIA_CORTA)) {
 				out = true;
-			} else if (distancia.intValue() >= 400 && distancia.intValue() < 600
+				
+			} else if (distancia.intValue() >= Constantes.UMBRAL_DISTANCIA_CORTAS_MEDIAS.intValue()
+					&& distancia.intValue() < Constantes.UMBRAL_DISTANCIA_MEDIAS_LARGAS.intValue()
 					&& tipoDistanciaAnalizada.equals(DISTANCIA_LONGITUD_MEDIA)) {
 				out = true;
-			} else if (distancia.intValue() > 600 && tipoDistanciaAnalizada.equals(DISTANCIA_LARGA)) {
+				
+			} else if (distancia.intValue() > Constantes.UMBRAL_DISTANCIA_MEDIAS_LARGAS.intValue()
+					&& tipoDistanciaAnalizada.equals(DISTANCIA_LARGA)) {
 				out = true;
 			}
 
