@@ -24,9 +24,9 @@ mysql -t --execute="ALTER TABLE datos_desa.tb_trans_galgos ADD INDEX trans_galgo
 mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_carreras_idx1(id_carrera);" 2>&1 1>>${LOG_016_STATS}
 mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_carreras_idx2(distancia(255));" 2>&1 1>>${LOG_016_STATS}
 
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_cg_idx1(id_carrera);" 2>&1 1>>${LOG_016_STATS}
-#mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_cg_idx2(galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
-#mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_cg_idx3(id_carrera(255), galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx1(id_carrera);" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx2(galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
+mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx3(id_carrera(255), galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
 
 
 

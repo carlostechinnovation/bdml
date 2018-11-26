@@ -3,11 +3,11 @@
  
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
-RENTABILIDAD_MINIMA="110"
-COBERTURA_MINIMA="0.49"
-SUFICIENTES_CASOS="18"
+RENTABILIDAD_MINIMA="100"
+COBERTURA_MINIMA="0.40"
+SUFICIENTES_CASOS="12"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM="0.94"
+PCA_UMBRAL_VARIANZA_ACUM="0.85" #Consideramos scale & center las variables PCx!!!!!! (antes no tenia sentido que PC1 estuviera desplazada.... y que hubiera tan pocas PCx acumulando tanta varianza 0.95 ...)
 TSNE_NUM_F_OUT="12"
 MIN_CG_FUT_SUBGRUPO="1"
 
@@ -372,6 +372,24 @@ echo -e $(date +"%T")" ------- tablasAuxiliaresParaSubgrupos -------" 2>&1 1>>${
 mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_aux_carreras_con_algun_lento;" 2>&1 1>>${PATH_LOG_P}
 mysql -t --execute="CREATE TABLE datos_desa.tb_aux_carreras_con_algun_lento AS SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT  galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 );" 2>&1 1>>${PATH_LOG_P}
 
+}
+
+
+function analizarScoreSobreSubgrupos_TEMP ()
+{
+
+PATH_LOG=${1}
+
+echo -e $(date +"%T")" ------- analizarScoreSobreSubgrupos -------" 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
+
+#filtro_carreras filtro_galgos filtro_cg sufijo
+
+#----Criterios simples ---
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
 
 }
 
@@ -391,14 +409,6 @@ echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
-
-#echo -e $(date +"%T")" Exportando 037 TOTAL hacia fichero externo..." 2>&1 1>>${PATH_LOG}
-#echo -e $(date +"%T")" Creando carpeta vacia para external_037 (si no existe ya)..." 2>&1 1>>${PATH_LOG}
-#mkdir -p "$EXTERNAL_037"
-#rm -f "${EXTERNAL_037}037_train_f_TOTAL.txt" #Por si ya existe
-#rm -f "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" #Por si ya existe
-#exportarTablaAFichero "datos_desa" "tb_ds_pasado_train_features_TOTAL" "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" "${PATH_LOG}" "${EXTERNAL_037}037_train_f_TOTAL.txt"
-
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carreras WHERE dow_l=1)" "DOW_L" 2>&1 1>>$PATH_LOG

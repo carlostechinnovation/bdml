@@ -110,6 +110,16 @@ read -d '' CONSULTA_ELAB1 <<- EOF
 DROP TABLE IF EXISTS datos_desa.tb_elaborada_carreras;
 
 CREATE TABLE datos_desa.tb_elaborada_carreras AS 
+
+SELECT
+fuera2.*,
+CASE WHEN (distancia<=349) THEN distancia ELSE NULL END as distancia_solo_cortas,
+CASE WHEN (distancia>349 AND distancia<=549) THEN distancia ELSE NULL END as distancia_solo_medias,
+CASE WHEN (distancia>549) THEN distancia ELSE NULL END as distancia_solo_largas
+
+FROM
+(
+
 SELECT 
 IFNULL(dentro.id_carrera, GH.id_carrera) AS id_carrera,
 IFNULL(dentro.id_campeonato, GH.id_campeonato) AS id_campeonato,
@@ -178,6 +188,8 @@ LEFT JOIN datos_desa.tb_ce_x8b D
 ON (dentro.track=D.track)
 
 WHERE tempSpan >3 AND tempSpan <14
+
+) fuera2
 ;
 
 

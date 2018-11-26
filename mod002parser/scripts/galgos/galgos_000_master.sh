@@ -28,13 +28,13 @@ echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_M
 #echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 #${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
 
-echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 
-${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
-${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
+#${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
 
 
 rm -f $LOG_DS  # Limpiar LOG de la capa 035 (036+037)
