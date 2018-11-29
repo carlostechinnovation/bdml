@@ -10,9 +10,12 @@ CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
 PCA_UMBRAL_VARIANZA_ACUM="0.82" #Consideramos centered las variables PCx!!!!!! (antes no tenia sentido que PC1 estuviera desplazada.... y que hubiera tan pocas PCx acumulando tanta varianza 0.95 ...)
 TSNE_NUM_F_OUT="12"
 MIN_CG_FUT_SUBGRUPO="1"
+<<<<<<< HEAD
 
 POST_099_UMBRAL_CORTAS_MEDIAS=349
 POST_099_UMBRAL_MEDIAS_LARGAS=549
+=======
+>>>>>>> branch 'master' of https://github.com/carlostechinnovation/bdml
 
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
