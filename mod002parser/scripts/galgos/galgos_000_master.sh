@@ -19,14 +19,13 @@ echo -e "-------- "$(date +"%T")" ---------- GALGOS - Cadena de procesos -------
 echo -e "Ruta script="${PATH_SCRIPTS}
 echo -e "Ruta log (coordinador)="${LOG_MASTER}
 
+
 crearTablaTiposSp #tabla estatica
-
 echo -e $(date +"%T")" Descarga de datos BRUTOS (planificado con CRON)" >>$LOG_MASTER
-
-#${PATH_SCRIPTS}'galgos_MOD010_WEATHER.sh'  >>$LOG_MASTER # WEATHER de pasado y futuro (para enriquecer despues)
-#${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos). Se enriquece con info WEATHER
-#echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
+${PATH_SCRIPTS}'galgos_MOD010_WEATHER.sh'  >>$LOG_MASTER # WEATHER de pasado y futuro (para enriquecer despues)
+${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras) + GBGB (historicos). Se enriquece con info WEATHER
+echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
 
 echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER

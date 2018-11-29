@@ -3,13 +3,16 @@
  
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
-RENTABILIDAD_MINIMA="110"
-COBERTURA_MINIMA="0.50"
-SUFICIENTES_CASOS="20"
+RENTABILIDAD_MINIMA="100"
+COBERTURA_MINIMA="0.40"
+SUFICIENTES_CASOS="12"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM=0.90
-TSNE_NUM_F_OUT=12
-MIN_CG_FUT_SUBGRUPO=1
+PCA_UMBRAL_VARIANZA_ACUM="0.82" #Consideramos centered las variables PCx!!!!!! (antes no tenia sentido que PC1 estuviera desplazada.... y que hubiera tan pocas PCx acumulando tanta varianza 0.95 ...)
+TSNE_NUM_F_OUT="12"
+MIN_CG_FUT_SUBGRUPO="1"
+
+POST_099_UMBRAL_CORTAS_MEDIAS=349
+POST_099_UMBRAL_MEDIAS_LARGAS=549
 
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
@@ -98,8 +101,8 @@ INFORME_BUCLE_PREDICCIONES_COMANDOS="${PATH_LOGS}INFORME_BUCLE_PREDICCIONES_COMA
 
 VAR_distancia_diff_pct=20
 INFORME_BRUTO_POSTERIORI="${PATH_LOGS}temp_INFORME_BRUTO_POSTERIORI.txt"
-INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}INFORME_LIMPIO_POSTERIORI.txt"
-INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}INFORME_RENTABILIDAD_POSTERIORI.txt"
+INFORME_LIMPIO_POSTERIORI="${PATH_LOGS}POST_LIMPIO"
+INFORME_RENTABILIDAD_POSTERIORI="${PATH_LOGS}POST_RENTAB"
 
 EXTERNAL_010_BRUTO="${PATH_EXTERNAL_DATA}010_BRUTOS/"
 EXTERNAL_012_LIMNOR="${PATH_EXTERNAL_DATA}012_LIMNOR/"
@@ -365,13 +368,31 @@ mysql -t --execute="$CONSULTA_TABLA_TIPOS_SP" 2>&1 1>>${LOG_MASTER}
 function tablasAuxiliaresParaSubgrupos ()
 {
 
+PATH_LOG_P=${1}
+
+echo -e $(date +"%T")" ------- tablasAuxiliaresParaSubgrupos -------" 2>&1 1>>${PATH_LOG_P}
+
+mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_aux_carreras_con_algun_lento;" 2>&1 1>>${PATH_LOG_P}
+mysql -t --execute="CREATE TABLE datos_desa.tb_aux_carreras_con_algun_lento AS SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT  galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 );" 2>&1 1>>${PATH_LOG_P}
+
+}
+
+
+function analizarScoreSobreSubgrupos_TEMP ()
+{
+
 PATH_LOG=${1}
 
-echo -e $(date +"%T")" ------- tablasAuxiliaresParaSubgrupos -------" 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" ------- analizarScoreSobreSubgrupos -------" 2>&1 1>>${PATH_LOG}
+echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 
-mysql -t --execute="DROP TABLE IF EXISTS datos_desa.tb_aux_carreras_con_algun_lento;" 2>&1 1>>${LOG_MASTER}
-mysql -t --execute="CREATE TABLE datos_desa.tb_aux_carreras_con_algun_lento AS SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carrerasgalgos WHERE galgo_nombre IN (SELECT  galgo_nombre FROM datos_desa.tb_trans_galgos WHERE vel_going_largas_max <= 0.33 );" 2>&1 1>>${LOG_MASTER}
+#filtro_carreras filtro_galgos filtro_cg sufijo
 
+#----Criterios simples ---
+
+echo -e $(date +"%T")" --------" >>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
 
 }
 
@@ -391,14 +412,6 @@ echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
-
-#echo -e $(date +"%T")" Exportando 037 TOTAL hacia fichero externo..." 2>&1 1>>${PATH_LOG}
-#echo -e $(date +"%T")" Creando carpeta vacia para external_037 (si no existe ya)..." 2>&1 1>>${PATH_LOG}
-#mkdir -p "$EXTERNAL_037"
-#rm -f "${EXTERNAL_037}037_train_f_TOTAL.txt" #Por si ya existe
-#rm -f "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" #Por si ya existe
-#exportarTablaAFichero "datos_desa" "tb_ds_pasado_train_features_TOTAL" "${PATH_MYSQL_PRIV_SECURE}037_train_f_TOTAL.txt" "${PATH_LOG}" "${EXTERNAL_037}037_train_f_TOTAL.txt"
-
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
 ${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "WHERE id_carrera IN (SELECT DISTINCT id_carrera FROM datos_desa.tb_trans_carreras WHERE dow_l=1)" "DOW_L" 2>&1 1>>$PATH_LOG
@@ -544,7 +557,7 @@ DROP TABLE IF EXISTS datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_
 CREATE TABLE datos_desa.tb_val_${tag_prediccion}_economico_${TAG}_${tag_grupo_sp} AS
 SELECT A.*, GH.sp, ${dinero_gastado} AS gastado_${tag_prediccion}, acierto * 1 * sp AS beneficio_bruto 
 FROM datos_desa.tb_val_${tag_prediccion}_riesgo_${TAG} A 
-INNER JOIN datos_desa.tb_galgos_historico_norm GH 
+INNER JOIN datos_desa.tb_galgos_historico GH 
 ON (
   A.id_carrera=GH.id_carrera 
   AND A.galgo_nombre=GH.galgo_nombre 
@@ -634,7 +647,7 @@ function analisisRentabilidadesPorSubgrupos(){
   echo -e "\nLas columnas 'aciertos' y 'casos' indican filas predichas. Si es 1st, indican carreras (porque solo hay una prediccion por carrera). Si es 1o2, 2 casos abarcan 1 carrera." >>${INFORME_RENTABILIDADES}
 
   echo -e "\nSolo poner dinero en las carrera futuras que esten dentro de los grupo_sp rentables." 2>&1 1>>${INFORME_RENTABILIDADES}
-  echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren. Debo COMPROBAR que se cumple aproximadamente (ej: si habiamos dicho que era una carrera de 450m, puede ser de 480m, pero no de 800m ni de 250m)." 2>&1 1>>${INFORME_RENTABILIDADES}
+  echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren. Debo COMPROBAR que se cumple aproximadamente (ej: si habiamos dicho que era una carrera de 450m, puede ser de 480m, pero no de 800m ni de 250m." 2>&1 1>>${INFORME_RENTABILIDADES}
 
   echo -e "\nPoner DINERO solo en las tuplas indicadas, por este orden de prioridad: \n\n" >>${INFORME_RENTABILIDADES}
 

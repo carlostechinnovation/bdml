@@ -34,7 +34,7 @@ rm -f $PATH_FILE_VALIDATION_TARGETS_PREDICHOS
 #------------------------------------------------ R ----------------------------------------------------
 # Modelo predictivo REGRESION
 echo -e "MOD040 - Prediciendo con R..." 2>&1 1>>${LOG_ML}
-Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "30000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" $PCA_UMBRAL_VARIANZA_ACUM $TSNE_NUM_F_OUT 2>&1 1>>"${LOG_ML}"
+Rscript '/home/carloslinux/Desktop/WORKSPACES/wksp_for_r/r_galgos/galgos_040_ttv_por_tag_pasado.R' "1" "${TAG}" "30000" "PCA" "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pca_modelo_" "${PCA_UMBRAL_VARIANZA_ACUM}" "${TSNE_NUM_F_OUT}" 2>&1 1>>"${LOG_ML}"
 
 #---------------------------------------------------------------------------------------------------------------
 
@@ -121,9 +121,6 @@ SELECT count(*) as num_ids_validation_predichos FROM datos_desa.tb_val_${TAG} LI
 
 SELECT id_carrera, count(*) AS contador  FROM datos_desa.tb_val_${TAG}  GROUP BY id_carrera ORDER BY contador DESC LIMIT 10;
 
-
-
-
 EOF
 
 
@@ -143,18 +140,13 @@ ${PATH_SCRIPTS}galgos_MOD042_1st.sh "${TAG}" 2>&1 1>>${LOG_ML}
 ############## fin del primer IF
 
 else
-	echo "$PATH_FILE_VALIDATION_TARGETS_PREDICHOS no encontrado!! ERROR!!"
+  echo "$PATH_FILE_VALIDATION_TARGETS_PREDICHOS no encontrado!! ERROR!!"
 fi
-
-
-
 
 ################################################
 ##############################################################
 
 echo -e $(date +"%T")" | 040 | Modelos predictivos | FIN" >>$LOG_070
-
-
 
 
 

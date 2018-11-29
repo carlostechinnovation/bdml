@@ -21,7 +21,7 @@ public class Constantes {
 	public static final String ANALITICA_GLOBAL = "ANALITICA_GLOBAL";
 
 	// -------------- GALGOS --------
-	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 7 * 7;// TODO //Ultimas 9*7 semanas
+	public static Integer GALGOS_UMBRAL_DIAS_CARRERAS_ANTERIORES = 8 * 7;// TODO //Ultimas 9*7 semanas
 	public static Integer MAX_NUM_CARRERAS_SEMILLA = 300;// TODO 300 // SOLO ESTUDIAMOS LOS GALGOS DE ESTAS CARRERAS (y
 															// las derivadas)
 	public static Integer MAX_NUM_CARRERAS_PROCESADAS = MAX_NUM_CARRERAS_SEMILLA * 6 * 6;// TODO X*6*6
@@ -31,6 +31,9 @@ public class Constantes {
 	public static final Long ESPERA_ENTRE_DESCARGA_CARRERAS_MSEC = 1 * 50L;
 	public static Integer GALGOS_FUTUROS_BETBRIGHT_CARRERAGALGOS_MAX = 10;// util para debuguear con pocos casos.
 	// Normalmente será 100000
+
+	public static final Integer UMBRAL_DISTANCIA_CORTAS_MEDIAS=Integer.valueOf(349);
+	public static final Integer UMBRAL_DISTANCIA_MEDIAS_LARGAS=Integer.valueOf(549);
 
 	public static final String PATH_DIR_DATOS_BRUTOS_GALGOS = "/home/carloslinux/Desktop/DATOS_BRUTO/galgos/";
 	public static final String PATH_DIR_DATOS_LIMPIOS_GALGOS = "/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/";

@@ -227,7 +227,7 @@ LEFT JOIN datos_desa.tb_fut_1st_predicho_completo_${TAG} B
 ON (A.rowid=B.galgo_rowid)
 ; -- WHERE con_historico_desconocido=0;  -- Que se conozca el historico de todos los galgos que corren
 
-ALTER TABLE datos_desa.tb_fut_1st_final_${TAG} ADD INDEX tb_fut_1st_final_${TAG}_idx(id_carrera, galgo_nombre);
+ALTER TABLE datos_desa.tb_fut_1st_final_${TAG} ADD INDEX tb_fut_1st_final_${TAG}_idx(id_carrera, galgo_nombre(255));
 
 SELECT * FROM datos_desa.tb_fut_1st_final_${TAG} ORDER BY id_carrera ASC LIMIT 10;
 
@@ -246,7 +246,7 @@ WHERE A.posicion_predicha=1 and B.posicion_predicha=2
 ORDER BY fortaleza DESC
 ;
 
-ALTER TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} ADD INDEX tb_fut_1st_final_riesgo_${TAG}_idx(id_carrera, galgo_nombre);
+ALTER TABLE datos_desa.tb_fut_1st_final_riesgo_${TAG} ADD INDEX tb_fut_1st_final_riesgo_${TAG}_idx(id_carrera, galgo_nombre(255));
 
 SELECT * FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 3;
 SELECT count(*) as num_fut_1st_final FROM datos_desa.tb_fut_1st_final_riesgo_${TAG} LIMIT 1;

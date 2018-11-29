@@ -2,30 +2,40 @@
 
 source "/home/carloslinux/git/bdml/mod002parser/scripts/galgos/funciones.sh"
 
+#Borrar log
+rm -f "${LOG_099}"
+
 ######################## PARAMETROS ############
 if [ "$#" -ne 3 ]; then
-    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_045}
+    echo " Numero de parametros incorrecto!!!" 2>&1 1>>${LOG_099}
 fi
 
 INFORME_COMANDOS_INPUT="${1}"
 TAG="${2}"
 ID_EJECUCION="${3}"
 
-
-#Borrar log
-rm -f "${LOG_099}"
+echo -e "---------- 099 - Parametros entrada -------" 2>&1 1>>${LOG_099}
+echo -e "INFORME_COMANDOS_INPUT = ${INFORME_COMANDOS_INPUT}" 2>&1 1>>${LOG_099}
+echo -e "TAG = ${TAG}" 2>&1 1>>${LOG_099}
+echo -e "ID_EJECUCION = ${ID_EJECUCION}" 2>&1 1>>${LOG_099}
+echo -e "------------------------------------" 2>&1 1>>${LOG_099}
 
 
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | INICIO" >>$LOG_070
-echo -e "MOD099 --> LOG = "${LOG_099}
+echo -e "MOD099 --> LOG = ${LOG_099}"
 
 #Directorio de salida (informes y datasets)
 PATH_DIR_OUT="${PATH_EXTERNAL_DATA}${ID_EJECUCION}/"
 
+#Paths informes
+PATH_IBP="${INFORME_BRUTO_POSTERIORI}"
+PATH_ILP="${INFORME_LIMPIO_POSTERIORI}_${ID_EJECUCION}_${TAG}.txt"
+PATH_IRP="${INFORME_RENTABILIDAD_POSTERIORI}_${ID_EJECUCION}_${TAG}.txt"
 
-echo -e "\nOutput (HTML bruto leido): "$INFORME_BRUTO_POSTERIORI 2>&1 1>>${LOG_099}
+
+echo -e "\nOutput (HTML bruto leido): ${PATH_IBP}" 2>&1 1>>${LOG_099}
 echo -e "Borrando fichero bruto output..." 2>&1 1>>${LOG_099}
-rm -f "${INFORME_BRUTO_POSTERIORI}"
+rm -f "${ID_EJECUCION}_${TAG}_${PATH_IBP}"
 
 
 ########## EJECUTANDO COMANDOS (calculados previamente en el script 050) #################
@@ -35,12 +45,13 @@ $INFORME_COMANDOS_INPUT  #Ejecuta el fichero con todos los comandos!!!!!!
 
 ########## BUCLE Limpieza #################
 echo -e "Limpieza POSTERIORI..." 2>&1 1>>${LOG_099}
-rm -f "${INFORME_LIMPIO_POSTERIORI}"
+
+rm -f "${PATH_ILP}"
 echo -e "|Date|Distancia|TP|STmHcp|Fin|By|WinnerOr2nd|Venue|Remarks|WinTime|Going|SP|Class|CalcTm|Race|Meeting" >>${LOG_099}
 
-sed 's/\t//g' ${INFORME_BRUTO_POSTERIORI} | sed 's/center//g' | sed 's/resultsRace.aspx?id=//g' | sed 's/<\/td>//g' | sed 's/<\/a>//g' | sed 's/align=\"\"//g' | sed 's/ title=\"Race\"//g' | sed 's/a title=\"Meeting\" href=\"//g' | sed 's/<td/|/g' | sed 's/<//g' | sed 's/>//g' | sed 's/a href=\"//g' | sed 's/\"Race//g' | sed 's/resultsMeeting\.aspx//g' | sed 's/\"Meeting//g' | sed 's/\?id=//g' | sed 's/&nbsp;//g' 2>&1 1>>${INFORME_LIMPIO_POSTERIORI}
+sed 's/\t//g' ${PATH_IBP} | sed 's/center//g' | sed 's/resultsRace.aspx?id=//g' | sed 's/<\/td>//g' | sed 's/<\/a>//g' | sed 's/align=\"\"//g' | sed 's/ title=\"Race\"//g' | sed 's/a title=\"Meeting\" href=\"//g' | sed 's/<td/|/g' | sed 's/<//g' | sed 's/>//g' | sed 's/a href=\"//g' | sed 's/\"Race//g' | sed 's/resultsMeeting\.aspx//g' | sed 's/\"Meeting//g' | sed 's/\?id=//g' | sed 's/&nbsp;//g' 2>&1 1>>"${PATH_ILP}"
 
-echo -e "\n\nOutput (HTML limpio leido): "$INFORME_LIMPIO_POSTERIORI 2>&1 1>>${LOG_099}
+echo -e "\n\nOutput (HTML limpio leido): ${PATH_ILP}" 2>&1 1>>${LOG_099}
 
 
 ######### Tabla sobre esos datos REALES ######
@@ -72,7 +83,10 @@ echo -e "\n$CONSULTA_TABLA_LIMPIA_POSTERIORI" 2>&1 1>>${LOG_099}
 mysql -t --execute="$CONSULTA_TABLA_LIMPIA_POSTERIORI"  2>&1 1>>${LOG_099}
 
 consultar "TRUNCATE TABLE datos_desa.tb_galgos_fut_real\W;" "${LOG_099}"
-consultar "LOAD DATA LOCAL INFILE '${INFORME_LIMPIO_POSTERIORI}' INTO TABLE datos_desa.tb_galgos_fut_real FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "${LOG_099}"
+consultar "LOAD DATA LOCAL INFILE '${PATH_ILP}' INTO TABLE datos_desa.tb_galgos_fut_real FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 0 LINES\W;" "${LOG_099}"
+
+mysql -t --execute="SELECT * FROM datos_desa.tb_galgos_fut_real LIMIT 5;"  2>&1 1>>${LOG_099}
+mysql -t --execute="SELECT count(*) AS num_fut_real FROM datos_desa.tb_galgos_fut_real;"  2>&1 1>>${LOG_099}
 
 
 ###################################################################################################
@@ -210,45 +224,48 @@ echo -e "\n$CONSULTA_ACUMULAR_FUT_COMBINADA" 2>&1 1>>${LOG_099}
 mysql -t --execute="$CONSULTA_ACUMULAR_FUT_COMBINADA"  2>&1 1>>${LOG_099}
 
 
-
 ################### Rentabilidad a posteriori (tras 2 días) #######
 
+echo -e "\n----------------------------------------------------\n\n\n\n" 2>&1 1>>${LOG_099}
 echo -e "Rentabilidad a posteriori (tras 2 días)..." 2>&1 1>>${LOG_099}
-rm -f "${INFORME_RENTABILIDAD_POSTERIORI}"
+
+rm -f "${PATH_IRP}"
 
 
 FILE_TEMP_PRED="./temp_MOD099_num_predicciones_posteriori"
 rm -f ${FILE_TEMP_PRED}
 mysql -N --execute="SELECT count(*) AS contador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}';" > ${FILE_TEMP_PRED}
 numero_predicciones_posteriori=$(cat ${FILE_TEMP_PRED})
+echo -e "\nDato intermedio --> numero_predicciones_posteriori =${numero_predicciones_posteriori}" 2>&1 1>>${LOG_099}
 
 
 FILE_TEMP="./temp_MOD099_rentabilidad_posteriori"
 rm -f ${FILE_TEMP}
 mysql -N --execute="SELECT ROUND( 100.0 * SUM(ganado)/SUM(gastado) , 2) AS rentabilidad FROM ( SELECT numero1, fortaleza, 1 AS gastado, CASE WHEN real_posicion=1 THEN cast(numerador AS decimal(2,0)) / cast(denominador AS decimal(2,0)) ELSE 0 END AS ganado FROM ( SELECT numero1, fortaleza, real_posicion, real_sp, substring_index(real_sp,'/',1) as numerador, substring_index(real_sp,'/',-1) as denominador FROM datos_desa.tb_galgos_fut_combinada_acum WHERE subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}' ) d ) fuera;" > ${FILE_TEMP}
 rentabilidad_posteriori=$( cat ${FILE_TEMP})
+echo -e "\nDato intermedio --> rentabilidad_posteriori =${rentabilidad_posteriori} euros (por cada 100 euros)" 2>&1 1>>${LOG_099}
 
 
 FILE_TEMP="./temp_MOD099_num_aciertos_posteriori"
 mysql -N --execute="SELECT count(*) FROM datos_desa.tb_galgos_fut_combinada_acum WHERE real_posicion=1 AND subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}'" > ${FILE_TEMP}
 numero_aciertos_posteriori=$( cat ${FILE_TEMP})
+echo -e "\nDato intermedio --> numero_aciertos_posteriori =${numero_aciertos_posteriori}" 2>&1 1>>${LOG_099}
 
 
 COBERTURA_posteriori=$(echo "scale=2; $numero_aciertos_posteriori / $numero_predicciones_posteriori" | bc -l)
+echo -e "\nDato intermedio --> COBERTURA_posteriori =${COBERTURA_posteriori}" 2>&1 1>>${LOG_099}
 
 ####SALIDA
-echo -e "FUTURO_POSTERIORI --> Analisis del TAG=${TAG}  id_ejecucion=${ID_EJECUCION}" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+echo -e "FUTURO_POSTERIORI --> Analisis del TAG=${TAG}  id_ejecucion=${ID_EJECUCION}" 2>&1 1>>${PATH_IRP}
 #MENSAJE="cobertura=$numero_aciertos_posteriori/$numero_predicciones_posteriori=${COBERTURA_posteriori}  rentabilidad (si >100%)=${rentabilidad_posteriori}"
-#echo -e "$MENSAJE" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
-echo -e "Observar las tablas de este informe y calcular RENTABILIDAD POSTERIORI a mano (mirar las carreras futuras con acierto=1 y que esten dentro de los grupo_sp rentables)" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+#echo -e "$MENSAJE" 2>&1 1>>${PATH_IRP}
+echo -e "\nObservar las tablas de este informe y calcular RENTABILIDAD POSTERIORI a mano (mirar las carreras futuras con acierto=1 y que esten dentro de los grupo_sp rentables)" 2>&1 1>>${PATH_IRP}
 
-echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren..." 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+echo -e "La distancia de la carrera futura la habiamos estimado mirando la MEDIANA de la distancia de la carrera más reciente de cada uno de los 6 galgos que corren..." 2>&1 1>>${PATH_IRP}
 
-echo -e "\nAtencion, dentro del subgrupo, solo debo mirar el grupo_sp rentable:" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
-mysql -t  --execute="SELECT A.*, B.* FROM datos_desa.tb_rentabilidades_solo_ganadores A LEFT JOIN datos_desa.tb_grupos_sp B ON (A.grupo_sp=B.grupo_sp) LIMIT 100;" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
+echo -e "\nAtencion, dentro del subgrupo, solo debo mirar el grupo_sp rentable:" 2>&1 1>>${PATH_IRP}
+mysql -t  --execute="SELECT A.*, B.* FROM datos_desa.tb_rentabilidades_solo_ganadores A LEFT JOIN datos_desa.tb_grupos_sp B ON (A.grupo_sp=B.grupo_sp) LIMIT 100;" 2>&1 1>>${PATH_IRP}
 
-echo -e "\nA priori pensabamos que era una distancia, pero a posteriori era otra distancia real!!! (Quitamos casos con mucha distancia_diff > ${VAR_distancia_diff_pct} % ) !!\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
-echo -e "\nTabla completa (PREDICHO y REAL):\n" 2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
 read -d '' CONSULTA_PREDICHO_Y_REAL <<- EOF
 select dentro1.*
@@ -262,13 +279,13 @@ abs(A.real_distancia-B.distancia) AS distancia_diff,
 100*(abs(A.real_distancia-B.distancia))/B.distancia AS distancia_diff_pct,
 A.real_distancia AS dis_post,
 B.distancia AS dis_pre,
-CASE WHEN (B.distancia_norm <= 0.33) THEN 1 ELSE 0 END AS b_corta,
-CASE WHEN (B.distancia_norm >0.33 AND  B.distancia_norm <=0.66) THEN 1 ELSE 0 END AS b_media,
-CASE WHEN (B.distancia_norm > 0.66) THEN 1 ELSE 0 END AS b_larga,
+CASE WHEN (B.distancia <= ${POST_099_UMBRAL_CORTAS_MEDIAS} ) THEN 1 ELSE 0 END AS b_corta,
+CASE WHEN (B.distancia > ${POST_099_UMBRAL_CORTAS_MEDIAS} AND  B.distancia <= ${POST_099_UMBRAL_MEDIAS_LARGAS} ) THEN 1 ELSE 0 END AS b_media,
+CASE WHEN (B.distancia > ${POST_099_UMBRAL_MEDIAS_LARGAS} ) THEN 1 ELSE 0 END AS b_larga,
 A.*
 FROM datos_desa.tb_galgos_fut_combinada_acum A 
 
-LEFT JOIN  datos_desa.tb_galgos_carreras_norm B
+LEFT JOIN  datos_desa.tb_elaborada_carreras B
 ON (A.id_carrera=B.id_carrera)
 
 WHERE subgrupo_ganador='${TAG}' AND id_ejecucion='${ID_EJECUCION}' AND A.real_posicion > 0
@@ -286,25 +303,43 @@ WHERE dentro1.distancia_diff_pct < ${VAR_distancia_diff_pct};
 
 EOF
 
-echo -e "\n$CONSULTA_PREDICHO_Y_REAL" 2>&1 1>>${LOG_099}
-mysql -t --execute="$CONSULTA_PREDICHO_Y_REAL"  2>&1 1>>${INFORME_RENTABILIDAD_POSTERIORI}
 
+
+
+##########################
+if [ "$TAG" == "BUCLE" ]
+then
+    echo -e "\nPara BUCLE, no puedo pintar facilmente la tabla de aciertos, pero los datos globales ( ¡¡ Sin mirar SP real!! ) usando bucle serian:" 2>&1 1>>${PATH_IRP}
+    echo -e "\nnumero_predicciones_posteriori =${numero_predicciones_posteriori}" 2>&1 1>>${PATH_IRP}
+    echo -e "\nnumero_aciertos_posteriori =${numero_aciertos_posteriori}" 2>&1 1>>${PATH_IRP}
+    echo -e "\nrentabilidad_posteriori =${rentabilidad_posteriori} euros (por cada 100 euros)" 2>&1 1>>${PATH_IRP}
+    echo -e "\nCOBERTURA_posteriori =${COBERTURA_posteriori}" 2>&1 1>>${PATH_IRP}
+
+else
+    echo -e "\nA priori pensabamos que era una distancia, pero a posteriori era otra distancia real!!! (Quitamos casos con mucha distancia_diff > ${VAR_distancia_diff_pct} % ) !!\n" 2>&1 1>>${PATH_IRP}
+    echo -e "\nTabla completa (PREDICHO y REAL):\n" 2>&1 1>>${PATH_IRP}
+    echo -e "\n$CONSULTA_PREDICHO_Y_REAL" 2>&1 1>>${LOG_099}
+    mysql -t --execute="$CONSULTA_PREDICHO_Y_REAL"  2>&1 1>>${PATH_IRP}
+fi
+##########################
 
 ################################# INFORMES (POSTERIORI) ###############################################
+echo -e "\n----------------------------------------------------\n\n\n\n" 2>&1 1>>${LOG_099}
 echo -e "Informes (posteriori) en: ${PATH_DIR_OUT}" >> "${LOG_099}"
 
 #Limpiar por si acaso relanzo varias veces a posteriori sobre el mismo ID_EJECUCION
 rm -rf "${PATH_DIR_OUT}posteriori*"
 
 cp "$LOG_070" "${PATH_DIR_OUT}posteriori_${TAG}_tic.txt" #Informe TIC. En su ultima linea aparece el COMANDO que debo lanzar a POSTERIORI
-cp "$INFORME_LIMPIO_POSTERIORI" "${PATH_DIR_OUT}posteriori_${TAG}_limpio.txt"
-cp "$INFORME_RENTABILIDAD_POSTERIORI" "${PATH_DIR_OUT}posteriori_${TAG}_rentabilidad.txt"
+cp "${PATH_ILP}" "${PATH_DIR_OUT}posteriori_${TAG}_limpio.txt"
+cp "${PATH_IRP}" "${PATH_DIR_OUT}posteriori_${TAG}_rentabilidad.txt"
 
 
 ##################### Permisos ########################################################################
 chmod -R 777 "${PATH_DIR_OUT}"
 #####################################################################################################
 
+echo -e "\n-------------------- FIN --------------------------------\n\n\n\n" 2>&1 1>>${LOG_099}
 echo -e $(date +"%T")" | 099 | Posteriori - Extractor de resultados reales | FIN" >>$LOG_070
 
 

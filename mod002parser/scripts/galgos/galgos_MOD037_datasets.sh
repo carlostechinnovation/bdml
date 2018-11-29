@@ -101,7 +101,10 @@ C.tempMin,
 C.tempMax, 
 C.tempSpan,
 C.venue_going_std,
-C.venue_going_avg
+C.venue_going_avg,
+C.distancia_solo_cortas,
+C.distancia_solo_medias,
+C.distancia_solo_largas
 
   FROM datos_desa.tb_filtrada_carrerasgalgos_${TAG} A
   INNER JOIN datos_desa.tb_filtrada_galgos_${TAG} B ON (A.galgo_nombre_ix=B.galgo_nombre_ix)
@@ -257,7 +260,7 @@ entrenador_posicion_std,
 eed,
 -- trap,
 -- mes,
-sp,
+-- sp,
 -- clase,
 distancia,
 -- entrenador,
@@ -290,17 +293,21 @@ dow_d,dow_l,dow_m,dow_x,dow_j,dow_v,dow_s,dow_finde,dow_laborable,
 num_galgos, 
 mes_norm,
 hora,
-premio_primero,
-premio_segundo,
-premio_otros,
-premio_total_carrera,
+-- premio_primero,
+-- premio_segundo,
+-- premio_otros,
+-- premio_total_carrera,
 -- going_allowance_segundos,
-fc_1,fc_2,fc_pounds,tc_1,tc_2,tc_3,tc_pounds,
+-- fc_1,fc_2,fc_pounds,
+-- tc_1,tc_2,tc_3,tc_pounds,
 tempMin, 
 tempMax, 
 tempSpan,
 venue_going_std,
-venue_going_avg
+venue_going_avg,
+distancia_solo_cortas,
+distancia_solo_medias,
+distancia_solo_largas
 EOF
 
 
@@ -424,7 +431,7 @@ RIGHT JOIN datos_desa.tb_dataset_ids_futuros_${TAG} B
 ON (A.id_carrera=B.id_carrera)
 ;
 
-SELECT count(*) as num_futuro_features FROM datos_desa.tb_ds_futuro_features_id_${TAG} LIMIT 1;
+SELECT count(*) as num_futuro_features_id FROM datos_desa.tb_ds_futuro_features_id_${TAG} LIMIT 1;
 
 
 -- Sin id_carrera y galgo_nombre.
