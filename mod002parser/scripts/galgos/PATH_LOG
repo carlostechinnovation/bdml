@@ -1,0 +1,42 @@
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 0 --> [TRAIN + TEST + *VALIDATION] = 0 + 0 + *0
+DISTANCIA_MEDIA|DS-Futuros = 132
+ERROR 1146 (42S02) at line 3: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1146 (42S02) at line 3: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1146 (42S02) at line 3: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1146 (42S02) at line 4: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_ds_pasado_train_features_DISTANCIA_MEDIA' at line 1
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_ds_pasado_test_features_DISTANCIA_MEDIA' at line 1
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_filtrada_carreras_DISTANCIA_MEDIA' at line 1
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_filtrada_galgos_DISTANCIA_MEDIA' at line 1
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_filtrada_carrerasgalgos_DISTANCIA_MEDIA' at line 1
+DISTANCIA_MEDIA|DS-Pasados = 0 --> [TRAIN + TEST + *VALIDATION] = 0 + 0 + *0
+DISTANCIA_MEDIA|DS-Futuros = 132
+ERROR 1146 (42S02) at line 3: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1146 (42S02) at line 3: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1146 (42S02) at line 3: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1146 (42S02) at line 4: Table 'datos_desa.tb_dataset_con_ids_DISTANCIA_MEDIA' doesn't exist
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_ds_pasado_train_features_DISTANCIA_MEDIA' at line 1
+ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SELEC FROM datos_desa.tb_ds_pasado_test_features_DISTANCIA_MEDIA' at line 1
+ERROR 1051 (42S02) at line 1: Unknown table 'datos_desa.tb_filtrada_carreras_DISTANCIA_MEDIA'
+ERROR 1051 (42S02) at line 1: Unknown table 'datos_desa.tb_filtrada_galgos_DISTANCIA_MEDIA'
+ERROR 1051 (42S02) at line 1: Unknown table 'datos_desa.tb_filtrada_carrerasgalgos_DISTANCIA_MEDIA'
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 3700 --> [TRAIN + TEST + *VALIDATION] = 2220 + 370 + *1110
+DISTANCIA_MEDIA|DS-Futuros = 138
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 3700 --> [TRAIN + TEST + *VALIDATION] = 2220 + 370 + *1110
+DISTANCIA_MEDIA|DS-Futuros = 138
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 3700 --> [TRAIN + TEST + *VALIDATION] = 2220 + 370 + *1110
+DISTANCIA_MEDIA|DS-Futuros = 138
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 3700 --> [TRAIN + TEST + *VALIDATION] = 2220 + 370 + *1110
+DISTANCIA_MEDIA|DS-Futuros = 138
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 5084 --> [TRAIN + TEST + *VALIDATION] = 3051 + 508 + *1525
+DISTANCIA_MEDIA|DS-Futuros = 0
+MOD035 --> LOG = /home/carloslinux/Desktop/LOGS/galgos_037_datasets.log
+DISTANCIA_MEDIA|DS-Pasados = 5084 --> [TRAIN + TEST + *VALIDATION] = 3051 + 508 + *1525
+DISTANCIA_MEDIA|DS-Futuros = 0

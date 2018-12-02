@@ -16,6 +16,9 @@ TAG="${1}"
 echo -e $(date +"%T")" | 040 | Modelo predictivo (subgrupo: $TAG) | INICIO" >>$LOG_070
 echo -e "\n\n\nMOD040 (subgrupo: $TAG) --> LOG = "${LOG_ML}
 
+#echo -e "Esperando un rato para que el ordenador se desatasque de procesos..." >>$LOG_070
+#sleep 5s
+
 
 PATH_FILE_VALIDATION_TARGETS_PREDICHOS="/home/carloslinux/Desktop/DATOS_LIMPIO/galgos/pasado_validation_targets_predichos_"${TAG}".txt"
 echo -e "MOD040 - Se calcularan los pasado_validation_targets_predichos para $TAG . Borramos posible fichero antiguo... " 2>&1 1>>${LOG_ML}

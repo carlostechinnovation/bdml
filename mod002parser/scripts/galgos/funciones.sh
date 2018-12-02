@@ -1,21 +1,17 @@
 #!/bin/bash
-
  
 DATASET_TEST_PORCENTAJE="0.10"
 DATASET_VALIDATION_PORCENTAJE="0.30"
 RENTABILIDAD_MINIMA="100"
-COBERTURA_MINIMA="0.40"
-SUFICIENTES_CASOS="12"
+COBERTURA_MINIMA="0.20"
+SUFICIENTES_CASOS="16"
 CRITERIO_ORDEN="cobertura_sg_sp" #cobertura_sg_sp o rentabilidad_porciento
-PCA_UMBRAL_VARIANZA_ACUM="0.82" #Consideramos centered las variables PCx!!!!!! (antes no tenia sentido que PC1 estuviera desplazada.... y que hubiera tan pocas PCx acumulando tanta varianza 0.95 ...)
+PCA_UMBRAL_VARIANZA_ACUM="0.86" #Consideramos centered las variables PCx!!!!!! (antes no tenia sentido que PC1 estuviera desplazada.... y que hubiera tan pocas PCx acumulando tanta varianza 0.95 ...)
 TSNE_NUM_F_OUT="12"
 MIN_CG_FUT_SUBGRUPO="1"
-<<<<<<< HEAD
 
 POST_099_UMBRAL_CORTAS_MEDIAS=349
 POST_099_UMBRAL_MEDIAS_LARGAS=549
-=======
->>>>>>> branch 'master' of https://github.com/carlostechinnovation/bdml
 
 
 PATH_SCRIPTS="/home/carloslinux/git/bdml/mod002parser/scripts/galgos/"
@@ -394,8 +390,8 @@ echo -e $(date +"%T")" Analisis de subgrupos..." >>$PATH_LOG
 #----Criterios simples ---
 
 echo -e $(date +"%T")" --------" >>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "TOTAL" 2>&1 1>>$PATH_LOG
-${PATH_SCRIPTS}'galgos_MOD040.sh' "TOTAL" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD035.sh' "" "" "" "HORA_TARDE" 2>&1 1>>$PATH_LOG
+${PATH_SCRIPTS}'galgos_MOD040.sh' "HORA_TARDE" 2>&1 1>>$PATH_LOG
 
 }
 

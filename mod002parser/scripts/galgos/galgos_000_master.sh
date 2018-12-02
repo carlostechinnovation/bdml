@@ -27,13 +27,13 @@ ${PATH_SCRIPTS}'galgos_MOD010.sh' "" >>$LOG_MASTER  #Sportium (semillas futuras)
 echo -e $(date +"%T")" Insertando filas artificiales FUTURAS en datos BRUTOS" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD010_FUT.sh'  >>$LOG_MASTER #Se enriquece con info WEATHER
 
-#echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
+echo -e $(date +"%T")" Limpieza y normalizacion de tablas brutas (Sportium y Betbright)" >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD011.sh' >>$LOG_MASTER
 
-#${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
-#${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD013.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD014.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD015.sh' >>$LOG_MASTER
+${PATH_SCRIPTS}'galgos_MOD016.sh' >>$LOG_MASTER
 
 
 rm -f $LOG_DS  # Limpiar LOG de la capa 035 (036+037)
@@ -85,7 +85,7 @@ echo -e "\n"$(date +"%T")" POSTERIORI: tras 2 días, debes ejecutar el script 09
 COMANDO_099="${PATH_SCRIPTS}galgos_MOD099.sh $INFORME_PREDICCIONES_COMANDOS $SUBGRUPO_GANADOR $ID_EJECUCION"
 echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_MASTER
 echo -e "\n\n"${COMANDO_099}"\n\n" >>$LOG_070
-#${COMANDO_099} >>$LOG_MASTER # (solo se puede hacer si son datos de hace unos dias) EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
+#######${COMANDO_099} >>$LOG_MASTER # (solo se puede hacer si son datos de hace unos dias) EXTRAE resultado REAL a un fichero EXTERNAL y calcula rentabilidad (score real)
 
 echo -e $(date +"%T")" Análisis posterior" >>$LOG_MASTER
 ${PATH_SCRIPTS}'galgos_MOD060_caso_endtoend.sh' "$SUBGRUPO_GANADOR" "" >>$LOG_MASTER
@@ -118,6 +118,9 @@ do
     echo -e "*******************SUB_GAN_AUX=${SUB_GAN_AUX}*******************" >>$LOG_MASTER
     SUB_GAN=$( echo "${SUB_GAN_AUX}" | cut -d'|' -f1 )
     echo -e "*******************SUB_GAN=${SUB_GAN}*******************" >>$LOG_MASTER
+
+    #echo -e "Esperando un rato para que el ordenador se desatasque de procesos..." >>$LOG_MASTER
+    #sleep 3s
   
     ${PATH_SCRIPTS}'galgos_MOD038_ds_pasados.sh' "$SUB_GAN" "N" >>$LOG_MASTER
     ${PATH_SCRIPTS}'galgos_MOD045.sh' "$SUB_GAN" "N" >>$LOG_MASTER

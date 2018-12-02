@@ -32,22 +32,7 @@ mkdir '/home/carloslinux/Desktop/LOGS/015_graficos/'
 echo -e "MOD015 - Transformando con R..." 2>&1 1>>${LOG_015}
 Rscript "${PATH_RSTUDIO_WSKP}galgos_015.R" "10000000" 2>&1 1>>"${LOG_015}"
 echo -e "MOD015 - Transformando con R - FIN" 2>&1 1>>${LOG_015}
-<<<<<<< HEAD
 
-=======
->>>>>>> branch 'master' of https://github.com/carlostechinnovation/bdml
-
-############################## OPTIMIZACION #######################################################################
-echo -e "-------------- OPTIMIZACION --------------" >> "${LOG_016_STATS}"
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_galgos ADD INDEX trans_galgos_idx1(galgo_nombre(255));" 2>&1 1>>${LOG_015}
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_galgos ADD INDEX trans_galgos_idx2(vel_going_largas_max(255));" 2>&1 1>>${LOG_015}
-
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_carreras_idx1(id_carrera);" 2>&1 1>>${LOG_015}
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carreras ADD INDEX trans_carreras_idx2(distancia(255));" 2>&1 1>>${LOG_015}
-
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx1(id_carrera);" 2>&1 1>>${LOG_015}
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx2(galgo_nombre(255));" 2>&1 1>>${LOG_015}
-mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx3(id_carrera, galgo_nombre(255));" 2>&1 1>>${LOG_015}
 ########################################################################
 
 echo -e $(date +"%T")" | 015 | Transformacion de columnas | FIN" >>$LOG_070

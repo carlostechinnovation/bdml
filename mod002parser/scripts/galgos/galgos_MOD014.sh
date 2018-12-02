@@ -33,8 +33,8 @@ analizarTabla "datos_desa" "tb_elaborada_galgos" "${LOG_014_STATS}"
 analizarTabla "datos_desa" "tb_elaborada_carrerasgalgos" "${LOG_014_STATS}"
 
 
-stats_completitud=$(cat "${LOG_014_STATS}" | grep '_velocidad_con_going_norm')
-echo -e "\nMETRICA de COMPLETITUD de los datos historicos --> (tabla datos_desa.tb_elaborada_carrerasgalgos, campo _velocidad_con_going_norm ): ${stats_completitud}\n" >>$LOG_070
+stats_completitud=$(cat "${LOG_014_STATS}" | grep '_velocidad_con_going')
+echo -e "\nMETRICA de COMPLETITUD de los datos historicos --> (tabla datos_desa.tb_elaborada_carrerasgalgos, campo _velocidad_con_going ): ${stats_completitud}\n" >>$LOG_070
 echo -e "MAX|MIN|AVG|STD|NO_NULOS|NULOS --> El ratio NULOS/No_nulos debe ser bajo.\n" >>$LOG_070
 
 #echo -e "Exportando ELABORADOS (limpios) a ficheros external..." >> "${LOG_014_STATS}"

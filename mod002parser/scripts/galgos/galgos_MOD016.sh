@@ -14,9 +14,6 @@ analizarTabla "datos_desa" "tb_trans_carreras" "${LOG_016_STATS}"
 analizarTabla "datos_desa" "tb_trans_galgos" "${LOG_016_STATS}"
 analizarTabla "datos_desa" "tb_trans_carrerasgalgos" "${LOG_016_STATS}"
 
-
-<<<<<<< HEAD
-=======
 ############################## OPTIMIZACION #######################################################################
 echo -e "-------------- OPTIMIZACION --------------" >> "${LOG_016_STATS}"
 mysql -t --execute="ALTER TABLE datos_desa.tb_trans_galgos ADD INDEX trans_galgos_idx1(galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
@@ -30,9 +27,6 @@ mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX tra
 mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx2(galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
 mysql -t --execute="ALTER TABLE datos_desa.tb_trans_carrerasgalgos ADD INDEX trans_cg_idx3(id_carrera(255), galgo_nombre(255));" 2>&1 1>>${LOG_016_STATS}
 
-
-
->>>>>>> branch 'master' of https://github.com/carlostechinnovation/bdml
 #####################################################################################################
 echo -e "Analizando con KNIME..." >> "${LOG_016_STATS}"
 PATH_KNIME_WFLOW="/root/knime-workspace/workflow_galgos/"
