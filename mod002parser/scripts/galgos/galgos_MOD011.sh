@@ -21,13 +21,13 @@ echo -e "Extraigo dia, hora y minuto de la primera carrera futura. Como la desca
 echo -e "Generando tablas limpias:" >> "${LOG_011}"
 
 echo -e "LIMPIANDO tb_galgos_carreras..." >> "${LOG_011}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM; CREATE TABLE datos_desa.tb_galgos_carreras_LIM AS SELECT * FROM datos_desa.tb_galgos_carreras WHERE (distancia IS NULL OR (distancia>100 AND distancia<=750)) AND num_galgos>=4 AND (going_allowance_segundos IS NULL OR (going_allowance_segundos>=-0.8 AND going_allowance_segundos<=0.8)) AND clase IS NOT NULL;" 2>&1 1>>"${LOG_011}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_carreras_LIM; CREATE TABLE datos_desa.tb_galgos_carreras_LIM AS SELECT * FROM datos_desa.tb_galgos_carreras WHERE (distancia IS NULL OR (distancia>100 AND distancia<=750)) AND num_galgos>=4 AND (going_allowance_segundos IS NULL OR (going_allowance_segundos>=-0.8 AND going_allowance_segundos<=0.8)) AND clase IS NOT NULL AND hora<=24;" 2>&1 1>>"${LOG_011}"
 
 echo -e "LIMPIANDO tb_galgos_posiciones_en_carreras..." >> "${LOG_011}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM; CREATE TABLE datos_desa.tb_galgos_posiciones_en_carreras_LIM AS SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras WHERE galgo_nombre <>'VACANT' AND (sp IS NULL OR sp<12);" 2>&1 1>>"${LOG_011}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_posiciones_en_carreras_LIM; CREATE TABLE datos_desa.tb_galgos_posiciones_en_carreras_LIM AS SELECT * FROM datos_desa.tb_galgos_posiciones_en_carreras WHERE galgo_nombre <>'VACANT' AND (sp IS NULL OR sp< ${SP_MAX} );" 2>&1 1>>"${LOG_011}"
 
 echo -e "LIMPIANDO tb_galgos_historico..." >> "${LOG_011}"
-mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM; CREATE TABLE datos_desa.tb_galgos_historico_LIM AS SELECT * FROM datos_desa.tb_galgos_historico WHERE (distancia IS NULL OR (distancia>100 AND distancia<=750)) AND trap<=6 AND (velocidad_con_going IS NULL OR (velocidad_con_going>=15 AND velocidad_con_going<=18.1)) AND clase IS NOT NULL AND galgo_nombre <>'VACANT' AND edad_en_dias>90 AND edad_en_dias<2400 AND (sp IS NULL OR sp<12);" 2>&1 1>>"${LOG_011}"
+mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_historico_LIM; CREATE TABLE datos_desa.tb_galgos_historico_LIM AS SELECT * FROM datos_desa.tb_galgos_historico WHERE (distancia IS NULL OR (distancia>100 AND distancia<=750)) AND trap<=6 AND (velocidad_con_going IS NULL OR (velocidad_con_going>=15 AND velocidad_con_going<=18.1)) AND clase IS NOT NULL AND galgo_nombre <>'VACANT' AND edad_en_dias>90 AND edad_en_dias<2400 AND (sp IS NULL OR sp< ${SP_MAX} );" 2>&1 1>>"${LOG_011}"
 
 echo -e "LIMPIANDO tb_galgos_agregados..." >> "${LOG_011}"
 mysql -tN --execute="DROP TABLE IF EXISTS datos_desa.tb_galgos_agregados_LIM; CREATE TABLE datos_desa.tb_galgos_agregados_LIM AS SELECT * FROM datos_desa.tb_galgos_agregados WHERE vel_real_longmedias_max<17.5;" 2>&1 1>>"${LOG_011}"

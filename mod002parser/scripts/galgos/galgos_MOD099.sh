@@ -26,6 +26,7 @@ echo -e "MOD099 --> LOG = ${LOG_099}"
 
 #Directorio de salida (informes y datasets)
 PATH_DIR_OUT="${PATH_EXTERNAL_DATA}${ID_EJECUCION}/"
+mkdir ${PATH_DIR_OUT}
 
 #Paths informes
 PATH_IBP="${INFORME_BRUTO_POSTERIORI}"

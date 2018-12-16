@@ -46,7 +46,7 @@ echo -e "Ruta-comandos: "$COMUN_I_PRED_COMANDOS 2>&1 1>>${LOG_050}
 #####################################################################
 
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | INICIO" >>$LOG_070
-echo -e "MOD050 --> LOG = "${LOG_050}
+echo -e "\n\n\nMOD050 --> LOG = "${LOG_050}
 
 echo -e "Parametros-MOD050:" 2>&1 1>>${LOG_050}
 echo -e "TAG=$TAG" 2>&1 1>>${LOG_050}
@@ -80,7 +80,7 @@ echo -e "\n\n---------------------- Comprobacion de PREDICCIONES ---------------
 num_targets_file=$(cat "$PATH_FILE_FUTURO_TARGETS_LIMPIO" | wc -l)
 if [ ${num_targets_file} -eq 0 ]
   then
-    echo -e "ERROR En el fichero generado por modulo 050. NO hay NINGUN target PREDICHO. Salida forzada. num_targets_file=$num_targets_file"
+    echo -e "ERROR En el fichero generado por modulo 050. NO hay NINGUN target PREDICHO para subgrupo ${TAG} . Salida forzada. num_targets_file=$num_targets_file"
     exit -1
 fi
 echo -e "\n-------------------------------------------------------------------\n" 2>&1 1>>${LOG_050}
@@ -329,7 +329,7 @@ chmod 777 $COMUN_I_PRED_COMANDOS
 #cat "$PATH_INFORME_FINAL" | mail -s "GALGOS - Prediccion carreras futuras Sportium" carlosandresgarcia1986@gmail.com,fcacereslau@hotmail.com,luisandresgarcia@gmail.com
 
 ##################################################
-
+echo -e $(date +"%T")" | 050 | Prediccion FUTURA | FIN" >>$LOG_050
 echo -e $(date +"%T")" | 050 | Prediccion FUTURA | FIN" >>$LOG_070
 
 
